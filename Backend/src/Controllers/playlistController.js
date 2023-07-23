@@ -9,26 +9,31 @@ const getAllPlaylist = async (req, res) => {
         message: "Không có playlist nào",
       });
     }
-    return res.json({
+    return res.status(200).json({
       message: "Danh sách playlist",
       playlists,
     });
-  } catch (error) {}
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 const getOnePlaylist = async (req, res) => {
   try {
-    const playlist = await PlayList.findById(req.params.id);
-    if (!playlist) {
+    const data = await PlayList.findById(req.params.id);
+    if (!data) {
       return res.json({
         message: "playlist không tồn tại",
       });
     }
-    return res.json({
-      playlist,
+    return res.status(200).json({
+      message: "Lấy dữ liệu thành công",
+      data,
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -36,29 +41,29 @@ const getOnePlaylist = async (req, res) => {
 
 const createPlaylist = async (req, res) => {
   try {
-    const { error } = await playlistSchema.validate(req.body, {
+    const { error } = playlistSchema.validate(req.body, {
       abortEarly: false,
     });
 
     if (error) {
-      return res.json({
-        message: error.details,
+      return res.status(400).json({
+        message: error.details[0].message,
       });
     }
 
-    const playlist = await PlayList.create(req.body);
-    if (!playlist) {
-      return res.json({
+    const data = await PlayList.create(req.body);
+    if (!data) {
+      return res.status(404).json({
         message: "Tạo playlist thất bại ",
       });
     }
 
-    return res.json({
+    return res.status(200).json({
       message: "Tạo playlist thành công",
-      playlist,
+      data,
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -68,22 +73,22 @@ const updatePlaylist = async (req, res) => {
   try {
     const { error } = playlistSchema.validate(req.body);
     if (error) {
-      return res.json({
+      return res.status(400).json({
         message: error.details,
       });
     }
     const id = req.params.id;
     const { playlist_name } = req.body;
 
-    const playlist = await PlayList.findByIdAndUpdate(id, {
+    const data = await PlayList.findByIdAndUpdate(id, {
       playlist_name: playlist_name,
     });
-    return res.json({
+    return res.status(200).json({
       message: "Cập nhập thành công",
-      playlist,
+      data,
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -91,18 +96,18 @@ const updatePlaylist = async (req, res) => {
 
 const removePlaylist = async (req, res) => {
   try {
-    const playlist = await PlayList.findByIdAndDelete(req.params.id);
-    if (!playlist) {
-      return res.json({
+    const data = await PlayList.findByIdAndDelete(req.params.id);
+    if (!data) {
+      return res.status(400).json({
         message: "Xóa thất bại",
       });
     }
-    return res.json({
+    return res.status(200).json({
       message: "Xóa thành công",
-      playlist,
+      data,
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -112,7 +117,7 @@ const addSongToPlaylist = async (req, res) => {
   try {
     const { id_song } = req.body;
     if (!id_song) {
-      return res.json({
+      return res.status(400).json({
         message: "Bài hát không hợp lệ",
       });
     }
@@ -128,18 +133,18 @@ const addSongToPlaylist = async (req, res) => {
       });
     }
 
-    const playlist = await PlayList.findByIdAndUpdate(req.params.id, {
+    const data = await PlayList.findByIdAndUpdate(req.params.id, {
       $addToSet: {
         list_song: id_song,
       },
     });
 
-    return res.json({
+    return res.status(200).json({
       message: "Thêm bài hát thành công",
-      playlist,
+      data,
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -165,18 +170,18 @@ const removeSongToPlaylist = async (req, res) => {
       });
     }
 
-    const playlist = await PlayList.findByIdAndUpdate(req.params.id, {
+    const data = await PlayList.findByIdAndUpdate(req.params.id, {
       $pull: {
         list_song: id_song,
       },
     });
 
-    return res.json({
+    return res.status(200).json({
       message: "Xóa bài hát thành công",
-      playlist,
+      data,
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       message: error.message,
     });
   }
