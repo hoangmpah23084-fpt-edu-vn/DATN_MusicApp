@@ -7,7 +7,7 @@ import {
   removePlaylist,
   removeSongToPlaylist,
   updatePlaylist,
-} from "../Controllers/Playlist";
+} from "../Controllers/playlistController";
 
 const router = express.Router();
 

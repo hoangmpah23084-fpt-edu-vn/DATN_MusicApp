@@ -1,5 +1,5 @@
-import PlayList from "../Models/Playlist";
-import { playlistSchema } from "../Schemas/Playlist";
+import PlayList from "../Models/playlistModal";
+import { playlistSchema } from "../Schemas/playlistSchema";
 
 const getAllPlaylist = async (req, res) => {
   try {
