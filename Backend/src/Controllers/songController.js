@@ -1,5 +1,5 @@
-import { Validate_Song } from "../Schemas/Song";
-import SongSchame from "../Models/Song";
+import { Validate_Song } from "../Schemas/songSchemas";
+import SongSchame from "../Models/songModel";
 
 export const createSong = async (req, res) => {
   try {
@@ -15,7 +15,6 @@ export const createSong = async (req, res) => {
         message: "Create Song failed",
       });
     }
-    console.log(data);
     return res.status(200).json({
       message: "Create Song successfully",
       data,
@@ -54,7 +53,6 @@ export const get_Song = async (req, res) => {
     });
   }
 };
-
 export const update_Song = async (req, res) => {
   try {
     const { error } = Validate_Song.validate(req.body, { abortEarly: false });

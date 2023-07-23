@@ -12,11 +12,19 @@ const SongSchame = new mongoose.Schema(
       },
     ],
     song_singer: String,
-    song_lyric: String,
     song_musian: String,
-    song_dowload: {
+    song_lyric: String,
+    is_dowload: {
       type: Boolean,
       default: true,
+    },
+    id_Genre: {
+      type: mongoose.Types.ObjectId,
+      ref: "Genre",
+    },
+    id_Artists: {
+      type: mongoose.Types.ObjectId,
+      ref: "Artists",
     },
   },
   { versionKey: false, timestamps: true }

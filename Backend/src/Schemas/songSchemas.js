@@ -35,4 +35,10 @@ export const Validate_Song = joi.object({
     "string.empty": "musian is not allowed to be empty",
     "string.base": "musian must be a string",
   }),
+  id_Genre: joi.string().required().messages({
+    "string.required": "Id_Genre is Required",
+  }),
+  id_Artists: joi.string().required().messages({
+    "string.required": "Id_Genre is Required",
+  }),
 });
