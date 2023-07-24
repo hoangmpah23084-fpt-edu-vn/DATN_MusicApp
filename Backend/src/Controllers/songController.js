@@ -47,6 +47,7 @@ export const get_Songs = async (req, res) => {
     });
   }
 };
+
 export const get_Song = async (req, res) => {
   try {
     const { id } = req.params;
@@ -61,6 +62,7 @@ export const get_Song = async (req, res) => {
     });
   }
 };
+
 export const update_Song = async (req, res) => {
   try {
     const { error } = Validate_Song.validate(req.body, { abortEarly: false });
@@ -74,6 +76,15 @@ export const update_Song = async (req, res) => {
       req.body,
       { new: true }
     );
+    /* update artist */
+    await Artist.findByIdAndUpdate(data.id_Artists, {
+      $pull: { songs: data._id },
+    });
+    const artistId = data.id_Artists;
+    await Artist.findByIdAndUpdate(artistId, {
+      $addToSet: { songs: data._id },
+    });
+
     return res.status(200).json({
       message: "Updated song successfully",
       data,
@@ -94,6 +105,12 @@ export const deleteSong = async (req, res) => {
         message: "Delete Song failed",
       });
     }
+
+    /* delete song in artist */
+    await Artist.findByIdAndUpdate(data.id_Artists, {
+      $pull: { songs: data._id },
+    });
+
     return res.status(200).json({
       message: "Delete Song Successfully",
       data,

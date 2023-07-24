@@ -66,4 +66,24 @@ const deleteArtist = async (req, res) => {
   }
 };
 
-export default { getArtists, createArtist, updateArtist, deleteArtist };
+const getItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await Artist.findById(id);
+    if (!data) {
+      return res
+        .status(404)
+        .send({ message: "fail", error: "Khong tim thay artist " });
+    }
+  } catch (error) {
+    return res.status(500).send({ message: "fail", error: error });
+  }
+};
+
+export default {
+  getArtists,
+  createArtist,
+  updateArtist,
+  deleteArtist,
+  getItem,
+};
