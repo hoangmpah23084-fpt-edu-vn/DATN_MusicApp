@@ -10,11 +10,8 @@ const songFavouriteSchema = new mongoose.Schema({
         ref: 'User' // truy cập đến bảng User 
     },
     list_songFavourites: [{
-        id_song: {
-            type: mongoose.Types.ObjectId,
-            required: true,
-            ref: 'Song' // truy cập đến bằng Song
-        }
+        type: mongoose.Types.ObjectId,
+        ref: 'Song'
     }]
 })
 
