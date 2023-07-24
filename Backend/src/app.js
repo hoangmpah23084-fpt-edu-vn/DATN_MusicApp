@@ -19,7 +19,6 @@ app.use(cors());
 /* db */
 ConnectDB();
 
-
 app.use("/api", Route_Song);
 app.use("/api", GenderRouter);
 app.use("/api", AlbumRouter);
