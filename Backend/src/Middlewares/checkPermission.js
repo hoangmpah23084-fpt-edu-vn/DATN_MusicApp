@@ -15,7 +15,7 @@ export const checkPermission = async (req, res, next) => {
     }
     // lấy token
     const token = await req.headers.authorization.split(" ")[1];
-    // console.log(jwt.verify(token, SECRETKEY));
+    console.log(jwt.verify(token, SECRETKEY));
     const { id } = await jwt.verify(token, SECRETKEY);
 
     const user = await User.findById(id);
