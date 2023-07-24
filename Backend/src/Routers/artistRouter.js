@@ -5,5 +5,7 @@ const ArtistRoute = Router();
 
 ArtistRoute.get("/artists", artistController.getArtists);
 ArtistRoute.post("/artist", artistController.createArtist);
+ArtistRoute.put("/artist/:id", artistController.updateArtist);
+ArtistRoute.delete("/artist/:id", artistController.deleteArtist);
 
 export default ArtistRoute;
