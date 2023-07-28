@@ -6,9 +6,9 @@ const imageSchema = new mongoose.Schema({
   url: {
     type: String,
   },
-  public_id: {
-    type: String,
-  },
+  // public_id: {
+  //   type: String,
+  // },
 });
 
 const artistSchema = new Schema(
@@ -30,15 +30,15 @@ const artistSchema = new Schema(
     },
 
     album: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Album",
-        },
-      ],
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Album",
+      },
+    ],
 
     songs: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: "Song",
       },
     ],

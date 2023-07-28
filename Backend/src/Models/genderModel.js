@@ -16,4 +16,4 @@ const Gender = new mongoose.Schema(
   { versionKey: false, timestamps: true }
 );
 
-export default mongoose.model("Genre", Gender, "Gender");
+export default mongoose.model("Genre", Gender);

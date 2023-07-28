@@ -1,5 +1,11 @@
 import express from "express";
-import { create_Genre, getAll_Genre, get_GenreById, delete_Genre, update_Genre } from "../Controllers/genreController.js";
+import {
+  create_Genre,
+  getAll_Genre,
+  get_GenreById,
+  delete_Genre,
+  update_Genre,
+} from "../Controllers/genreController.js";
 const GenderRouter = express.Router();
 
 GenderRouter.get("/genre", getAll_Genre);
