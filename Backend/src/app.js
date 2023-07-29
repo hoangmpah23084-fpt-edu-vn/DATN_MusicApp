@@ -1,13 +1,14 @@
 import express from "express";
+import routerFavourite from "./Routers/songFavourites";
+import dotenv from "dotenv";
 import cors from "cors";
 import ArtistRoute from "./Routers/artistRouter.js";
 import { ConnectDB } from "./Config/connect.js";
-import dotenv from "dotenv";
+import Route_Song from "./Routers/songRouter.js";
+import Router_Playlist from "./Routers/playlistRoute.js";
+import GenderRouter from "./Routers/genreRouter.js";
+import AlbumRouter from "./Routers/albumRouter.js";
 
-import mongoose from "mongoose";
-import Route_Song from "./Routers/Song";
-import dotenv from "dotenv";
-import cors from "cors";
 dotenv.config();
 
 const app = express();
@@ -18,6 +19,14 @@ app.use(cors());
 ConnectDB();
 
 app.use("/api", Route_Song);
+app.use("/api", routerFavourite);
+app.use("/api", GenderRouter);
+app.use("/api", AlbumRouter);
+
+app.use("/api", Router_Playlist);
+
+/* router artist */
+app.use("/api/", ArtistRoute);
 
 app.listen(process.env.PORT, () => {
   console.log("Port is running at: " + process.env.PORT);
