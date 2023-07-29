@@ -1,1 +1,2 @@
-Config
+PORT = 8080
+URI_MONGODB = "mongodb://127.0.0.1:27017/DATN_Music"
