@@ -3,7 +3,7 @@ import ArtistValidate from "../Schemas/artistSchema.js";
 
 const getArtists = async (req, res) => {
   try {
-    const data = await Artist.find({});
+    const data = await Artist.find();
     if (!data) {
       return res.status(404).send({ message: "fail", error: "Loi" });
     }
@@ -69,12 +69,16 @@ const deleteArtist = async (req, res) => {
 const getItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const data = await Artist.findById(id);
+    const data = await Artist.findById(id).populate("songs");
     if (!data) {
       return res
         .status(404)
         .send({ message: "fail", error: "Khong tim thay artist " });
     }
+    return res.status(200).json({
+      message: "Get data successfully",
+      data,
+    });
   } catch (error) {
     return res.status(500).send({ message: "fail", error: error });
   }

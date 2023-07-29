@@ -6,6 +6,7 @@ import Genre from "../Models/genreModel.js";
 export const createSong = async (req, res) => {
   try {
     const body = req.body;
+    console.log(body);
 
     const { error } = Validate_Song.validate(req.body, { abortEarly: false });
     if (error) {
@@ -14,15 +15,29 @@ export const createSong = async (req, res) => {
       });
     }
     const data = await SongSchame.create(req.body);
+    console.log(data);
     if (!data) {
       return res.status(400).json({
         message: "Create Song failed",
       });
     }
     /* update artist */
-    await Artist.findByIdAndUpdate(body.id_Artists, {
-      $addToSet: { songs: data._id },
-    });
+    await Artist.findByIdAndUpdate(
+      data.id_Artists,
+      {
+        $addToSet: { songs: data._id },
+      },
+      { new: true }
+    );
+
+    //todo Update Genre
+    await genderModel.findByIdAndUpdate(
+      data.id_Genre,
+      {
+        $addToSet: { list_song: data._id },
+      },
+      { new: true }
+    );
 
     /* update genre */
     await Genre.findByIdAndUpdate(body.id_Genre, {
@@ -115,6 +130,11 @@ export const deleteSong = async (req, res) => {
     /* delete song in artist */
     await Artist.findByIdAndUpdate(data.id_Artists, {
       $pull: { songs: data._id },
+    });
+
+    //todo  delete song in genre  */
+    await genderModel.findByIdAndUpdate(data.id_Genre, {
+      $pull: { list_song: data._id },
     });
 
     return res.status(200).json({
