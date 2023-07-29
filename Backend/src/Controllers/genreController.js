@@ -1,5 +1,5 @@
-import Genre from "../Models/genderModel.js";
-import { genreValidate } from "../Schemas/genderSchema.js";
+import Genre from "../Models/genreModel.js";
+import { genreValidate } from "../Schemas/genreSchema.js";
 
 export const create_Genre = async (req, res) => {
     try {
@@ -11,7 +11,7 @@ export const create_Genre = async (req, res) => {
         if (!data) {
             return res.status(400).json({ message: "Create Genre Failed" });
         }
-        console.log(data);
+        // console.log(data);
         return res.status(200).json({
             message: "Create Genre Success",
             data
@@ -50,7 +50,6 @@ export const get_GenreById = async (req, res) => {
         console.log(error);
     }
 }
-
 
 export const update_Genre = async (req, res) => {
     try {

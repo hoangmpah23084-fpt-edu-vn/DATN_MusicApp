@@ -23,7 +23,7 @@ const artistSchema = new Schema(
       required: true,
     },
 
-    image: [imageSchema],
+    images: [imageSchema],
 
     description: {
       type: String,

@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
-const Gender = new mongoose.Schema(
+const Genre = new mongoose.Schema(
   {
-    genre_name: {
+    name: {
       type: String,
       required: true,
     },
-    list_song: [
+    list_songs: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Song",
@@ -16,4 +16,4 @@ const Gender = new mongoose.Schema(
   { versionKey: false, timestamps: true }
 );
 
-export default mongoose.model("Genre", Gender, "Gender");
+export default mongoose.model("Genre", Genre, "Genre");

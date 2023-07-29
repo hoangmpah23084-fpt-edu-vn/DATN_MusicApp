@@ -1,6 +1,7 @@
 import { Validate_Song } from "../Schemas/songSchemas.js";
 import SongSchame from "../Models/songModel.js";
 import Artist from "../Models/artistModel.js";
+import Genre from "../Models/genreModel.js";
 
 export const createSong = async (req, res) => {
   try {
@@ -21,6 +22,11 @@ export const createSong = async (req, res) => {
     /* update artist */
     await Artist.findByIdAndUpdate(body.id_Artists, {
       $addToSet: { songs: data._id },
+    });
+
+    /* update genre */
+    await Genre.findByIdAndUpdate(body.id_Genre, {
+      $addToSet: { list_songs: data._id },
     });
 
     return res.status(200).json({

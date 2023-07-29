@@ -9,3 +9,4 @@ GenderRouter.patch("/genre/:id", update_Genre);
 GenderRouter.delete("/genre/:id", delete_Genre);
 
 export default GenderRouter;
+
