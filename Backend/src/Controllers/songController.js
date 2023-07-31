@@ -29,7 +29,6 @@ export const createSong = async (req, res) => {
       },
       { new: true }
     );
-
     //todo Update Genre
     await genderModel.findByIdAndUpdate(
       data.id_Genre,
