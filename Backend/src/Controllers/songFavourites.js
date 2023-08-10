@@ -1,4 +1,4 @@
-import Favourites from "../Models/songFavourites";
+import Favourites from "../Models/songFavourites.js";
 
 //========= getFavourites ================
 

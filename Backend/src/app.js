@@ -1,5 +1,5 @@
 import express from "express";
-import routerFavourite from "./Routers/songFavourites";
+import routerFavourite from "./Routers/songFavourites.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import ArtistRoute from "./Routers/artistRouter.js";
