@@ -1,3 +1,4 @@
+import model_user from "../Models/model_user.js";
 import roomModel from "../Models/roomChatModel.js";
 import { roomSchame } from "../Schemas/roomSchame.js";
 
@@ -64,16 +65,22 @@ export const updateRoomChat = async (req, res) => {
 };
 export const getRoom = async (req, res) => {
   try {
-    const getRoom = await roomModel.findById(req.params.idChat);
-    if (!getRoom) {
-      return res.status(404).json({
-        message: "Không tìm thấy phòng",
+    await roomModel
+      .findById(req.params.idChat)
+      .populate("memberGroup", "-password")
+      .populate("isAdminGroup", "-password")
+      .populate("listMessages", "-password")
+      .then(async (result) => {
+        console.log(result);
+        result = await model_user.populate(result, {
+          path: "listMessages.id_sender",
+          select: "fullName, email",
+        });
+        res.status(200).json({
+          message: "Lấy phòng thành công",
+          data: result,
+        });
       });
-    }
-    return res.status(200).json({
-      message: "Lấy phòng thành công",
-      data: getRoom,
-    });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

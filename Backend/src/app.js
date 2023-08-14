@@ -11,6 +11,7 @@ import AlbumRouter from "./Routers/albumRouter.js";
 import routerAuth from "./Routers/router_auth.js";
 import roomRouter from "./Routers/roomRouter.js";
 import morgan from "morgan";
+import messageRouter from "./Routers/messRouter.js";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api", AlbumRouter);
 app.use("/api", Router_Playlist);
 app.use("/api", routerAuth);
 app.use("/api", roomRouter);
+app.use("/api", messageRouter);
 
 /* router artist */
 app.use("/api/", ArtistRoute);

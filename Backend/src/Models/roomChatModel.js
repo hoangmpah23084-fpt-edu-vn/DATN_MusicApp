@@ -9,6 +9,12 @@ const roomModel = new mongoose.Schema({
       ref: "User",
     },
   ],
+  listMessages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
+    },
+  ],
   isAdminGroup: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
