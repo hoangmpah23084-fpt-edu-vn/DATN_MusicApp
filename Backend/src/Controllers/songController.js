@@ -31,7 +31,7 @@ export const createSong = async (req, res) => {
     );
 
     //todo Update Genre
-    await genderModel.findByIdAndUpdate(
+    await Genre.findByIdAndUpdate(
       data.id_Genre,
       {
         $addToSet: { list_song: data._id },
@@ -133,7 +133,7 @@ export const deleteSong = async (req, res) => {
     });
 
     //todo  delete song in genre  */
-    await genderModel.findByIdAndUpdate(data.id_Genre, {
+    await Genre.findByIdAndUpdate(data.id_Genre, {
       $pull: { list_song: data._id },
     });
 
