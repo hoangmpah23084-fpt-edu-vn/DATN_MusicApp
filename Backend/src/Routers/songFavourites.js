@@ -4,8 +4,7 @@ import { createFavourites, getFavourites } from "../Controllers/songFavourites.j
 
 const router = express.Router();
 
-router.get("/songFavourites/:id_user", getFavourites)
-router.post("/songFavourites", createFavourites)
+router.get("/songFavourites/:id_user", getFavourites);
+router.post("/songFavourites", createFavourites);
 
-
-export default router
+export default router;

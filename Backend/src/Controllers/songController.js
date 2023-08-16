@@ -29,7 +29,6 @@ export const createSong = async (req, res) => {
       },
       { new: true }
     );
-
     //todo Update Genre
     await Genre.findByIdAndUpdate(
       data.id_Genre,
@@ -58,6 +57,7 @@ export const createSong = async (req, res) => {
 export const get_Songs = async (req, res) => {
   try {
     const data = await SongSchame.find();
+    console.log(req.user);
     return res.status(200).json({
       message: "Get song list Successfully",
       data,
@@ -98,6 +98,7 @@ export const update_Song = async (req, res) => {
       { new: true }
     );
     /* update artist */
+    //todo loai bỏ id song khỏi Artist
     await Artist.findByIdAndUpdate(data.id_Artists, {
       $pull: { songs: data._id },
     });

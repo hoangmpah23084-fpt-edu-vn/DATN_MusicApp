@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.zmp3-logo {
+  background: url(./logo-dark.svg) 50% / contain no-repeat;
+}
+
+.sidebar-divide::after {
+  content: "";
+  border-top: 1px solid #32323d;
+  position: absolute;
+  left: 25px;
+  right: 25px;
+  top: 0;
+}
+

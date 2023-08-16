@@ -1,9 +1,5 @@
-import "./index.scss";
-import "react-toastify/dist/ReactToastify.css";
-import "sweetalert2/src/sweetalert2.scss";
-
+import './index.scss'
 import persistor, { store } from "./store/store.ts";
-
 import App from "./App.tsx";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
