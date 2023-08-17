@@ -1,7 +1,7 @@
 import { Validate_Song } from "../Schemas/songSchemas.js";
 import SongSchame from "../Models/songModel.js";
 import Artist from "../Models/artistModel.js";
-import genderModel from "../Models/genderModel.js";
+import Genre from "../Models/genreModel.js";
 
 export const createSong = async (req, res) => {
   try {
@@ -30,13 +30,18 @@ export const createSong = async (req, res) => {
       { new: true }
     );
     //todo Update Genre
-    await genderModel.findByIdAndUpdate(
+    await Genre.findByIdAndUpdate(
       data.id_Genre,
       {
         $addToSet: { list_song: data._id },
       },
       { new: true }
     );
+
+    /* update genre */
+    await Genre.findByIdAndUpdate(body.id_Genre, {
+      $addToSet: { list_songs: data._id },
+    });
 
     return res.status(200).json({
       message: "Create Song successfully",
@@ -129,7 +134,7 @@ export const deleteSong = async (req, res) => {
     });
 
     //todo  delete song in genre  */
-    await genderModel.findByIdAndUpdate(data.id_Genre, {
+    await Genre.findByIdAndUpdate(data.id_Genre, {
       $pull: { list_song: data._id },
     });
 
