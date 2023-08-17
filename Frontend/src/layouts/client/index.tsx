@@ -14,7 +14,7 @@ const LayoutClient = (props: Props) => {
         <SidebarMenu />
         <Header />
         <div className="mr-[330px] flex-grow-1 w-[calc(100%-570px)]">
-          <div className="relative w-[100%] h-[100%] mt-[70px]">
+          <div className="relative w-[100%] h-[80%] mt-[70px]">
             <Outlet />
           </div>
         </div>
