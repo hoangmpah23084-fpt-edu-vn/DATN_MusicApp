@@ -16,9 +16,11 @@ import {
 } from "react-icons/ai";
 import { MdLibraryMusic } from "react-icons/md";
 import { Link } from "react-router-dom";
-type Props = {};
+import "./index.css"
 
-const SidebarMenu = (props: Props) => {
+// type Props = {};
+
+const SidebarMenu = () => {
   return (
     <aside className=" text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e] ">
       <div>
