@@ -1,9 +1,11 @@
 import express from "express";
-import routerFavourite from "./Routers/songFavourites.js";
+import routerFavourite from "./Routers/songFavourites.js"
 import dotenv from "dotenv";
 import cors from "cors";
 import ArtistRoute from "./Routers/artistRouter.js";
 import { ConnectDB } from "./Config/connect.js";
+
+import mongoose from "mongoose";
 import Route_Song from "./Routers/songRouter.js";
 import Router_Playlist from "./Routers/playlistRoute.js";
 import GenderRouter from "./Routers/genreRouter.js";
@@ -24,8 +26,10 @@ app.use(cors());
 ConnectDB();
 
 app.use("/api", Route_Song);
+
 app.use("/api", routerFavourite);
 app.use("/api", GenderRouter);
+
 app.use("/api", AlbumRouter);
 app.use("/api", Router_Playlist);
 app.use("/api", routerAuth);
