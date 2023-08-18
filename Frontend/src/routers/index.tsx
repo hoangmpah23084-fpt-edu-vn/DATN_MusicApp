@@ -1,6 +1,8 @@
+import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
+import DashBoard from "@/pages/Admin/DashBoard/Index";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
-import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
   //todo FE
@@ -13,23 +15,33 @@ export const router = createBrowserRouter([
   //todo BE
   {
     path: "/admin",
-    element: (
-      <div>
-        LayOut Admin <Outlet />
-      </div>
-    ),
+    element: <LayoutAdmin />,
     children: [
       {
         index: true,
-        element: <Navigate to={"dashboard"} />,
+        element:  <DashBoard />,
       },
       {
         path: "dashboard",
-        element: <div>Dashboard</div>,
+        element:  <div>
+        Hehe
+      </div>,
       },
       {
-        path: "product",
-        element: <div>Product List</div>,
+        path: "song",
+        element: <div>Add Song</div>,
+      },
+      {
+        path: "listsong",
+        element: <div>List Song</div>,
+      },
+      {
+        path: "art",
+        element: <div>Add Artist</div>,
+      },
+      {
+        path: "listart",
+        element: <div>Add Artist</div>,
       },
       {
         path: "product/:id",
