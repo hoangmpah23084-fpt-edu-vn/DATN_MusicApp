@@ -13,12 +13,9 @@ const LayoutClient = (props: Props) => {
       <div className="flex w-[100%] bg-[#170f23]">
         <SidebarMenu />
         <Header />
-        <div className="mr-[330px] flex-grow-1 w-[calc(100%-570px)]">
-          <div className="relative w-[100%] h-[80%] mt-[70px]">
-            <Outlet />
-          </div>
+        <div className="ml-[300px] relative w-[100%] h-[80%] overscroll-y-auto">
+          <Outlet />
         </div>
-        <SidebarSong />
         <Footer />
       </div>
     </>

@@ -1,0 +1,15 @@
+.item_list {
+    opacity: 0;
+    transition: all 0.3s;
+
+}
+
+.item:hover .item_list {
+    opacity: 1;
+    cursor: pointer;
+    display: block;
+}
+
+.item:hover .item_list_time {
+    display: none;
+}

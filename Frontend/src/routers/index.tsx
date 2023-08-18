@@ -1,4 +1,5 @@
 import LayoutClient from "@/layouts/client";
+import FavouritePage from "@/pages/Favourite/FavouritePage";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
 
@@ -7,7 +8,9 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <LayoutClient />,
-    children: [{ index: true, element: <KhamPhaPage /> }],
+    children: [
+      { index: true, element: <KhamPhaPage /> },
+      { path: "mymusic/song/favorite", element: <FavouritePage /> }],
   },
 
   //todo BE
