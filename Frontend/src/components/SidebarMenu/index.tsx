@@ -67,7 +67,7 @@ const SidebarMenu = () => {
 
           <li className="">
             <Link
-              to={"/"}
+              to={"/mymusic/song/favorite"}
               className="flex items-center leading-[20px] py-[6px] px-[24px]"
             >
               <MdLibraryMusic className="w-[22px] text-[#ccc] h-[40px]" />
@@ -148,7 +148,7 @@ const SidebarMenu = () => {
               </li>
               <li className="">
                 <Link
-                  to={"/"}
+                  to={"/mymusic/song/favorite"}
                   className="flex items-center leading-[20px] py-[13px] px-[24px]"
                 >
                   <div className="h-[26px] w-[26px] flex items-center justify-center rounded-[9px] bg-[#10c4ff]">
