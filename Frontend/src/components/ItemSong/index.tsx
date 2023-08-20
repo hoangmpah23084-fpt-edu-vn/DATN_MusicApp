@@ -5,10 +5,14 @@ import { Link } from "react-router-dom"
 import { TfiVideoClapper } from "react-icons/tfi"
 import { PiMicrophoneStageDuotone } from "react-icons/pi"
 import { FaPlay } from "react-icons/fa"
-
 import "./index.css"
+import { useState } from "react"
+import ModalSongMenu from "../Modals/modalSongMenu"
 
 const ItemSong = () => {
+
+    const [modal, setModal] = useState<boolean>(false)
+
     return (
         <tbody>
             <tr className="item border-b-[#2c2436] border-b-[1px] cursor-pointer hover:bg-[#2f2739] ease-in-out duration-500">
@@ -45,7 +49,15 @@ const ItemSong = () => {
                                 <p className="text-white">Xóa yêu thích</p>
                             </div>
                         </button>
-                        <span className="item_list mx-2 hidden"><BsThreeDots className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " /></span>
+
+
+                        <button className="item_list mx-2 hidden" onClick={() => setModal(!modal)}><BsThreeDots className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
+                        </button>
+                        {modal && <>
+                            <div className="z-40 absolute w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full" onClick={() => setModal(false)}></div >
+                            <ModalSongMenu />
+                        </>}
+
                         <span className="mx-2 text-sm text-[#86828c] item_list_time"><p className="px-3 py-2 rounded-full text-[9px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " >4:00</p></span>
                     </div>
                 </td>
