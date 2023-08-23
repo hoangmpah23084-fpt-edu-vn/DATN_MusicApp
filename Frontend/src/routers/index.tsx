@@ -1,6 +1,7 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
+import Album from "@/pages/Album/Album";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -11,7 +12,12 @@ export const router = createBrowserRouter([
     element: <LayoutClient />,
     children: [{ index: true, element: <KhamPhaPage /> }],
   },
+  {
+    path: "/album",
+    element: <LayoutClient />,
+    children: [{ index: true, element: <Album/> }],
 
+  },
   //todo BE
   {
     path: "/admin",
@@ -19,13 +25,13 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element:  <DashBoard />,
+        element: <DashBoard />,
       },
       {
         path: "dashboard",
-        element:  <div>
-        Hehe
-      </div>,
+        element: <div>
+          Hehe
+        </div>,
       },
       {
         path: "song",
