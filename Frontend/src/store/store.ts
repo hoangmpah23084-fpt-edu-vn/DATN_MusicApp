@@ -9,6 +9,7 @@ import {
     persistReducer,
     persistStore,
 } from 'redux-persist';
+import songReducer from "./Reducer/Song";
 
 import storage from 'redux-persist/lib/storage';
 
@@ -17,8 +18,9 @@ const persistConfig = {
     storage,
     whitelist: ['cart']
 }
+
 const rootReducer = combineReducers({
-    
+    Song : songReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

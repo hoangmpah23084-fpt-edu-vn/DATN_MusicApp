@@ -24,6 +24,6 @@
         "@/*": ["src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../Backend/src/Config/cloudinary.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

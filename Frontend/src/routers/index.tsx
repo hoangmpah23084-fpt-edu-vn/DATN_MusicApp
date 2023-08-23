@@ -1,6 +1,9 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
+import AddSong from "@/pages/Admin/Song/AddSong";
+import ListSong from "@/pages/Admin/Song/ListSong";
+import UpdateSong from "@/pages/Admin/Song/UpdateSong";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -29,15 +32,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "song",
-        element: <div>Add Song</div>,
+        element: <AddSong />,
       },
       {
         path: "listsong",
-        element: <div>List Song</div>,
+        element: <ListSong />,
       },
       {
-        path: "art",
-        element: <div>Add Artist</div>,
+        path: "updatesong/:id",
+        element: <UpdateSong />,
       },
       {
         path: "listart",

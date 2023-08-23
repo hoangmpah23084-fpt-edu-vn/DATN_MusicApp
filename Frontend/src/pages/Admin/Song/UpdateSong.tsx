@@ -1,30 +1,44 @@
+import React, { useEffect } from 'react';
+// import { Video } from 'cloudinary-react';
 import Title from '../Title'
 import { Box, TextField, Typography } from '@mui/material'
 import { BoxProduct, BoxUpload } from '@/Mui/Component/Product'
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SongSchame, ifSong } from '../Interface/ValidateSong';
 import { handImage, handleFileUpload } from '@/Mui/Component/handUpload';
 import { useAppDispatch } from '@/store/hooks';
-import { handAddSong } from '@/store/Reducer/Song';
+import {  handGetOne, handUpdateSong } from '@/store/Reducer/Song';
+import { useParams } from 'react-router-dom';
 
 
-const AddSong = () => {
-  // const [genre , setGenre] = React.useState<string>("");
-  // const [artist , setArtist] = React.useState<string>("");
+const UpdateSong = () => {
+  const [song , setSong] = React.useState<ifSong | null>(null);
   const dispatch = useAppDispatch();
+  const {id} = useParams<{id ?: string}>();
+  useEffect(() => {
+    if (id) {
+      handGetOne(id).then(({data}) => setSong(data)).catch((error) => console.error(error));
+    }
+    // handGetOne(id).then(({data}) => setSong(data)).catch((error) => console.error(error));
+  },[id])
 
-
-  const {register, handleSubmit, formState : {errors}} = useForm({
+  const {register, reset , handleSubmit, formState : {errors}} = useForm({
     resolver : yupResolver(SongSchame)
   });
-  const handSubmitHandler : SubmitHandler<ifSong> = async (value) => {
+  useEffect(() => {
+    return reset(song);
+  },[reset, song])
+  
+
+  const handSubmitHandler = async (value : ifSong) => {
     value.song_link = await handleFileUpload(value.song_link);
     value.song_image = await handImage(value.song_image)
-    const {payload} = await dispatch(handAddSong(value));
-    if (payload) {
-      alert(payload)
-    }
+    const data = await dispatch(handUpdateSong(value));
+    console.log(data);
+    // if (payload) {
+    //   alert(payload)
+    // }
   }
 
 return (
@@ -85,8 +99,8 @@ return (
             </div>
             <div className='w-full h-[70%] grid grid-cols-2 gap-6 '>
               <div >
-              {/* onChange={(e) => setGenre(e.target.value)} */}
                 <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Genre</label>
+                {/* onChange={(e) => setGenre(e.target.value)} */}
                 <select required  {...register("id_Genre")} className='block w-full border-gray-300 rounded-lg' >
                     <option value={""} selected>Choose a Genre</option>
                     <option value="64e239e9e5a2f10db4134352">Genre1</option>
@@ -95,8 +109,9 @@ return (
               </div>
               <div  >
               {/* onChange={(e) => setArtist(e.target.value)} */}
+              {/* defaultValue={song.id_Artists} */}
               <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Artists</label>
-                <select required  {...register("id_Artists")} className='block w-full border-gray-300 rounded-lg' >
+                <select required  {...register("id_Artists")}  className='block w-full border-gray-300 rounded-lg' >
                     <option value={""} selected>Choose a Artists</option>
                     <option value="64c293500827f19d6cdde734">Artist 1</option>
                     <option value="CA">Canada</option>
@@ -153,4 +168,4 @@ return (
     </>
   )
 }
-export default AddSong
+export default UpdateSong
