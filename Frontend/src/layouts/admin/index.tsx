@@ -34,6 +34,9 @@ import Popper from '@mui/material/Popper';
 import Fade from '@mui/material/Fade';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import GroupsIcon from '@mui/icons-material/Groups';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 const drawerWidth = 240;
 
@@ -310,20 +313,20 @@ export default function LayoutAdmin() {
             </ListItemButton>
             <Collapse in={openArtist} timeout={"auto"} unmountOnExit  >
             <List component={"div"} disablePadding  >
-                <Link to={"/admin/art"} >
+                <Link to={"/admin/artist"} >
                 <ListItemButton sx={{ pl: 4 }}>
                         <ListItemIcon>
-                          <AddBoxIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Add Artist" />
-                    </ListItemButton>
-                </Link>
-                <Link to={"/admin/listart"} >
-                <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                        <ListAltIcon />
+                        <GroupsIcon/>
                         </ListItemIcon>
                         <ListItemText primary="List Artist" />
+                    </ListItemButton>
+                </Link>
+                <Link to={"/admin/add-artist"} >
+                <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon >
+                          <GroupAddIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary="Add Artist" />
                     </ListItemButton>
                 </Link>
             </List>
@@ -337,12 +340,22 @@ export default function LayoutAdmin() {
             </ListItemButton>
             <Collapse in={openUser} timeout={"auto"} unmountOnExit  >
             <List component={"div"} disablePadding  >
-                   <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                        <RecentActorsIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="List User" />
-                    </ListItemButton>
+              <Link to="/admin/user">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                <RecentActorsIcon />
+                </ListItemIcon>
+                <ListItemText primary="List User" />
+              </ListItemButton>
+              </Link>
+              <Link to="/admin/add-user">
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                <PersonAddIcon />
+                </ListItemIcon>
+                <ListItemText primary="Add User" />
+              </ListItemButton>
+              </Link>
             </List>
             </Collapse>
           </ListItem>
