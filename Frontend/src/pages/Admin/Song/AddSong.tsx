@@ -13,8 +13,6 @@ const AddSong = () => {
   // const [genre , setGenre] = React.useState<string>("");
   // const [artist , setArtist] = React.useState<string>("");
   const dispatch = useAppDispatch();
-
-
   const {register, handleSubmit, formState : {errors}} = useForm({
     resolver : yupResolver(SongSchame)
   });
@@ -57,6 +55,7 @@ return (
               <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}} {...register("song_image")} error={Boolean(errors.song_image)} helperText={errors.song_image?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
+              <input multiple />
               {/* <input type='file' multiple onChange={handImage} /> */}
             </BoxProduct>
             <BoxProduct sx={{ width : "100%", height : "16%" }} >

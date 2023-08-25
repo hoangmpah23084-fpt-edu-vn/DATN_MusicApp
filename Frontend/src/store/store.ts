@@ -10,6 +10,7 @@ import {
     persistStore,
 } from 'redux-persist';
 import songReducer from "./Reducer/Song";
+import userReducer from "./Reducer/User";
 
 import storage from 'redux-persist/lib/storage';
 
@@ -21,6 +22,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     Song : songReducer,
+    user : userReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

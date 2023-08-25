@@ -7,10 +7,6 @@ interface initState {
     loading : boolean,
     song : ifSong[]
 }
-interface typeSong {
-    _id : string,
-    datafake : ifSong
-}
 
 const initialState: initState = {
     error : "",

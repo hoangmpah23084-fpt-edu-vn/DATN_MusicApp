@@ -63,6 +63,25 @@ const ListSong = () => {
       backgroundColor : "#D0BFFF",
       color: "white",
     },
+    "& .MuiDataGrid-footerContainer" : {
+      backgroundColor : "#D0BFFF",
+      color: "white",
+    },
+    "& .MuiTablePagination-displayedRows":{
+      color : "white"
+    },
+    "& .MuiTablePagination-actions" : {
+      color : " white"
+    },
+    "& .MuiTablePagination-selectLabel ":{
+      color : "white"
+    },
+    "& .css-16c50h-MuiInputBase-root-MuiTablePagination-select ":{
+      color : "white"
+    },
+    "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon":{
+      color : "white"
+    }
     }} >
      <Title Title='Show Product' />
      <DataGrid
@@ -78,7 +97,7 @@ const ListSong = () => {
             },
           },
         }}
-        pageSizeOptions={[5]}
+        pageSizeOptions={[5, 10, 25]}
         checkboxSelection
         disableRowSelectionOnClick={true}
       />

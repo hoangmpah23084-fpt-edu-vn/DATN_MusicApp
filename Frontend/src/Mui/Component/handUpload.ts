@@ -11,7 +11,6 @@ type ResponseData = {
 
 
 export const handImage = async (file : FileList)=> {
-    // const file = (e.target as HTMLInputElement).files;
     console.log(file);
     if(!file) return [] ;
     const files = Array.from(file);
@@ -25,12 +24,10 @@ export const handImage = async (file : FileList)=> {
           formData.append('upload_preset', 'demo-ECMA');
           formData.append("folder", "DATN");
           formData.append("cloud_name", "dsbiugddk");
-          const response = await axios.post(`https://api.cloudinary.com/v1_1/dsbiugddk/image/upload`, formData)
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+          const response = await axios.post<{secure_url : string}>(`https://api.cloudinary.com/v1_1/dsbiugddk/image/upload`, formData)
           return response.data.secure_url
         })
       )
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment
       const responesData : string[] = [...upLoadResponse];
       return responesData
     }
@@ -38,7 +35,6 @@ export const handImage = async (file : FileList)=> {
 
   //todo Upload Video
 export  const handleFileUpload = async (file: ResponseData) => {
-    // const file = e.target.files[0];
     console.log(file);
     const files = file[0];
     if (!files) return;
@@ -47,13 +43,12 @@ export  const handleFileUpload = async (file: ResponseData) => {
     formData.append('upload_preset', 'demo-ECMA'); // Đặt upload preset tương ứng của bạn
     formData.append('folder', 'audiofiles'); // Đặt upload preset tương ứng của bạn
     try {
-      const response = await axios.post(
+      const response = await axios.post<{secure_url : string[]}>(
         `https://api.cloudinary.com/v1_1/dsbiugddk/video/upload`,
         formData
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (response.data && response.data.secure_url) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+
         return response.data.secure_url
       }
     } catch (error) {
