@@ -16,8 +16,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import { Avatar, Collapse, ListItemAvatar } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
@@ -340,7 +338,7 @@ export default function LayoutAdmin() {
             </ListItemButton>
             <Collapse in={openUser} timeout={"auto"} unmountOnExit  >
             <List component={"div"} disablePadding  >
-              <Link to="/admin/user">
+              <Link to={"/admin/listuser"}>
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
                 <RecentActorsIcon />
