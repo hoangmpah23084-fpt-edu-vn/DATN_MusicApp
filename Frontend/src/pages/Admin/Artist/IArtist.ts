@@ -2,21 +2,21 @@ import * as Yup from "yup"
 
 export interface IArtist {
     _id?: string,
-    artist_name: string,
-    artist_age: number,
-    artist_image: string,
-    artist_description: string,
-    artist_album: string,
-    artist_list_song: string
+    name: string,
+    age: number,
+    images: File | string[] | null,
+    description: string,
+    album: string,
+    songs: string
 }
 
 export const formArtist = Yup.object({
-    artist_name: Yup.string().required("Trường dữ liệu bắt buộc"),
-    artist_age: Yup.number().required("Trường dữ liệu bắt buộc"),
-    artist_image: Yup.string().required("Trường dữ liệu bắt buộc"),
-    artist_description: Yup.string().required("Trường dữ liệu bắt buộc"),
-    artist_album: Yup.string().required("Trường dữ liệu bắt buộc"),
-    artist_list_song: Yup.string().required("Trường dữ liệu bắt buộc")
+    name: Yup.string().required("Enter the name"),
+    age: Yup.number().required("Enter the age"),
+    images: Yup.string().required("Enter the email"),
+    description: Yup.string().required("Enter the description"),
+    album: Yup.string().required("Select at least 1 album"),
+    songs: Yup.string().required("Select at least 1 song")
 })
 
 export type formArtist = Yup.InferType<typeof formArtist>

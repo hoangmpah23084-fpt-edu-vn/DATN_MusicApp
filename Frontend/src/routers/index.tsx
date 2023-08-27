@@ -1,6 +1,6 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
-import Artist from "@/pages/Admin/Artist";
+import Artist from "@/pages/Admin/Artist/listArtist";
 import AddArtist from "@/pages/Admin/Artist/addArtist";
 import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
