@@ -1,5 +1,8 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
+import Artist from "@/pages/Admin/Artist/listArtist";
+import AddArtist from "@/pages/Admin/Artist/addArtist";
+import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
 import AddSong from "@/pages/Admin/Song/AddSong";
 import ListSong from "@/pages/Admin/Song/ListSong";
@@ -44,12 +47,16 @@ export const router = createBrowserRouter([
         element: <UpdateSong />,
       },
       {
-        path: "listuser",
-        element: <ListUser />,
+        path: "artist",
+        element: <Artist/>,
       },
       {
-        path: "listart",
-        element: <div>Add Artist</div>,
+        path: "add-artist",
+        element: <AddArtist/>,
+      },
+      {
+        path: "update-artist/:id",
+        element: <UpdateArtist/>,
       },
       {
         path: "product/:id",
