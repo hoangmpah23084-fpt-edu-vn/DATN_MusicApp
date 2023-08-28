@@ -68,7 +68,7 @@ return (
             <BoxProduct sx={{ width : "100%", height : "16%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Song Link</Typography>
               {/* asdadasdasdasd */}
-              <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}} {...register("song_image")} error={Boolean(errors.song_image)} helperText={errors.song_image?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
+              <TextField placeholder='Inter Song Title' type='file'  {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_link?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
               {/* <input type='file' multiple onChange={handImage} /> */}
@@ -130,7 +130,7 @@ return (
             <Typography>Section to config basic product information</Typography>
           </Box>
           <BoxUpload >
-          <TextField {...register("song_link")} type="file" error={Boolean(errors.song_link)} helperText={errors.song_link?.message} sx={{ width : "100%", height : "100%", display :"block",
+          <TextField {...register("song_image")} type="file" error={Boolean(errors.song_image)} inputProps={{ multiple: true}} helperText={errors.song_image?.message} sx={{ width : "100%", height : "100%", display :"block",
                  position : "absolute",
                  cursor: "pointer",
                  opacity: 0,
