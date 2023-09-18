@@ -1,27 +1,37 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect } from 'react';
 // import { Video } from 'cloudinary-react';
 import Title from '../Title'
 import { Box, TextField, Typography } from '@mui/material'
-import { BoxProduct, BoxUpload } from '@/Mui/Component/Product'
-import { useForm } from "react-hook-form";
+import { BoxProduct, BoxUpload, TypographySong } from '@/Mui/Component/Product'
+import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SongSchame, ifSong } from '../Interface/ValidateSong';
 import { handImage, handleFileUpload } from '@/Mui/Component/handUpload';
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {  handGetOne, handUpdateSong } from '@/store/Reducer/Song';
 import { useParams } from 'react-router-dom';
+import { getGenre } from '@/store/Reducer/genreReducer';
+import { handleGetArtist } from '@/store/Reducer/artistReducer';
+import { ifGenre } from '../Interface/validateAlbum';
 
 
 const UpdateSong = () => {
-  const [song , setSong] = React.useState<ifSong | null>(null);
+  const [song , setSong] = React.useState<ifSong>();
   const dispatch = useAppDispatch();
+  const {genre} = useAppSelector(({genre}) => genre);
+  const {artist} = useAppSelector(({artist}) => artist);
+  
   const {id} = useParams<{id ?: string}>();
   useEffect(() => {
     if (id) {
-      handGetOne(id).then(({data}) => setSong(data)).catch((error) => console.error(error));
+      handGetOne(id).then(({data}) => {
+        setSong(data)
+      }).catch((error) => console.error(error));
     }
-    // handGetOne(id).then(({data}) => setSong(data)).catch((error) => console.error(error));
-  },[id])
+    void dispatch(getGenre());
+    void dispatch(handleGetArtist());
+  },[id, dispatch])
 
   const {register, reset , handleSubmit, formState : {errors}} = useForm({
     resolver : yupResolver(SongSchame)
@@ -29,16 +39,12 @@ const UpdateSong = () => {
   useEffect(() => {
     return reset(song);
   },[reset, song])
-  
-
-  const handSubmitHandler = async (value : ifSong) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handSubmitHandler : SubmitHandler<any> = async (value : ifSong) => {
     value.song_link = await handleFileUpload(value.song_link);
     value.song_image = await handImage(value.song_image)
     const data = await dispatch(handUpdateSong(value));
     console.log(data);
-    // if (payload) {
-    //   alert(payload)
-    // }
   }
 
 return (
@@ -53,40 +59,38 @@ return (
             <Typography>Section to config basic product information</Typography>
           </Box>
           <Box sx={{ width : "100%", height : "70%" }} >
-            <BoxProduct sx={{ width : "100%", height : "16%" }} >
-              <Typography sx={{ padding : "8px 0px" }} >Song Name</Typography>
+            <BoxProduct >
+              <TypographySong >Song Name</TypographySong>
               <TextField helperText={errors.song_name?.message} type='text' placeholder='Inter Song Name' {...register("song_name")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "16%" }} >
-              <Typography sx={{ padding : "8px 0px" }} >Song Title</Typography>
+            <BoxProduct >
+              <TypographySong >Song Title</TypographySong>
               <TextField placeholder='Inter Song Title' type='text' helperText={errors.song_title?.message} {...register("song_title")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "16%" }} >
-              <Typography sx={{ padding : "8px 0px" }} >Song Link</Typography>
-              {/* asdadasdasdasd */}
+            <BoxProduct >
+              <TypographySong>Song Link</TypographySong>
               <TextField placeholder='Inter Song Title' type='file'  {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_link?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
-              {/* <input type='file' multiple onChange={handImage} /> */}
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "16%" }} >
-              <Typography sx={{ padding : "8px 0px" }}  >Song Singer</Typography>
+            <BoxProduct >
+              <TypographySong  >Song Singer</TypographySong>
               <TextField placeholder='Inter Song Title' type='text' {...register("song_singer")} helperText={errors.song_singer?.message} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "16%" }} >
-              <Typography sx={{ padding : "8px 0px" }} >Song Musian</Typography>
+            <BoxProduct >
+              <TypographySong >Song Musian</TypographySong>
               <TextField placeholder='Inter Song Musian' type='text' helperText={errors.song_musian?.message} {...register("song_musian")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "16%" }} >
-              <Typography sx={{ padding : "8px 0px" }} >Song Lyric</Typography>
+            <BoxProduct >
+              <TypographySong >Song Lyric</TypographySong>
               <TextField placeholder='Inter Song Lyric' type='text' helperText={errors.song_lyric?.message} {...register("song_lyric")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
@@ -102,19 +106,17 @@ return (
                 <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Genre</label>
                 {/* onChange={(e) => setGenre(e.target.value)} */}
                 <select required  {...register("id_Genre")} className='block w-full border-gray-300 rounded-lg' >
-                    <option value={""} selected>Choose a Genre</option>
-                    <option value="64e239e9e5a2f10db4134352">Genre1</option>
-                    <option value="CA">Canada</option>
+                    {
+                      genre.map((item : ifGenre) => <option value={item._id} selected>{item.name}</option>)
+                    }
                 </select>
               </div>
               <div  >
-              {/* onChange={(e) => setArtist(e.target.value)} */}
-              {/* defaultValue={song.id_Artists} */}
               <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Artists</label>
                 <select required  {...register("id_Artists")}  className='block w-full border-gray-300 rounded-lg' >
-                    <option value={""} selected>Choose a Artists</option>
-                    <option value="64c293500827f19d6cdde734">Artist 1</option>
-                    <option value="CA">Canada</option>
+                  {
+                    artist.map((item) => <option value={item._id} selected>{item.name}</option>)
+                  }
                 </select>
               </div>
             </div>
@@ -143,19 +145,10 @@ return (
                  },
                  "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input" : {
                   height : "100%",
-                  // position : "absolute",
                  }
                   }} >
 
           </TextField>
-          {/* <input type="file" accept=".mp3" onChange={handleFileUpload} style={{width : "100%", height : "100%", display :"block",
-                 position : "absolute",
-                 cursor: "pointer",
-                 opacity: 0,
-                 inset : "0px",
-                 fontSize : "100%",
-                 }} /> */}
-                     {/* {uploadedVideo && <Video cloudName="dsbiugddk" publicId={uploadedVideo} />} */}
             <Box sx={{ textAlign : "center", margin : "4rem 0rem" }} >
               <img src="../../../../public/Image/upload.png" alt="" style={{marginLeft: "auto", marginRight : "auto", maxWidth : "100%" , height : "auto", display : "block", verticalAlign : "middle"}} />
               <Typography variant='body1'><span style={{fontWeight : 600}} >Drop your Video here, or </span><span style={{fontWeight : 600, color : "#1D5D9B"}} > browse</span></Typography>

@@ -9,6 +9,15 @@ export interface IArtist {
     album: string,
     songs: string
 }
+export type TypeArtist = {
+    _id: string,
+    name: string,
+    age: number,
+    images: File | string[] | null,
+    description: string,
+    album: string,
+    songs: string
+}
 
 export const formArtist = Yup.object({
     name: Yup.string().required("Enter the name"),

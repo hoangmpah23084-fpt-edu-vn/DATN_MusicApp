@@ -10,6 +10,9 @@ import UpdateSong from "@/pages/Admin/Song/UpdateSong";
 import ListUser from "@/pages/Admin/User/ListUser";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter } from "react-router-dom";
+import Genre from "@/pages/Admin/genre/Genre";
+import ListGenre from "@/pages/Admin/genre/ListGenre";
+import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 
 export const router = createBrowserRouter([
   //todo FE
@@ -47,6 +50,10 @@ export const router = createBrowserRouter([
         element: <UpdateSong />,
       },
       {
+        path: "listuser",
+        element: <ListUser />,
+      },
+      {
         path: "artist",
         element: <Artist/>,
       },
@@ -57,11 +64,21 @@ export const router = createBrowserRouter([
       {
         path: "update-artist/:id",
         element: <UpdateArtist/>,
+      }
+      ,
+      {
+        path: "addgenre",
+        element: <Genre />
+      }
+      ,
+      {
+        path: "listgenre",
+        element: <ListGenre />
       },
       {
-        path: "product/:id",
-        element: <div>Product Detail</div>,
-      },
+        path : "UpdateGenre/:id",
+        element : <UpdateGenre />
+      }
     ],
   },
 ]);

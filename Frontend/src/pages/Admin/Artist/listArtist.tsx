@@ -6,13 +6,15 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Link } from "react-router-dom";
-import { handleDeleteArtist, handleGetArtist } from "./artistReducer";
+import { handleDeleteArtist, handleGetArtist } from "../../../store/Reducer/artistReducer";
+import { IArtist } from "../Interface/IArtist";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 const Artist = () => {
   const dispatch = useAppDispatch();
   const { artist } = useAppSelector(({ artist }) => artist);
+console.log(artist);
 
   useEffect(() => {
     void dispatch(handleGetArtist());
@@ -96,7 +98,7 @@ const Artist = () => {
           </tr>
         </thead>
         <tbody>
-          {artist?.map((item) => (
+          {artist?.map((item : IArtist) => (
             <tr
               key={item._id}
               className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -113,7 +115,7 @@ const Artist = () => {
               </td>
               <td className="px-6 py-4">{item.description}</td>
               <td className="px-6 py-4">{item.album}</td>
-              <td className="px-6 py-4">{item.songs}</td>
+              <td className="px-6 py-4">{item.songs.length}</td>
               <td className="px-6 py-4 text-right">
                   <Link
                     to={`/admin/update-artist/${item._id}`}

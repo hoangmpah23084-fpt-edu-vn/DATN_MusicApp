@@ -2,8 +2,8 @@ import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternate
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import { useAppDispatch } from "@/store/hooks";
 import { useForm } from "react-hook-form";
-import { IArtist, formArtist } from "./IArtist";
-import { handleGetOne, handleUpdateArtist } from "./artistReducer";
+import { IArtist, formArtist } from "../Interface/IArtist";
+import { handleGetOne, handleUpdateArtist } from "../../../store/Reducer/artistReducer";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { handImage } from "@/Mui/Component/handUpload";
 import React, { useEffect } from 'react';

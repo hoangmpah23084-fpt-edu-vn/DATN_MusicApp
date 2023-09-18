@@ -1,4 +1,4 @@
-import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { TypeSong, ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -29,22 +29,16 @@ export const handDeleteSong = createAsyncThunk("song/deleteSong", async (id : st
     await axios.delete("http://localhost:8080/api/Song/"+ id) 
     return id
 })
-export const handUpdateSong = createAsyncThunk("song/updatesong", async (value : ifSong) => {
+export const handUpdateSong = createAsyncThunk("song/updatesong", async (value : TypeSong) => {
     const {_id , ...datafake} = value;
-    console.log(_id , datafake);
-    
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const {data} = await axios.put<{data : ifSong}>(`http://localhost:8080/api/Song/${_id}`, datafake) 
     console.log(data);
     return data.data
 })
 export const handGetOne = async (id : string) => {
     const {data} = await axios.get<{data : ifSong}>("http://localhost:8080/api/Song/"+ id)
-    console.log(data);
     return data
 }
-
-
 const songReducer = createSlice({
     name : "Song",
     initialState,
@@ -78,7 +72,7 @@ const songReducer = createSlice({
         })
         builder.addCase(handDeleteSong.fulfilled, (state, action) => {
             state.loading = true;
-            state.song = state.song.filter((song => song._id != action.payload))
+            state.song = state.song.filter(((song : ifSong) => song._id != action.payload))
             state.error = ""
         })
         builder.addCase(handDeleteSong.rejected, (state, action) => {

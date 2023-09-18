@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { IArtist } from "./IArtist";
+import { IArtist, TypeArtist } from "../../pages/Admin/Interface/IArtist";
 
 interface initState {
     error : string,
@@ -27,16 +27,14 @@ export const handleDeleteArtist = createAsyncThunk("artist/delete-artist", async
     await axios.delete("http://localhost:8080/api/artist/"+ id) 
     return id
 })
-export const handleUpdateArtist = createAsyncThunk("artist/update-artist", async (value : IArtist) => {
+export const handleUpdateArtist = createAsyncThunk("artist/update-artist", async (value : TypeArtist) => {
     const {_id , ...datafake} = value;
-    console.log(_id , datafake);
     const {data} = await axios.put<{data : IArtist}>(`http://localhost:8080/api/artist/${_id}`, datafake) 
     console.log(data);
     return data.data
 })
 export const handleGetOne = async (id : string) => {
     const {data} = await axios.get<{data : IArtist}>("http://localhost:8080/api/artist/"+ id)
-    console.log(data);
     return data
 }
 

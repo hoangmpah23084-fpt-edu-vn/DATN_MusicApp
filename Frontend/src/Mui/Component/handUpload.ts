@@ -2,16 +2,12 @@ import axios from "axios";
 
 //todo UploadImage
 type ResponseData = {
-  [0] : File,
+  [0] : File| string,
 }
-// type ResponseData1 = {
-//   file : File[],
-// }
 
-
-
-export const handImage = async (file : FileList)=> {
-    console.log(file);
+// : Promise<string[] | undefined>
+export const handImage = async (file : string[] | undefined)  => {
+    console.log(file);  
     if(!file) return [] ;
     const files = Array.from(file);
     if (files.length === 0) return [];
@@ -34,8 +30,8 @@ export const handImage = async (file : FileList)=> {
   }
 
   //todo Upload Video
-export  const handleFileUpload = async (file: ResponseData) => {
-    console.log(file);
+export  const handleFileUpload = async (file: string | string[] | undefined) => {
+  if (file) {
     const files = file[0];
     if (!files) return;
     const formData = new FormData();
@@ -54,4 +50,6 @@ export  const handleFileUpload = async (file: ResponseData) => {
     } catch (error) {
       console.error('Error uploading video:', error);
     }
+  }
+  
 };

@@ -2,8 +2,8 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { useAppDispatch } from "@/store/hooks";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IArtist, formArtist } from "./IArtist";
-import { handleAddArtist } from "./artistReducer";
+import { IArtist, formArtist } from "../Interface/IArtist";
+import { handleAddArtist } from "../../../store/Reducer/artistReducer";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { handImage } from "@/Mui/Component/handUpload";
 
@@ -85,17 +85,6 @@ const AddArtist = () => {
                     <option value="2">Gieo</option>
                   </select>
                 </div>
-                <div className="flex flex-col">
-                  <label>List song</label>
-                  <input
-                    className="border border-gray-300 rounded-md p-2"
-                    placeholder="List song"
-                    {...register("songs")}
-                  />
-                  <div className="text-sm text-red-500">
-                    {errors.songs?.message}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -138,7 +127,7 @@ const AddArtist = () => {
               </button>
               <button
                 type="submit"
-                className="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-100 focus:outline-none bg-indigo-700 rounded-lg border border-gray-300 hover:bg-indigo-600"
+                className="py-[6px] px-5 mr-2 mb-2 text-sm font-medium text-gray-100 focus:outline-none bg-indigo-700 rounded-lg border border-gray-300 hover:bg-indigo-600"
               >
                 <SaveOutlinedIcon></SaveOutlinedIcon>
                 Save
