@@ -1,6 +1,7 @@
 import joi from "joi";
 
 export const Validate_Song = joi.object({
+  _id: joi.string(),
   song_name: joi.string().required().empty().messages({
     "string.required": "name is Required",
     "string.emtpy": "name is not allowed to be empty",

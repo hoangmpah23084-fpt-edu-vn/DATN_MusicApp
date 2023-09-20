@@ -1,9 +1,18 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
+import Artist from "@/pages/Admin/Artist/listArtist";
+import AddArtist from "@/pages/Admin/Artist/addArtist";
+import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
-import Album from "@/pages/Album/Album";
+import AddSong from "@/pages/Admin/Song/AddSong";
+import ListSong from "@/pages/Admin/Song/ListSong";
+import UpdateSong from "@/pages/Admin/Song/UpdateSong";
+import ListUser from "@/pages/Admin/User/ListUser";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter } from "react-router-dom";
+import Genre from "@/pages/Admin/genre/Genre";
+import ListGenre from "@/pages/Admin/genre/ListGenre";
+import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 
 export const router = createBrowserRouter([
   //todo FE
@@ -35,24 +44,46 @@ export const router = createBrowserRouter([
       },
       {
         path: "song",
-        element: <div>Add Song</div>,
+        element: <AddSong />,
       },
       {
         path: "listsong",
-        element: <div>List Song</div>,
+        element: <ListSong />,
       },
       {
-        path: "art",
-        element: <div>Add Artist</div>,
+        path: "updatesong/:id",
+        element: <UpdateSong />,
       },
       {
-        path: "listart",
-        element: <div>Add Artist</div>,
+        path: "listuser",
+        element: <ListUser />,
       },
       {
-        path: "product/:id",
-        element: <div>Product Detail</div>,
+        path: "artist",
+        element: <Artist/>,
       },
+      {
+        path: "add-artist",
+        element: <AddArtist/>,
+      },
+      {
+        path: "update-artist/:id",
+        element: <UpdateArtist/>,
+      }
+      ,
+      {
+        path: "addgenre",
+        element: <Genre />
+      }
+      ,
+      {
+        path: "listgenre",
+        element: <ListGenre />
+      },
+      {
+        path : "UpdateGenre/:id",
+        element : <UpdateGenre />
+      }
     ],
   },
 ]);

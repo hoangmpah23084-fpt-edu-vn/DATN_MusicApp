@@ -1,5 +1,5 @@
 import express from "express";
-import routerFavourite from "./Routers/songFavourites.js"
+import routerFavourite from "./Routers/songFavourites.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import ArtistRoute from "./Routers/artistRouter.js";
@@ -14,6 +14,7 @@ import routerAuth from "./Routers/router_auth.js";
 import roomRouter from "./Routers/roomRouter.js";
 import morgan from "morgan";
 import messageRouter from "./Routers/messRouter.js";
+import Route_Video from "./Routers/videoRouter.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use("/api", Router_Playlist);
 app.use("/api", routerAuth);
 app.use("/api", roomRouter);
 app.use("/api", messageRouter);
+app.use("/api", Route_Video);
 
 /* router artist */
 app.use("/api/", ArtistRoute);

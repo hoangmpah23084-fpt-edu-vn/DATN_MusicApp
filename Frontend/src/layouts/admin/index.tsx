@@ -16,8 +16,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import { Avatar, Collapse, ListItemAvatar } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
@@ -34,6 +32,9 @@ import Popper from '@mui/material/Popper';
 import Fade from '@mui/material/Fade';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import GroupsIcon from '@mui/icons-material/Groups';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 const drawerWidth = 240;
 
@@ -113,6 +114,7 @@ export default function LayoutAdmin() {
   const [openSong, setOpenSong] = React.useState(false);
   const [openUser, setOpenUser] = React.useState(false);
   const [openGenre, setOpenGenre] = React.useState(false);
+  const [openAlbum, setOpenAlbum] = React.useState(false);
   const [openUserif, setUserif] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -120,6 +122,9 @@ export default function LayoutAdmin() {
     setAnchorEl(event.currentTarget);
     setUserif((previousOpen) => !previousOpen);
   };
+  const closeLeave = () => {
+    setUserif((previousOpen) => !previousOpen);
+  }
 
   const canBeOpen = anchorEl && Boolean(anchorEl);
   const id = canBeOpen ? 'transition-popper' : undefined;
@@ -138,6 +143,9 @@ export default function LayoutAdmin() {
   };
   const handleArtist = () => {
     setOpenArtist(!openArtist);
+  };
+  const handleAlbum = () => {
+    setOpenAlbum(!openAlbum);
   };
   const handleUser = () => {
     setOpenUser(!openUser);
@@ -196,7 +204,7 @@ export default function LayoutAdmin() {
                      }} primary="Admin" secondary="Pham Thang" />
                   </ListItemButton>
                   </ListItem>
-                        <Popper id={id} open={openUserif} anchorEl={anchorEl} transition>
+                        <Popper id={id} onMouseLeave={closeLeave} open={openUserif} anchorEl={anchorEl} transition>
                           {({ TransitionProps }) => (
                         <Fade {...TransitionProps} timeout={350}>
                        <Box sx={{ width : 250, mr : 5 ,height : 200, backgroundColor : "white", borderRadius : "10px", boxShadow: "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px" }}>
@@ -310,20 +318,20 @@ export default function LayoutAdmin() {
             </ListItemButton>
             <Collapse in={openArtist} timeout={"auto"} unmountOnExit  >
             <List component={"div"} disablePadding  >
-                <Link to={"/admin/art"} >
+                <Link to={"/admin/add-artist"} >
                 <ListItemButton sx={{ pl: 4 }}>
                         <ListItemIcon>
-                          <AddBoxIcon />
+                        <GroupsIcon/>
                         </ListItemIcon>
                         <ListItemText primary="Add Artist" />
                     </ListItemButton>
                 </Link>
-                <Link to={"/admin/listart"} >
+                <Link to={"/admin/artist"} >
                 <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                        <ListAltIcon />
+                        <ListItemIcon >
+                          <GroupAddIcon/>
                         </ListItemIcon>
-                        <ListItemText primary="List Artist" />
+                        <ListItemText primary="List Artist" /> 
                     </ListItemButton>
                 </Link>
             </List>
@@ -337,12 +345,14 @@ export default function LayoutAdmin() {
             </ListItemButton>
             <Collapse in={openUser} timeout={"auto"} unmountOnExit  >
             <List component={"div"} disablePadding  >
-                   <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                        <RecentActorsIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="List User" />
-                    </ListItemButton>
+              <Link to={"/admin/listuser"}>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                <RecentActorsIcon />
+                </ListItemIcon>
+                <ListItemText primary="List User" />
+              </ListItemButton>
+              </Link>
             </List>
             </Collapse>
           </ListItem>
@@ -357,20 +367,59 @@ export default function LayoutAdmin() {
             </ListItemButton>
             <Collapse in={openGenre} timeout={"auto"} unmountOnExit  >
             <List component={"div"} disablePadding  >
-                  <ListItemButton sx={{ pl: 4 }}>
+              <Link to={"/admin/addgenre"} >
+              <ListItemButton sx={{ pl: 4 }}>
                         <ListItemIcon>
                         <AddBoxIcon />
                         </ListItemIcon>
                         <ListItemText primary="Add Genre" />
                     </ListItemButton>
-                   <ListItemButton sx={{ pl: 4 }}>
+              </Link>
+              <Link to={"/admin/listgenre"} >
+              <ListItemButton sx={{ pl: 4 }}>
                         <ListItemIcon>
                         <ListAltIcon />
                         </ListItemIcon>
                         <ListItemText primary="List Genre" />
                     </ListItemButton>
+              </Link>
             </List>
             </Collapse>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton onClick={() => handleAlbum()} sx={{    
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  }} >
+                <ListItemIcon sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }} >
+                    <LibraryMusicIcon /></ListItemIcon>
+                <ListItemText primary={"Album"} sx={{ opacity: open ? 1 : 0 }} ></ListItemText>
+                {openAlbum ? <MdExpandLess /> : <MdExpandMore />}
+              </ListItemButton>
+              <Collapse in={openAlbum} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      <Link  to={"/admin/addalbum"} >
+                      <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                          <AddBoxIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Add Album" />
+                      </ListItemButton>
+                      </Link>
+                      <Link to={"/admin/listalbum"} >
+                      <ListItemButton sx={{ pl: 4 }}>
+                        <ListItemIcon>
+                          <ListAltIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="List Album" />
+                      </ListItemButton>
+                      </Link>
+                    </List>
+              </Collapse>
           </ListItem>
         </List>
       </Drawer>

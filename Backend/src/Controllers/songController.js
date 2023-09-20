@@ -86,12 +86,12 @@ export const get_Song = async (req, res) => {
 
 export const update_Song = async (req, res) => {
   try {
-    const { error } = Validate_Song.validate(req.body, { abortEarly: false });
-    if (error) {
-      return res.status(400).json({
-        message: error.details[0].message,
-      });
-    }
+    // const { error } = Validate_Song.validate(req.body, { abortEarly: false });
+    // if (error) {
+    //   return res.status(400).json({
+    //     message: error.details[0].message,
+    //   });
+    // }
     const data = await SongSchame.findByIdAndUpdate(
       { _id: req.params.id },
       req.body,
