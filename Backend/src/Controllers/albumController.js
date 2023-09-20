@@ -1,5 +1,6 @@
 import { albumValidate } from "../Schemas/albumSchema.js";
 import Album from "../Models/albumModel.js"
+import Artist from "../Models/artistModel.js";
 
 export const create_Album = async (req, res) => {
   try {
@@ -11,6 +12,13 @@ export const create_Album = async (req, res) => {
     if (!data) {
       return res.status(400).json({ message: "Create Album Failed" });
     }
+    await Artist.findByIdAndUpdate(
+      data.id_artist,
+      {
+        $addToSet: { album: data._id },
+      },
+      { new: true }
+    );
     console.log(data);
     return res.status(200).json({
       message: "Create Album Success",
@@ -23,7 +31,7 @@ export const create_Album = async (req, res) => {
 
 export const getAll_Album = async (req, res) => {
   try {
-    const data = await Album.find();
+    const data = await Album.find().populate("id_artist");
     if (!data) {
       return res.status(400).json({ message: "Get All Album Failed" });
     }

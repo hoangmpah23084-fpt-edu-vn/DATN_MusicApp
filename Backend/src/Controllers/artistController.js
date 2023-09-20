@@ -3,7 +3,7 @@ import ArtistValidate from "../Schemas/artistSchema.js";
 
 const getArtists = async (req, res) => {
   try {
-    const data = await Artist.find();
+    const data = await Artist.find().populate("album");
     if (!data) {
       return res.status(404).send({ message: "fail", error: "Loi" });
     }

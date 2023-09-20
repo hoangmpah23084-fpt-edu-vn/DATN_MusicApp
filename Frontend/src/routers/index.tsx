@@ -13,6 +13,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
+import Album from "@/pages/Album/Album";
 
 export const router = createBrowserRouter([
   //todo FE
