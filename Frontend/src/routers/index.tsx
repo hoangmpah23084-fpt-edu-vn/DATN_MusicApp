@@ -1,7 +1,19 @@
+import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
 import FavouritePage from "@/pages/Favourite/FavouritePage";
+import Artist from "@/pages/Admin/Artist/listArtist";
+import AddArtist from "@/pages/Admin/Artist/addArtist";
+import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
+import DashBoard from "@/pages/Admin/DashBoard/Index";
+import AddSong from "@/pages/Admin/Song/AddSong";
+import ListSong from "@/pages/Admin/Song/ListSong";
+import UpdateSong from "@/pages/Admin/Song/UpdateSong";
+import ListUser from "@/pages/Admin/User/ListUser";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
-import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
+import Genre from "@/pages/Admin/genre/Genre";
+import ListGenre from "@/pages/Admin/genre/ListGenre";
+import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 
 export const router = createBrowserRouter([
   //todo FE
@@ -16,28 +28,60 @@ export const router = createBrowserRouter([
   //todo BE
   {
     path: "/admin",
-    element: (
-      <div>
-        LayOut Admin <Outlet />
-      </div>
-    ),
+    element: <LayoutAdmin />,
     children: [
       {
         index: true,
-        element: <Navigate to={"dashboard"} />,
+        element:  <DashBoard />,
       },
       {
         path: "dashboard",
-        element: <div>Dashboard</div>,
+        element:  <div>
+        Hehe
+      </div>,
       },
       {
-        path: "product",
-        element: <div>Product List</div>,
+        path: "song",
+        element: <AddSong />,
       },
       {
-        path: "product/:id",
-        element: <div>Product Detail</div>,
+        path: "listsong",
+        element: <ListSong />,
       },
+      {
+        path: "updatesong/:id",
+        element: <UpdateSong />,
+      },
+      {
+        path: "listuser",
+        element: <ListUser />,
+      },
+      {
+        path: "artist",
+        element: <Artist/>,
+      },
+      {
+        path: "add-artist",
+        element: <AddArtist/>,
+      },
+      {
+        path: "update-artist/:id",
+        element: <UpdateArtist/>,
+      }
+      ,
+      {
+        path: "addgenre",
+        element: <Genre />
+      }
+      ,
+      {
+        path: "listgenre",
+        element: <ListGenre />
+      },
+      {
+        path : "UpdateGenre/:id",
+        element : <UpdateGenre />
+      }
     ],
   },
 ]);

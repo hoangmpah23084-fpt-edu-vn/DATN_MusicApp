@@ -1,4 +1,4 @@
-import Genre from "../Models/genreModel.js"
+import Genre from "../Models/genreModel.js";
 import songModel from "../Models/songModel.js";
 import { genreValidate } from "../Schemas/genreSchema.js";
 
@@ -45,7 +45,7 @@ export const getAll_Genre = async (req, res) => {
 
 export const get_GenreById = async (req, res) => {
   try {
-    const data = await Genre.findById(req.params.id).populate("list_song");
+    const data = await Genre.findById(req.params.id).populate("list_songs");
     if (!data) {
       return res.status(400).json({ message: "Get Genre By Id Failed" });
     }
@@ -90,7 +90,7 @@ export const delete_Genre = async (req, res) => {
     console.log(songsToUpdate);
 
     //todo Tìm xem đã có danh mục Uncategorized trong db chưa
-    const unGenre = await Genre.findOne({ genre_name: "un_genre" });
+    const unGenre = await Genre.findOne({ name: "un_genre" });
     //todo Cập nhật genreId của các sản phẩm thuộc genre đang chuẩn bị được xóa sang id của "UnGenre"
     if (unGenre) {
       await songModel.updateMany(
@@ -102,14 +102,14 @@ export const delete_Genre = async (req, res) => {
       //todo Cập nhật mảng Song của danh mục "unGenre"
       await Genre.findByIdAndUpdate(unGenre._id, {
         $push: {
-          list_song: {
+          list_songs: {
             $each: songsToUpdate.map((song) => song._id),
           },
         },
       });
     } else {
       //todo nếu chưa có Genre unGenre thì tạo mới
-      const newUnGenre = Genre.create({ genre_name: "un_genre" });
+      const newUnGenre = Genre.create({ name: "un_genre" });
 
       //todo cập nhật các id_Genre của song thuộc Genre đang chuẩn bị xóa chuyển sang unGenre
       await songModel.updateMany(
@@ -119,7 +119,7 @@ export const delete_Genre = async (req, res) => {
       //todo Cập nhật mảng list_song của danh mục "un_genre"
       await Genre.findByIdAndUpdate(newUnGenre._id, {
         $push: {
-          list_song: {
+          list_songs: {
             $each: songsToUpdate.map((song) => song._id),
           },
         },

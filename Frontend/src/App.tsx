@@ -1,12 +1,16 @@
 import './App.css'
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routers/index.tsx";
+import { ThemeProvider } from '@mui/material';
+import theme from './Mui/Index.ts';
 
 function App() {
 
   return (
     <>
-     <RouterProvider router={router}></RouterProvider>
+    <ThemeProvider theme={theme}>
+    <RouterProvider router={router}></RouterProvider>
+    </ThemeProvider>
     </>
   )
 }

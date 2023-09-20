@@ -9,16 +9,24 @@ import {
     persistReducer,
     persistStore,
 } from 'redux-persist';
+import songReducer from "./Reducer/Song";
+import userReducer from "./Reducer/User";
 
 import storage from 'redux-persist/lib/storage';
+import artistReducer from './Reducer/artistReducer';
+import genreReducer from './Reducer/genreReducer';
 
 const persistConfig = {
     key: 'root',
     storage,
     whitelist: ['cart']
 }
+
 const rootReducer = combineReducers({
-    
+    Song : songReducer,
+    user : userReducer,
+    artist: artistReducer,
+    genre : genreReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
