@@ -111,7 +111,7 @@ console.log(artist);
               </th>
               <td className="px-6 py-4">{item.age}</td>
               <td className="px-6 py-4">
-                <img src={item.images} className="h-[50px]" />
+                <p>{item.images?.length}</p>
               </td>
               <td className="px-6 py-4">{item.description}</td>
               <td className="px-6 py-4">{item.album}</td>
@@ -119,15 +119,18 @@ console.log(artist);
               <td className="px-6 py-4 text-right">
                   <Link
                     to={`/admin/update-artist/${item._id}`}
-                    className="font-medium text-grey-600 dark:text-grey-200 hover:underline"
+                    className="font-medium text-grey-600 border-[1px] border-[#ed6c0285] px-[16px] py-[6px] mr-3 rounded-[4px] text-[#ed6c02] hover:bg-[#ebeae885]"
                   >
-                    <EditOutlinedIcon />
+                    EDIT
+                    {/* <EditOutlinedIcon /> */}
                   </Link>
                 <button
                   onClick={() => handleDelete(item._id)}
-                  className="font-medium text-grey-600 dark:text-grey-200 hover:underline"
+
+                  className="font-medium text-grey-600 border-[1px] px-2 py-1 rounded-[4px] border-[#d32f2f] text-[#ed6c02] hover:bg-[#ebeae885] "
                 >
-                  <DeleteOutlineOutlinedIcon />
+                  {/* <DeleteOutlineOutlinedIcon /> */}
+                  DELETE
                 </button>
               </td>
             </tr>

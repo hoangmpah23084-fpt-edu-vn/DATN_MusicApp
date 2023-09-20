@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { useAppDispatch } from "@/store/hooks";
@@ -16,8 +17,11 @@ const AddArtist = () => {
   } = useForm({
     resolver: yupResolver(formArtist),
   });
-  const onSubmit: SubmitHandler<IArtist> = async (value) => {
-    // value.images = await handImage(value.images)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handOnSubmit: SubmitHandler<any> = async (value : IArtist) => {
+    value.images = await handImage(value.images)
+    console.log(value);
+    console.log("Lalala");
     const { payload } = await dispatch(handleAddArtist(value));
     if (payload) {
       alert(payload);
@@ -31,7 +35,7 @@ const AddArtist = () => {
       <h5>
         <b>Basic Information</b>
       </h5>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(handOnSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2">
             <div className="card mb-4 border-0 pb-6 py-4 md:border-gray-200 md:dark:border-gray-600 rounded-br-none rounded-bl-none card-border">
@@ -44,6 +48,7 @@ const AddArtist = () => {
                     {...register("name")}
                   />
                   <div className="text-sm text-red-500">
+                  {/* {errors.images?.message} */}
                     {errors.name?.message}
                   </div>
                 </div>
@@ -91,12 +96,11 @@ const AddArtist = () => {
           <div className="card mb-4 border-0 card-border grid grid-cols-1 md:grid-cols-1 gap-4">
             <div className="form-item vertical">
               <label className="form-label">Artist Image</label>
-              <div className="upload upload-draggable border rounded-md border-dashed border-2 outline-gray-200 hover:border-indigo-600">
+              <div className="upload upload-draggable rounded-md border-dashed border-2 outline-gray-200 hover:border-indigo-600">
                 <input
                   multiple
                   className="upload-input draggable"
                   type="file"
-                  accept="image/*"
                   {...register("images")}
                 />
                 <div className="my-16 text-center">

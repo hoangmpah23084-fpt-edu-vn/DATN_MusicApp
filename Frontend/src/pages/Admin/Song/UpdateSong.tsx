@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 import { getGenre } from '@/store/Reducer/genreReducer';
 import { handleGetArtist } from '@/store/Reducer/artistReducer';
 import { ifGenre } from '../Interface/validateAlbum';
+import { IArtist } from '../Interface/IArtist';
 
 
 const UpdateSong = () => {
@@ -45,8 +46,8 @@ const UpdateSong = () => {
     value.song_image = await handImage(value.song_image)
     const data = await dispatch(handUpdateSong(value));
     console.log(data);
+    alert("Cập nhật song thành công")
   }
-
 return (
     <>
     <Title Title='Add New Song' />
@@ -107,7 +108,7 @@ return (
                 {/* onChange={(e) => setGenre(e.target.value)} */}
                 <select required  {...register("id_Genre")} className='block w-full border-gray-300 rounded-lg' >
                     {
-                      genre.map((item : ifGenre) => <option value={item._id} selected>{item.name}</option>)
+                      genre.map((item : ifGenre) => <option key={item._id}  value={item._id} selected>{item.name}</option>)
                     }
                 </select>
               </div>
@@ -115,14 +116,14 @@ return (
               <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Artists</label>
                 <select required  {...register("id_Artists")}  className='block w-full border-gray-300 rounded-lg' >
                   {
-                    artist.map((item) => <option value={item._id} selected>{item.name}</option>)
+                    artist.map((item : IArtist) => <option key={item._id} value={item._id} selected>{item.name}</option>)
                   }
                 </select>
               </div>
             </div>
            </div>
            <div className='w-full h-[5%]'>
-           <button type='submit' className='bg-purple-500 text-white w-[100px] h-[85%] rounded-lg ' >Submit</button>
+           <button type='submit' className='bg-purple-500 text-white w-[100px] h-[85%] rounded-lg' >Submit</button>
            </div>
           </Box>
          </Box>

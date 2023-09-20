@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { getGenre } from '@/store/Reducer/genreReducer';
 import { ifGenre } from '../Interface/validateAlbum';
 import { handleGetArtist } from '@/store/Reducer/artistReducer';
+import { IArtist } from '../Interface/IArtist';
 
 
 const AddSong = () => {
@@ -52,6 +53,8 @@ return (
                 height : "10px"
               } }} />
             </BoxProduct>
+                 <p>{errors.song_image?.message}</p>
+
             <BoxProduct sx={{ width : "100%", height : "16%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Song Title</Typography>
               <TextField placeholder='Inter Song Title' type='text' helperText={errors.song_title?.message} {...register("song_title")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
@@ -60,7 +63,7 @@ return (
             </BoxProduct>
             <BoxProduct sx={{ width : "100%", height : "16%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Song Link</Typography>
-              <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}}  {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_image?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
+              <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}}  {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_link?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
@@ -94,19 +97,17 @@ return (
                 <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Genre</label>
                 <select required  {...register("id_Genre")} className='block w-full border-gray-300 rounded-lg' >
                 <option value={""} >Choose a Genre</option>
-
                   {
-                    genre.length > 0  ? genre.map((item : ifGenre) =>  <option value={item._id} >{item.name}</option> ) : ""
+                    genre.length > 0  ? genre.map((item : ifGenre) =>  <option key={item._id} value={item._id} >{item.name}</option> ) : ""
                   }
                 </select>
               </div>
               <div  >
-              {/* onChange={(e) => setArtist(e.target.value)} */}
               <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Artists</label>
                 <select required  {...register("id_Artists")} className='block w-full border-gray-300 rounded-lg' >
                 <option value={""} selected>Choose a Artists</option>
                   {
-                     artist.length > 0 ? artist.map(item => <option value={item._id} >{item.name}</option>) : ""
+                     artist.length > 0 ? artist.map((item : IArtist) => <option value={item._id} >{item.name}</option>) : ""
                   }
                 </select>
               </div>

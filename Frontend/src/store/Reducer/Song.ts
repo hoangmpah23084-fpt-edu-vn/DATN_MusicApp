@@ -1,5 +1,5 @@
-import { TypeSong, ifSong } from "@/pages/Admin/Interface/ValidateSong";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {  ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface initState {
@@ -13,8 +13,6 @@ const initialState: initState = {
     loading : false,
     song : []
 }
-
-
 export const handAddSong = createAsyncThunk("song/addSong", async (song : ifSong) => {
     //todo <{ message : string}> định nghĩa type cho giá trị trả về
     const {data} = await axios.post<{ message : string}>("http://localhost:8080/api/Song", song);
@@ -29,11 +27,13 @@ export const handDeleteSong = createAsyncThunk("song/deleteSong", async (id : st
     await axios.delete("http://localhost:8080/api/Song/"+ id) 
     return id
 })
-export const handUpdateSong = createAsyncThunk("song/updatesong", async (value : TypeSong) => {
+export const handUpdateSong = createAsyncThunk("song/updatesong", async (value : ifSong) => {
     const {_id , ...datafake} = value;
-    const {data} = await axios.put<{data : ifSong}>(`http://localhost:8080/api/Song/${_id}`, datafake) 
-    console.log(data);
-    return data.data
+    if (_id) {
+        const {data} = await axios.put<{data : ifSong}>(`http://localhost:8080/api/Song/${_id}`, datafake) 
+        return data.data
+    }
+
 })
 export const handGetOne = async (id : string) => {
     const {data} = await axios.get<{data : ifSong}>("http://localhost:8080/api/Song/"+ id)
@@ -64,8 +64,6 @@ const songReducer = createSlice({
         builder.addCase(handGetSong.rejected, (state, action) => {
             console.log(action);
             state.loading = true;
-            // state.error = action.payload;
-            // state.error = action.payload.message
         })
         builder.addCase(handDeleteSong.pending, (state) => {
             state.loading = true;
@@ -75,25 +73,25 @@ const songReducer = createSlice({
             state.song = state.song.filter(((song : ifSong) => song._id != action.payload))
             state.error = ""
         })
-        builder.addCase(handDeleteSong.rejected, (state, action) => {
-            console.log(action);
+        builder.addCase(handDeleteSong.rejected, (state) => {
             state.loading = true;
-            // state.error = action.payload;
-            // state.error = action.payload.message
         })
         builder.addCase(handUpdateSong.pending, (state) => {
             state.loading = true;
         })
         builder.addCase(handUpdateSong.fulfilled, (state, action) => {
-            state.loading = true;
-            state.song = state.song.map((song => song._id == action.payload._id ? action.payload : song))
-            state.error = ""
+            if (action.payload) {
+                const {_id} = action.payload;
+                state.loading = true;
+                // state.song = state.song.map(((song : ifSong) => song._id == _id ? action.payload : song))
+                const data = state.song.filter(((song : ifSong) => song._id != _id ))
+                state.song = [action.payload, ...data];
+                state.error = ""
+            }
         })
         builder.addCase(handUpdateSong.rejected, (state, action) => {
             console.log(action);
             state.loading = true;
-            // state.error = action.payload;
-            // state.error = action.payload.message
         })
     }
 })

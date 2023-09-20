@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import { useAppDispatch } from "@/store/hooks";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { IArtist, formArtist } from "../Interface/IArtist";
 import { handleGetOne, handleUpdateArtist } from "../../../store/Reducer/artistReducer";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,7 +12,7 @@ import { useParams } from 'react-router-dom';
 import Title from '../Title';
 
 const UpdateArtist = () => {
-  const [artist , setArtist] = React.useState<IArtist | null>(null);
+  const [artist , setArtist] = React.useState<IArtist>();
   const dispatch = useAppDispatch();
   const {id} = useParams<{id ?: string}>();
   useEffect(() => {
@@ -28,7 +29,8 @@ const UpdateArtist = () => {
   },[reset, artist])
   
 
-  const onSubmit = async (value : IArtist) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSubmit : SubmitHandler<any> = async (value : IArtist) => {
     value.images = await handImage(value.images)
     const data = await dispatch(handleUpdateArtist(value));
     console.log(data);
@@ -88,7 +90,7 @@ const UpdateArtist = () => {
                       <option value="2">Gieo</option>
                     </select>
                   </div>
-                  <div className="flex flex-col">
+                  {/* <div className="flex flex-col">
                     <label>List song</label>
                     <input
                       className="border border-gray-300 rounded-md p-2"
@@ -96,14 +98,14 @@ const UpdateArtist = () => {
                       {...register("songs")}
                     />
                     <div className="text-sm text-red-500">{errors.songs?.message}</div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
             <div className="card mb-4 border-0 card-border grid grid-cols-1 md:grid-cols-1 gap-4">
               <div className="form-item vertical">
                 <label className="form-label">Artist Image</label>
-                <div className="upload upload-draggable border rounded-md border-dashed border-2 outline-gray-200 hover:border-indigo-600">
+                <div className="upload upload-draggable rounded-md border-dashed border-2 outline-gray-200 hover:border-indigo-600">
                   <input
                     multiple 
                     className="upload-input draggable"
