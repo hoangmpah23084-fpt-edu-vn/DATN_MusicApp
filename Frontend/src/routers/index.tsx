@@ -1,5 +1,6 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
+import FavouritePage from "@/pages/Favourite/FavouritePage";
 import Artist from "@/pages/Admin/Artist/listArtist";
 import AddArtist from "@/pages/Admin/Artist/addArtist";
 import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
@@ -20,7 +21,9 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <LayoutClient />,
-    children: [{ index: true, element: <KhamPhaPage /> }],
+    children: [
+      { index: true, element: <KhamPhaPage /> },
+      { path: "mymusic/song/favorite", element: <FavouritePage /> }],
   },
   {
     path: "/album",

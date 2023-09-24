@@ -24,6 +24,13 @@
         "@/*": ["src/*"]
     }
   },
+  "compilerOpti`enter code here`ons": {
+    "lib": ["es6", "dom"],
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true
+  },
   "include": ["src", "../Backend/src/Config/cloudinary.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
+
