@@ -6,8 +6,9 @@ const ArtistValidate = new joi.object({
     "any.required": "Please enter name required",
   }),
   age: joi.number(),
-  images: joi.array().messages({
-    'string.base': 'Images must be a string',
+  images: joi.array().required().empty().messages({
+    "string.required": "image is Required",
+    "string.empty": "image is not allowed to be empty",
   }),
   description: joi.string(),
   album: joi.array().items(joi.string()),

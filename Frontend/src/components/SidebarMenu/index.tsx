@@ -22,7 +22,7 @@ import "./index.css"
 
 const SidebarMenu = () => {
   return (
-    <aside className=" fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[300px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e] ">
+    <aside className=" fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e] ">
       <nav className="zm-navbar ">
         <div className="zm-navbar-brand w-[240px] h-[70px] fixed top-0 pt-0 pr-[25px] pl-[28px] flex items-center">
           <div className="zm-navbar-item">
@@ -79,7 +79,7 @@ const SidebarMenu = () => {
 
       <div className="sidebar-divide relative h-[1px]"></div>
 
-      <div className="overflow-y-scroll h-[290px] mt-[16px] " id="style-scrollbar">
+      <div className="overflow-y-scroll h-[490px] mt-[16px] " id="style-scrollbar">
         <div className=" ">
           <nav>
             <ul className="">

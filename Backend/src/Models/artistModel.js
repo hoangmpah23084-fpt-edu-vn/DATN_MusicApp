@@ -2,14 +2,14 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const imageSchema = new mongoose.Schema({
-  url: {
-    type: String,
-  },
-  // public_id: {
-  //   type: String,
-  // },
-});
+// const imageSchema = new mongoose.Schema({
+//   url: {
+//     type: String,
+//   },
+//   // public_id: {
+//   //   type: String,
+//   // },
+// });
 
 const artistSchema = new Schema(
   {
@@ -23,7 +23,12 @@ const artistSchema = new Schema(
       required: true,
     },
 
-    images: [imageSchema],
+    images: [
+      {
+        type: Object,
+        required: true,
+      },
+    ],
 
     description: {
       type: String,

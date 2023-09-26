@@ -12,12 +12,14 @@ const Album = new mongoose.Schema(
         ref: "Song",
       },
     ],
-    id_artist: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Artists",
-    },
+    id_artist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Artists",
+      },
+    ],
   },
   { versionKey: false, timestamps: true }
 );
 
-export default mongoose.model("Album", Album, 'Album');
+export default mongoose.model("Album", Album, "Album");

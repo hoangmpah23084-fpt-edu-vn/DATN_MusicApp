@@ -12,7 +12,7 @@ type Props = {};
 
 const Header = (props: Props) => {
   return (
-    <div className="flex h-[70px] items-center fixed bg-[#170f23] ml-[300px] z-50 w-full" >
+    <div className="flex h-[70px] items-center fixed bg-[#170f23] ml-[240px] z-50 w-full" >
       <div className="flex items-center z-1 w-[100%]">
         <div className="flex">
           <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] flex items-center h-[40px]" />
