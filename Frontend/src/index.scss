@@ -14,6 +14,21 @@
   right: 25px;
   top: 0;
 }
+.wall{
+  &:hover{
+    .wallSong{
+      img{
+        filter: brightness(80%);
+      }
+    }
+    .pause{
+      visibility: visible;
+    }
+  }
+  .pause{
+    visibility: hidden;
+  }
+}
 @layer components {
   .fjc {
     display: flex;
