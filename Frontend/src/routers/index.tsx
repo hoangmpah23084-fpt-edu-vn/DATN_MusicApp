@@ -15,9 +15,14 @@ import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 import Album from "@/pages/Album/Album";
+import Signnup from "@/pages/Register/Signup";
 
 export const router = createBrowserRouter([
   //todo FE
+  {
+    path: "/signup",
+    element: <Signnup/>
+  },
   {
     path: "/",
     element: <LayoutClient />,
