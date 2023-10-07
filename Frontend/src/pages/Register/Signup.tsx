@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 
 
-import { useForm } from "react-hook-form"
+import {  useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { SignupForm, SignupSchema } from "../Admin/Interface/validateAuth"
 import { useNavigate } from "react-router-dom"
@@ -14,23 +15,19 @@ const Signup = () => {
             resolver: yupResolver(SignupSchema)
         }
     )
-
     const navigate = useNavigate()
 
     const onSubmit = async (data: SignupForm)=> {
        try {
         const response = await signup(data)
         console.log(response);
-        navigate('/signin')
-        
+        navigate('/signin');
     } catch (error) {
         console.log(error);
         
        }
 
     }
-    
-
     return <>
         <section className="bg-white">
             <div className="lg:grid lg:min-h-screen lg:grid-cols-12">

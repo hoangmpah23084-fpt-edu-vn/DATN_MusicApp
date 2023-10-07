@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 
-import { useForm } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { useNavigate } from "react-router-dom";
@@ -24,7 +25,7 @@ const SigninSchema = yup.object().shape({
 });
 
 const Signin = () => {
-  const { register, handleSubmit, formState } = useForm<SigninForm>({
+  const { register, handleSubmit, formState : {errors} } = useForm<SigninForm>({
     resolver: yupResolver(SigninSchema),
   });
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const Signin = () => {
   }
 
   // Initialize user with an empty object of User type
-  const [user, setUser] = useLocalStorage<User>("user", {});
+  const [user, setUser] = useLocalStorage<User>("user", undefined);
 
   const onSubmit = async (data: SigninForm) => {
     try {
@@ -49,14 +50,12 @@ const Signin = () => {
 
       if ("accessToken" in response && "user" in response) {
         const { accessToken, user } = response as User;
-
         setUser({
           accessToken,
           user: {
             ...user,
           },
         });
-
         if (user.role !== "admin") {
           navigate("/");
         } else {
