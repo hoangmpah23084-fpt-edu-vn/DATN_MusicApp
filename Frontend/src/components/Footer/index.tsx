@@ -24,11 +24,10 @@ export const useStyles = makeStyles(() => createStyles({
 }));
 type Props = {
   setSideBarRight : Dispatch<SetStateAction<boolean>>,
-  globalPause : boolean,
-  setGlobalPause : Dispatch<SetStateAction<boolean>>
+  // globalPause : boolean,
+  // setGlobalPause : Dispatch<SetStateAction<boolean>>
 }
 const Footer = (props : Props) => {
-  const [pause, setpause] = React.useState(false);
   const [duration, setDuration] = React.useState<number>(0);
   const [currentTime , setCurrentTime] = React.useState('');
   const [rewindAudio , setRewindAudio] = React.useState<number>(0);
@@ -40,20 +39,25 @@ const Footer = (props : Props) => {
   const rewindRef = React.useRef<HTMLAudioElement>(null);
   const classes = useStyles();
   const [intervalId, setIntervalId] = React.useState<number | null>(null);
-  const { linkSong } = SongStateContext();
+  const { linkSong, setGlobalPause, globalPause } = SongStateContext();
+  
+
+  useEffect(() => {
+    console.log('-- linkSong  = ', linkSong)
+  }, [linkSong])
+  
 
   const handPause = React.useCallback(() => {
-    props.setGlobalPause((pause) => !pause);
+    setGlobalPause((pause) => !pause);
     const id = setInterval(() => {
       audioRef.current && setRewindAudio(audioRef.current?.currentTime);
       audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
     }, 1000);
     setIntervalId(id);
-  }, [props]);
+  }, [setGlobalPause]);
   const handChangeVolume = (event: any, value: any) => {
     setVolume(value as number);
   }
-
   const handTurnVolume = () => {
     setTurnVolume((item) => !item);
     if (turnVolume == false) {
@@ -63,12 +67,13 @@ const Footer = (props : Props) => {
     }
   }
   const stopPause = React.useCallback(() => {
-    props.setGlobalPause((pause) => !pause);
+    setGlobalPause((pause) => !pause);
     if (intervalId !== null) {
       clearInterval(intervalId);
       setIntervalId(null); // Đặt lại intervalId về null khi dừng
     }
-  }, [intervalId, props]);
+  }, [intervalId, setGlobalPause]);
+
   function SeconToMinuste(giay : number) {
     const currentSecon= Number(giay.toFixed(0));
     let minute = Math.floor(currentSecon / 60);
@@ -89,8 +94,9 @@ const Footer = (props : Props) => {
     audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
     setRewindAudio(value as number);
   }
+  
   React.useEffect(() => {
-    props.globalPause ? audioRef.current?.play() : audioRef.current?.pause();
+    globalPause ? audioRef.current?.play() : audioRef.current?.pause();
     setDuration(audioRef.current?.duration as number);
     audioRef.current && (audioRef.current.loop = repeat);
     audioRef.current && (audioRef.current.volume = (volume / 100));
@@ -100,7 +106,7 @@ const Footer = (props : Props) => {
         setRewindAudio(audioRef.current.currentTime);
       }
     });
-  },[pause, repeat, volume, linkSong, props.globalPause])
+  },[repeat, volume, linkSong, globalPause])
   
   return (
     <div className="fixed z-50 w-[100%] bottom-0 bg-[#170f23]">
@@ -184,9 +190,9 @@ const Footer = (props : Props) => {
                 </div>
 
                 <div className="w-[24%] h-[100%] ">
-                  <PauseListItemButtonStyle onClick={() => pause ?  stopPause() : handPause()} >
+                  <PauseListItemButtonStyle onClick={() => globalPause ?  stopPause() : handPause()} >
                     <PauseListItemIconStyle>
-                      {props.globalPause ?  <PauseIcon className={classes.root} /> : <PlayArrowIcon className={classes.root} />}
+                      {globalPause ?  <PauseIcon className={classes.root} /> : <PlayArrowIcon className={classes.root} />}
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>

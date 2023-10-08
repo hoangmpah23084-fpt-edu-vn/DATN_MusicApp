@@ -20,8 +20,10 @@ const LayoutClient = () => {
         <div className="ml-[300px] relative w-[100%] h-[80%] overscroll-y-auto">
           <Outlet />
         </div>
-        <SidebarSong sideBarRight={sideBarRight} setGlobalPause={setGlobalPause} globalPause={globalPause} />
-        <Footer setSideBarRight={setSideBarRight} globalPause={globalPause} setGlobalPause={setGlobalPause} />
+        {/* <SidebarSong sideBarRight={sideBarRight}  globalPause={globalPause} setGlobalPause={setGlobalPause}  /> */}
+        <SidebarSong sideBarRight={sideBarRight} />
+        <Footer setSideBarRight={setSideBarRight}  />
+        {/* <Footer setSideBarRight={setSideBarRight} globalPause={globalPause} setGlobalPause={setGlobalPause} /> */}
       </div>
     </>
   );
