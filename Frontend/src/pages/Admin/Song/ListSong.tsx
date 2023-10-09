@@ -9,20 +9,20 @@ import { Link } from 'react-router-dom';
 const ListSong = () => {
   const dispatch = useAppDispatch();
   const {song} = useAppSelector(({Song}) => Song);
+
+  
 // console.log(song);
 
   useEffect(() => {
     void dispatch(handGetSong())
   }, [dispatch])
     const handleDelete = (id: string) => {
-    // Thực hiện các thao tác xóa tại đây, ví dụ: dispatch(handDeleteSong(id))
     if (confirm("Bạn có chắc chắn muốn xóa không ? ")) {
      void  dispatch(handDeleteSong(id));
     }
   };
 
   const columns: GridColDef[] = [
-    // { field: '_id', headerName: '_id', flex : 0.5, headerAlign: 'center',align: 'center' },
     { field: 'song_name', headerName: 'Name ', flex : 1, headerAlign: 'center',align: 'center' },
     { field: 'song_singer', headerName: 'Singer', flex : 1, headerAlign: 'center',align: 'center' },
     { field: 'song_title', headerName: 'Title', flex : 1, headerAlign: 'center',align: 'center' },

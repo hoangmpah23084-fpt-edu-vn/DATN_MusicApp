@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import Title from '../Title'
 import { Box, TextField, Typography } from '@mui/material'
 import { BoxProduct, BoxUpload } from '@/Mui/Component/Product'
@@ -5,18 +6,28 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SongSchame, ifSong } from '../Interface/ValidateSong';
 import { handImage, handleFileUpload } from '@/Mui/Component/handUpload';
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { handAddSong } from '@/store/Reducer/Song';
+import { useEffect } from 'react';
+import { getGenre } from '@/store/Reducer/genreReducer';
+import { ifGenre } from '../Interface/validateAlbum';
+import { handleGetArtist } from '@/store/Reducer/artistReducer';
+import { IArtist } from '../Interface/IArtist';
 
 
 const AddSong = () => {
-  // const [genre , setGenre] = React.useState<string>("");
-  // const [artist , setArtist] = React.useState<string>("");
   const dispatch = useAppDispatch();
+  const {genre} = useAppSelector(({genre}) => genre);
+  const {artist} = useAppSelector(({artist}) => artist);
+  useEffect(() => {
+   void dispatch(getGenre());
+   void dispatch(handleGetArtist())
+  },[dispatch])
   const {register, handleSubmit, formState : {errors}} = useForm({
     resolver : yupResolver(SongSchame)
   });
-  const handSubmitHandler : SubmitHandler<ifSong> = async (value) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handSubmitHandler : SubmitHandler<any> = async (value : ifSong) => {
     value.song_link = await handleFileUpload(value.song_link);
     value.song_image = await handImage(value.song_image)
     const {payload} = await dispatch(handAddSong(value));
@@ -24,7 +35,6 @@ const AddSong = () => {
       alert(payload)
     }
   }
-
 return (
     <>
     <Title Title='Add New Song' />
@@ -43,6 +53,8 @@ return (
                 height : "10px"
               } }} />
             </BoxProduct>
+                 <p>{errors.song_image?.message}</p>
+
             <BoxProduct sx={{ width : "100%", height : "16%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Song Title</Typography>
               <TextField placeholder='Inter Song Title' type='text' helperText={errors.song_title?.message} {...register("song_title")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
@@ -51,11 +63,9 @@ return (
             </BoxProduct>
             <BoxProduct sx={{ width : "100%", height : "16%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Song Link</Typography>
-              {/* asdadasdasdasd */}
-              <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}}  {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_image?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
+              <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}}  {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_link?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
-              {/* <input type='file' multiple onChange={handImage} /> */}
             </BoxProduct>
             <BoxProduct sx={{ width : "100%", height : "16%" }} >
               <Typography sx={{ padding : "8px 0px" }}  >Song Singer</Typography>
@@ -86,18 +96,19 @@ return (
               {/* onChange={(e) => setGenre(e.target.value)} */}
                 <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Genre</label>
                 <select required  {...register("id_Genre")} className='block w-full border-gray-300 rounded-lg' >
-                    <option value={""} selected>Choose a Genre</option>
-                    <option value="64e239e9e5a2f10db4134352">Genre1</option>
-                    <option value="CA">Canada</option>
+                <option value={""} >Choose a Genre</option>
+                  {
+                    genre.length > 0  ? genre.map((item : ifGenre) =>  <option key={item._id} value={item._id} >{item.name}</option> ) : ""
+                  }
                 </select>
               </div>
               <div  >
-              {/* onChange={(e) => setArtist(e.target.value)} */}
               <label  className="block mb-2 font-bold text-sm  text-gray-500 dark:text-white">Select Artists</label>
                 <select required  {...register("id_Artists")} className='block w-full border-gray-300 rounded-lg' >
-                    <option value={""} selected>Choose a Artists</option>
-                    <option value="64c293500827f19d6cdde734">Artist 1</option>
-                    <option value="CA">Canada</option>
+                <option value={""} selected>Choose a Artists</option>
+                  {
+                     artist.length > 0 ? artist.map((item : IArtist) => <option value={item._id} >{item.name}</option>) : ""
+                  }
                 </select>
               </div>
             </div>
@@ -131,14 +142,6 @@ return (
                   }} >
 
           </TextField>
-          {/* <input type="file" accept=".mp3" onChange={handleFileUpload} style={{width : "100%", height : "100%", display :"block",
-                 position : "absolute",
-                 cursor: "pointer",
-                 opacity: 0,
-                 inset : "0px",
-                 fontSize : "100%",
-                 }} /> */}
-                     {/* {uploadedVideo && <Video cloudName="dsbiugddk" publicId={uploadedVideo} />} */}
             <Box sx={{ textAlign : "center", margin : "4rem 0rem" }} >
               <img src="../../../../public/Image/upload.png" alt="" style={{marginLeft: "auto", marginRight : "auto", maxWidth : "100%" , height : "auto", display : "block", verticalAlign : "middle"}} />
               <Typography variant='body1'><span style={{fontWeight : 600}} >Drop your Video here, or </span><span style={{fontWeight : 600, color : "#1D5D9B"}} > browse</span></Typography>

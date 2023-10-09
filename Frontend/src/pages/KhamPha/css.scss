@@ -1,0 +1,53 @@
+.gallery-item {
+  padding: 0 15px;
+  img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    height: 100%;
+  }
+}
+
+.container {
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+}
+
+.swiper-slide {
+  width: 450px !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  width: 55px !important;
+  height: 55px !important;
+  border-radius: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #fff !important;
+  margin-top: 0 !important;
+  background-color: hsla(0, 0%, 100%, 0.15) !important;
+  box-shadow: 0 2px 4px 0 rgba(226, 102, 102, 0.15) !important;
+}
+
+.swiper-button-prev {
+  left: 25px !important;
+}
+
+.swiper-button-next {
+  right: 25px !important;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 20px !important;
+  color: #fff;
+}
+.gallery-container:hover .swiper-button-prev,
+.gallery-container:hover .swiper-button-next {
+}
+
+
+
+
+

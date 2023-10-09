@@ -2,15 +2,6 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-// const imageSchema = new mongoose.Schema({
-//   url: {
-//     type: String,
-//   },
-//   // public_id: {
-//   //   type: String,
-//   // },
-// });
-
 const artistSchema = new Schema(
   {
     name: {

@@ -16,13 +16,13 @@ import {
 } from "react-icons/ai";
 import { MdLibraryMusic } from "react-icons/md";
 import { Link } from "react-router-dom";
-import "./index.css"
+import "./index.scss"
 
 // type Props = {};
 
 const SidebarMenu = () => {
   return (
-    <aside className=" fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e] ">
+    <aside className="fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e] z-0">
       <nav className="zm-navbar ">
         <div className="zm-navbar-brand w-[240px] h-[70px] fixed top-0 pt-0 pr-[25px] pl-[28px] flex items-center">
           <div className="zm-navbar-item">
@@ -32,7 +32,6 @@ const SidebarMenu = () => {
           </div>
         </div>
       </nav>
-
       <div className=" mb-[16px]">
         <ul className=" ">
           <li className="bg-[#3a3244] border-l-2 border-l-[#9b4de0]">

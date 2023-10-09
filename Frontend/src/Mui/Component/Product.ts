@@ -1,10 +1,14 @@
-import { styled, Box, TextField } from "@mui/material";
+import { styled, Box, TextField, Typography } from "@mui/material";
 
 
 export const BoxProduct = styled(Box)(() => ({
     width : "100%",
-    height : "13%"
+    height : "16%"
 }))
+export const TypographySong = styled(Typography)(() => ({
+    padding : "8px 0px"
+}))
+
 export const BoxUpload = styled(Box)(() => ({
     width : "100%",
     height: "25%",
