@@ -24,8 +24,6 @@ export const useStyles = makeStyles(() => createStyles({
 }));
 type Props = {
   setSideBarRight : Dispatch<SetStateAction<boolean>>,
-  // globalPause : boolean,
-  // setGlobalPause : Dispatch<SetStateAction<boolean>>
 }
 const Footer = (props : Props) => {
   const [duration, setDuration] = React.useState<number>(0);
@@ -39,12 +37,10 @@ const Footer = (props : Props) => {
   const rewindRef = React.useRef<HTMLAudioElement>(null);
   const classes = useStyles();
   const [intervalId, setIntervalId] = React.useState<number | null>(null);
-  const { linkSong, setGlobalPause, globalPause } = SongStateContext();
-  
-
+  const { linkSong, setLinkSong,setGlobalPause, globalPause } = SongStateContext();
   useEffect(() => {
-    console.log('-- linkSong  = ', linkSong)
-  }, [linkSong])
+    // console.log('-- linkSong  = ', linkSong)
+  }, [linkSong, setLinkSong])
   
 
   const handPause = React.useCallback(() => {
@@ -68,6 +64,7 @@ const Footer = (props : Props) => {
   }
   const stopPause = React.useCallback(() => {
     setGlobalPause((pause) => !pause);
+    localStorage.removeItem("song");
     if (intervalId !== null) {
       clearInterval(intervalId);
       setIntervalId(null); // Đặt lại intervalId về null khi dừng
