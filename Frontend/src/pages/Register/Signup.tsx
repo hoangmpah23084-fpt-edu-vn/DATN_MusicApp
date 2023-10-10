@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 
 
 import { useForm, SubmitHandler } from "react-hook-form"
