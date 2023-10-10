@@ -1,6 +1,6 @@
 
 
-import { useForm } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { SignupForm, SignupSchema } from "../Admin/Interface/validateAuth"
 import { useNavigate } from "react-router-dom"
@@ -14,22 +14,21 @@ const Signup = () => {
             resolver: yupResolver(SignupSchema)
         }
     )
-
-    const navigate = useNavigate()
-
-    const onSubmit = async (data: SignupForm)=> {
-       try {
-        const response = await signup(data)
-        console.log(response);
-        navigate('/signin')
-        
-    } catch (error) {
-        console.log(error);
-        
-       }
-
-    }
     
+        
+   
+    const navigate = useNavigate()
+    const onSubmit : SubmitHandler<any> = async (data) => {
+        try {
+            await signup(data)
+            navigate("/signin")
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+     
+
 
     return <>
         <section className="bg-white">
@@ -106,13 +105,14 @@ const Signup = () => {
                             </p>
                         </div>
 
-                        <form action="#" className="mt-8 grid grid-cols-6 gap-6" onSubmit={handleSubmit(onSubmit)}>
+
+                        <form className="mt-8 grid grid-cols-6 gap-6" onSubmit={handleSubmit(onSubmit)}>
                             <div className="col-span-6 sm:col-span-3">
                                 <label
                                     htmlFor="FirstName"
                                     className="block text-sm font-medium text-gray-700"
                                 >
-                                  Name
+                                    Name
                                 </label>
 
                                 <input
@@ -120,25 +120,7 @@ const Signup = () => {
                                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
                                 <p className="text-red-600 text-[20px]">{errors.fullName && errors.fullName.message}</p>
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                    htmlFor="LastName"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Role
-                                </label>
-
-                                <input
-                                    {...register("role", { required: true })}
-
-                                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                                />
-                                <p className="text-red-600 text-[20px]">{errors.role && errors.role.message}</p>
-
-                            </div>
-
+                            </div>                 
                             <div className="col-span-6">
                                 <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
                                     Email
