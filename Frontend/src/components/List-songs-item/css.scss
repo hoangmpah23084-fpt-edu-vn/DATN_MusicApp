@@ -1,0 +1,56 @@
+// hover vào icon trái tim và 3 chấm
+.btn-hear:hover {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+
+// hover scale image
+.list-items .card-image img {
+  transition: all 0.7s;
+}
+
+.list-items .card-image:hover img {
+  transform: scale(1.1);
+}
+
+// hover overlay, btn tim, btn 3 chấm, btn play xuất hiện
+.media:hover .hover-items {
+  display: block;
+}
+
+.media:hover .overlay {
+  display: block;
+}
+
+.media:hover .action-container {
+  display: block;
+}
+
+.order {
+  opacity: 0.4;
+  -webkit-text-stroke: 1px #fff;
+  font-size: 40px;
+  font-weight: 900;
+  color: transparent;
+  line-height: 1;
+  font-family: "Roboto", sans-serif;
+}
+
+.song-prefix .number {
+  font-size: 30px;
+  font-weight: 900;
+  color: transparent;
+  line-height: 1;
+  font-family: "Roboto", sans-serif;
+}
+
+.is-top-1 {
+  -webkit-text-stroke: 1px #4a90e2;
+}
+
+// .is-top-2 {
+//   -webkit-text-stroke: 1px #50e3c2;
+// }
+
+// .is-top-2 {
+//   -webkit-text-stroke: 1px #e35050;
+// }

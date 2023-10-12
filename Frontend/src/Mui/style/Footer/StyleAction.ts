@@ -9,6 +9,7 @@ const ListItemButtonStyle = styled(ListItemButton)({
     justifyContent : "center",
     alignItems : "center",
     " .MuiTouchRipple-root" : {
+        display: "none",
         width : "37px",
         height : "36px",
         transform: "translate(3px, 4px)",
@@ -35,10 +36,8 @@ const PauseListItemButtonStyle = styled(ListItemButton)({
     display : "flex",
     justifyContent : "center",
     alignItems : "center",
-    " .MuiTouchRipple-root" : {
-        width : "40px",
-        height : "40px",
-        transform: "translate(10px, 4px)",
+    "& .MuiTouchRipple-root" : {
+        display : "none"
     }
 });
 const PauseListItemIconStyle = styled(ListItemIcon)({

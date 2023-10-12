@@ -14,10 +14,7 @@
   width: 100%;
 }
 
-.swiper-slide {
-  width: 450px !important;
-}
-
+//slide image
 .swiper-button-prev,
 .swiper-button-next {
   width: 55px !important;
@@ -43,11 +40,52 @@
   font-size: 20px !important;
   color: #fff;
 }
-.gallery-container:hover .swiper-button-prev,
-.gallery-container:hover .swiper-button-next {
+
+.suggested-list-songs span,
+.suggested-list-songs .card-title a {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
+.chart-home .header a {
+  background: radial-gradient(
+      50% 124.93% at 95.86% -10%,
+      #3efad9 0,
+      hsla(0, 0%, 100%, 0) 100%
+    ),
+    linear-gradient(91.56deg, #ff9357 1.54%, #9100ff 98.71%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
+.bg-blur {
+  background-color: #2b273f;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
 
+.bg-alpha {
+  background-color: rgba(51, 16, 76, 0.95);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
 
+// week-chart
+.week-chart .card-image img {
+  transition: all .7s;
+}
+
+.week-chart .card-image:hover img {
+  transform: scale(1.1);
+}
 

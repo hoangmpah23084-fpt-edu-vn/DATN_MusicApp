@@ -14,6 +14,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
+import BarChart from "@/components/Barchart";
 
 export const router = createBrowserRouter([
   //todo FE
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
     element: <LayoutClient />,
     children: [
       { index: true, element: <KhamPhaPage /> },
+      { path: "/test", element: <BarChart /> },
       { path: "mymusic/song/favorite", element: <FavouritePage /> }],
   },
 

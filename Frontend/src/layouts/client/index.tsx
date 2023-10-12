@@ -5,18 +5,25 @@ import SidebarMenu from "@/components/SidebarMenu";
 import Footer from "@/components/Footer";
 // import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { Outlet } from "react-router-dom";
+import SidebarSong from "@/components/SidebarSong";
 
 
 const LayoutClient = () => {
+  const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const [globalPause, setGlobalPause] = React.useState<boolean>(false);
+
   return (
     <>
-      <div className="flex w-[100%] bg-[#170f23]">
+      <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
         <SidebarMenu />
         <Header />
         <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
-        <Footer />
+        {/* <SidebarSong sideBarRight={sideBarRight}  globalPause={globalPause} setGlobalPause={setGlobalPause}  /> */}
+        <SidebarSong sideBarRight={sideBarRight} />
+        <Footer setSideBarRight={setSideBarRight}  />
+        {/* <Footer setSideBarRight={setSideBarRight} globalPause={globalPause} setGlobalPause={setGlobalPause} /> */}
       </div>
     </>
   );

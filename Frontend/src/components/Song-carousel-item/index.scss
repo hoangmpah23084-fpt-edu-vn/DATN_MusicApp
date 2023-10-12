@@ -6,3 +6,29 @@ span {
   text-overflow: ellipsis;
   word-break: break-word;
 }
+
+.carousel-item .card-image a {
+  overflow: hidden;
+}
+
+.carousel-item .card-image img {
+  transition: all 0.7s;
+}
+
+.carousel-item .card-image:hover img {
+  transform: scale(1.1);
+}
+
+.carousel-item .card-image:hover .overlay,
+.carousel-item .card-image:hover .action-container {
+  display: block;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.btn-hear:hover {
+  background-color: rgba(204, 204, 204, 0.2);
+}
+

@@ -1,6 +1,8 @@
-import express from "express"
-import { createFavourites, getFavourites } from "../Controllers/songFavourites.js";
-
+import express from "express";
+import {
+  createFavourites,
+  getFavourites,
+} from "../Controllers/songFavourites.js";
 
 const router = express.Router();
 
