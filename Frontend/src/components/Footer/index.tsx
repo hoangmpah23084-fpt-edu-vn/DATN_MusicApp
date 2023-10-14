@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -26,24 +26,20 @@ type Props = {
   setSideBarRight : Dispatch<SetStateAction<boolean>>,
 }
 const Footer = (props : Props) => {
-  const [duration, setDuration] = React.useState<number>(0);
-  const [currentTime , setCurrentTime] = React.useState('');
-  const [rewindAudio , setRewindAudio] = React.useState<number>(0);
-  const [volume , setVolume] = React.useState<number>(50);
-  const [sideBarRight , setSideBarRight] = React.useState<boolean>(false);
+  const [duration, setDuration] = useState<number>(0);
+  const [currentTime , setCurrentTime] = useState('');
+  const [rewindAudio , setRewindAudio] = useState<number>(0);
+  const [volume , setVolume] = useState<number>(50);
   const [turnVolume, setTurnVolume] = useState(false);
-  const [repeat , setRepeat] = React.useState(false);
-  const audioRef = React.useRef<HTMLAudioElement>(null);
-  const rewindRef = React.useRef<HTMLAudioElement>(null);
+  const [repeat , setRepeat] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
-  const [intervalId, setIntervalId] = React.useState<number | null>(null);
-  const { linkSong, setLinkSong,setGlobalPause, globalPause } = SongStateContext();
-  useEffect(() => {
-    // console.log('-- linkSong  = ', linkSong)
-  }, [linkSong, setLinkSong])
-  
+  const [intervalId, setIntervalId] = useState<number | null>(null);
+  const { linkSong, setLinkSong,setGlobalPause, globalPause, dataSong, setDataSong } = SongStateContext();
 
-  const handPause = React.useCallback(() => {
+  
+  const startPause = useCallback(() => {
     setGlobalPause((pause) => !pause);
     const id = setInterval(() => {
       audioRef.current && setRewindAudio(audioRef.current?.currentTime);
@@ -51,9 +47,15 @@ const Footer = (props : Props) => {
     }, 1000);
     setIntervalId(id);
   }, [setGlobalPause]);
+
+  useEffect(() => {
+    console.log("haha");
+  }, [linkSong, setLinkSong, setDataSong, dataSong, startPause, startPause]);
+
   const handChangeVolume = (event: any, value: any) => {
     setVolume(value as number);
   }
+  
   const handTurnVolume = () => {
     setTurnVolume((item) => !item);
     if (turnVolume == false) {
@@ -62,7 +64,7 @@ const Footer = (props : Props) => {
       setVolume(50)
     }
   }
-  const stopPause = React.useCallback(() => {
+  const stopPause = useCallback(() => {
     setGlobalPause((pause) => !pause);
     localStorage.removeItem("song");
     if (intervalId !== null) {
@@ -72,13 +74,17 @@ const Footer = (props : Props) => {
   }, [intervalId, setGlobalPause]);
 
   function SeconToMinuste(giay : number) {
-    const currentSecon= Number(giay.toFixed(0));
-    let minute = Math.floor(currentSecon / 60);
-    const Secon = currentSecon % 60;
-    minute = minute % 60;
-    const minusteString = minute.toString().padStart(2,'0');
-    const SeconString = Secon.toString().padStart(2, '0');
-    return minusteString + ':' + SeconString;
+    if (giay) {
+      const currentSecon= Number(giay.toFixed(0));
+      let minute = Math.floor(currentSecon / 60);
+      const Secon = currentSecon % 60;
+      minute = minute % 60;
+      const minusteString = minute.toString().padStart(2,'0');
+      const SeconString = Secon.toString().padStart(2, '0');
+      return minusteString + ':' + SeconString;
+    }else{
+      return "00:00"
+    }
   }
   const handRewindAudio = (event: any, value: any) => {
     rewindRef.current && rewindRef.current.addEventListener("mouseup", () => {
@@ -92,7 +98,7 @@ const Footer = (props : Props) => {
     setRewindAudio(value as number);
   }
   
-  React.useEffect(() => {
+  useEffect(() => {
     globalPause ? audioRef.current?.play() : audioRef.current?.pause();
     setDuration(audioRef.current?.duration as number);
     audioRef.current && (audioRef.current.loop = repeat);
@@ -168,7 +174,7 @@ const Footer = (props : Props) => {
           </div>
         </div>
         <div className="w-[60%] h-[100%] fjc">
-          <div className="w-[65%] h-[100%] ">
+          <div className="w-[70%] h-[100%] ">
             <div className="w-[100%] h-[70%] fjc">
               <div className="w-[40%] min-w-[200px] h-[75%] flex">
                 <div className="w-[19%] h-[100%] ">
@@ -187,7 +193,7 @@ const Footer = (props : Props) => {
                 </div>
 
                 <div className="w-[24%] h-[100%] ">
-                  <PauseListItemButtonStyle onClick={() => globalPause ?  stopPause() : handPause()} >
+                  <PauseListItemButtonStyle onClick={() => globalPause ?  stopPause() : startPause()} >
                     <PauseListItemIconStyle>
                       {globalPause ?  <PauseIcon className={classes.root} /> : <PlayArrowIcon className={classes.root} />}
                     </PauseListItemIconStyle>
@@ -233,7 +239,7 @@ const Footer = (props : Props) => {
                    }} value={rewindAudio} max={duration} ref={rewindRef} onChange={handRewindAudio}  />
                 </div>
                 <div className="w-[6%] h-full fjc">
-                {audioRef.current ? SeconToMinuste(audioRef.current?.duration) : "--:--" }
+                {audioRef.current ? SeconToMinuste(audioRef.current?.duration) : 0 }
                 </div>
               </div>
             </div>
@@ -273,7 +279,6 @@ const Footer = (props : Props) => {
                   <ListItemButtonStyle sx={{ "& .MuiTouchRipple-root" : {
                     display: "none"
                   } }}  onClick={() => {
-                    setSideBarRight((value) => !value)
                     props.setSideBarRight(value => !value);
                   }} >
                     <ListItemIconStyle sx={{ backgroundColor : "#9B4DE0", borderRadius : "5px", 

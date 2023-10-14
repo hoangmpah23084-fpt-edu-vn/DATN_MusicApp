@@ -17,7 +17,7 @@ export interface ifSong {
     song_name: string;
     song_title: string;
     song_link: string[] | string | undefined;
-    song_image: string[] | undefined;
+    song_image: string[] ;
     song_singer: string;
     song_musian: string;
     song_lyric: string;

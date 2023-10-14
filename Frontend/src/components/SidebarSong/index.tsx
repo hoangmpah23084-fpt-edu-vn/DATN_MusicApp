@@ -8,75 +8,59 @@ import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { useStyles } from '../Footer';
 import { SongStateContext } from '../Context/SongProvider';
+import { handGetSong } from '@/store/Reducer/Song';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { ifSong } from '@/pages/Admin/Interface/ValidateSong';
 type Props = {
   sideBarRight: boolean,
 }
 
-const dataFake = [
-  {
-    id : 1,
-    title: 'tile 1',
-    link : "https://res.cloudinary.com/dsbiugddk/video/upload/v1695006432/audiofiles/q1wkpzc0dnvotblkk1le.mp3",
-    state : false,
-  },
-  {
-    id : 2,
-    title: 'title 2',
-    link : "https://res.cloudinary.com/dsbiugddk/video/upload/v1695049634/audiofiles/hwns7m56wj6tzs0necjz.mp3",
-    state : false,
-  }
-]
-interface IfData {
-  id : number,
-  link :string,
-  title :string,
-  state : boolean,
-}
-
 const SidebarSong = (props: Props) => {
   const [stateColor , setStateColor] = React.useState<boolean>(true);
-  const [pause , setPause] = React.useState<boolean>(true);
-  const [linkSongOld , setLinkSongOld] = React.useState<string>('');
-  const [dataLocal, setDataLocal] = React.useState<IfData | undefined>(undefined)
+  // const [pause , setPause] = React.useState<boolean>(false);
+  const [dataLocal, setDataLocal] = React.useState<ifSong | undefined>(undefined)
+  const dispatch = useAppDispatch();
+  const renderListSong = useAppSelector(({Song}) => Song);
   const classes = useStyles();
-  const {  setLinkSong , setIndexLink, data, setData, setGlobalPause, globalPause } = SongStateContext();
-  const stopPause = React.useCallback((value : IfData) => {
-    console.log(' .test pause');
-    console.log(value);
-    localStorage.removeItem("song");
+  
+  const {setLinkSong , setIndexLink, setDataSong, setGlobalPause, globalPause } = SongStateContext();
+  const stopPause = React.useCallback((value : ifSong) => {
     setDataLocal(undefined);
-    setPause(state => !state)
-    setLinkSong(value.link);
-    console.log("hahaha");
-    setLinkSongOld(value.link)
-    setGlobalPause(item => !item);
-  },[props, setLinkSong, setGlobalPause, globalPause]);
+    // setPause(item => !item)
+    setLinkSong(value.song_link as string);
+    setGlobalPause(false);
+  },[setLinkSong, setGlobalPause]);
+
   useEffect(() => { // init data
-    setData(dataFake) 
-    setIndexLink(0) // default index 0
-    console.log("hello");
-  },[])
-   useEffect(() => {
-      console.log('globalPause = ', globalPause)
-   }, [globalPause])
-  const handStart = React.useCallback((value : IfData, index: number) =>{
-    console.log(' --test start')
+    setDataSong(renderListSong.song);
+    void dispatch(handGetSong());
+    const getlocal = localStorage?.getItem("song") || ""
+    if (getlocal) {
+      const currentlocal : ifSong  = JSON?.parse(getlocal);
+        setDataLocal(currentlocal);
+    }
+    renderListSong.song.length > 0 && setLinkSong(renderListSong.song[0].song_link as string)
+  },[dispatch, setDataSong, setLinkSong]);
+
+//   useEffect(() => { // init data
+//     renderListSong.song.length > 0 && setLinkSong(renderListSong.song[0].song_link as string) // default index 0
+//  },[renderListSong, setLinkSong])
+
+  const handStart = React.useCallback((value : ifSong, index: number) =>{
     localStorage.setItem("song", JSON.stringify(value));
-    const currentlocal : IfData  = JSON?.parse(localStorage?.getItem("song") || "");
+    const currentlocal : ifSong  = JSON?.parse(localStorage?.getItem("song") || "");
     setDataLocal(currentlocal)
     setIndexLink(index)
-    setPause(state => !state)
-    setLinkSong(currentlocal.link);
-    setGlobalPause(item => !item);
-  },[props, setLinkSong, setGlobalPause, globalPause, dataLocal]);
+    // setPause(true)
+    setLinkSong(currentlocal.song_link as string);
+    setGlobalPause(true);
+  },[setIndexLink, setLinkSong, setGlobalPause]);
   const handPlaylist = () => {
     setStateColor(true);
   }
   const handRecently = () => {
     setStateColor(false);
   }
-  console.log(dataLocal, globalPause);
-  
   return (
     <div className={`right-0 transition-all duration-700 ${props.sideBarRight ? "" : "fixed translate-x-[400px]"} sticky z-50  border-l-[1px] border-[#120822] text-white w-[600px] h-[660px] bg-[#120822] bottom-[90px] fjc`}>
       <div className='w-[93%] h-full'>
@@ -120,13 +104,13 @@ const SidebarSong = (props: Props) => {
         </div>
         <div className='w-full h-full fjc'>
           <div className='w-full h-[100%] overflow-y-scroll'>
-            { data && data?.length > 0 &&
-              data.map((item, index) => {
-                return <div className='w-full h-[60px] my-1 fjc hover:bg-[#b4b4b32d] cursor-pointer rounded-lg wall'>
-                <div className='w-[95%] h-[80%] flex justify-between'>
+            { renderListSong && renderListSong.song?.length > 0 &&
+              renderListSong.song.map((item : ifSong, index : number) => {
+                return <div className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id ? "bg-[#9B4DE0]" : "hover:bg-[#b4b4b32d]"} my-1 fjc  cursor-pointer rounded-lg wall`}>
+                <div className='w-[95%] h-[80%] flex justify-between '>
                   <div className='w-[17%] h-full'>
                   <div className='absolute w-[47px] h-[45px] z-10 fjc pause'>
-                  <PauseListItemButtonStyle  onClick={() => pause ?  handStart(item, index) : stopPause(item)}>
+                  <PauseListItemButtonStyle  onClick={() => globalPause && dataLocal?._id == item._id ? stopPause(item)  :  handStart(item, index)}>
                       <PauseListItemIconStyle sx={{ border : "none", ":hover" : {
                         border : "none",
                         color : "#fff",
@@ -134,12 +118,12 @@ const SidebarSong = (props: Props) => {
                           color : "#ffffffcf"
                       }
                       }}}>
-                        {dataLocal && globalPause && dataLocal.id == item.id ? <PauseIcon className={classes.root} /> : <PlayArrowIcon className={classes.root} />}
+                        { dataLocal && globalPause && dataLocal?._id == item._id ? <PauseIcon className={classes.root} /> : <PlayArrowIcon className={classes.root} />}
                       </PauseListItemIconStyle>
                     </PauseListItemButtonStyle>
                   </div>
                     <div className='w-full h-full flex justify-start items-center relative wallSong'>
-                      <img className='w-[90%] h-[90%] bg-cover rounded-[5px]' src='https://photo-resize-zmp3.zmdcdn.me/w94_r1x1_jpeg/cover/f/9/4/3/f9436eb6a8ddb4fa7f93b106c3ad22c1.jpg' />
+                      <img className='w-[90%] h-[90%] bg-cover rounded-[5px]' src={`${item.song_image[0]}`} />
                     </div>
                   </div>
                   <div className='w-[48%] ml-[2%] h-full'>
