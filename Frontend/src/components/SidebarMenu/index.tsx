@@ -1,4 +1,3 @@
-import React from "react";
 import { FaRegDotCircle } from "react-icons/fa";
 import {
   BsBarChartLine,
@@ -13,6 +12,7 @@ import {
   AiOutlinePlus,
   AiOutlineHeart,
   AiOutlineCloudUpload,
+  AiFillHome
 } from "react-icons/ai";
 import { MdLibraryMusic } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -72,6 +72,16 @@ const SidebarMenu = () => {
             >
               <MdLibraryMusic className="w-[22px] text-[#ccc] h-[40px]" />
               <span className="ml-3">Thư Viện</span>
+            </Link>
+            
+          </li>
+          <li className="">
+            <Link
+              to={"/room"}
+              className="flex items-center leading-[20px] py-[6px] px-[24px]"
+            >
+              <AiFillHome className="w-[22px] text-[#ccc] h-[40px]" />
+              <span className="ml-3">Phòng nhạc</span>
             </Link>
           </li>
         </ul>

@@ -5,9 +5,8 @@ import SidebarSong from "@/components/SidebarSong";
 import Footer from "@/components/Footer";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { Outlet } from "react-router-dom";
-type Props = {};
 
-const LayoutClient = (props: Props) => {
+const LayoutClient = () => {
   return (
     <>
       <div className="flex w-[100%] bg-[#170f23]">
