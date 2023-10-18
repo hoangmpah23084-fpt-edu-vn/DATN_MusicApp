@@ -78,7 +78,7 @@ const SidebarMenu = () => {
 
       <div className="sidebar-divide relative h-[1px]"></div>
 
-      <div className="overflow-y-scroll h-[490px] mt-[16px] " id="style-scrollbar">
+      <div className="overflow-y-scroll h-[50vh] mt-[16px] " id="style-scrollbar">
         <div className=" ">
           <nav>
             <ul className="">

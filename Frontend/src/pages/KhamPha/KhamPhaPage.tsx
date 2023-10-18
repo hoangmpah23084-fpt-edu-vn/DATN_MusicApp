@@ -14,7 +14,6 @@ import SongCarouselItem from "@/components/Song-carousel-item";
 import ListSongItem from "@/components/List-songs-item";
 import BarChart from "@/components/Barchart";
 
-// interface IImage = {}
 
 const img_slide = [
   { id: 0, img: "/Image/b0fa9fbfce103d1dce15d73aaceb68be.jpg" },
@@ -75,7 +74,7 @@ const KhamPhaPage = () => {
                   </Link>
                 </div>
                 <div className="carousel-wrapper relative ">
-                  <div className="carousel flex -mx-[15px] overflow-hidden">
+                  <div className="carousel flex -mx-[15px]">
                     <div className="carousel-container flex w-[100%]">
                       <SongCarouselItem />
                       <SongCarouselItem />

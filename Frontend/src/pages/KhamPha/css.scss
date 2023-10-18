@@ -15,8 +15,8 @@
 }
 
 //slide image
-.swiper-button-prev,
-.swiper-button-next {
+.gallery-container .swiper-button-prev,
+.gallery-container .swiper-button-next {
   width: 55px !important;
   height: 55px !important;
   border-radius: 50% !important;
@@ -27,16 +27,16 @@
   box-shadow: 0 2px 4px 0 rgba(226, 102, 102, 0.15) !important;
 }
 
-.swiper-button-prev {
+.gallery-container .swiper-button-prev {
   left: 25px !important;
 }
 
-.swiper-button-next {
+.gallery-container .swiper-button-next {
   right: 25px !important;
 }
 
-.swiper-button-prev::after,
-.swiper-button-next::after {
+.gallery-container .swiper-button-prev::after,
+.gallery-container .swiper-button-next::after {
   font-size: 20px !important;
   color: #fff;
 }
@@ -82,10 +82,9 @@
 
 // week-chart
 .week-chart .card-image img {
-  transition: all .7s;
+  transition: all 0.7s;
 }
 
 .week-chart .card-image:hover img {
   transform: scale(1.1);
 }
-

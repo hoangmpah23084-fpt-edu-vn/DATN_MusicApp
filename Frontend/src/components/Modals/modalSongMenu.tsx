@@ -1,23 +1,34 @@
-import { BiLogoFacebookCircle } from "react-icons/bi"
-import { SiZalo } from "react-icons/si"
-import { SlEarphonesAlt } from "react-icons/sl"
-import { FaBan } from "react-icons/fa"
-import { HiDocumentAdd } from "react-icons/hi"
-import { MdReplay } from "react-icons/md"
-import { ImCopy } from "react-icons/im"
-import { PiMicrophoneStageDuotone } from "react-icons/pi"
-import { AiOutlineHeart, AiOutlinePlus, AiOutlineDownload, AiOutlinePlusCircle, AiOutlineShareAlt, AiOutlineRight } from "react-icons/ai"
-import { BsMusicNoteList } from "react-icons/bs"
-
+import { BiLogoFacebookCircle } from "react-icons/bi";
+import { SiZalo } from "react-icons/si";
+import { SlEarphonesAlt } from "react-icons/sl";
+import { FaBan } from "react-icons/fa";
+import { HiDocumentAdd } from "react-icons/hi";
+import { MdReplay } from "react-icons/md";
+import { ImCopy } from "react-icons/im";
+import { PiMicrophoneStageDuotone } from "react-icons/pi";
+import {
+  AiOutlineHeart,
+  AiOutlinePlus,
+  AiOutlineDownload,
+  AiOutlinePlusCircle,
+  AiOutlineShareAlt,
+  AiOutlineRight,
+} from "react-icons/ai";
+import { BsMusicNoteList } from "react-icons/bs";
 
 const ModalSongMenu = () => {
   return (
     <>
       <div className="absolute z-50 max-h-full bg-[#34224f] rounded-xl w-72 right-16 -mt-64">
         <header className="flex items-center py-3 ml-2 pr-10 ">
-          <img src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg" alt="" className="w-10 h-10 rounded-lg mx-1 relative z-10" />
+          <img
+            src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg"
+            alt=""
+            className="w-10 h-10 rounded-lg mx-1 relative z-10"
+          />
           <div className="mx-1">
-            <p className="group relative ease-in-out duration-300"><h3 className="hover:text-[#9b4de0]">Khó Vẽ Nụ cười</h3>
+            <p className="group relative ease-in-out duration-300">
+              <h3 className="hover:text-[#9b4de0]">Khó Vẽ Nụ cười</h3>
               <div className="absolute z-40 -top-20 -left-48 pl-10 py-5 text-sm w-60 bg-[#34224f] scale-50 rounded-xl group-hover:-top-5 group-hover:scale-100 opacity-0 group-hover:-left-72 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <div>
                   <p className="text-[#857a95]">Nghệ sĩ</p>
@@ -42,8 +53,14 @@ const ModalSongMenu = () => {
               </div>
             </p>
             <div className="flex items-center">
-              <p className="flex items-center mx-1 text-xs"><AiOutlineHeart /><span className="mx-1">691</span></p>
-              <p className="flex items-center mx-1 text-xs"><SlEarphonesAlt /><span className="mx-1">25k</span></p>
+              <p className="flex items-center mx-1 text-xs">
+                <AiOutlineHeart />
+                <span className="mx-1">691</span>
+              </p>
+              <p className="flex items-center mx-1 text-xs">
+                <SlEarphonesAlt />
+                <span className="mx-1">25k</span>
+              </p>
             </div>
           </div>
         </header>
@@ -63,64 +80,126 @@ const ModalSongMenu = () => {
         </div>
         <div className="mt-3">
           <ul className="text-base text-[#c4c2c8]">
-            <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300"><button className="flex items-center"><span className="mx-5"><HiDocumentAdd /></span>Thêm vào danh sách phát</button></li>
-            <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300"><button className="flex items-center"><span className="mx-5"><MdReplay /></span>Phát tiếp theo</button></li>
-            <li className="py-1 hover:bg-[#594b6f] group relative ease-in-out duration-300"><button className="flex items-center"><span className="mx-5"><AiOutlinePlusCircle /></span>Thêm vào playlist <span className="absolute right-8"><AiOutlineRight /></span></button>
+            <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300">
+              <button className="flex items-center">
+                <span className="mx-5">
+                  <HiDocumentAdd />
+                </span>
+                Thêm vào danh sách phát
+              </button>
+            </li>
+            <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300">
+              <button className="flex items-center">
+                <span className="mx-5">
+                  <MdReplay />
+                </span>
+                Phát tiếp theo
+              </button>
+            </li>
+            <li className="py-1 hover:bg-[#594b6f] group relative ease-in-out duration-300">
+              <button className="flex items-center">
+                <span className="mx-5">
+                  <AiOutlinePlusCircle />
+                </span>
+                Thêm vào playlist{" "}
+                <span className="absolute right-8">
+                  <AiOutlineRight />
+                </span>
+              </button>
               <div className="absolute overflow-y-auto z-40 -top-32 h-72 -left-40 py-5 text-sm w-60 bg-[#34224f] scale-50 rounded-lg group-hover:-top-52 group-hover:scale-100 opacity-0 group-hover:-left-60 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <header className="mx-5">
-                  <input type="text" placeholder="Tìm playlist" className="bg-[#493961] border-none w-full py-1 text-sm rounded-xl outline-none text-white placeholder:text-white" />
+                  <input
+                    type="text"
+                    placeholder="Tìm playlist"
+                    className="bg-[#493961] border-none w-full py-1 text-sm rounded-xl outline-none text-white placeholder:text-white"
+                  />
                 </header>
                 <div className="px-5 py-2 mt-4 hover:bg-[#594b6f] ">
                   <button className="flex items-center text-white">
-                    <span className="bg-[#ca8dc6] px-2 py-1 text-white rounded-lg"><AiOutlinePlus /></span>
+                    <span className="bg-[#ca8dc6] px-2 py-1 text-white rounded-lg">
+                      <AiOutlinePlus />
+                    </span>
                     <p className="ml-2">Tạo Playlist mới</p>
                   </button>
                 </div>
                 <div className="">
                   <ul className=" text-white">
                     <li className="flex px-5 py-2 my-1  items-center hover:bg-[#594b6f]">
-                      <span><BsMusicNoteList /></span>
+                      <span>
+                        <BsMusicNoteList />
+                      </span>
                       <p className="ml-3">Test</p>
                     </li>
                     <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span><BsMusicNoteList /></span>
+                      <span>
+                        <BsMusicNoteList />
+                      </span>
                       <p className="ml-3">Test</p>
                     </li>
                     <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span><BsMusicNoteList /></span>
+                      <span>
+                        <BsMusicNoteList />
+                      </span>
                       <p className="ml-3">Test</p>
                     </li>
                     <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span><BsMusicNoteList /></span>
+                      <span>
+                        <BsMusicNoteList />
+                      </span>
                       <p className="ml-3">Test</p>
                     </li>
                     <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span><BsMusicNoteList /></span>
+                      <span>
+                        <BsMusicNoteList />
+                      </span>
                       <p className="ml-3">Test</p>
                     </li>
                     <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span><BsMusicNoteList /></span>
+                      <span>
+                        <BsMusicNoteList />
+                      </span>
                       <p className="ml-3">Test</p>
                     </li>
                     <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span><BsMusicNoteList /></span>
+                      <span>
+                        <BsMusicNoteList />
+                      </span>
                       <p className="ml-3">Test</p>
                     </li>
-
                   </ul>
                 </div>
               </div>
             </li>
-            <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300"><button className="flex items-center"><span className="mx-5"><ImCopy /></span>Sao chép link</button></li>
-            <li className="py-1 hover:bg-[#594b6f] group relative ease-in-out duration-300"><button className="flex items-center"><span className="mx-5"><AiOutlineShareAlt /></span>Chia sẻ <span className="absolute right-8"><AiOutlineRight /></span></button>
+            <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300">
+              <button className="flex items-center">
+                <span className="mx-5">
+                  <ImCopy />
+                </span>
+                Sao chép link
+              </button>
+            </li>
+            <li className="py-1 hover:bg-[#594b6f] group relative ease-in-out duration-300">
+              <button className="flex items-center">
+                <span className="mx-5">
+                  <AiOutlineShareAlt />
+                </span>
+                Chia sẻ{" "}
+                <span className="absolute right-8">
+                  <AiOutlineRight />
+                </span>
+              </button>
               <div className="absolute z-40 h-36 -left-36 -top-16 py-2  text-sm w-56 bg-[#34224f] scale-50 rounded-lg group-hover:scale-100 opacity-0 group-hover:-left-56 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <div className="">
                   <div className="flex items-center px-5 py-2 my-1 hover:bg-[#594b6f]">
-                    <span className="text-blue-500"><BiLogoFacebookCircle /></span>
+                    <span className="text-blue-500">
+                      <BiLogoFacebookCircle />
+                    </span>
                     <p className="ml-3">FaceBook</p>
                   </div>
                   <div className="flex items-center px-5 py-2 my-1 hover:bg-[#594b6f]">
-                    <span className="text-blue-500"><SiZalo /></span>
+                    <span className="text-blue-500">
+                      <SiZalo />
+                    </span>
                     <p className="ml-3">Zalo</p>
                   </div>
                   <div className="flex items-center px-5 py-2 my-1 hover:bg-[#594b6f]">
@@ -137,8 +216,7 @@ const ModalSongMenu = () => {
         </footer>
       </div>
     </>
+  );
+};
 
-  )
-}
-
-export default ModalSongMenu
+export default ModalSongMenu;

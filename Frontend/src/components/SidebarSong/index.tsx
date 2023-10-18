@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ListItemButtonStyle, ListItemIconStyle, PauseListItemButtonStyle, PauseListItemIconStyle } from '@/Mui/style/Footer/StyleAction'
 import React, { useEffect } from 'react'
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
@@ -9,8 +10,6 @@ import { useStyles } from '../Footer';
 import { SongStateContext } from '../Context/SongProvider';
 type Props = {
   sideBarRight: boolean,
-  // setGlobalPause : React.Dispatch<React.SetStateAction<boolean>>,
-  // globalPause : boolean,
 }
 
 const dataFake = [
@@ -38,50 +37,46 @@ const SidebarSong = (props: Props) => {
   const [stateColor , setStateColor] = React.useState<boolean>(true);
   const [pause , setPause] = React.useState<boolean>(true);
   const [linkSongOld , setLinkSongOld] = React.useState<string>('');
-
+  const [dataLocal, setDataLocal] = React.useState<IfData | undefined>(undefined)
   const classes = useStyles();
-  const { linkSong, setLinkSong ,indexLink, setIndexLink, data, setData, setGlobalPause, globalPause } = SongStateContext();
-  const stopPause = React.useCallback((value : IfData, index:number) => {
-    console.log(' --test pause')
-    setPause(true)
-    // setPause(item => !item)
+  const {  setLinkSong , setIndexLink, data, setData, setGlobalPause, globalPause } = SongStateContext();
+  const stopPause = React.useCallback((value : IfData) => {
+    console.log(' .test pause');
+    console.log(value);
+    localStorage.removeItem("song");
+    setDataLocal(undefined);
+    setPause(state => !state)
     setLinkSong(value.link);
+    console.log("hahaha");
     setLinkSongOld(value.link)
     setGlobalPause(item => !item);
-    value.state = !globalPause;
-  },[props, setLinkSong, setGlobalPause, globalPause])
-
-
+  },[props, setLinkSong, setGlobalPause, globalPause]);
   useEffect(() => { // init data
     setData(dataFake) 
-    setLinkSong(dataFake[0].link) // default index 0
     setIndexLink(0) // default index 0
-  })
-
+    console.log("hello");
+  },[])
    useEffect(() => {
       console.log('globalPause = ', globalPause)
    }, [globalPause])
-
   const handStart = React.useCallback((value : IfData, index: number) =>{
     console.log(' --test start')
+    localStorage.setItem("song", JSON.stringify(value));
+    const currentlocal : IfData  = JSON?.parse(localStorage?.getItem("song") || "");
+    setDataLocal(currentlocal)
     setIndexLink(index)
-    setPause(false)
-    setLinkSong(value.link);
-    // setData((preState:Array<IfData>) => {
-    //   return preState.map((item) => {
-
-    //   } )
-    // })
+    setPause(state => !state)
+    setLinkSong(currentlocal.link);
     setGlobalPause(item => !item);
-    value.state = !globalPause;
-  },[props, setLinkSong, setGlobalPause, globalPause]);
-
+  },[props, setLinkSong, setGlobalPause, globalPause, dataLocal]);
   const handPlaylist = () => {
     setStateColor(true);
   }
   const handRecently = () => {
     setStateColor(false);
   }
+  console.log(dataLocal, globalPause);
+  
   return (
     <div className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"} sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#120822] bottom-[90px] fjc`}>
       <div className='w-[93%] h-full'>
@@ -125,19 +120,13 @@ const SidebarSong = (props: Props) => {
         </div>
         <div className='w-full h-full fjc'>
           <div className='w-full h-[100%] overflow-y-scroll'>
-            { data && data?.length > 0 && 
+            { data && data?.length > 0 &&
               data.map((item, index) => {
-                // console.log('index = ', index)
                 return <div className='w-full h-[60px] my-1 fjc hover:bg-[#b4b4b32d] cursor-pointer rounded-lg wall'>
                 <div className='w-[95%] h-[80%] flex justify-between'>
                   <div className='w-[17%] h-full'>
-                    <div>{item.title}</div>
                   <div className='absolute w-[47px] h-[45px] z-10 fjc pause'>
-                  <PauseListItemButtonStyle  onClick={() => { 
-                    //  console.log('index = ', index)
-                        pause ?  handStart(item, index) : stopPause(item, index)
-                      }} 
-                  >
+                  <PauseListItemButtonStyle  onClick={() => pause ?  handStart(item, index) : stopPause(item)}>
                       <PauseListItemIconStyle sx={{ border : "none", ":hover" : {
                         border : "none",
                         color : "#fff",
@@ -145,7 +134,7 @@ const SidebarSong = (props: Props) => {
                           color : "#ffffffcf"
                       }
                       }}}>
-                        {item.state ?  <PauseIcon className={classes.root} /> : <PlayArrowIcon className={classes.root} />}
+                        {dataLocal && globalPause && dataLocal.id == item.id ? <PauseIcon className={classes.root} /> : <PlayArrowIcon className={classes.root} />}
                       </PauseListItemIconStyle>
                     </PauseListItemButtonStyle>
                   </div>

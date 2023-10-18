@@ -8,7 +8,7 @@ type Props = {
   section?: string;
 };
 
-const ListSongItem = ({ section }: Props) => {
+const  ListSongItem = ({ section }: Props) => {
   return (
     <div className="list-items px-[15px]">
       <div
@@ -37,12 +37,12 @@ const ListSongItem = ({ section }: Props) => {
                 className={`rounded-[5px] ${
                   section === "suggested" && "w-[60px] h-[60px]"
                 } ${section === "zingchart" && "w-[60px] h-[60px]"} ${
-                  section === "chanel" && "w-[120px]"
+                  section === "chanel" && "w-[120px] h-[120px]"
                 }`}
                 src="./Image/6974fd1ab921429cc4f4d14564269660.jpg"
                 alt=""
               />
-              <div className="overlay absolute w-full h-full top-0 bg-[#ccc] hidden"></div>
+              <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
               <div className="action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%] hidden">
                 <div className="flex gap-[20px] h-full justify-center">
                   <div>
@@ -92,12 +92,18 @@ const ListSongItem = ({ section }: Props) => {
         >
           <div className="hover-items hidden relative z-10">
             <div className="level flex">
-              <div className="btn-hear flex justify-center items-center rounded-full p-[10px] mx-[4px]">
-                <AiOutlineHeart className="text-[18px]" />
-              </div>
-              <div className="btn-hear flex justify-center items-center rounded-full p-[10px] mx-[4px]">
-                <BsThreeDots className="text-[20px]" />
-              </div>
+              <button className="group flex justify-center items-center rounded-full px-[5px] ">
+                <AiOutlineHeart className="px-3 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-80 " />
+                <div className="absolute -top-5 -left-9 text-xs w-32 px-[10px] py-[5px] bg-gray-600 text-center rounded-[5px] opacity-0 group-hover:-top-[35px] group-hover:opacity-100 ease-in-out duration-300">
+                  <p className="text-white">Xóa khỏi thư viện</p>
+                </div>
+              </button>
+              <button className="group relative flex justify-center items-center rounded-full px-[5px] ">
+                <BsThreeDots className="px-3 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-80 " />
+                <div className="absolute -top-5 right-[ưpx] text-xs px-[10px] py-[5px] bg-gray-600 text-center opacity-0 rounded-[5px] group-hover:opacity-100 group-hover:-top-[35px] ease-in-out duration-300">
+                  <p className="text-white">Khác</p>
+                </div>
+              </button>
             </div>
           </div>
         </div>

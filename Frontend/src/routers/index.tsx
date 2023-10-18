@@ -15,6 +15,8 @@ import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 import BarChart from "@/components/Barchart";
+import RoomPage from "@/pages/Room/RoomPage";
+import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 
 export const router = createBrowserRouter([
   //todo FE
@@ -23,8 +25,15 @@ export const router = createBrowserRouter([
     element: <LayoutClient />,
     children: [
       { index: true, element: <KhamPhaPage /> },
-      { path: "/test", element: <BarChart /> },
-      { path: "mymusic/song/favorite", element: <FavouritePage /> }],
+      // { path: "/test", element: <BarChart /> },
+      { path: "mymusic/song/favorite", element: <FavouritePage /> },
+      { path: "mymusic/song/playlist", element: <PlaylistPage /> },
+    ],
+  },
+
+  {
+    path: "/room",
+    element: <RoomPage />,
   },
 
   //todo BE
@@ -34,12 +43,11 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element:  <DashBoard />,
+        element: <DashBoard />,
       },
       {
         path: "dashboard",
-        element:  <div>
-      </div>,
+        element: <div></div>,
       },
       {
         path: "song",
@@ -59,30 +67,28 @@ export const router = createBrowserRouter([
       },
       {
         path: "artist",
-        element: <Artist/>,
+        element: <Artist />,
       },
       {
         path: "add-artist",
-        element: <AddArtist/>,
+        element: <AddArtist />,
       },
       {
         path: "update-artist/:id",
-        element: <UpdateArtist/>,
-      }
-      ,
-      {
-        path: "addgenre",
-        element: <Genre />
-      }
-      ,
-      {
-        path: "listgenre",
-        element: <ListGenre />
+        element: <UpdateArtist />,
       },
       {
-        path : "UpdateGenre/:id",
-        element : <UpdateGenre />
-      }
+        path: "addgenre",
+        element: <Genre />,
+      },
+      {
+        path: "listgenre",
+        element: <ListGenre />,
+      },
+      {
+        path: "UpdateGenre/:id",
+        element: <UpdateGenre />,
+      },
     ],
   },
 ]);
