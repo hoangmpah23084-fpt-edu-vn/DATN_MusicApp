@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ListItemButtonStyle, ListItemIconStyle, PauseListItemButtonStyle, PauseListItemIconStyle } from '@/Mui/style/Footer/StyleAction'
-import React, { useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -13,48 +13,52 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ifSong } from '@/pages/Admin/Interface/ValidateSong';
 type Props = {
   sideBarRight: boolean,
+  setCurrentSong : Dispatch<SetStateAction<ifSong | null>>
 }
 
 const SidebarSong = (props: Props) => {
   const [stateColor , setStateColor] = React.useState<boolean>(true);
-  // const [pause , setPause] = React.useState<boolean>(false);
   const [dataLocal, setDataLocal] = React.useState<ifSong | undefined>(undefined)
   const dispatch = useAppDispatch();
   const renderListSong = useAppSelector(({Song}) => Song);
+  const {setGlobalPause, globalPause } = SongStateContext();
   const classes = useStyles();
-  
-  const {setLinkSong , setIndexLink, setDataSong, setGlobalPause, globalPause } = SongStateContext();
+
   const stopPause = React.useCallback((value : ifSong) => {
+    props.setCurrentSong(value);
     setDataLocal(undefined);
-    // setPause(item => !item)
-    setLinkSong(value.song_link as string);
     setGlobalPause(false);
-  },[setLinkSong, setGlobalPause]);
+  },[props, setGlobalPause]);
 
   useEffect(() => { // init data
-    setDataSong(renderListSong.song);
     void dispatch(handGetSong());
-    const getlocal = localStorage?.getItem("song") || ""
-    if (getlocal) {
-      const currentlocal : ifSong  = JSON?.parse(getlocal);
-        setDataLocal(currentlocal);
-    }
-    renderListSong.song.length > 0 && setLinkSong(renderListSong.song[0].song_link as string)
-  },[dispatch, setDataSong, setLinkSong]);
-
-//   useEffect(() => { // init data
-//     renderListSong.song.length > 0 && setLinkSong(renderListSong.song[0].song_link as string) // default index 0
-//  },[renderListSong, setLinkSong])
+    window.addEventListener("storage", () => {
+      const getlocal = localStorage?.getItem("song") || "";
+      console.log(getlocal);
+      if (getlocal) {
+        const currentlocal : ifSong  = JSON?.parse(getlocal);
+          setDataLocal(currentlocal);
+      }
+    })
+  },[dispatch]);
+  // useEffect(() => {
+  //   window.addEventListener("storage", (e) => {
+  //     const getlocal = localStorage?.getItem("song") || "";
+  //     console.log(getlocal);
+  //     if (getlocal) {
+  //       const currentlocal: ifSong = JSON?.parse(getlocal);
+  //       setDataLocal(currentlocal);
+  //     }
+  //   })
+  // });
 
   const handStart = React.useCallback((value : ifSong, index: number) =>{
+    props.setCurrentSong(value);
     localStorage.setItem("song", JSON.stringify(value));
     const currentlocal : ifSong  = JSON?.parse(localStorage?.getItem("song") || "");
     setDataLocal(currentlocal)
-    setIndexLink(index)
-    // setPause(true)
-    setLinkSong(currentlocal.song_link as string);
     setGlobalPause(true);
-  },[setIndexLink, setLinkSong, setGlobalPause]);
+  },[props, setGlobalPause]);
   const handPlaylist = () => {
     setStateColor(true);
   }
