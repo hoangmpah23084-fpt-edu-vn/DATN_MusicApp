@@ -90,15 +90,6 @@ const UpdateArtist = () => {
                       <option value="2">Gieo</option>
                     </select>
                   </div>
-                  {/* <div className="flex flex-col">
-                    <label>List song</label>
-                    <input
-                      className="border border-gray-300 rounded-md p-2"
-                      placeholder="List song"
-                      {...register("songs")}
-                    />
-                    <div className="text-sm text-red-500">{errors.songs?.message}</div>
-                  </div> */}
                 </div>
               </div>
             </div>
