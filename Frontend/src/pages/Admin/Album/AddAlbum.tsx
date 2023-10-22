@@ -4,9 +4,9 @@ import { Box, Button, TextField, Typography } from '@mui/material'
 import { styled } from "@mui/styles";
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IArtist, validateArtist } from "../Interface/IArtist";
+import { ifAlbum, validateAlbum } from "../Interface/validateAlbum";
 import { useAppDispatch } from '@/store/hooks';
-import { addArtist } from '@/store/Reducer/artistReducer';
+import { addAlbum } from '@/store/Reducer/albumReducer';
 
 
 const MyButton = styled(Button)({
@@ -18,18 +18,18 @@ const MyButton = styled(Button)({
     padding: '0 30px',
   });
 
-const AddArtist = () => {
-    const {register, handleSubmit, formState : {errors}} = useForm<IArtist>({
-        resolver : yupResolver(validateArtist)
+const AddAlbum = () => {
+    const {register, handleSubmit, formState : {errors}} = useForm<ifAlbum>({
+        resolver : yupResolver(validateAlbum)
     });
     const dispatch = useAppDispatch();
-    const handSubmitForm : SubmitHandler<IArtist> = (value) => {
-        void dispatch(addArtist(value));
-        alert("Thêm Artist thành công");
+    const handSubmitForm : SubmitHandler<ifAlbum> = (value) => {
+        void dispatch(addAlbum(value));
+        alert("Thêm Album thành công");
     }
   return (
     <>
-    <Title Title='New Artist' />
+    <Title Title='New Album' />
     <Box sx={{ width : "100%" , height : "500px" }} >
         <form action="" style={{width : "100%", height : "100%"}} onSubmit={handleSubmit(handSubmitForm)} >
             <Box sx={{ width : "100%", height : "100px" }} >
@@ -37,8 +37,8 @@ const AddArtist = () => {
                 <Typography >Section to config basic product information</Typography>
             </Box>
             <Box sx={{ width : "100%" }} >
-                <Typography sx={{ paddingBottom : "10px" }} >Name Artist</Typography>
-                <TextField sx={{ width : "100%" }} {...register("artist_name")} helperText={errors.artist_name?.message} placeholder='Enter Name Artist' />
+                <Typography sx={{ paddingBottom : "10px" }} >Name Album</Typography>
+                <TextField sx={{ width : "100%" }} {...register("album_name")} helperText={errors.album_name?.message} placeholder='Enter Name Album' />
             </Box>
             <Box sx={{ width : "100%" }} >
                 <Typography sx={{ paddingBottom : "10px" }} >Id Artist</Typography>
@@ -52,4 +52,4 @@ const AddArtist = () => {
     </>
   )
 }
-export default AddArtist
+export default AddAlbum

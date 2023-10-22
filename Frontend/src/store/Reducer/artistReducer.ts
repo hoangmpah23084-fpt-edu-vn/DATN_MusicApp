@@ -1,93 +1,76 @@
+import { IArtist } from "@/pages/Admin/Interface/IArtist";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { IArtist, TypeArtist } from "../../pages/Admin/Interface/IArtist";
 
-interface initState {
-    error : string,
+interface artist {
     loading : boolean,
-    artist : IArtist[]
+    artist : IArtist[],
+    error : string,
 }
 
-const initialState: initState = {
-    error : "",
+const initialState : artist = {
     loading : false,
-    artist : []
+    artist : [],
+    error : "",
 }
-
-export const handleAddArtist = createAsyncThunk("artist/add-artist", async (artist : IArtist) => {
-    const {data} = await axios.post<{ message : string}>("http://localhost:8080/api/artist", artist);
-    console.log(data);
-    return data.message
+export const addArtist = createAsyncThunk("artist/addArtist", async (dataToForm : IArtist) => {
+    const {data} = await axios.post<{data : IArtist}>("http://localhost:8080/api/artist",dataToForm);
+    return data.data;
 })
-export const handleGetArtist = createAsyncThunk("artists", async () => {
-    const {data} = await axios.get<{data : IArtist[]}>("http://localhost:8080/api/artists") 
-    return data.data
+export const handleGetArtist = createAsyncThunk("artist/getArtist", async () => {
+    const {data} =  await axios.get<{data : IArtist[]}>("http://localhost:8080/api/artist");
+    return data.data;
 })
-export const handleDeleteArtist = createAsyncThunk("artist/delete-artist", async (id : string) => {
-    await axios.delete("http://localhost:8080/api/artist/"+ id) 
-    return id
+export const deleteArtist = createAsyncThunk("artist/deleteArtist", async (_id : string) => {
+    const {data} = await axios.delete<{artist : IArtist}>(`http://localhost:8080/api/artist/${_id}`);
+    return data.artist;
 })
-export const handleUpdateArtist = createAsyncThunk("artist/update-artist", async (value : TypeArtist) => {
-    const {_id , ...datafake} = value;
-    const {data} = await axios.put<{data : IArtist}>(`http://localhost:8080/api/artist/${_id}`, datafake) 
-    console.log(data);
-    return data.data
+export const updateArtist = createAsyncThunk("artist/updateArtist", async (value : IArtist) => {
+    const {_id , ...dataRest} = value;
+    const {data} = await axios.put<{artist : IArtist}>(`http://localhost:8080/api/artist/${_id}`, dataRest);
+    return data.artist;
 })
-export const handleGetOne = async (id : string) => {
-    const {data} = await axios.get<{data : IArtist}>("http://localhost:8080/api/artist/"+ id)
+export const getOneArtist = async (id : string) => {
+    const {data} = await axios.get<{data : IArtist}>(`http://localhost:8080/api/artist/${id}`)
     return data
 }
 
 const artistReducer = createSlice({
-    name : "artist",
+    name: 'artist',
     initialState,
-    reducers : {},
+    reducers :{},
     extraReducers : builder => {
-        builder.addCase(handleAddArtist.pending, (state) => {
-            state.loading = true;
+        builder
+        .addCase(addArtist.pending, (state) => {
+            state.loading = true
         })
-        builder.addCase(handleAddArtist.fulfilled , (state) => {
+        .addCase(addArtist.fulfilled, (state) => {
             state.loading = false;
         })
-        builder.addCase(handleAddArtist.rejected, (state) => {
+        .addCase(addArtist.rejected, (state) => {
+            state.loading = true;
+        })
+        .addCase(handleGetArtist.pending, (state) => {
+            state.loading = true
+        })
+        .addCase(handleGetArtist.fulfilled, (state, action) => {
             state.loading = false;
-        })
-        builder.addCase(handleGetArtist.pending, (state) => {
-            state.loading = true;
-        })
-        builder.addCase(handleGetArtist.fulfilled, (state, action) => {
-            state.loading = true;
             state.artist = action.payload;
-            state.error = ""
         })
-        builder.addCase(handleGetArtist.rejected, (state, action) => {
-            console.log(action);
+        .addCase(handleGetArtist.rejected, (state) => {
             state.loading = true;
         })
-        builder.addCase(handleDeleteArtist.pending, (state) => {
-            state.loading = true;
+        .addCase(deleteArtist.pending, (state) => {
+            state.loading = true
         })
-        builder.addCase(handleDeleteArtist.fulfilled, (state, action) => {
-            state.loading = true;
-            state.artist = state.artist.filter((artist => artist._id != action.payload))
-            state.error = ""
+        .addCase(deleteArtist.fulfilled, (state, action) => {
+            state.loading = false;
+            state.artist = state.artist.filter(item => item._id != action.payload._id)
         })
-        builder.addCase(handleDeleteArtist.rejected, (state, action) => {
-            console.log(action);
-            state.loading = true;
-        })
-        builder.addCase(handleUpdateArtist.pending, (state) => {
-            state.loading = true;
-        })
-        builder.addCase(handleUpdateArtist.fulfilled, (state, action) => {
-            state.loading = true;
-            state.artist = state.artist.map((artist => artist._id == action.payload._id ? action.payload : artist))
-            state.error = ""
-        })
-        builder.addCase(handleUpdateArtist.rejected, (state, action) => {
-            console.log(action);
+        .addCase(deleteArtist.rejected, (state) => {
             state.loading = true;
         })
     }
 })
-export default artistReducer.reducer;
+
+export default artistReducer.reducer

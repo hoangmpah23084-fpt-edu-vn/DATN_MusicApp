@@ -1,4 +1,4 @@
-import * as Yup from "yup"
+import * as yup from "yup"
 
 export interface IArtist {
     _id: string,
@@ -9,23 +9,12 @@ export interface IArtist {
     album: string,
     songs: string[]
 }
-export type TypeArtist = {
-    _id?: string,
-    name: string,
-    age: number,
-    images: string[] | undefined,
-    description: string,
-    album: string,
-    songs: string[]
-}
 
-export const formArtist = Yup.object({
-    name: Yup.string().required("Enter the name"),
-    age: Yup.number().required("Enter the age"),
-    images: Yup.mixed().notRequired(),
-    description: Yup.string().required("Enter the description"),
-    album: Yup.string().required("Select at least 1 album"),
-    // songs: Yup.string().required("Select at least 1 song")
+export const validateArtist = yup.object({
+    name: yup.string().required("Enter the name"),
+    age: yup.number().required("Enter the age"),
+    images: yup.mixed().notRequired(),
+    description: yup.string().required("Enter the description"),
+    album: yup.string().required("Select at least 1 album"),
+    // songs: yup.string().required("Select at least 1 song")
 })
-
-export type formArtist = Yup.InferType<typeof formArtist>

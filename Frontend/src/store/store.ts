@@ -14,6 +14,7 @@ import userReducer from "./Reducer/User";
 
 import storage from 'redux-persist/lib/storage';
 import artistReducer from './Reducer/artistReducer';
+import albumReducer from './Reducer/albumReducer';
 import genreReducer from './Reducer/genreReducer';
 
 const persistConfig = {
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
     Song : songReducer,
     user : userReducer,
     artist: artistReducer,
+    album: albumReducer,
     genre : genreReducer
 })
 
