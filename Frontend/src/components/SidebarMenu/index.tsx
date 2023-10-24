@@ -32,7 +32,6 @@ const SidebarMenu = () => {
           </div>
         </div>
       </nav>
-
       <div className=" mb-[16px]">
         <ul className=" ">
           <li className="bg-[#3a3244] border-l-2 border-l-[#9b4de0]">
