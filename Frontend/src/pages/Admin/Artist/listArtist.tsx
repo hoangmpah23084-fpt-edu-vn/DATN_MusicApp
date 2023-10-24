@@ -19,19 +19,56 @@ const ListArtist = () => {
     }
   };
   const columns: GridColDef[] = [
-    { field: "_id", headerName: "ID", flex: 1, align: "center", headerAlign: "center" },
-    { field: "name", headerName: "Name", headerAlign: "center", editable: false, align: "center", flex: 1 },
-    { field: "age", headerName: "Age", headerAlign: "center", editable: false, align: "center", flex: 1 },
-    { field: "images", headerName: "Images", headerAlign: "center", editable: false, align: "center", flex: 1 },
-    { field: "description", headerName: "Description", headerAlign: "center", editable: false, align: "center", flex: 1 },
-    { field: "album", headerName: "Album", headerAlign: "center", editable: false, align: "center", flex: 1 },
-    { field: "songs", headerName: "Songs", headerAlign: "center", editable: false, align: "center",
-    renderCell : (params) => {
-      const data : string[] = params.row.songs.name;
-      return data;
-    }, flex: 1 },
     {
-      field: "Action", headerName: "Action", type: "number", headerAlign: "center", editable: false, align: "center",
+      field: "_id",
+      headerName: "ID",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      headerAlign: "center",
+      editable: false,
+      align: "center",
+      flex: 1,
+    },
+    {
+      field: "age",
+      headerName: "Age",
+      headerAlign: "center",
+      editable: false,
+      align: "center",
+      flex: 1,
+    },
+    {
+      field: "images",
+      headerName: "Images",
+      headerAlign: "center",
+      editable: false,
+      align: "center",
+      renderCell : (params) => {
+        const image: string[] = params.row.images;
+        return <img src={`${image}`} />;
+      },
+      flex: 1,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      headerAlign: "center",
+      editable: false,
+      align: "center",
+      flex: 1,
+    },
+    {
+      field: "Action",
+      headerName: "Action",
+      type: "number",
+      headerAlign: "center",
+      editable: false,
+      align: "center",
       renderCell: (params: GridRenderCellParams<{ _id: string }>) => {
         const _id: string = params.row._id;
         return (
@@ -39,7 +76,14 @@ const ListArtist = () => {
             <Button variant="outlined" color="warning" size="small">
               <Link to={`/admin/update-artist/${_id}`}>Edit</Link>
             </Button>
-            <Button variant="outlined" color="error" size="small" onClick={() => handDeleteArtist(_id)} >Delete</Button>
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              onClick={() => handDeleteArtist(_id)}
+            >
+              Delete
+            </Button>
           </Stack>
         );
       },
@@ -54,14 +98,13 @@ const ListArtist = () => {
         <DataGrid
           rows={artist}
           columns={columns}
-          initialState={{ pagination: { paginationModel: { pageSize: 5 } }}}
+          initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
           getRowId={(row) => row._id}
           pageSizeOptions={[5]}
-          checkboxSelection
-          disableRowSelectionOnClick
         />
       </Box>
     </>
   );
 };
+
 export default ListArtist;

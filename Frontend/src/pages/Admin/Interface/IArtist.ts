@@ -6,8 +6,8 @@ export interface IArtist {
     age: number,
     images: string[] | undefined,
     description: string,
-    album: string,
-    songs: string[]
+    album: string[] | undefined,
+    songs: string[] | undefined,
 }
 
 export const validateArtist = yup.object({
@@ -15,6 +15,6 @@ export const validateArtist = yup.object({
     age: yup.number().required("Enter the age"),
     images: yup.mixed().notRequired(),
     description: yup.string().required("Enter the description"),
-    album: yup.string().required("Select at least 1 album"),
-    // songs: yup.string().required("Select at least 1 song")
+    album: yup.string(),
+    songs: yup.string()
 })
