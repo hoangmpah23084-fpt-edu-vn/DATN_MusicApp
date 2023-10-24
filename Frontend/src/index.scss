@@ -14,4 +14,25 @@
   right: 25px;
   top: 0;
 }
-
+.wall{
+  &:hover{
+    .wallSong{
+      img{
+        filter: brightness(80%);
+      }
+    }
+    .pause{
+      display: block;
+    }
+  }
+  .pause{
+    display: none;
+  }
+}
+@layer components {
+  .fjc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
