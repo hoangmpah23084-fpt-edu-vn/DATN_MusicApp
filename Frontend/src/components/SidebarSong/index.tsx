@@ -32,36 +32,29 @@ const SidebarSong = (props: Props) => {
 
   useEffect(() => { // init data
     void dispatch(handGetSong());
-    window.addEventListener("storage", () => {
-      const getlocal = localStorage?.getItem("song") || "";
-      console.log(getlocal);
-      if (getlocal) {
-        const currentlocal : ifSong  = JSON?.parse(getlocal);
-          setDataLocal(currentlocal);
-      }
-    })
   },[dispatch]);
-  // useEffect(() => {
-  //   window.addEventListener("storage", (e) => {
-  //     const getlocal = localStorage?.getItem("song") || "";
-  //     console.log(getlocal);
-  //     if (getlocal) {
-  //       const currentlocal: ifSong = JSON?.parse(getlocal);
-  //       setDataLocal(currentlocal);
-  //     }
-  //   })
-  // });
 
-  const handStart = React.useCallback((value : ifSong, index: number) =>{
+  useEffect(() => {
+    const getSongLocal = localStorage?.getItem("song") || '';
+    console.log(getSongLocal);
+    if (getSongLocal) {
+      const currentlocal : ifSong  = JSON?.parse(getSongLocal);
+      setDataLocal(currentlocal);
+    }
+  },[globalPause])
+
+  const handStart = React.useCallback((value : ifSong) =>{
     props.setCurrentSong(value);
     localStorage.setItem("song", JSON.stringify(value));
     const currentlocal : ifSong  = JSON?.parse(localStorage?.getItem("song") || "");
     setDataLocal(currentlocal)
     setGlobalPause(true);
   },[props, setGlobalPause]);
+
   const handPlaylist = () => {
     setStateColor(true);
   }
+
   const handRecently = () => {
     setStateColor(false);
   }
@@ -109,12 +102,12 @@ const SidebarSong = (props: Props) => {
         <div className='w-full h-full fjc'>
           <div className='w-full h-[100%] overflow-y-scroll'>
             { renderListSong && renderListSong.song?.length > 0 &&
-              renderListSong.song.map((item : ifSong, index : number) => {
+              renderListSong.song.map((item : ifSong) => {
                 return <div className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id ? "bg-[#9B4DE0]" : "hover:bg-[#b4b4b32d]"} my-1 fjc  cursor-pointer rounded-lg wall`}>
                 <div className='w-[95%] h-[80%] flex justify-between '>
                   <div className='w-[17%] h-full'>
                   <div className='absolute w-[47px] h-[45px] z-10 fjc pause'>
-                  <PauseListItemButtonStyle  onClick={() => globalPause && dataLocal?._id == item._id ? stopPause(item)  :  handStart(item, index)}>
+                  <PauseListItemButtonStyle  onClick={() => globalPause && dataLocal?._id == item._id ? stopPause(item)  :  handStart(item)}>
                       <PauseListItemIconStyle sx={{ border : "none", ":hover" : {
                         border : "none",
                         color : "#fff",
