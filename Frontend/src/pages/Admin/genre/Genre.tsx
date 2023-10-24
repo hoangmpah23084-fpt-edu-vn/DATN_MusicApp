@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import Title from '../Title'
 import { Box, Button, TextField, Typography } from '@mui/material'
 import { styled } from "@mui/styles";
@@ -18,7 +19,7 @@ const MyButton = styled(Button)({
   });
 
 const Genre = () => {
-    const {register, handleSubmit, formState : {errors}} = useForm({
+    const {register, handleSubmit, formState : {errors}} = useForm<ifAlbum>({
         resolver : yupResolver(validateGenre)
     });
     const dispatch = useAppDispatch();
