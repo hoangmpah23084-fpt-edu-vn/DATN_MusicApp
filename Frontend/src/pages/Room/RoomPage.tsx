@@ -10,7 +10,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-type Props = {};
+
+type Props = {
+  roomLive: boolean;
+};
 
 const img_slide = [
   { id: 0, img: "./Image/efb05fb9097a7057aecef6ecb62bff5a.jpg" },
@@ -27,17 +30,20 @@ const img_slide = [
   { id: 11, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
 ];
 
-//background image 
-const background = './Image/e1887a2c79f9d3d04984905cbf443a29.jpg';
+//background image
+const background = "./Image/e1887a2c79f9d3d04984905cbf443a29.jpg";
 
 const RoomPage = (props: Props) => {
   return (
     <div>
-      <div className="zm-room-wrapper bg-[#170f23] flex fixed h-full left-0 top-0 right-0 bottom-0 text-white overflow-hidden">
+      <div
+        className={`zm-room-wrapper bg-[#170f23] flex fixed ${
+          props.roomLive ? "h-full" : "h-0"
+        } left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
+      >
         <div className="zm-left-content w-[88px] relative z-20 bg-[#21181c] h-full">
           <div className="scroll-container h-full">
             <div className="content relative h-full">
-              {/* <RoomLeftItem  /> */}
               <Swiper
                 modules={[Navigation]}
                 direction="vertical"
@@ -56,7 +62,10 @@ const RoomPage = (props: Props) => {
           </div>
         </div>
 
-        <div style={{backgroundImage: `url(${background})`}} className="zm-room relative bg-no-repeat bg-cover ">
+        <div
+          style={{ backgroundImage: `url(${background})` }}
+          className="zm-room relative bg-no-repeat bg-cover "
+        >
           <div className="zm-room-opacity absolute top-0 left-0 right-0 bottom-0"></div>
           <div className="zm-room-content relative h-full p-[30px] pl-[40px] ">
             <div className="top-info flex">

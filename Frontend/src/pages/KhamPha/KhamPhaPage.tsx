@@ -14,7 +14,6 @@ import SongCarouselItem from "@/components/Song-carousel-item";
 import ListSongItem from "@/components/List-songs-item";
 import BarChart from "@/components/Barchart";
 
-
 const img_slide = [
   { id: 0, img: "/Image/b0fa9fbfce103d1dce15d73aaceb68be.jpg" },
   { id: 1, img: "/Image/e2917910851c112d22209b2aa8d6e9a9.jpg" },
@@ -76,13 +75,28 @@ const KhamPhaPage = () => {
                 <div className="carousel-wrapper relative ">
                   <div className="carousel flex -mx-[15px]">
                     <div className="carousel-container flex w-[100%]">
-                      <SongCarouselItem />
-                      <SongCarouselItem />
-                      <SongCarouselItem />
-                      <SongCarouselItem />
-                      <SongCarouselItem />
-                      <SongCarouselItem />
-                      <SongCarouselItem />
+                      <Link to={"/playlist"}>
+                        <SongCarouselItem />
+                      </Link>
+                      <Link to={"/playlist"}>
+                        <SongCarouselItem />
+                      </Link>
+                      <Link to={"/playlist"}>
+                        <SongCarouselItem />
+                      </Link>
+                      <Link to={"/playlist"}>
+                        <SongCarouselItem />
+                      </Link>
+                      <Link to={"/playlist"}>
+                        <SongCarouselItem />
+                      </Link>
+                      <Link to={"/playlist"}>
+                        <SongCarouselItem />
+                      </Link>
+                      <Link to={"/playlist"}>
+                        <SongCarouselItem />
+                      </Link>
+                      
                     </div>
                   </div>
                 </div>
@@ -168,7 +182,7 @@ const KhamPhaPage = () => {
                   </div>
                   <div className="zm-chart relative z-10 w-[58.3%]">
                     <div className="chart-container">
-                      <BarChart/>
+                      <BarChart />
                     </div>
                   </div>
                 </div>

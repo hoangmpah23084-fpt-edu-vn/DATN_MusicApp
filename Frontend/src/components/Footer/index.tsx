@@ -31,13 +31,16 @@ export const useStyles = makeStyles(() =>
 );
 type Props = {
   setSideBarRight : Dispatch<SetStateAction<boolean>>,
+  setLiveRoom: Dispatch<SetStateAction<boolean>>
 }
+
 const Footer = (props : Props) => {
   const [duration, setDuration] = React.useState<number>(0);
   const [currentTime, setCurrentTime] = React.useState("");
   const [rewindAudio, setRewindAudio] = React.useState<number>(0);
   const [volume, setVolume] = React.useState<number>(50);
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const [liveRoom, setLiveRoom] = React.useState<boolean>(false);
   const [turnVolume, setTurnVolume] = useState(false);
   const [repeat, setRepeat] = React.useState(false);
   const audioRef = React.useRef<HTMLAudioElement>(null);
@@ -116,7 +119,12 @@ const Footer = (props : Props) => {
   }, [repeat, volume, linkSong, globalPause]);
 
   return (
-    <div className="fixed z-50 w-[100%] bottom-0 bg-[#170f23]">
+    <div
+    onClick={() => {
+      setLiveRoom((value) => !value);
+      props.setLiveRoom((value) => !value);
+    }}
+    className="fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer">
       <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
           <div className="flex items-center w-[100%]">

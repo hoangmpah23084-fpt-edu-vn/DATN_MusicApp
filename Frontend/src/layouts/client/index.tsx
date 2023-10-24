@@ -4,10 +4,11 @@ import SidebarMenu from "@/components/SidebarMenu";
 import Footer from "@/components/Footer";
 import { Outlet } from "react-router-dom";
 import SidebarSong from "@/components/SidebarSong";
-
+import RoomPage from "@/pages/Room/RoomPage";
 
 const LayoutClient = () => {
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const [liveRoom, setLiveRoom] = React.useState<boolean>(false);
 
   return (
     <>
@@ -18,7 +19,11 @@ const LayoutClient = () => {
           <Outlet />
         </div>
         <SidebarSong sideBarRight={sideBarRight} />
-        <Footer setSideBarRight={setSideBarRight}  />
+       
+        {/* <div className="fixed w-[100%] max-h-[70px] z-100 bottom-0"> */}
+          <Footer setSideBarRight={setSideBarRight} setLiveRoom={setLiveRoom} />
+          {/* <RoomPage roomLive={liveRoom} /> */}
+        {/* </div> */}
       </div>
     </>
   );

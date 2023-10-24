@@ -11,11 +11,11 @@
   transition: all 0.7s;
 }
 
-.playlist-content .card-top:hover img {
+.playlist-content .media-left:hover img {
   transform: scale(1.1);
 }
 
-.playlist-content .card-top:hover .overlay,
-.playlist-content .card-top:hover .action-container {
+.playlist-content .media-left:hover .overlay,
+.playlist-content .media-left:hover .action-container {
   display: block;
 }

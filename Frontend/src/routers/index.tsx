@@ -17,6 +17,7 @@ import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 import BarChart from "@/components/Barchart";
 import RoomPage from "@/pages/Room/RoomPage";
 import PlaylistPage from "@/pages/Playlist/PlaylistPage";
+import Room from "@/pages/Room/room";
 
 export const router = createBrowserRouter([
   //todo FE
@@ -25,16 +26,16 @@ export const router = createBrowserRouter([
     element: <LayoutClient />,
     children: [
       { index: true, element: <KhamPhaPage /> },
-      // { path: "/test", element: <BarChart /> },
       { path: "mymusic/song/favorite", element: <FavouritePage /> },
-      { path: "mymusic/song/playlist", element: <PlaylistPage /> },
+      { path: "rooms", element: <Room /> },
+      { path: "playlist", element: <PlaylistPage /> },
     ],
   },
 
-  {
-    path: "/room",
-    element: <RoomPage />,
-  },
+  // {
+  //   path: "/liveroom",
+  //   element: <RoomPage />,
+  // },
 
   //todo BE
   {

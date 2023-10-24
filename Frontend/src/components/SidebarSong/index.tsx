@@ -8,6 +8,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { useStyles } from '../Footer';
 import { SongStateContext } from '../Context/SongProvider';
+
 type Props = {
   sideBarRight: boolean,
 }

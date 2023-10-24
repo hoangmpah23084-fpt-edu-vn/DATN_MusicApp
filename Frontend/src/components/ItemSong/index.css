@@ -10,7 +10,7 @@
 }
 
 .item:hover .item_list_time {
-    display: none;
+  display: none;
 }
 
 .item:hover .action-container,

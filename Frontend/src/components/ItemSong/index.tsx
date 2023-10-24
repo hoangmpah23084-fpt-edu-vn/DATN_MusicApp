@@ -72,18 +72,20 @@ const ItemSong = () => {
         </td>
         <td>
           <div className="flex items-center justify-center mr-2">
-            <span className="item_list mx-2 group relative">
+            <button className="item_list mx-2 group relative">
               <TfiVideoClapper className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
               <div className="absolute -top-5 -left-9 text-xs w-28 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <p>Xem MV</p>
               </div>
-            </span>
-            <span className="item_list mx-2 group relative">
+            </button>
+
+            <button className="item_list mx-2 group relative ">
               <PiMicrophoneStageDuotone className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
-                <p>Phát cùng lời bài hát</p>
+                <p className="text-white">Phát cùng lời bài hát</p>
               </div>
-            </span>
+            </button>
+
             <button className="text-[#9b4de0] mx-2 group relative ">
               <AiFillHeart className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
@@ -97,6 +99,7 @@ const ItemSong = () => {
             >
               <BsThreeDots className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
             </button>
+
             {modal && (
               <>
                 <div
