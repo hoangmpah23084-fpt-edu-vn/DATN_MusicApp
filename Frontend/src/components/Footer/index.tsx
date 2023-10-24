@@ -34,6 +34,7 @@ const Footer = (props : Props) => {
   const [rewindAudio , setRewindAudio] = useState<number>(0);
   const [volume , setVolume] = useState<number>(50);
   const [repeat , setRepeat] = useState(false);
+  const [randomSong , setRandomSong] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
@@ -58,6 +59,34 @@ const Footer = (props : Props) => {
       }
     }
   },[globalPause, intervalId, setGlobalPause])
+  const handRandomSong = () => {
+    const preRandom = randomSong; 
+    setRandomSong(!preRandom);
+    preRandom == false && setRepeat(false)
+  }
+  
+  useEffect(() => {
+    if (currentTime == SeconToMinuste(duration) && SeconToMinuste(duration) != '00:00' && repeat == false && randomSong == false) {
+      const findIndexSong = props.ListData.findIndex((item) => item._id == props.currentSong?._id)
+      const findSong = props.ListData.filter((item, index) => index == findIndexSong + 1);
+      props.setCurrentSong(findSong[0]);
+      localStorage.setItem("song",JSON.stringify(findSong[0]));
+      setGlobalPause(false);
+      setTimeout(() => {
+        setGlobalPause(true);
+      },500);
+    }
+    if (currentTime == SeconToMinuste(duration) && SeconToMinuste(duration) != '00:00' && randomSong == true) {
+      const randomSong = props.ListData[Math.round(Math.random() * props.ListData.length) + 0]
+      props.setCurrentSong(randomSong);
+      localStorage.setItem('song', JSON.stringify(randomSong));
+      setGlobalPause(false);
+      setTimeout(() => {
+        setGlobalPause(true);
+      },500);
+    }
+  },[currentTime == SeconToMinuste(duration),randomSong])
+
   
   useEffect(() => {
     globalPause ? audioRef.current?.play() : audioRef.current?.pause();
@@ -178,13 +207,13 @@ const Footer = (props : Props) => {
             <div className="w-[100%] h-[70%] fjc">
               <div className="w-[40%] min-w-[200px] h-[75%] flex">
                 <div className="w-[19%] h-[100%] ">
-                  <ListItemButtonStyle >
+                  <ListItemButtonStyle onClick={handRandomSong} >
                     <ListItemIconStyle>
-                      <ShuffleIcon sx={{ color : "white"}} />
+                      <ShuffleIcon sx={{ color : randomSong ? "#c273ed" : "white"}} />
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
-                <PrevSong ListData={props.ListData} setCurrentSong={props.setCurrentSong} currentSong={props.currentSong} />
+                <PrevSong ListData={props.ListData} setCurrentSong={props.setCurrentSong} currentSong={props.currentSong} setGlobalPause={setGlobalPause} />
                 <div className="w-[24%] h-[100%] ">
                   <PauseListItemButtonStyle onClick={togglePlayPause} >
                     <PauseListItemIconStyle>
@@ -192,7 +221,7 @@ const Footer = (props : Props) => {
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>
-                <NextSong ListData={props.ListData} setCurrentSong={props.setCurrentSong} currentSong={props.currentSong} />
+                <NextSong ListData={props.ListData} setCurrentSong={props.setCurrentSong} currentSong={props.currentSong} setGlobalPause={setGlobalPause} />
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle onClick={() => setRepeat((value) => !value)} >
                     <ListItemIconStyle>

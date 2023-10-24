@@ -69,7 +69,7 @@ export const getRoom = async (req, res) => {
       .findById(req.params.idChat)
       .populate("memberGroup", "-password")
       .populate("isAdminGroup", "-password")
-      .populate("listMessages", "-password")
+      .populate("listMessages", "-password -id_room")
       .then(async (result) => {
         console.log(result);
         result = await model_user.populate(result, {
