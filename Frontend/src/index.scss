@@ -22,11 +22,11 @@
       }
     }
     .pause{
-      visibility: visible;
+      display: block;
     }
   }
   .pause{
-    visibility: hidden;
+    display: none;
   }
 }
 @layer components {

@@ -106,7 +106,9 @@ const SidebarSong = (props: Props) => {
                 return <div className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id ? "bg-[#9B4DE0]" : "hover:bg-[#b4b4b32d]"} my-1 fjc  cursor-pointer rounded-lg wall`}>
                 <div className='w-[95%] h-[80%] flex justify-between '>
                   <div className='w-[17%] h-full'>
-                  <div className='absolute w-[47px] h-[45px] z-10 fjc pause'>
+                    <div className='w-full h-full flex justify-start items-center relative wallSong'>
+                      <img className='w-[90%] h-[90%] bg-cover rounded-[5px]' src={`${item.song_image[0]}`} />
+                      <div className='absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause'>
                   <PauseListItemButtonStyle  onClick={() => globalPause && dataLocal?._id == item._id ? stopPause(item)  :  handStart(item)}>
                       <PauseListItemIconStyle sx={{ border : "none", ":hover" : {
                         border : "none",
@@ -119,8 +121,6 @@ const SidebarSong = (props: Props) => {
                       </PauseListItemIconStyle>
                     </PauseListItemButtonStyle>
                   </div>
-                    <div className='w-full h-full flex justify-start items-center relative wallSong'>
-                      <img className='w-[90%] h-[90%] bg-cover rounded-[5px]' src={`${item.song_image[0]}`} />
                     </div>
                   </div>
                   <div className='w-[48%] ml-[2%] h-full'>
