@@ -12,7 +12,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 type Props = {
-  roomLive: boolean;
+  roomLive?: boolean;
 };
 
 const img_slide = [
@@ -37,9 +37,9 @@ const RoomPage = (props: Props) => {
   return (
     <div>
       <div
-        className={`zm-room-wrapper bg-[#170f23] flex fixed ${
-          props.roomLive ? "h-full" : "h-0"
-        } left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
+        className={`zm-room-wrapper bg-[#170f23] flex fixed 
+        h-full
+         left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
       >
         <div className="zm-left-content w-[88px] relative z-20 bg-[#21181c] h-full">
           <div className="scroll-container h-full">

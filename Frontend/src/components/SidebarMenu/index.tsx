@@ -54,7 +54,7 @@ const SidebarMenu = () => {
             </Link>
           </li>
 
-          <li className="">
+          {/* <li className="">
             <Link
               to={"/"}
               className="flex items-center leading-[20px] py-[6px] px-[24px]"
@@ -62,7 +62,7 @@ const SidebarMenu = () => {
               <BsRadioactive className="w-[22px] text-[#ccc] h-[40px]" />
               <span className="ml-3">Radio</span>
             </Link>
-          </li>
+          </li> */}
 
           <li className="">
             <Link
@@ -168,7 +168,7 @@ const SidebarMenu = () => {
               </li>
               <li className="">
                 <Link
-                  to={"/"}
+                  to={"/playlist"}
                   className="flex items-center leading-[20px] py-[13px] px-[24px]"
                 >
                   <div className="h-[26px] w-[26px] flex items-center justify-center rounded-[9px] bg-[#fa702e]">
@@ -179,7 +179,7 @@ const SidebarMenu = () => {
               </li>
               <li className="">
                 <Link
-                  to={"/"}
+                  to={"/album"}
                   className="flex items-center leading-[20px] py-[13px] px-[24px]"
                 >
                   <div className="h-[26px] w-[26px] flex items-center justify-center rounded-[9px] bg-[#ff4eb0]">
