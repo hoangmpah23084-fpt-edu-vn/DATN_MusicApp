@@ -36,7 +36,7 @@ const ModalRoom = ({ dataModal, onHandleResetData }: roomProps) => {
     return (
         <>
             {dataModal.password && <div className="bg-slate-950/80 absolute w-full h-full text-white z-50">
-                <div className="fixed flex justify-center items-center z-50 w-full p-4 overflow-x-hidden overflow-y-auto  md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div className="fixed flex justify-center items-center z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
                     <div className="relative w-full max-w-md max-h-full">
                         <div ref={ref} className="relative bg-[#231b2e] rounded-lg shadow dark:bg-gray-700 ">
                             <button type="button" onClick={() => OnReset()} className="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" >

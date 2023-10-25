@@ -59,7 +59,7 @@ const SidebarSong = (props: Props) => {
     setStateColor(false);
   }
   return (
-    <div className={`right-0 transition-all duration-700 ${props.sideBarRight ? "fixed" : "fixed translate-x-[600px]"}  z-50  border-l-[1px] border-[#120822] text-white w-[350px] h-[660px] bg-[#120822] bottom-[90px] fjc`}>
+    <div className={`right-0 transition-all duration-700 ${props.sideBarRight ? "fixed" : "fixed translate-x-[600px]"} top-3 z-50  border-l-[1px] border-[#120822] text-white w-[350px] h-[100%] bg-[#120822] bottom-[90px] fjc`}>
       <div className='w-[93%] h-full'>
         <div className='w-full h-[10%] fjc'>
           <div className='w-full h-[50%]  flex'>
