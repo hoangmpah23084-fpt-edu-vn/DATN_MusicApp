@@ -99,7 +99,7 @@ const Room = () => {
         <div className="text-white w-full h-[100%]">
             <div className='flex items-center justify-between mt-24 mx-16 '>
                 <h1 className="flex items-center text-[40px] font-bold ">Phòng Nhạc <span className="ml-2 mt-1 hover:opacity-70 cursor-pointer ease-in-out duration-300"><AiOutlineHome /></span></h1>
-                <input type="search" className="bg-[#3a3244] text-white text-sm rounded-lg block w-96 p-2.5" placeholder="Tìm phòng" required />
+                <input type="search" className=" w-full bg-[#2f2739] h-[40px] text-[14px] rounded-3xl focus:outline-none border-none placeholder: pl-5 lg:mx-auto lg:w-[30rem]" placeholder="Tìm phòng" required />
                 <button className='relative bg-[#b76cea] min-w-[130px] py-2 rounded-full hover:bg-white hover:text-[#654789] flex items-center text-md text-center justify-center ease-in-out duration-300'>Tạo phòng <span className='text-xl font-bold ml-2'><FaPlus /> </span></button>
             </div>
             <div className='pb-[40%] px-16 grid grid-cols-2 gap-4 mt-5'>
