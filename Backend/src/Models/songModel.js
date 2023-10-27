@@ -26,6 +26,10 @@ const SongSchame = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Artists",
     },
+    total_like:{
+      type:Number,
+      default: 0,
+    }
   },
   { versionKey: false, timestamps: true }
 );
