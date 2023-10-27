@@ -29,11 +29,7 @@ const SongSchame = new mongoose.Schema(
     total_like:{
       type:Number,
       default: 0,
-    },
-    is_favourite:{
-      type: Boolean,
-      default: false,
-    },
+    }
   },
   { versionKey: false, timestamps: true }
 );
