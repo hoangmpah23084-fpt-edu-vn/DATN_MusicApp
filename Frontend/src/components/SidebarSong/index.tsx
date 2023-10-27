@@ -6,7 +6,7 @@ import {
   PauseListItemIconStyle,
   ListItemIconBgStyle,
 } from "@/Mui/style/Footer/StyleAction";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { useEffect } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -20,7 +20,6 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 type Props = {
   sideBarRight: boolean;
-  setCurrentSong: Dispatch<SetStateAction<ifSong | null>>;
 };
 
 const SidebarSong = (props: Props) => {
@@ -30,16 +29,27 @@ const SidebarSong = (props: Props) => {
   );
   const dispatch = useAppDispatch();
   const renderListSong = useAppSelector(({ Song }) => Song);
-  const { setGlobalPause, globalPause } = SongStateContext();
+  const { setGlobalPause, globalPause, setCurrentSong } = SongStateContext();
   const classes = useStyles();
-
   const stopPause = React.useCallback(
     (value: ifSong) => {
-      props.setCurrentSong(value);
+      setCurrentSong(value);
       setDataLocal(undefined);
       setGlobalPause(false);
     },
-    [props, setGlobalPause]
+    [setGlobalPause]
+  );
+  const handStart = React.useCallback(
+    (value: ifSong) => {
+      setCurrentSong(value);
+      localStorage.setItem("song", JSON.stringify(value));
+      const currentlocal: ifSong = JSON?.parse(
+        localStorage?.getItem("song") || ""
+      );
+      setDataLocal(currentlocal);
+      setGlobalPause(true);
+    },
+    [setGlobalPause]
   );
 
   useEffect(() => {
@@ -54,25 +64,14 @@ const SidebarSong = (props: Props) => {
     }
   }, [globalPause]);
 
-  const handStart = React.useCallback(
-    (value: ifSong) => {
-      props.setCurrentSong(value);
-      localStorage.setItem("song", JSON.stringify(value));
-      const currentlocal: ifSong = JSON?.parse(
-        localStorage?.getItem("song") || ""
-      );
-      setDataLocal(currentlocal);
-      setGlobalPause(true);
-    },
-    [props, setGlobalPause]
-  );
-
-  const handPlaylist = () => {
-    setStateColor(true);
-  };
-
-  const handRecently = () => {
-    setStateColor(false);
+  const handTogglePlaylist = () => {
+    const preStateColor = stateColor;
+    setStateColor(!preStateColor);
+    if (!preStateColor) {
+      setStateColor(true);
+    }else{
+      setStateColor(false);
+    }
   };
   return (
     <div
@@ -89,7 +88,7 @@ const SidebarSong = (props: Props) => {
                   className={`text-[11px] transition-all  w-full rounded-full h-full ${
                     stateColor ? "bg-[#6A6474] font-bold" : ""
                   }`}
-                  onClick={() => handPlaylist()}
+                  onClick={() => handTogglePlaylist()}
                 >
                   Danh sách phát
                 </button>
@@ -99,7 +98,7 @@ const SidebarSong = (props: Props) => {
                   className={`text-[10px] transition-all w-full h-full rounded-full ${
                     stateColor ? "" : "bg-[#6A6474] font-bold"
                   }`}
-                  onClick={() => handRecently()}
+                  onClick={() => handTogglePlaylist()}
                 >
                   Nghe gần đây
                 </button>

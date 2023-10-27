@@ -1,4 +1,4 @@
-import {  ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import {  ifSong, ifSongAdmin } from "@/pages/Admin/Interface/ValidateSong";
 import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -13,14 +13,14 @@ const initialState: initState = {
     loading : false,
     song : []
 }
-export const handAddSong = createAsyncThunk("song/addSong", async (song : ifSong) => {
+export const handAddSong = createAsyncThunk("song/addSong", async (song : ifSongAdmin) => {
     //todo <{ message : string}> định nghĩa type cho giá trị trả về
     const {data} = await axios.post<{ message : string}>("http://localhost:8080/api/Song", song);
     console.log(data);
     return data.message
 })
 export const handGetSong = createAsyncThunk("song/getSong", async () => {
-    const {data} = await axios.get<{data : ifSong[]}>("http://localhost:8080/api/Song") 
+    const {data} = await axios.get<{data : ifSong[] | any}>("http://localhost:8080/api/Song") 
     return data.data
 })
 export const handDeleteSong = createAsyncThunk("song/deleteSong", async (id : string) => {

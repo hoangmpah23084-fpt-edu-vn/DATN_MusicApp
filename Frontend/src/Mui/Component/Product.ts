@@ -1,3 +1,4 @@
+import LoadingButton from "@mui/lab/LoadingButton";
 import { styled, Box, TextField, Typography } from "@mui/material";
 
 
@@ -11,7 +12,7 @@ export const TypographySong = styled(Typography)(() => ({
 
 export const BoxUpload = styled(Box)(() => ({
     width : "100%",
-    height: "25%",
+    height: "35%",
     display: "flex",
     cursor: "pointer",
     alignItems: "center",
@@ -39,5 +40,16 @@ export const InputUploadImage = styled(TextField)(() => ({
             cursor: "pointer",
         }
       }
+}))
+export const LoadingButtonCl = styled(LoadingButton)(() => ({
+    color: "white",
+    backgroundColor: '#9061F9',
+    width: '110px',
+    height: '90%',
+    ":hover": {
+        backgroundColor: '#9061F9',
+        color: "white",
+        opacity: 0.9
+    }
 }))
     
