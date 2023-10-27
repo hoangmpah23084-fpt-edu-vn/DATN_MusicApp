@@ -4,7 +4,7 @@ import { BsThreeDots, BsFillPlayFill } from "react-icons/bs";
 import { AiOutlineHeart } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import "./css.scss";
-import ListSong from "@/components/ListSong";
+import ListSong from "@/components/Favourites/ListSong";
 type Props = {};
 
 const PlaylistPage = (props: Props) => {
@@ -77,7 +77,7 @@ const PlaylistPage = (props: Props) => {
                   </div>
                   <div className="actions flex flex-col items-center justify-center">
                     <button className="flex bg-[#9b4de0] items-center rounded-[25px] my-[20px] px-[20px] py-[5px]">
-                      <BsFillPlayFill className='text-[25px]'/>
+                      <BsFillPlayFill className='text-[25px]' />
                       <span className="uppercase text-[14px] font-light">Tiếp tục phát</span>
                     </button>
                     <div className="flex">

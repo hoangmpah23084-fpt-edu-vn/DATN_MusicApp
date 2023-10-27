@@ -3,14 +3,17 @@ import { BsMusicNoteBeamed, BsThreeDots, BsFillPlayFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { TfiVideoClapper } from "react-icons/tfi";
 import { PiMicrophoneStageDuotone } from "react-icons/pi";
-import { FaPlay } from "react-icons/fa";
 import "./index.css";
 import { useState } from "react";
-import ModalSongMenu from "../Modals/modalSongMenu";
+import ModalSongMenu from "../../Modals/modalSongMenu";
+import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 
-const ItemSong = () => {
+type props = {
+  item: ifSong
+}
+
+const ItemSong = ({ item }: props) => {
   const [modal, setModal] = useState<boolean>(false);
-
   return (
     <tbody>
       <tr className="item border-b-[#2c2436] border-b-[1px] cursor-pointer hover:bg-[#2f2739] ease-in-out duration-500">
@@ -42,23 +45,13 @@ const ItemSong = () => {
               </div>
             </div>
           </div>
-          {/* <div className="relative">
-            <img
-              src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg"
-              alt=""
-              className="w-10 h-10 rounded-lg mx-1 relative z-10"
-            />
-            <span className="absolute z-50  item_list ">
-              <FaPlay />
-            </span>
-          </div> */}
           <div className="mx-1">
-            <p>Khó Vẽ Nụ cười</p>
+            <p>{item.song_name}</p>
             <Link
               to={`#`}
               className="text-xs text-[#86828c] hover:text-[#9b4de0] hover:border-b-[#9b4de0] hover:border-b-[1px]"
             >
-              Đạt G
+              {item.song_singer}
             </Link>
           </div>
         </td>

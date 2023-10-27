@@ -2,11 +2,20 @@
 import { AiFillPlayCircle, } from "react-icons/ai"
 import { BsPlusLg } from "react-icons/bs"
 import { Link } from "react-router-dom"
-import ListSong from "@/components/ListSong"
+import ListSong from "@/components/Favourites/ListSong"
+import { useAppDispatch } from "@/store/hooks"
+import { useEffect } from "react"
+import { getFavourite } from "@/store/Reducer/favouriteReducer"
 
 
 
 const FavouritePage = () => {
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(getFavourite())
+    }, [])
 
     return (<div className="text-white w-full">
         <h1 className="flex items-center text-[40px] font-bold mx-16 mt-20">Thư viện <span className="ml-2 mt-1 hover:opacity-70 cursor-pointer ease-in-out duration-300"><AiFillPlayCircle /></span></h1>

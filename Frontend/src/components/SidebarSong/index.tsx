@@ -18,6 +18,7 @@ import { SongStateContext } from "../Context/SongProvider";
 import { handGetSong } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { addFavourite, getFavourite } from "@/store/Reducer/favouriteReducer";
 type Props = {
   sideBarRight: boolean;
   setCurrentSong: Dispatch<SetStateAction<ifSong | null>>;
@@ -43,7 +44,7 @@ const SidebarSong = (props: Props) => {
   );
 
   useEffect(() => {
-     dispatch(handGetSong());
+    dispatch(handGetSong());
   }, [dispatch]);
 
   useEffect(() => {
@@ -74,11 +75,18 @@ const SidebarSong = (props: Props) => {
   const handRecently = () => {
     setStateColor(false);
   };
+
+
+  const onhandleFavourite = (id_song: string) => {
+    dispatch(addFavourite(id_song)).then(() => {
+      dispatch(getFavourite())
+    })
+  }
+
   return (
     <div
-      className={`right-0 transition-all duration-700 ${
-        props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"
-      } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#120822] bottom-[90px] fjc px-[8px]`}
+      className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"
+        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#120822] bottom-[90px] fjc px-[8px]`}
     >
       <div className="w-full h-full">
         <div className="w-full h-[70px] fjc">
@@ -86,9 +94,8 @@ const SidebarSong = (props: Props) => {
             <div className="w-[70%] h-full bg-[#2A2139] rounded-full flex items-center justify-center">
               <div className="w-[48%] h-[85%]">
                 <button
-                  className={`text-[11px] transition-all  w-full rounded-full h-full ${
-                    stateColor ? "bg-[#6A6474] font-bold" : ""
-                  }`}
+                  className={`text-[11px] transition-all  w-full rounded-full h-full ${stateColor ? "bg-[#6A6474] font-bold" : ""
+                    }`}
                   onClick={() => handPlaylist()}
                 >
                   Danh sách phát
@@ -96,9 +103,8 @@ const SidebarSong = (props: Props) => {
               </div>
               <div className="w-[50%] h-[85%]">
                 <button
-                  className={`text-[10px] transition-all w-full h-full rounded-full ${
-                    stateColor ? "" : "bg-[#6A6474] font-bold"
-                  }`}
+                  className={`text-[10px] transition-all w-full h-full rounded-full ${stateColor ? "" : "bg-[#6A6474] font-bold"
+                    }`}
                   onClick={() => handRecently()}
                 >
                   Nghe gần đây
@@ -145,11 +151,10 @@ const SidebarSong = (props: Props) => {
               renderListSong.song.map((item: ifSong) => {
                 return (
                   <div
-                    className={`w-full h-[60px] ${
-                      dataLocal && dataLocal?._id == item._id
-                        ? "bg-[#9B4DE0]"
-                        : "hover:bg-[#b4b4b32d]"
-                    } my-1 fjc  cursor-pointer rounded-lg wall`}
+                    className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
+                      ? "bg-[#9B4DE0]"
+                      : "hover:bg-[#b4b4b32d]"
+                      } my-1 fjc  cursor-pointer rounded-lg wall`}
                   >
                     <div className="w-[95%] h-[80%] flex justify-between ">
                       <div className="w-[17%] h-full">
@@ -179,8 +184,8 @@ const SidebarSong = (props: Props) => {
                                 }}
                               >
                                 {dataLocal &&
-                                globalPause &&
-                                dataLocal?._id == item._id ? (
+                                  globalPause &&
+                                  dataLocal?._id == item._id ? (
                                   <PauseIcon className={classes.root} />
                                 ) : (
                                   <PlayArrowIcon className={classes.root} />
@@ -196,19 +201,20 @@ const SidebarSong = (props: Props) => {
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">
-                          {item.song_singer}
+                            {item.song_singer}
                           </p>
                         </div>
                       </div>
                       <div className="w-[30%] h-full flex">
                         <div className="w-1/2">
-                          <ListItemButtonStyle>
+                          <ListItemButtonStyle onClick={() => onhandleFavourite(item?._id as string)}>
                             <ListItemIconStyle>
                               <FavoriteBorderIcon
                                 sx={{ color: "white", fontSize: "20px" }}
+
                               />
                             </ListItemIconStyle>
-                          </ListItemButtonStyle>
+                          </ListItemButtonStyle >
                         </div>
                         <div className="w-1/2">
                           <ListItemButtonStyle>

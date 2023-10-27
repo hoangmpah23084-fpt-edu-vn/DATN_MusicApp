@@ -19,7 +19,7 @@ interface roomForm {
     password: string
 }
 
-const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5MTZkMDQwOGIwNWE2YTJjMyIsImlhdCI6MTY5ODM4MjA1MCwiZXhwIjoxNjk4Mzg1NjUwfQ.hu93XIjtNIqMvKqDmin0mq1GBCyLHVU840ArAeqJhSo"
+const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MzdkYWM5ZTI4Zjg4ODVlMzY3ODA3NyIsImlhdCI6MTY5ODM5MzEzMywiZXhwIjoxNjk4Mzk2NzMzfQ.dFdDWhqtwUaNEdmHu1RGD7Sa-OiJ-JjZy1Upc0sM00Q"
 
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
     const { data } = await axios.post<{ data: roomForm }>("http://localhost:8080/api/room", dataToForm, {
