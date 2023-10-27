@@ -1,11 +1,14 @@
 import ItemRoom from "@/components/ItemRoom/ItemRoom";
 import ModalRoom from "@/components/Modals/room";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
 
 import { IRoom } from "../Admin/Interface/Room";
 import ModalCreateRoom from "@/components/Modals/createRoom";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { getRoom } from "@/store/Reducer/roomReducer";
+import { RootState } from "@/store/store";
 
 interface ICreateRoom {
   name: string;
@@ -16,91 +19,50 @@ const Room = () => {
   const [isShowModalCreateRoom, setIsShowModalCreateRoom] =
     useState<boolean>(false);
 
+    const [isShowModalJoinRoom, setIsShowModalJoinRoom] =
+    useState<boolean>(false);
+
+    const [selectedRoom,setSelectedRoom] = useState<IRoom>({} as IRoom)
+
   const [dataModal, setDataModal] = useState<IRoom>({
     id: 0,
     name: "",
     quanlity: 0,
   });
 
-  const data = [
-    {
-      id: 1,
-      name: "room 1",
-      quanlity: 1,
-    },
-    {
-      id: 2,
-      name: "room 2 room",
-      quanlity: 1,
-      password: "abc",
-    },
-    {
-      id: 3,
-      name: "room 3 room",
-      quanlity: 2,
-    },
-    {
-      id: 4,
-      name: "room 4",
-      quanlity: 1,
-    },
-    {
-      id: 5,
-      name: "room 5",
-      quanlity: 2,
+  const { room } = useAppSelector((state:RootState) => state.room);
+  const dispatch = useAppDispatch();
 
-      password: "abc",
-    },
-    {
-      id: 6,
-      name: "room 6",
-      quanlity: 2,
-      password: "abc",
-    },
-    {
-      id: 7,
-      name: "room 7",
-      quanlity: 2,
-    },
-    {
-      id: 8,
-      name: "room 8",
-      quanlity: 1,
-      password: "abc",
-    },
-    {
-      id: 9,
-      name: "room 9",
-      quanlity: 1,
-
-      password: "abc",
-    },
-    {
-      id: 10,
-      name: "room 10",
-      quanlity: 1,
-      password: "abc",
-    },
-    {
-      id: 11,
-      name: "room 1",
-      quanlity: 1,
-    },
-  ];
-
-  const onTest = (data: IRoom) => {
-    if (data.password || data.password === "") {
-      setDataModal(data);
+  const fetchRoom =() => {
+    try {
+      dispatch(getRoom());
+    } catch (error) {
+      console.log(error);
+      
     }
   };
+  useEffect(() => {
+    fetchRoom()
+  }, [dispatch]);
+
+  console.log("room",room);
 
   const handleShowModalCreateRoom = () => {
     setIsShowModalCreateRoom(!isShowModalCreateRoom);
   };
 
+  const handleShowModalJoinRoom = () => {
+    console.log(123);
+    
+    setIsShowModalJoinRoom(!isShowModalJoinRoom);
+  };
+
+  const handleSelectedRoom = (data:IRoom) => {
+    setSelectedRoom(data)
+  }
   return (
     <>
-      <ModalRoom dataModal={dataModal} onHandleResetData={onTest} />
+      {isShowModalJoinRoom && <ModalRoom data={selectedRoom} onShowModal={handleShowModalJoinRoom} />}
       {isShowModalCreateRoom && (
         <ModalCreateRoom onShowModal={handleShowModalCreateRoom} />
       )}
@@ -129,9 +91,9 @@ const Room = () => {
               </span>
             </button>
           </div>
-          <div className="pb-[40%] px-16 grid grid-cols-2 gap-4 mt-5">
-            {data.map((data: IRoom) => {
-              return <ItemRoom data={data} onHandlePassword={onTest} />;
+          <div className="pb-[40%] px-16 grid grid-cols-6 gap-6 mt-5">
+            {room.map((data: IRoom , index:number) => {
+              return <ItemRoom key={index} data={data} handleSelectedRoom={handleSelectedRoom} handleShowModalJoinRoom={handleShowModalJoinRoom} />;
             })}
           </div>
         </div>
