@@ -43,13 +43,11 @@ const SidebarSong = (props: Props) => {
   );
 
   useEffect(() => {
-    // init data
-    void dispatch(handGetSong());
+     dispatch(handGetSong());
   }, [dispatch]);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
-    console.log(getSongLocal);
     if (getSongLocal) {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
       setDataLocal(currentlocal);
@@ -194,11 +192,11 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[48%] ml-[2%] h-full">
                         <div className="w-full h-[50%]">
-                          <h1 className="font-semibold">Somebody</h1>
+                          <h1 className="font-semibold">{item.song_name}</h1>
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">
-                            Dreamcatcher
+                          {item.song_singer}
                           </p>
                         </div>
                       </div>
