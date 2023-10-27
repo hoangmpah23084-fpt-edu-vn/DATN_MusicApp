@@ -6,7 +6,6 @@ import SongSchame from "../Models/songModel.js";
 export const getFavourites = async (req, res) => {
   try {
     const list_songFavourites = await Favourites.findOne({id_user:req.user._id}).populate("list_songFavourites")
-    console.log(list_songFavourites);
     if (!list_songFavourites) {
       return res.status(201).json({
         message: "Danh sách không tồn tại",
@@ -29,13 +28,14 @@ export const getFavourites = async (req, res) => {
 export const createFavourites = async (req, res) => {
   const { id_song } = req.body; // lấy id_user và id_song từ request
   const id_user = req.user._id
+  console.log(id_user);
+  console.log(req.body);
   try {
     const checkFavourite = await Favourites.findOne({
       id_user: id_user,
       list_songFavourites: id_song,
     });
     if (checkFavourite) {
-      console.log(123);
       const index = checkFavourite.list_songFavourites.findIndex((item) =>
         item.equals(id_song)
       );
@@ -58,8 +58,6 @@ export const createFavourites = async (req, res) => {
     }
     // bắt đầu call API
     if (!checkFavourite) {
-      console.log(123);
-
       const dataFavourite = await Favourites.findOneAndUpdate(
         { id_user }, //tham số đầu tiên là id_user
         { $addToSet: { list_songFavourites: id_song } },

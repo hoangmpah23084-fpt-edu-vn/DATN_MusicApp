@@ -29,7 +29,7 @@ const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5M
 
 
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
-    const  {data}  = await instanceAxios.post("/room",dataToForm)
+    const { data } = await instanceAxios.post("/room", dataToForm)
     return data;
 })
 export const getRoom = createAsyncThunk("room/getRoom", async () => {
@@ -38,7 +38,7 @@ export const getRoom = createAsyncThunk("room/getRoom", async () => {
 })
 
 export const joinRoom = createAsyncThunk("room/joinRoom", async (dataForm: joinRoom) => {
-    const { data } = await instanceAxios.post("/joinroom",dataForm)
+    const { data } = await instanceAxios.post("/joinroom", dataForm)
     return data;
 })
 
