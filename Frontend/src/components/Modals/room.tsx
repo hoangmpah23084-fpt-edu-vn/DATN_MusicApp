@@ -5,6 +5,7 @@ import useClickOutside from "@/hooks/clickOutSide";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { joinRoom } from "@/store/Reducer/roomReducer";
+import { toast } from "react-toastify";
 
 
 
@@ -18,26 +19,27 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
-  
-  const onHandleSubmit: SubmitHandler<any> = async ({password}) => {
-    console.log(password);
-    console.log(data);
 
-    
-
-    await dispatch(joinRoom({
-      idChat: data._id,
-      password: password
-    })).then((data:any) => {
-      console.log(data);
+  const onHandleSubmit: SubmitHandler<any> = async ({ password }) => {
+    try {
+      const resq = await dispatch(joinRoom({
+        idChat: data._id,
+        password: password
+      }))
       
-      // if(data) {
-      //   alert(data)
-      // }
-    })
-  
-    // navigate("/liveroom");
-    reset();
+      toast.success(resq.payload.message)
+      navigate("/liveroom");
+    } catch (error) {
+      toast.error(error as string)
+    }finally {
+      reset();
+    }
+
+
+
+
+
+
   };
 
   const ref = useClickOutside(() => onShowModal());
