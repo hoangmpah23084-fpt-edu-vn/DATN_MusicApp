@@ -1,4 +1,5 @@
 import { IRoom } from "@/pages/Admin/Interface/Room";
+import instanceAxios from "@/utils/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -28,25 +29,17 @@ const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5M
 
 
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
-    const { data } = await axios.post<{ data: roomForm }>("http://localhost:8080/api/room", dataToForm, {
-        headers: {
-            "Authorization": token
-        }
-    });
-    return data.data;
+    const  {data}  = await instanceAxios.post("/room",dataToForm)
+    return data;
 })
 export const getRoom = createAsyncThunk("room/getRoom", async () => {
-    const { data } = await axios.get<{ data: IRoom[] }>("http://localhost:8080/api/room");
+    const { data } = await instanceAxios.get('/room');
     return data.data;
 })
 
 export const joinRoom = createAsyncThunk("room/joinRoom", async (dataForm: joinRoom) => {
-    const { data } = await axios.post<{ data: IRoom[] }>("http://localhost:8080/api/joinroom" , dataForm , {
-        headers: {
-            "Authorization": token
-        }
-    });
-    return data.data;
+    const { data } = await instanceAxios.post("/joinroom",dataForm)
+    return data;
 })
 
 
