@@ -15,6 +15,7 @@ import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import { SongStateContext } from "../Context/SongProvider";
 import { NextSong, PrevSong } from "./NextSong";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import io from "socket.io-client";
 
 const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
@@ -42,6 +43,7 @@ const Footer = (props : Props) => {
   const classes = useStyles();
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const {setGlobalPause, globalPause } = SongStateContext();
+  const [tryConnect, setTryConnect] = useState(false);
   
   const togglePlayPause = useCallback(() => {
     const preValue = globalPause;
@@ -92,6 +94,8 @@ const Footer = (props : Props) => {
   
   useEffect(() => {
     globalPause ? audioRef.current?.play() : audioRef.current?.pause();
+    connect.emit("trySend", [1,2,3])
+    connect.on("connected", () => void setTryConnect(true));
     if (globalPause) {
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
