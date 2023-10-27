@@ -22,7 +22,9 @@ export const router = createBrowserRouter([
     element: <LayoutClient />,
     children: [
       { index: true, element: <KhamPhaPage /> },
-      { path: "mymusic/song/favorite", element: <FavouritePage /> }],
+      { path: "mymusic/song/favorite", element: <FavouritePage /> }, 
+      // { path: "profile"}
+    ],
   },
 
   //todo BE
