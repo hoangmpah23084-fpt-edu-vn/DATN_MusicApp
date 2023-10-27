@@ -16,7 +16,7 @@ import { SongStateContext } from "../Context/SongProvider";
 import { NextSong, PrevSong } from "./NextSong";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 
-const connect = io("http://localhost:8080")
+// const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
   root: {
     color : "white",
