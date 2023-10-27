@@ -1,7 +1,10 @@
 import { IRoom, RoomSchame } from "@/pages/Admin/Interface/Room";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai"
+import useClickOutside from "@/hooks/clickOutSide";
+
+
 
 type roomProps = {
   dataModal: IRoom;
