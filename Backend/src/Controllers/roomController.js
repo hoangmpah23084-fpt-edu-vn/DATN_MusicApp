@@ -131,6 +131,7 @@ export const joinRoom = async (req, res) => {
   try {
     const { idChat, password } = req.body;
     const Chat = await roomModel.findOne({ _id: idChat });
+    console.log(Chat.password , password);
     if (Chat.memberGroup.length >= 2) {
       return res.status(400).json({
         message: "Phòng đã đủ người",
