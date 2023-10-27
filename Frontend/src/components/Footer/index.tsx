@@ -16,14 +16,13 @@ import { SongStateContext } from "../Context/SongProvider";
 import { NextSong, PrevSong } from "./NextSong";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 
-export const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      color: "white",
-      "&:hover": { color: "#9B4DE0" },
-    },
-  })
-);
+const connect = io("http://localhost:8080")
+export const useStyles = makeStyles(() => createStyles({
+  root: {
+    color : "white",
+    "&:hover" :{color : "#9B4DE0"}
+  },
+}));
 type Props = {
   ListData : ifSong[],
   currentSong : ifSong | null,
