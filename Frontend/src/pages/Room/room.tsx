@@ -10,12 +10,9 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getRoom } from "@/store/Reducer/roomReducer";
 import { RootState } from "@/store/store";
 
-interface ICreateRoom {
-  name: string;
-  password: string;
-}
-
 const Room = () => {
+
+
   const [isShowModalCreateRoom, setIsShowModalCreateRoom] =
     useState<boolean>(false);
 
@@ -23,12 +20,6 @@ const Room = () => {
     useState<boolean>(false);
 
     const [selectedRoom,setSelectedRoom] = useState<IRoom>({} as IRoom)
-
-  const [dataModal, setDataModal] = useState<IRoom>({
-    id: 0,
-    name: "",
-    quanlity: 0,
-  });
 
   const { room } = useAppSelector((state:RootState) => state.room);
   const dispatch = useAppDispatch();
@@ -45,21 +36,18 @@ const Room = () => {
     fetchRoom()
   }, [dispatch]);
 
-  console.log("room",room);
-
   const handleShowModalCreateRoom = () => {
     setIsShowModalCreateRoom(!isShowModalCreateRoom);
   };
 
-  const handleShowModalJoinRoom = () => {
-    console.log(123);
-    
+  const handleShowModalJoinRoom = () => { 
     setIsShowModalJoinRoom(!isShowModalJoinRoom);
   };
 
   const handleSelectedRoom = (data:IRoom) => {
     setSelectedRoom(data)
   }
+
   return (
     <>
       {isShowModalJoinRoom && <ModalRoom data={selectedRoom} onShowModal={handleShowModalJoinRoom} />}

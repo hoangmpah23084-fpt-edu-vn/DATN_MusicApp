@@ -3,6 +3,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import useClickOutside from "@/hooks/clickOutSide";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
+import { joinRoom } from "@/store/Reducer/roomReducer";
 
 
 
@@ -14,11 +16,27 @@ type roomProps = {
 const ModalRoom = ({ onShowModal, data }: roomProps) => {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
   
-  const onHandleSubmit: SubmitHandler<any> = (password) => {
+  const onHandleSubmit: SubmitHandler<any> = async ({password}) => {
     console.log(password);
     console.log(data);
-    navigate("/liveroom");
+
+    
+
+    await dispatch(joinRoom({
+      idChat: data._id,
+      password: password
+    })).then((data:any) => {
+      console.log(data);
+      
+      // if(data) {
+      //   alert(data)
+      // }
+    })
+  
+    // navigate("/liveroom");
     reset();
   };
 

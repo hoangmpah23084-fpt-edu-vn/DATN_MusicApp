@@ -6,7 +6,6 @@ const roomModel = new mongoose.Schema({
   room_image: [
     {
       type: Object,
-      required: true,
     },
   ],
   memberGroup: [

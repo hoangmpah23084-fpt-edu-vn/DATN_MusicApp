@@ -19,7 +19,13 @@ interface roomForm {
     password: string
 }
 
-const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5MTZkMDQwOGIwNWE2YTJjMyIsImlhdCI6MTY5ODM4MjA1MCwiZXhwIjoxNjk4Mzg1NjUwfQ.hu93XIjtNIqMvKqDmin0mq1GBCyLHVU840ArAeqJhSo"
+interface joinRoom {
+    idChat: string,
+    password: string
+}
+
+const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5MTZkMDQwOGIwNWE2YTJjMyIsImlhdCI6MTY5ODM5NTE4NSwiZXhwIjoxNjk4Mzk4Nzg1fQ.FAGLctQtZhFenRK72KZSfk7cqPWsNIBTb3f_sBDeIMM"
+
 
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
     const { data } = await axios.post<{ data: roomForm }>("http://localhost:8080/api/room", dataToForm, {
@@ -31,6 +37,15 @@ export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomF
 })
 export const getRoom = createAsyncThunk("room/getRoom", async () => {
     const { data } = await axios.get<{ data: IRoom[] }>("http://localhost:8080/api/room");
+    return data.data;
+})
+
+export const joinRoom = createAsyncThunk("room/joinRoom", async (dataForm: joinRoom) => {
+    const { data } = await axios.post<{ data: IRoom[] }>("http://localhost:8080/api/joinroom" , dataForm , {
+        headers: {
+            "Authorization": token
+        }
+    });
     return data.data;
 })
 
@@ -52,8 +67,6 @@ const roomReducer = createSlice({
                 state.loading = true;
             })
             .addCase(getRoom.pending, (state) => {
-                console.log(123);
-
                 state.loading = true
             })
             .addCase(getRoom.fulfilled, (state, action) => {
@@ -61,6 +74,15 @@ const roomReducer = createSlice({
                 state.room = action.payload;
             })
             .addCase(getRoom.rejected, (state) => {
+                state.loading = true;
+            })
+            .addCase(joinRoom.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(joinRoom.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(joinRoom.rejected, (state) => {
                 state.loading = true;
             })
     }

@@ -4,6 +4,7 @@ import * as yup from "yup";
 
 export interface IRoom {
     id: number,
+    _id: string,
     name: string,
     quanlity: number,
     password?: string,
