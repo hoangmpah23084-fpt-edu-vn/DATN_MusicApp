@@ -1,4 +1,5 @@
 import { IRoom } from "@/pages/Admin/Interface/Room";
+import instanceAxios from "@/utils/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -19,19 +20,26 @@ interface roomForm {
     password: string
 }
 
-const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MzdkYWM5ZTI4Zjg4ODVlMzY3ODA3NyIsImlhdCI6MTY5ODM5MzEzMywiZXhwIjoxNjk4Mzk2NzMzfQ.dFdDWhqtwUaNEdmHu1RGD7Sa-OiJ-JjZy1Upc0sM00Q"
+interface joinRoom {
+    idChat: string,
+    password: string
+}
+
+const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5MTZkMDQwOGIwNWE2YTJjMyIsImlhdCI6MTY5ODM5NTE4NSwiZXhwIjoxNjk4Mzk4Nzg1fQ.FAGLctQtZhFenRK72KZSfk7cqPWsNIBTb3f_sBDeIMM"
+
 
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
-    const { data } = await axios.post<{ data: roomForm }>("http://localhost:8080/api/room", dataToForm, {
-        headers: {
-            "Authorization": token
-        }
-    });
-    return data.data;
+    const { data } = await instanceAxios.post("/room", dataToForm)
+    return data;
 })
 export const getRoom = createAsyncThunk("room/getRoom", async () => {
-    const { data } = await axios.get<{ data: IRoom[] }>("http://localhost:8080/api/room");
+    const { data } = await instanceAxios.get('/room');
     return data.data;
+})
+
+export const joinRoom = createAsyncThunk("room/joinRoom", async (dataForm: joinRoom) => {
+    const { data } = await instanceAxios.post("/joinroom", dataForm)
+    return data;
 })
 
 
@@ -52,8 +60,6 @@ const roomReducer = createSlice({
                 state.loading = true;
             })
             .addCase(getRoom.pending, (state) => {
-                console.log(123);
-
                 state.loading = true
             })
             .addCase(getRoom.fulfilled, (state, action) => {
@@ -61,6 +67,15 @@ const roomReducer = createSlice({
                 state.room = action.payload;
             })
             .addCase(getRoom.rejected, (state) => {
+                state.loading = true;
+            })
+            .addCase(joinRoom.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(joinRoom.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(joinRoom.rejected, (state) => {
                 state.loading = true;
             })
     }

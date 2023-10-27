@@ -5,6 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import useClickOutside from "@/hooks/clickOutSide";
 import { useAppDispatch } from "@/store/hooks";
 import { addRoom, getRoom } from "@/store/Reducer/roomReducer";
+import { toast } from "react-toastify";
 
 interface IProps {
   onShowModal: () => void;
@@ -22,15 +23,25 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
 
   const dispatch = useAppDispatch();
 
-  const onHandleSubmit: any = (data: {
+  const onHandleSubmit: any = async (data: {
     nameGroup: string;
     password: string;
   }) => {
-    dispatch(addRoom(data)).then(() => {
-      dispatch(getRoom());
-    });
-    reset();
-    onShowModal();
+    try {
+      const resp: any = await dispatch(addRoom(data))
+      await dispatch(getRoom());
+      console.log(resp.payload.message);
+
+      toast.success(resp.payload.message)
+      console.log("resp", resp);
+    } catch (error) {
+      toast.error(error as string)
+    } finally {
+      reset();
+      onShowModal();
+    }
+
+
   };
 
   const ref = useClickOutside(() => onShowModal());
