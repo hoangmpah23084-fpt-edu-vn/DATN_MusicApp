@@ -31,7 +31,7 @@ const LayoutClient = () => {
       <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
         <SidebarMenu />
         <Header />
-        <div className="ml-[300px] relative w-[100%] h-[80%] overscroll-y-auto">
+        <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
         <SidebarSong sideBarRight={sideBarRight} setCurrentSong={setCurrentSong} />

@@ -14,16 +14,18 @@ import { createBrowserRouter } from "react-router-dom";
 import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
-import Room from "@/pages/Room/room";
 import Album from "@/pages/Album/Album";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
+import Room from "@/pages/Room/room";
+import RoomPage from "@/pages/Room/RoomPage";
+import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 
 export const router = createBrowserRouter([
   //todo FE
   {
     path: "/signup",
-    element: <Signnup />
+    element: <Signnup />,
   },
   {
     path: "/signin",
@@ -35,15 +37,13 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <KhamPhaPage /> },
       { path: "mymusic/song/favorite", element: <FavouritePage /> },
-      { path: "room", element: <Room /> },
-
+      { path: "rooms", element: <Room /> },
+      { path: "playlist", element: <PlaylistPage /> },
+      { path: "album", element: <Album /> },
     ],
   },
   {
-    path: "/album",
-    element: <LayoutClient />,
-    children: [{ index: true, element: <Album /> }],
-
+    path: "/liveRoom", element: <RoomPage/>
   },
   //todo BE
   {
@@ -56,9 +56,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <div>
-          Hehe
-        </div>,
+        element: <div>Hehe</div>,
       },
       {
         path: "song",
@@ -87,21 +85,19 @@ export const router = createBrowserRouter([
       {
         path: "update-artist/:id",
         element: <UpdateArtist />,
-      }
-      ,
+      },
       {
         path: "addgenre",
-        element: <Genre />
-      }
-      ,
+        element: <Genre />,
+      },
       {
         path: "listgenre",
-        element: <ListGenre />
+        element: <ListGenre />,
       },
       {
         path: "UpdateGenre/:id",
-        element: <UpdateGenre />
-      }
+        element: <UpdateGenre />,
+      },
     ],
   },
 ]);

@@ -9,27 +9,29 @@ import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { makeStyles, createStyles } from "@material-ui/core/styles"; 
 import { Slider } from "@mui/material";
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import { SongStateContext } from "../Context/SongProvider";
 import { NextSong, PrevSong } from "./NextSong";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import io from "socket.io-client";
 
-const connect = io("http://localhost:8080")
-export const useStyles = makeStyles(() => createStyles({
-  root: {
-    color : "white",
-    "&:hover" :{color : "#9B4DE0"}
-  },
-}));
+export const useStyles = makeStyles(() =>
+  createStyles({
+    root: {
+      color: "white",
+      "&:hover": { color: "#9B4DE0" },
+    },
+  })
+);
 type Props = {
   ListData : ifSong[],
   currentSong : ifSong | null,
   setSideBarRight : Dispatch<SetStateAction<boolean>>,
   setCurrentSong : Dispatch<SetStateAction<ifSong | null>>
 }
+
 const Footer = (props : Props) => {
   const [duration, setDuration] = useState<number>(0);
   const [currentTime , setCurrentTime] = useState('');
@@ -119,7 +121,7 @@ const Footer = (props : Props) => {
 
   const handChangeVolume = (event: any, value: any) => {
     setVolume(value as number);
-  }
+  };
   const handTurnVolume = () => {
     volume > 0 ? setVolume(0) : setVolume(50);
   }
@@ -135,23 +137,30 @@ const Footer = (props : Props) => {
     }
   }
   const handRewindAudio = (event: any, value: any) => {
-    rewindRef.current && rewindRef.current.addEventListener("mouseup", () => {
-      if (audioRef.current) {
-        audioRef.current.currentTime = Number(value)
-        setRewindAudio(value as number);
-        setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }
-    })
-    audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+    rewindRef.current &&
+      rewindRef.current.addEventListener("mouseup", () => {
+        if (audioRef.current) {
+          audioRef.current.currentTime = Number(value);
+          setRewindAudio(value as number);
+          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+        }
+      });
+    audioRef.current &&
+      setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
     setRewindAudio(value as number);
   }
   return (
-    <div className="fixed z-50 w-[100%] bottom-0 bg-[#170f23]">
+    <div
+    // onClick={() => {
+    //   setLiveRoom((value) => !value);
+    //   props.setLiveRoom((value) => !value);
+    // }}
+    className="fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer">
       <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
           <div className="flex items-center w-[100%]">
             <div className="flex w-[100%] ">
-              <div className="">  
+              <div className="">
                 <Link to={"#"}>
                   <div className="thumbnail-wrapper">
                     <div className="thumbnail w-[64px] h-[64px] mr-[10px]">
@@ -183,7 +192,7 @@ const Footer = (props : Props) => {
                     <div className="title-wrapper">
                       <span className="item-title title text-[13px] font-thin text-[#dadada]">
                         Hoài Lâm
-                      </span> 
+                      </span>
                     </div>
                   </Link>
                 </h3>
@@ -222,15 +231,23 @@ const Footer = (props : Props) => {
                 <div className="w-[24%] h-[100%] ">
                   <PauseListItemButtonStyle onClick={togglePlayPause} >
                     <PauseListItemIconStyle>
-                      {globalPause ?  <PauseIcon className={classes.root} /> : <PlayArrowIcon className={classes.root} />}
+                      {globalPause ? (
+                        <PauseIcon className={classes.root} />
+                      ) : (
+                        <PlayArrowIcon className={classes.root} />
+                      )}
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>
                 <NextSong ListData={props.ListData} setCurrentSong={props.setCurrentSong} currentSong={props.currentSong} setGlobalPause={setGlobalPause} />
                 <div className="w-[19%] h-[100%] ">
-                  <ListItemButtonStyle onClick={() => setRepeat((value) => !value)} >
+                  <ListItemButtonStyle
+                    onClick={() => setRepeat((value) => !value)}
+                  >
                     <ListItemIconStyle>
-                      <RepeatIcon sx={{ color : repeat ? "#c273ed" : "white"}} />
+                      <RepeatIcon
+                        sx={{ color: repeat ? "#c273ed" : "white" }}
+                      />
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
@@ -239,25 +256,33 @@ const Footer = (props : Props) => {
             <div className="w-[100%] h-[30%] flex justify-center items-start">
               <audio ref={audioRef} src={Array.isArray(props.currentSong?.song_link) ? props.currentSong?.song_link[0] : props.currentSong?.song_link} preload={"metadata"} />
               <div className="w-full h-[20px] flex justify-between">
-                <div className="w-[6%] h-full fjc" >
+                <div className="w-[6%] h-full fjc">
                   <p>{currentTime}</p>
                 </div>
                 <div className="w-[85%] h-full fjc">
-                  <Slider sx={{color : "white" ,"& .MuiSlider-thumb" : {
-                    width : "0px",
-                    height : "0px",
-                    "&:hover" : {
-                      width : "12px",
-                      height : "12px",
-                    },
-                    '&:hover, &.Mui-focusVisible': {
-                      width : "12px",
-                      height : "12px",
-                      boxShadow: '0px 0px 0px 8px rgb(255 255 255 / 16%)'
-                    },
-                  },
-                  // min={0} step={1}
-                   }} value={rewindAudio} max={duration} ref={rewindRef} onChange={handRewindAudio}  />
+                  <Slider
+                    sx={{
+                      color: "white",
+                      "& .MuiSlider-thumb": {
+                        width: "0px",
+                        height: "0px",
+                        "&:hover": {
+                          width: "12px",
+                          height: "12px",
+                        },
+                        "&:hover, &.Mui-focusVisible": {
+                          width: "12px",
+                          height: "12px",
+                          boxShadow: "0px 0px 0px 8px rgb(255 255 255 / 16%)",
+                        },
+                      },
+                      // min={0} step={1}
+                    }}
+                    value={rewindAudio}
+                    max={duration}
+                    ref={rewindRef}
+                    onChange={handRewindAudio}
+                  />
                 </div>
                 <div className="w-[6%] h-full fjc">
                 {audioRef.current ? SeconToMinuste(audioRef.current?.duration) : 0 }
@@ -277,21 +302,27 @@ const Footer = (props : Props) => {
                   </ListItemButtonStyle>
               </div>
               <div className="w-[65%] h-[100%] fjc ">
-                <Slider sx={{color : "white" ,"& .MuiSlider-thumb" : {
-                    width : "0px",
-                    height : "0px",
-                    transition: '0.1s cubic-bezier(.47,1.64,.41,.8)',
-                    "&:hover" : {
-                      width : "12px",
-                      height : "12px",
+                <Slider
+                  sx={{
+                    color: "white",
+                    "& .MuiSlider-thumb": {
+                      width: "0px",
+                      height: "0px",
+                      transition: "0.1s cubic-bezier(.47,1.64,.41,.8)",
+                      "&:hover": {
+                        width: "12px",
+                        height: "12px",
+                      },
+                      "&:hover, &.Mui-focusVisible": {
+                        width: "12px",
+                        height: "12px",
+                        boxShadow: "0px 0px 0px 8px rgb(255 255 255 / 16%)",
+                      },
                     },
-                    '&:hover, &.Mui-focusVisible': {
-                      width : "12px",
-                      height : "12px",
-                      boxShadow: '0px 0px 0px 8px rgb(255 255 255 / 16%)'
-                    },
-                  },
-                   }} value={volume} onChange={handChangeVolume}/>
+                  }}
+                  value={volume}
+                  onChange={handChangeVolume}
+                />
               </div>
             </div>
           </div>
