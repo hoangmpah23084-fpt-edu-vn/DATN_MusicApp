@@ -7,10 +7,20 @@ const ConnectSocket = (server) => {
     pingTimeout: 60000,
     cors: {
       origin: "http://localhost:5173",
+      //todo các method có thể dùng cho socket
       methods: ["GET", "POST", "PUT", "DELETE"],
     },
   });
-  io.on("connection", (socket) => {});
-  console.log("connected socket io success");
+  io.on("connection", (socket) => {
+    console.log("connected socket io success");
+    socket.on("trySend", (data) => {
+      console.log(data);
+      socket.emit("connected");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("A user disconnected");
+    });
+  });
 };
 export default ConnectSocket;
