@@ -1,4 +1,5 @@
 import Favourites from "../Models/songFavourites.js";
+import SongSchame from "../Models/songModel.js";
 
 //========= getFavourites ================
 
@@ -40,6 +41,14 @@ export const createFavourites = async (req, res) => {
       );
       checkFavourite.list_songFavourites.splice(index, 1);
       await checkFavourite.save();
+     await SongSchame.findOneAndUpdate(
+      { id_song }, //tham số đầu tiên là id_user
+      { $addToSet: { 
+        total_like: total_like - 1,
+        is_favourite:false
+       }},
+      { upsert: true, new: true } // này chưa biết là gì
+    );
       return res.status(201).json({
         message: "Xóa yêu thích thành công",
         checkFavourite,
@@ -50,6 +59,15 @@ export const createFavourites = async (req, res) => {
       const dataFavourite = await Favourites.findOneAndUpdate(
         { id_user }, //tham số đầu tiên là id_user
         { $addToSet: { list_songFavourites: id_song } },
+        { upsert: true, new: true } // này chưa biết là gì
+      );
+
+     await SongSchame.findOneAndUpdate(
+        { id_song }, //tham số đầu tiên là id_user
+        { $addToSet: { 
+          total_like: total_like + 1,
+          is_favourite:true
+         }},
         { upsert: true, new: true } // này chưa biết là gì
       );
 
