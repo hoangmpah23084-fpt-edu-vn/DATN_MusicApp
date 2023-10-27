@@ -1,0 +1,22 @@
+  const [fileUrl, setFileUrl] = React.useState(null);
+  
+
+const fileOnChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+  const file  = event.target.files?.[0];
+  setFileUrl(file)
+} 
+const handSubmit= async (e : React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  if (fileUrl) {
+    console.log(fileUrl);
+    const formData = new FormData();
+    formData.append('audio', fileUrl);
+    console.log(formData);
+    const response = await axios.post("http://localhost:8080/api/upload/mp3", formData, {
+      headers : {
+        'Content-Type': 'application/json'
+      }
+    });
+      console.log(response);
+  }
+}
