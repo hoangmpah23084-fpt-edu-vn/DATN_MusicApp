@@ -8,7 +8,6 @@ import { ifAlbum, validateAlbum } from "../Interface/validateAlbum";
 import { useAppDispatch } from '@/store/hooks';
 import { addAlbum } from '@/store/Reducer/albumReducer';
 
-
 const MyButton = styled(Button)({
     background: 'linear-gradient(45deg, #5145CD 30%, #5145CD 90%)',
     border: 0,
@@ -39,10 +38,6 @@ const AddAlbum = () => {
             <Box sx={{ width : "100%" }} >
                 <Typography sx={{ paddingBottom : "10px" }} >Name Album</Typography>
                 <TextField sx={{ width : "100%" }} {...register("album_name")} helperText={errors.album_name?.message} placeholder='Enter Name Album' />
-            </Box>
-            <Box sx={{ width : "100%" }} >
-                <Typography sx={{ paddingBottom : "10px" }} >Id Artist</Typography>
-                <TextField sx={{ width : "100%" }} {...register("id_artist")} helperText={errors.id_artist?.message} placeholder='Enter Artist Id' />
             </Box>
             <Box sx={{ width : "100%", marginTop : "30px" }} >
                 <MyButton type='submit' variant="contained">Submit</MyButton>

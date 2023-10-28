@@ -64,14 +64,16 @@ const ListAlbum = () => {
   return (
     <>
       <Title Title="List Album" />
-      <Box sx={{ width: "100%", height: "700px", display: "grid" }}>
+      <Button variant="outlined" color="success" size="small">
+        <Link to={'/admin/add-album'}>Add Album</Link>
+      </Button>
+      <Box sx={{ width: "100%", height: "700px", display: "grid", marginTop: "20px" }}>
         <DataGrid
           rows={album}
           columns={columns}
           initialState={{ pagination: { paginationModel: { pageSize: 5 } }}}
           getRowId={(row) => row._id}
           pageSizeOptions={[5]}
-          checkboxSelection
           disableRowSelectionOnClick
         />
       </Box>

@@ -1,60 +1,47 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import Title from "../Title";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { BoxProduct, BoxUpload } from "@/Mui/Component/Product";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { handImage, handleFileUpload } from "@/Mui/Component/handUpload";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { getAlbum } from "@/store/Reducer/albumReducer";
+import { handImage, handleFileUpload } from "@/Mui/Component/handUpload";
 import { IArtist, validateArtist } from "../Interface/IArtist";
 import { updateArtist } from "@/store/Reducer/artistReducer";
 import { getOne } from "@/store/Reducer/artistReducer";
-import { ifAlbum } from "../Interface/validateAlbum";
-import { ifSong } from "../Interface/ValidateSong";
-import { useParams } from "react-router-dom";
-import { handGetOne } from "@/store/Reducer/Song";
+import { handGetSong } from "@/store/Reducer/Song";
 
 const UpdateArtist = () => {
-  const [ artist , setArtist ] = useState<IArtist>();
+  const [artist, setArtist] = useState<IArtist>();
   const dispatch = useAppDispatch();
-  const { album } = useAppSelector(({ album }) => album);
-  const { song } = useAppSelector(({ Song }) => Song);
-  const {id} = useParams<{id ?: string}>();
+  const { id } = useParams<{ id?: string }>();
 
   useEffect(() => {
     if (id) {
-        getOne(id).then(({data}) => {
-            setArtist(data)
-        }).catch((error) => console.error(error));
+      getOne(id).then(({ data }) => { setArtist(data) }).catch((error) => console.error(error));
     }
     void dispatch(getAlbum());
-    void dispatch(handGetOne());
+    void dispatch(handGetSong());
   }, [id, dispatch]);
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(validateArtist),
-  });
+  const { register, reset, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(validateArtist) });
+
   useEffect(() => {
     return reset(artist);
-  },[reset, artist])
+  }, [reset, artist]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handSubmitHandler: SubmitHandler<any> = async (value: IArtist) => {
     value.images = await handImage(value.images);
-    const { payload } = await dispatch(updateArtist(value));
-    if (payload) {
-      alert(payload);
-    }
+    const { data } = await dispatch(updateArtist(value));
+    alert("Cập nhật Artist thành công")
   };
+
   return (
     <>
       <Title Title="Update Artist" />
-      <Box sx={{ width: "100%", height: 1300 }}>
+      <Box sx={{ width: "100%" }}>
         <form
           onSubmit={handleSubmit(handSubmitHandler)}
           style={{
@@ -107,7 +94,6 @@ const UpdateArtist = () => {
                 <Typography sx={{ padding: "8px 0px" }}>Description</Typography>
                 <TextField
                   placeholder="Enter Description"
-                  type="text"
                   {...register("description")}
                   helperText={errors.description?.message}
                   sx={{
@@ -119,48 +105,15 @@ const UpdateArtist = () => {
                 />
               </BoxProduct>
             </div>
-            <Box className="grid grid-cols-2 gap-6 mt-4 mb-5">
-              <Box>
-                <label>Select Album</label>
-                <select
-                  {...register("album")}
-                  className="block w-full border-gray-300 rounded-lg"
-                >
-                  <option value={""} selected>
-                    Choose an Album
-                  </option>
-                  {album.length > 0
-                    ? album.map((item: ifAlbum) => (
-                        <option value={item._id}>{item.album_name}</option>
-                      ))
-                    : ""}
-                </select>
-              </Box>
-              <Box>
-                <label>Select Song</label>
-                <select
-                  {...register("songs")}
-                  className="block w-full border-gray-300 rounded-lg"
-                >
-                  <option value={""} selected>
-                    Choose a Song
-                  </option>
-                  {song.length > 0
-                    ? song.map((item: ifSong) => (
-                        <option value={item._id}>{item.song_name}</option>
-                      ))
-                    : ""}
-                </select>
-              </Box>
-            </Box>
-            <div className="w-full h-[5%]">
-              <button
-                type="submit"
-                className="bg-purple-500 text-white w-[100px] h-[85%] rounded-lg "
-              >
-                Submit
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="bg-purple-500 text-white w-[100px] h-[50px] rounded-lg mt-[20px] mr-[10px]"
+            >
+              Submit
+            </button>
+            <Button variant="outlined" color="success" className="h-[50px]" >
+              <Link to={'/admin/list-artist'}>List Arrtist</Link>
+            </Button>
           </Box>
           <Box sx={{ width: "35%", height: "100%" }}>
             <Box sx={{ width: "100%", mt: "10px", height: "8%" }}>

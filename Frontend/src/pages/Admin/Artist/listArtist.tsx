@@ -5,6 +5,8 @@ import Title from "../Title";
 import { Box, Button, Stack } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const ListArtist = () => {
   const { artist } = useAppSelector(({ artist }) => artist);
@@ -74,15 +76,12 @@ const ListArtist = () => {
         return (
           <Stack direction={"row"} spacing={1}>
             <Button variant="outlined" color="warning" size="small">
-              <Link to={`/admin/update-artist/${_id}`}>Edit</Link>
+              <Link to={`/admin/update-artist/${_id}`}>
+                <EditOutlinedIcon />
+              </Link>
             </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              size="small"
-              onClick={() => handDeleteArtist(_id)}
-            >
-              Delete
+            <Button variant="outlined" color="error" size="small" onClick={() => handDeleteArtist(_id)} >
+             <DeleteOutlineOutlinedIcon />
             </Button>
           </Stack>
         );
@@ -94,7 +93,10 @@ const ListArtist = () => {
   return (
     <>
       <Title Title="List Artist" />
-      <Box sx={{ width: "100%", height: "700px", display: "grid" }}>
+      <Button variant="outlined" color="success" size="small">
+        <Link to={'/admin/add-artist'}>Add Artist</Link>
+      </Button>
+      <Box sx={{ width: "100%", height: "700px", display: "grid", marginTop: "20px" }}>
         <DataGrid
           rows={artist}
           columns={columns}

@@ -15,17 +15,20 @@ const getArtists = async (req, res) => {
 
 const createArtist = async (req, res) => {
   try {
+    console.log("1");
     const body = req.body;
     /* validate */
     const { error } = ArtistValidate.validate(body, { abortEarly: false });
     if (error) {
       return res.status(400).json({ message: error.message });
     }
+    console.log("2");
     /* create */
     const artist = await Artist.create(body);
     if (!artist) {
       return res.status(400).json({ message: "Create artist failed" });
     }
+    console.log("3");
     return res.status(201).json({ data: artist });
   } catch (error) {
     return res.status(400).json({ message: error.message });

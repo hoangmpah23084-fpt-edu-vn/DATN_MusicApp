@@ -11,8 +11,6 @@ import { getAlbum } from "@/store/Reducer/albumReducer";
 import { IArtist, validateArtist } from "../Interface/IArtist";
 import { addArtist } from "@/store/Reducer/artistReducer";
 import { handGetSong } from "@/store/Reducer/Song";
-import { ifAlbum } from "../Interface/validateAlbum";
-import { ifSong } from "../Interface/ValidateSong";
 
 const AddArtist = () => {
   const dispatch = useAppDispatch();
@@ -32,9 +30,10 @@ const AddArtist = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handSubmitHandler: SubmitHandler<any> = async (value: IArtist) => {
     value.images = await handImage(value.images);
+    console.log(value);
     const { payload } = await dispatch(addArtist(value));
     if (payload) {
-      alert(payload);
+      alert("Complete Add Artist");
     }
   };
   return (
@@ -105,40 +104,7 @@ const AddArtist = () => {
                 />
               </BoxProduct>
             </div>
-            <Box className="grid grid-cols-2 gap-6 mt-4 mb-5">
-              <Box>
-                <label>Select Album</label>
-                <select
-                  {...register("album")}
-                  className="block w-full border-gray-300 rounded-lg"
-                >
-                  <option value={""} selected>
-                    Choose an Album
-                  </option>
-                  {album.length > 0
-                    ? album.map((item: ifAlbum) => (
-                        <option value={item._id}>{item.album_name}</option>
-                      ))
-                    : ""}
-                </select>
-              </Box>
-              <Box>
-                <label>Select Song</label>
-                <select
-                  {...register("songs")}
-                  className="block w-full border-gray-300 rounded-lg"
-                >
-                  <option value={""} selected>
-                    Choose a Song
-                  </option>
-                  {song.length > 0
-                    ? song.map((item: ifSong) => (
-                        <option value={item._id}>{item.song_name}</option>
-                      ))
-                    : ""}
-                </select>
-              </Box>
-            </Box>
+            <Box className="grid grid-cols-2 gap-6 mt-4 mb-5"></Box>
             <div className="w-full h-[5%]">
               <button
                 type="submit"
