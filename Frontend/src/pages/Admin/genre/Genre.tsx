@@ -7,24 +7,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ifAlbum, validateGenre } from "../Interface/validateAlbum";
 import { useAppDispatch } from '@/store/hooks';
 import { addGenre } from '@/store/Reducer/genreReducer';
+import {  LoadingButtonGenre } from '@/Mui/Component/Product';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-
-const MyButton = styled(Button)({
-    background: 'linear-gradient(45deg, #5145CD 30%, #5145CD 90%)',
-    border: 0,
-    borderRadius: 3,
-    color: 'white',
-    height: 48,
-    padding: '0 30px',
-  });
 
 const Genre = () => {
+    const [loading , setLoading] = useState(false);
     const {register, handleSubmit, formState : {errors}} = useForm<ifAlbum>({
         resolver : yupResolver(validateGenre)
     });
     const dispatch = useAppDispatch();
     const handSubmitForm : SubmitHandler<ifAlbum> = (value) => {
+        setLoading(true);
         void dispatch(addGenre(value));
+        setLoading(false);
         alert("Thêm genre thành công");
     }
   return (
@@ -40,9 +37,12 @@ const Genre = () => {
                 <Typography sx={{ paddingBottom : "10px" }} >Name Genre</Typography>
                 <TextField sx={{ width : "100%" }} {...register("name")} helperText={errors.name?.message} placeholder='Inter Name Genre' />
             </Box>
-            <Box sx={{ width : "100%", marginTop : "30px" }} >
-                <MyButton type='submit' variant="contained"  >Submit</MyButton>
-            </Box>
+            <Box sx={{ width : "15%", display: 'flex', justifyContent: "space-around", alignItems: 'center', marginTop: '20px' }} >
+            <LoadingButtonGenre className='h-[48px] bg-red-700' type='submit' loading={loading} sx={{"& .css-lufg7v-MuiButtonBase-root-MuiButton-root-MuiLoadingButton-root.MuiLoadingButton-loading":{
+            color : 'white'
+           }}} >Thêm mới</LoadingButtonGenre>
+           <Link to={"/admin/listgenre"} className='bg-purple-500 text-white w-[150px] text-center h-[100%] py-3 px2 rounded-[4px] ml-2 hover:opacity-[0.9]' >Danh sách nhạc</Link>
+           </Box>
         </form>
     </Box>
     </>

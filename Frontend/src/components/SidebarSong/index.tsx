@@ -6,23 +6,22 @@ import {
   PauseListItemIconStyle,
   ListItemIconBgStyle,
 } from "@/Mui/style/Footer/StyleAction";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { useEffect } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useStyles } from "../Footer";
-import { SongStateContext } from "../Context/SongProvider";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"
 import { handGetSong } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 import { addFavourite, getFavourite } from "@/store/Reducer/favouriteReducer";
 import { toast } from "react-toastify";
 import { RootState } from "@/store/store";
 type Props = {
   sideBarRight: boolean;
-  setCurrentSong: Dispatch<SetStateAction<ifSong | null>>;
 };
 
 const SidebarSong = (props: Props) => {
@@ -30,18 +29,29 @@ const SidebarSong = (props: Props) => {
   const [dataLocal, setDataLocal] = React.useState<ifSong | undefined>(
     undefined
   );
+  const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
   const renderListSong = useAppSelector(({ Song }) => Song);
-  const { setGlobalPause, globalPause } = SongStateContext();
   const classes = useStyles();
-
   const stopPause = React.useCallback(
     (value: ifSong) => {
-      props.setCurrentSong(value);
+      dispatch(handGetCurrentSong(value))
       setDataLocal(undefined);
-      setGlobalPause(false);
+      dispatch(handChangeStateSong(false))
     },
-    [props, setGlobalPause]
+    [dispatch]
+  );
+  const handStart = React.useCallback(
+    (value: ifSong) => {
+      dispatch(handGetCurrentSong(value))
+      localStorage.setItem("song", JSON.stringify(value));
+      const currentlocal: ifSong = JSON?.parse(
+        localStorage?.getItem("song") || ""
+      );
+      setDataLocal(currentlocal);
+      dispatch(handChangeStateSong(true))
+    },
+    [dispatch]
   );
 
   useEffect(() => {
@@ -54,23 +64,16 @@ const SidebarSong = (props: Props) => {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
       setDataLocal(currentlocal);
     }
-  }, [globalPause]);
+  }, [stateSong]);
 
-  const handStart = React.useCallback(
-    (value: ifSong) => {
-      props.setCurrentSong(value);
-      localStorage.setItem("song", JSON.stringify(value));
-      const currentlocal: ifSong = JSON?.parse(
-        localStorage?.getItem("song") || ""
-      );
-      setDataLocal(currentlocal);
-      setGlobalPause(true);
-    },
-    [props, setGlobalPause]
-  );
-
-  const handPlaylist = () => {
-    setStateColor(true);
+  const handTogglePlaylist = () => {
+    const preStateColor = stateColor;
+    setStateColor(!preStateColor);
+    if (!preStateColor) {
+      setStateColor(true);
+    } else {
+      setStateColor(false);
+    }
   };
 
   const handRecently = () => {
@@ -109,7 +112,7 @@ const SidebarSong = (props: Props) => {
                 <button
                   className={`text-[11px] transition-all  w-full rounded-full h-full ${stateColor ? "bg-[#6A6474] font-bold" : ""
                     }`}
-                  onClick={() => handPlaylist()}
+                  onClick={() => handTogglePlaylist()}
                 >
                   Danh sách phát
                 </button>
@@ -118,7 +121,7 @@ const SidebarSong = (props: Props) => {
                 <button
                   className={`text-[10px] transition-all w-full h-full rounded-full ${stateColor ? "" : "bg-[#6A6474] font-bold"
                     }`}
-                  onClick={() => handRecently()}
+                  onClick={() => handTogglePlaylist()}
                 >
                   Nghe gần đây
                 </button>
@@ -179,7 +182,7 @@ const SidebarSong = (props: Props) => {
                           <div className="absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause">
                             <PauseListItemButtonStyle
                               onClick={() =>
-                                globalPause && dataLocal?._id == item._id
+                                stateSong && dataLocal?._id == item._id
                                   ? stopPause(item)
                                   : handStart(item)
                               }
@@ -197,7 +200,7 @@ const SidebarSong = (props: Props) => {
                                 }}
                               >
                                 {dataLocal &&
-                                  globalPause &&
+                                  stateSong &&
                                   dataLocal?._id == item._id ? (
                                   <PauseIcon className={classes.root} />
                                 ) : (

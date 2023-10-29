@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const SongSchame = new mongoose.Schema(
   {
     song_name: String,
-    song_title: String,
     song_link: String,
     song_image: [
       {
@@ -12,7 +11,6 @@ const SongSchame = new mongoose.Schema(
       },
     ],
     song_singer: String,
-    song_musian: String,
     song_lyric: String,
     is_dowload: {
       type: Boolean,
@@ -34,6 +32,3 @@ const SongSchame = new mongoose.Schema(
   { versionKey: false, timestamps: true }
 );
 export default mongoose.model("Song", SongSchame, "Song");
-
-
-

@@ -7,11 +7,6 @@ export const Validate_Song = joi.object({
     "string.emtpy": "name is not allowed to be empty",
     "string.base": "name must be a string",
   }),
-  song_title: joi.string().required().empty().messages({
-    "string.required": "title is Required",
-    "string.emtpy": "title is not allowed to be empty",
-    "string.base": "name must be a string",
-  }),
   song_link: joi.string().required().empty().messages({
     "string.required": "title is Required",
     "string.emtpy": "Link is not allowed to be empty",
@@ -30,11 +25,6 @@ export const Validate_Song = joi.object({
     "string.required": "lyric is Required",
     "string.empty": "lyric is not allowed to be empty",
     "string.base": "lyric must be a string",
-  }),
-  song_musian: joi.string().required().empty().messages({
-    "string.required": "musian is Required",
-    "string.empty": "musian is not allowed to be empty",
-    "string.base": "musian must be a string",
   }),
   id_Genre: joi.string().required().messages({
     "string.required": "Id_Genre is Required",
