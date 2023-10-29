@@ -33,21 +33,21 @@ const SidebarSong = (props: Props) => {
   const classes = useStyles();
   const stopPause = React.useCallback(
     (value: ifSong) => {
+      dispatch(handChangeStateSong(false))
       dispatch(handGetCurrentSong(value))
       setDataLocal(undefined);
-      dispatch(handChangeStateSong(false))
     },
     [dispatch]
   );
   const handStart = React.useCallback(
     (value: ifSong) => {
       dispatch(handGetCurrentSong(value))
+      dispatch(handChangeStateSong(true))
       localStorage.setItem("song", JSON.stringify(value));
       const currentlocal: ifSong = JSON?.parse(
         localStorage?.getItem("song") || ""
       );
       setDataLocal(currentlocal);
-      dispatch(handChangeStateSong(true))
     },
     [dispatch]
   );
