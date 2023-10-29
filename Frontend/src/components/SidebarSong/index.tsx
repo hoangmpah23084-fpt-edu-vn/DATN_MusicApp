@@ -16,7 +16,7 @@ import { useStyles } from "../Footer";
 
 import { handGetSong } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { ifCurrentSong, ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 type Props = {
   sideBarRight: boolean;
@@ -33,21 +33,21 @@ const SidebarSong = (props: Props) => {
   const classes = useStyles();
   const stopPause = React.useCallback(
     (value: ifSong) => {
+      dispatch(handChangeStateSong(false))
       dispatch(handGetCurrentSong(value))
       setDataLocal(undefined);
-      dispatch(handChangeStateSong(false))
     },
     [dispatch]
   );
   const handStart = React.useCallback(
     (value: ifSong) => {
       dispatch(handGetCurrentSong(value))
+      dispatch(handChangeStateSong(true))
       localStorage.setItem("song", JSON.stringify(value));
       const currentlocal: ifSong = JSON?.parse(
         localStorage?.getItem("song") || ""
       );
       setDataLocal(currentlocal);
-      dispatch(handChangeStateSong(true))
     },
     [dispatch]
   );

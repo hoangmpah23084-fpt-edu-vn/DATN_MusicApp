@@ -120,7 +120,7 @@ const Footer = (props : Props) => {
         setRewindAudio(audioRef.current.currentTime);
       }
     });
-  },[repeat, volume, stateSong, dispatch]);
+  },[repeat, volume, stateSong, dispatch, currentSong]);
 
   const handChangeVolume = (_event: any, value: any) => {
     setVolume(value as number);
