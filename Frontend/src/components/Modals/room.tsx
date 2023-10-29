@@ -26,19 +26,14 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
         idChat: data._id,
         password: password
       }))
-      
+
       toast.success(resq.payload.message)
       navigate("/liveroom");
     } catch (error) {
       toast.error(error as string)
-    }finally {
+    } finally {
       reset();
     }
-
-
-
-
-
 
   };
 

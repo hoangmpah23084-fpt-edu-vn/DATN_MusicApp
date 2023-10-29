@@ -7,6 +7,9 @@ import "./index.css";
 import { useState } from "react";
 import ModalSongMenu from "../../Modals/modalSongMenu";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { addFavourite, getFavourite } from "@/store/Reducer/favouriteReducer";
+import { useAppDispatch } from "@/store/hooks";
+import { toast } from "react-toastify";
 
 type props = {
   item: ifSong
@@ -14,6 +17,23 @@ type props = {
 
 const ItemSong = ({ item }: props) => {
   const [modal, setModal] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch()
+
+  const onhandleFavourite = async (id_song: string) => {
+    try {
+      const resp: any = await dispatch(addFavourite(id_song))
+      console.log(resp);
+
+      await dispatch(getFavourite())
+      toast.success(resp.payload.message)
+    } catch (error) {
+      toast.error(error as string)
+    }
+
+  }
+
+
   return (
     <tbody>
       <tr className="item border-b-[#2c2436] border-b-[1px] cursor-pointer hover:bg-[#2f2739] ease-in-out duration-500">
@@ -31,7 +51,7 @@ const ItemSong = ({ item }: props) => {
             <img
               className={`rounded-[5px] w-10 h-10
                `}
-              src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg"
+              src={item.song_image[0]}
               alt=""
             />
             <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
@@ -79,7 +99,7 @@ const ItemSong = ({ item }: props) => {
               </div>
             </button>
 
-            <button className="text-[#9b4de0] mx-2 group relative ">
+            <button className="text-[#9b4de0] mx-2 group relative " onClick={() => onhandleFavourite(item?._id as string)}>
               <AiFillHeart className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <p className="text-white">Xoá khỏi thư viện</p>
