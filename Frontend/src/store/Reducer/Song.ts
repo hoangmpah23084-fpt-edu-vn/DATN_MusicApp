@@ -27,10 +27,10 @@ export const handDeleteSong = createAsyncThunk("song/deleteSong", async (id : st
     await axios.delete("http://localhost:8080/api/Song/"+ id) 
     return id
 })
-export const handUpdateSong = createAsyncThunk("song/updatesong", async (value : ifSong) => {
+export const handUpdateSong = createAsyncThunk("song/updatesong", async (value : ifSongAdmin) => {
     const {_id , ...datafake} = value;
     if (_id) {
-        const {data} = await axios.put<{data : ifSong}>(`http://localhost:8080/api/Song/${_id}`, datafake) 
+        const {data} = await axios.put<{data : ifSongAdmin}>(`http://localhost:8080/api/Song/${_id}`, datafake) 
         return data.data
     }
 
@@ -84,7 +84,7 @@ const songReducer = createSlice({
                 const {_id} = action.payload;
                 state.loading = true;
                 // state.song = state.song.map(((song : ifSong) => song._id == _id ? action.payload : song))
-                const data = state.song.filter(((song : ifSong) => song._id != _id ))
+                const data = state.song.filter(((song : ifSongAdmin) => song._id != _id ))
                 state.song = [action.payload, ...data];
                 state.error = ""
             }

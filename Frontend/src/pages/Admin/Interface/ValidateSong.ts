@@ -32,6 +32,16 @@ export interface ifSong {
     id_Genre: string; // Make it required
     id_Artists: string; // Make it required
   }
+  export interface ifCurrentSong {
+    _id?: string;
+    song_name: string;
+    song_link: string ;
+    song_image: string[] | undefined ;
+    song_singer: string;
+    song_lyric: string
+    id_Genre: string; // Make it required
+    id_Artists: string; // Make it required
+  }
   export type TypeSong = {
     _id?: string;
     song_name: string;

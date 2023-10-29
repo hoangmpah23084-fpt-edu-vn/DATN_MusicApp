@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 import SidebarSong from "@/components/SidebarSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handGetSong } from "@/store/Reducer/Song";
+import { handGetCurrentSong } from "@/store/Reducer/currentSong";
 
 
 const LayoutClient = () => {
@@ -19,6 +20,12 @@ const LayoutClient = () => {
     }
     void fetchData();
   }, [dispatch]);
+  useEffect(() => {
+    if (current.song.length > 0) {
+      localStorage.setItem('song', JSON.stringify(current.song[2]));
+      dispatch(handGetCurrentSong(current.song[2]))
+    }
+  }, [current.song]);
   return (
     <>
       <div className="flex w-[100%] bg-[#170f23] overflow-hidden">

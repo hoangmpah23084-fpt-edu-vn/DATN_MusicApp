@@ -13,11 +13,11 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useStyles } from "../Footer";
-import { SongStateContext } from "../Context/SongProvider";
 
 import { handGetSong } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { ifCurrentSong, ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 type Props = {
   sideBarRight: boolean;
 };
@@ -27,29 +27,29 @@ const SidebarSong = (props: Props) => {
   const [dataLocal, setDataLocal] = React.useState<ifSong | undefined>(
     undefined
   );
+  const {stateSong} = useAppSelector(({currentSong}) => currentSong);
   const dispatch = useAppDispatch();
   const renderListSong = useAppSelector(({ Song }) => Song);
-  const { setGlobalPause, globalPause, setCurrentSong } = SongStateContext();
   const classes = useStyles();
   const stopPause = React.useCallback(
     (value: ifSong) => {
-      setCurrentSong(value);
+      dispatch(handGetCurrentSong(value))
       setDataLocal(undefined);
-      setGlobalPause(false);
+      dispatch(handChangeStateSong(false))
     },
-    [setGlobalPause]
+    [dispatch]
   );
   const handStart = React.useCallback(
     (value: ifSong) => {
-      setCurrentSong(value);
+      dispatch(handGetCurrentSong(value))
       localStorage.setItem("song", JSON.stringify(value));
       const currentlocal: ifSong = JSON?.parse(
         localStorage?.getItem("song") || ""
       );
       setDataLocal(currentlocal);
-      setGlobalPause(true);
+      dispatch(handChangeStateSong(true))
     },
-    [setGlobalPause]
+    [dispatch]
   );
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const SidebarSong = (props: Props) => {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
       setDataLocal(currentlocal);
     }
-  }, [globalPause]);
+  }, [stateSong]);
 
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;
@@ -160,7 +160,7 @@ const SidebarSong = (props: Props) => {
                           <div className="absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause">
                             <PauseListItemButtonStyle
                               onClick={() =>
-                                globalPause && dataLocal?._id == item._id
+                                stateSong && dataLocal?._id == item._id
                                   ? stopPause(item)
                                   : handStart(item)
                               }
@@ -178,7 +178,7 @@ const SidebarSong = (props: Props) => {
                                 }}
                               >
                                 {dataLocal &&
-                                globalPause &&
+                                stateSong &&
                                 dataLocal?._id == item._id ? (
                                   <PauseIcon className={classes.root} />
                                 ) : (

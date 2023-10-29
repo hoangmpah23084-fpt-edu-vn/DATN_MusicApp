@@ -51,5 +51,16 @@ export const LoadingButtonCl = styled(LoadingButton)(() => ({
         color: "white",
         opacity: 0.9
     }
+}));
+export const LoadingButtonGenre = styled(LoadingButton)(() => ({
+    color: "white",
+    backgroundColor: '#9061F9',
+    width: '110px',
+    height: '48px',
+    ":hover": {
+        backgroundColor: '#9061F9',
+        color: "white",
+        opacity: 0.9
+    }
 }))
     
