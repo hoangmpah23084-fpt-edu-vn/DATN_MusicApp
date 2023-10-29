@@ -1,42 +1,48 @@
 import { AiFillHeart } from "react-icons/ai";
-import { BsMusicNoteBeamed, BsThreeDots, BsFillPlayFill } from "react-icons/bs";
+import { BsMusicNoteBeamed, BsThreeDots, BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { TfiVideoClapper } from "react-icons/tfi";
 import { PiMicrophoneStageDuotone } from "react-icons/pi";
 import "./index.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalSongMenu from "../../Modals/modalSongMenu";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
-import { addFavourite, getFavourite } from "@/store/Reducer/favouriteReducer";
-import { useAppDispatch } from "@/store/hooks";
-import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { activeSong } from "@/constane/song.const";
+import { onhandleFavourite } from "@/constane/favourites.const";
+import { setDataLocal } from "@/store/Reducer/currentSong";
+
 
 type props = {
   item: ifSong
 }
 
 const ItemSong = ({ item }: props) => {
-  const [modal, setModal] = useState<boolean>(false);
 
+
+  const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch()
 
-  const onhandleFavourite = async (id_song: string) => {
-    try {
-      const resp: any = await dispatch(addFavourite(id_song))
-      console.log(resp);
 
-      await dispatch(getFavourite())
-      toast.success(resp.payload.message)
-    } catch (error) {
-      toast.error(error as string)
+
+  const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
+
+  useEffect(() => {
+    const getSongLocal = localStorage?.getItem("song") || "";
+    if (getSongLocal) {
+      const currentlocal: ifSong = JSON?.parse(getSongLocal);
+      dispatch(setDataLocal(currentlocal))
     }
-
-  }
-
+  }, []);
 
   return (
     <tbody>
-      <tr className="item border-b-[#2c2436] border-b-[1px] cursor-pointer hover:bg-[#2f2739] ease-in-out duration-500">
+      <tr className={`item border-b-[#2c2436] border-b-[1px] cursor-pointer hover:bg-[#2f2739] ease-in-out duration-500 first-letter:
+      ${dataLocal && dataLocal?._id == item._id
+          ? "bg-[#2f2739]"
+          : "hover:bg-[#b4b4b32d]"
+        } 
+      `}>
         <td scope="row" className=" py-2 font-medium flex items-center">
           <span className="px-3">
             <input
@@ -55,11 +61,26 @@ const ItemSong = ({ item }: props) => {
               alt=""
             />
             <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
-            <div className="action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%] hidden">
+            <div className={`action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%] 
+            ${dataLocal &&
+                stateSong &&
+                dataLocal?._id == item._id ? "" : "hidden"}
+            `}>
               <div className="flex gap-[20px] h-full justify-center">
                 <div>
-                  <div>
-                    <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" />
+                  <div onClick={() =>
+                    stateSong && dataLocal?._id == item._id
+                      ? activeSong(dispatch, item, 'stopPause')
+                      : activeSong(dispatch, item, "start")
+                  }>
+                    {dataLocal &&
+                      stateSong &&
+                      dataLocal?._id == item._id ?
+                      <BsFillPauseFill className="text-[30px] mt-1 p-1 pl-[5px]" />
+                      :
+                      <BsFillPlayFill className="text-[30px] p-1 mt-1 pl-[5px]" />
+                    }
+
                   </div>
                 </div>
               </div>
@@ -99,7 +120,7 @@ const ItemSong = ({ item }: props) => {
               </div>
             </button>
 
-            <button className="text-[#9b4de0] mx-2 group relative " onClick={() => onhandleFavourite(item?._id as string)}>
+            <button className="text-[#9b4de0] mx-2 group relative " onClick={() => onhandleFavourite(dispatch, item?._id as string)}>
               <AiFillHeart className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <p className="text-white">Xoá khỏi thư viện</p>
@@ -131,7 +152,7 @@ const ItemSong = ({ item }: props) => {
           </div>
         </td>
       </tr>
-    </tbody>
+    </tbody >
   );
 };
 

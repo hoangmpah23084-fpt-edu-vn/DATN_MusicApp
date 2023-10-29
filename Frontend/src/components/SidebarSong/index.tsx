@@ -14,53 +14,28 @@ import { useStyles } from "../Footer";
 import { handGetSong } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
-import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
-import { addFavourite, getFavourite } from "@/store/Reducer/favouriteReducer";
-import { toast } from "react-toastify";
-import { ActiveFavourites } from "@/constane/favourites.const";
+import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
+import { activeSong, chekcSubString } from "@/constane/song.const";
+import { setDataLocal } from "@/store/Reducer/currentSong";
 type Props = {
   sideBarRight: boolean;
 };
 
 const SidebarSong = (props: Props) => {
   const [stateColor, setStateColor] = React.useState<boolean>(true);
-  const [dataLocal, setDataLocal] = React.useState<ifSong | undefined>(
-    undefined
-  );
-  const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
+  const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
   const renderListSong = useAppSelector(({ Song }) => Song);
   const classes = useStyles();
-  const stopPause = React.useCallback(
-    (value: ifSong) => {
-      dispatch(handChangeStateSong(false))
-      dispatch(handGetCurrentSong(value))
-      setDataLocal(undefined);
-    },
-    [dispatch]
-  );
-  const handStart = React.useCallback(
-    (value: ifSong) => {
-      dispatch(handGetCurrentSong(value))
-      dispatch(handChangeStateSong(true))
-      localStorage.setItem("song", JSON.stringify(value));
-      const currentlocal: ifSong = JSON?.parse(
-        localStorage?.getItem("song") || ""
-      );
-      setDataLocal(currentlocal);
-    },
-    [dispatch]
-  );
-
   useEffect(() => {
     dispatch(handGetSong());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
     if (getSongLocal) {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
-      setDataLocal(currentlocal);
+      dispatch(setDataLocal(currentlocal))
     }
   }, [stateSong]);
 
@@ -73,16 +48,6 @@ const SidebarSong = (props: Props) => {
       setStateColor(false);
     }
   };
-
-  const onhandleFavourite = async (id_song: string) => {
-    try {
-      const resp: any = await dispatch(addFavourite(id_song))
-      await dispatch(getFavourite())
-      toast.success(resp.payload.message)
-    } catch (error) {
-      toast.error(error as string)
-    }
-  }
 
   return (
     <div
@@ -168,8 +133,8 @@ const SidebarSong = (props: Props) => {
                             <PauseListItemButtonStyle
                               onClick={() =>
                                 stateSong && dataLocal?._id == item._id
-                                  ? stopPause(item)
-                                  : handStart(item)
+                                  ? activeSong(dispatch, item, 'stopPause')
+                                  : activeSong(dispatch, item, "start")
                               }
                             >
                               <PauseListItemIconStyle
@@ -198,7 +163,7 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[48%] ml-[2%] h-full">
                         <div className="w-full h-[50%]">
-                          <h1 className="font-semibold">{item.song_name}</h1>
+                          <h1 className="font-semibold">{chekcSubString(item.song_name as string)}</h1>
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">
@@ -208,7 +173,7 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[30%] h-full flex">
                         <div className="w-1/2">
-                          <ListItemButtonStyle onClick={() => onhandleFavourite(item?._id as string)}>
+                          <ListItemButtonStyle onClick={() => onhandleFavourite(dispatch, item?._id as string)}>
                             <ListItemIconStyle>
                               <ActiveFavourites item={item} />
                             </ListItemIconStyle>
