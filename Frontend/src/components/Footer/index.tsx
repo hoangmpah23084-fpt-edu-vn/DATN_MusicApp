@@ -12,9 +12,10 @@ import { Slider } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
-import { SongStateContext } from "../Context/SongProvider";
 import { NextSong, PrevSong } from "./NextSong";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
@@ -24,10 +25,8 @@ export const useStyles = makeStyles(() => createStyles({
   },
 }));
 type Props = {
-  ListData: ifSong[],
-  currentSong: ifSong | null,
-  setSideBarRight: Dispatch<SetStateAction<boolean>>,
-  setCurrentSong: Dispatch<SetStateAction<ifSong | null>>
+  ListData : ifSong[],
+  setSideBarRight : Dispatch<SetStateAction<boolean>>,
 }
 
 const Footer = (props: Props) => {
@@ -41,11 +40,15 @@ const Footer = (props: Props) => {
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
   const [intervalId, setIntervalId] = useState<number | null>(null);
-  const { setGlobalPause, globalPause } = SongStateContext();
-
+  const {currentSong} = useAppSelector(({currentSong}) => currentSong);
+  const {stateSong} = useAppSelector(({currentSong}) => currentSong);
+  const dispatch = useAppDispatch();
+  
+  
   const togglePlayPause = useCallback(() => {
-    const preValue = globalPause;
-    setGlobalPause(!preValue);
+    const preValue = stateSong;
+    console.log(preValue);
+    dispatch(handChangeStateSong(!preValue)) 
     if (!preValue) {
       void audioRef.current?.play();
       const id = setInterval(() => {
@@ -60,39 +63,43 @@ const Footer = (props: Props) => {
         setIntervalId(null);
       }
     }
-  }, [globalPause, intervalId, setGlobalPause])
-  const handRandomSong = () => {
-    const preRandom = randomSong;
-    setRandomSong(!preRandom);
-    preRandom == false && setRepeat(false)
+  },[dispatch, intervalId, stateSong])
+  const SeconToMinuste = (secs : number) => {
+    if (secs) {
+      const minutes = Math.floor(secs / 60);
+      const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+      const seconds = Math.floor(secs % 60);
+      const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+      return `${returnedMinutes}:${returnedSeconds}`;
+    }else{
+      return "00:00"
+    }
   }
-
   useEffect(() => {
     if (currentTime == SeconToMinuste(duration) && SeconToMinuste(duration) != '00:00' && repeat == false && randomSong == false) {
-      const findIndexSong = props.ListData.findIndex((item) => item._id == props.currentSong?._id)
-      const findSong = props.ListData.filter((item, index) => index == findIndexSong + 1);
-      props.setCurrentSong(findSong[0]);
-      localStorage.setItem("song", JSON.stringify(findSong[0]));
-      setGlobalPause(false);
+      const findIndexSong = props.ListData.findIndex((item) => item._id == currentSong?._id)
+      const findSong = props.ListData.filter((_item, index) => index == findIndexSong + 1);
+      dispatch(handGetCurrentSong(findSong[0]))
+      localStorage.setItem("song",JSON.stringify(findSong[0]));
+      dispatch(handChangeStateSong(false)) 
       setTimeout(() => {
-        setGlobalPause(true);
-      }, 500);
+        dispatch(handChangeStateSong(true)) 
+      },500);
     }
     if (currentTime == SeconToMinuste(duration) && SeconToMinuste(duration) != '00:00' && randomSong == true) {
       const randomSong = props.ListData[Math.round(Math.random() * props.ListData.length) + 0]
-      props.setCurrentSong(randomSong);
+      dispatch(handGetCurrentSong(randomSong))
       localStorage.setItem('song', JSON.stringify(randomSong));
-      setGlobalPause(false);
+      dispatch(handChangeStateSong(false)) 
       setTimeout(() => {
-        setGlobalPause(true);
-      }, 500);
+        dispatch(handChangeStateSong(true)) 
+      },500);
     }
-  }, [currentTime == SeconToMinuste(duration), randomSong])
-
-
+  },[currentTime == SeconToMinuste(duration), randomSong])
+  
   useEffect(() => {
-    globalPause ? audioRef.current?.play() : audioRef.current?.pause();
-    if (globalPause) {
+    stateSong ? audioRef.current?.play() : audioRef.current?.pause();
+    if (stateSong) {
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
         audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
@@ -112,26 +119,13 @@ const Footer = (props: Props) => {
         setRewindAudio(audioRef.current.currentTime);
       }
     });
-  }, [repeat, volume, globalPause, props.currentSong, props.setCurrentSong]);
+  },[repeat, volume, stateSong, dispatch]);
 
-  const handChangeVolume = (event: any, value: any) => {
+  const handChangeVolume = (_event: any, value: any) => {
     setVolume(value as number);
   };
-  const handTurnVolume = () => {
-    volume > 0 ? setVolume(0) : setVolume(50);
-  }
-  function SeconToMinuste(secs: number) {
-    if (secs) {
-      const minutes = Math.floor(secs / 60);
-      const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-      const seconds = Math.floor(secs % 60);
-      const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-      return `${returnedMinutes}:${returnedSeconds}`;
-    } else {
-      return "00:00"
-    }
-  }
-  const handRewindAudio = (event: any, value: any) => {
+
+  const handRewindAudio = (_event: any, value: any) => {
     rewindRef.current &&
       rewindRef.current.addEventListener("mouseup", () => {
         if (audioRef.current) {
@@ -144,13 +138,21 @@ const Footer = (props: Props) => {
       setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
     setRewindAudio(value as number);
   }
+  const handRandomSong = () => {
+    const preRandom = randomSong; 
+    setRandomSong(!preRandom);
+    preRandom == false && setRepeat(false)
+  }
+const handTurnVolume : any = () => {
+    return volume > 0 ? setVolume(0) : setVolume(50);
+}
   return (
-    <div
-      // onClick={() => {
-      //   setLiveRoom((value) => !value);
-      //   props.setLiveRoom((value) => !value);
-      // }}
-      className="fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer">
+<div
+    // onClick={() => {
+    //   setLiveRoom((value) => !value);
+    //   props.setLiveRoom((value) => !value);
+    // }}
+    className="fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer">
       <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
           <div className="flex items-center w-[100%]">
@@ -222,11 +224,11 @@ const Footer = (props: Props) => {
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
-                <PrevSong ListData={props.ListData} setCurrentSong={props.setCurrentSong} currentSong={props.currentSong} setGlobalPause={setGlobalPause} />
+                <PrevSong ListData={props.ListData}  />
                 <div className="w-[24%] h-[100%] ">
                   <PauseListItemButtonStyle onClick={togglePlayPause} >
                     <PauseListItemIconStyle>
-                      {globalPause ? (
+                      {stateSong ? (
                         <PauseIcon className={classes.root} />
                       ) : (
                         <PlayArrowIcon className={classes.root} />
@@ -234,7 +236,7 @@ const Footer = (props: Props) => {
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>
-                <NextSong ListData={props.ListData} setCurrentSong={props.setCurrentSong} currentSong={props.currentSong} setGlobalPause={setGlobalPause} />
+                <NextSong ListData={props.ListData} />
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle
                     onClick={() => setRepeat((value) => !value)}
@@ -249,7 +251,7 @@ const Footer = (props: Props) => {
               </div>
             </div>
             <div className="w-[100%] h-[30%] flex justify-center items-start">
-              <audio ref={audioRef} src={Array.isArray(props.currentSong?.song_link) ? props.currentSong?.song_link[0] : props.currentSong?.song_link} preload={"metadata"} />
+              <audio ref={audioRef} src={currentSong ? currentSong.song_link as string : ''} preload={"metadata"} />
               <div className="w-full h-[20px] flex justify-between">
                 <div className="w-[6%] h-full fjc">
                   <p>{currentTime}</p>
@@ -290,11 +292,11 @@ const Footer = (props: Props) => {
           <div className="w-[80%] h-[40px]  flex justify-end items-center  ">
             <div className="w-[50%] h-[100%] flex ">
               <div className="w-[30%] h-[100%]">
-                <ListItemButtonStyle onClick={() => handTurnVolume()} >
-                  <ListItemIconStyle>
-                    {volume <= 0 ? <VolumeOffIcon sx={{ color: "white" }} /> : <VolumeUpIcon sx={{ color: "white" }} />}
-                  </ListItemIconStyle>
-                </ListItemButtonStyle>
+              <ListItemButtonStyle onClick={() => handTurnVolume(volume, setVolume)} >
+                    <ListItemIconStyle> 
+                    {volume <= 0 ? <VolumeOffIcon sx={{ color :"white"}} /> :  <VolumeUpIcon sx={{ color :"white"}} />}
+                    </ListItemIconStyle>
+                  </ListItemButtonStyle>
               </div>
               <div className="w-[65%] h-[100%] fjc ">
                 <Slider
