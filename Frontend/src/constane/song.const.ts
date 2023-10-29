@@ -1,8 +1,9 @@
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
-import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
+import { handChangeStateSong, handGetCurrentSong, setDataLocal } from "@/store/Reducer/currentSong";
 import { AppDispatch } from "@/store/store";
 
-export const activeSong = (dispatch: AppDispatch,
+export const activeSong = (
+    dispatch: AppDispatch,
     value: ifSong,
     action: 'start' | 'stopPause') => {
     dispatch(handGetCurrentSong(value));
@@ -11,6 +12,12 @@ export const activeSong = (dispatch: AppDispatch,
         localStorage.setItem("song", JSON.stringify(value));
     } else if (action === "stopPause") {
         dispatch(handChangeStateSong(false));
+    }
+
+    const getSongLocal = localStorage?.getItem("song") || "";
+    if (getSongLocal) {
+        const currentlocal: ifSong = JSON?.parse(getSongLocal);
+        dispatch(setDataLocal(currentlocal))
     }
 };
 

@@ -29,7 +29,7 @@ const SidebarSong = (props: Props) => {
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
