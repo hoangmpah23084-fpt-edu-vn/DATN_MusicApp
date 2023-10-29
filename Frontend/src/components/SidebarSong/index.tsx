@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   ListItemButtonStyle,
   ListItemIconStyle,
@@ -12,14 +11,13 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useStyles } from "../Footer";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"
 import { handGetSong } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 import { addFavourite, getFavourite } from "@/store/Reducer/favouriteReducer";
 import { toast } from "react-toastify";
-import { RootState } from "@/store/store";
+import { ActiveFavourites } from "@/constane/favourites.const";
 type Props = {
   sideBarRight: boolean;
 };
@@ -76,18 +74,6 @@ const SidebarSong = (props: Props) => {
     }
   };
 
-  const handRecently = () => {
-    setStateColor(false);
-  };
-
-  const { listFavourites } = useAppSelector((state: RootState) => state.favourites);
-
-
-  const onhandleActiveFavourites = (item: any) => {
-    const active = listFavourites.map((item) => item._id).includes(item._id)
-    return active ? <AiFillHeart className="text-[20px] text-[#9b4de0] scale-90 ease-in-out duration-300" /> : <AiOutlineHeart className="text-[20px] text-white ease-in-out duration-300" />
-  }
-
   const onhandleFavourite = async (id_song: string) => {
     try {
       const resp: any = await dispatch(addFavourite(id_song))
@@ -96,7 +82,6 @@ const SidebarSong = (props: Props) => {
     } catch (error) {
       toast.error(error as string)
     }
-
   }
 
   return (
@@ -225,7 +210,7 @@ const SidebarSong = (props: Props) => {
                         <div className="w-1/2">
                           <ListItemButtonStyle onClick={() => onhandleFavourite(item?._id as string)}>
                             <ListItemIconStyle>
-                              {onhandleActiveFavourites(item)}
+                              <ActiveFavourites item={item} />
                             </ListItemIconStyle>
                           </ListItemButtonStyle >
                         </div>
@@ -246,7 +231,7 @@ const SidebarSong = (props: Props) => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
