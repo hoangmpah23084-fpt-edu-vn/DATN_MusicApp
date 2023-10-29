@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 
 type props = {
-  item: ifSong
+  item: ifSong,
 }
 
 export const ActiveFavourites = ({ item }: props) => {
