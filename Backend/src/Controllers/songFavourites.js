@@ -76,12 +76,12 @@ export const createFavourites = async (req, res) => {
 
       if (!dataFavourite) {
         return res.status(401).json({
-          message: "Thêm không thành công",
+          message: "Thêm yêu thích không thành công",
         });
       }
 
       return res.status(201).json({
-        message: "Thêm thành công",
+        message: "Thêm yêu thích thành công",
         dataFavourite,
       });
     }
