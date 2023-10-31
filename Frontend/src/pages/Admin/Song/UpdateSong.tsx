@@ -58,28 +58,32 @@ const UpdateSong = () => {
         <Box sx={{ width : "100%", height : "90%" }} >
           <Box sx={{ width : "100%", mt : "10px" ,height : "8%" }} ></Box>
           <Box sx={{ width : "100%", height : "70%" }} >
-            <BoxProduct sx={{ width : "100%", height : "25%" }} >
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Tên nhạc</Typography>
               <TextField helperText={errors.song_name?.message} type='text' placeholder='Inter Song Name' {...register("song_name")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
                  <p>{errors.song_image?.message}</p>
-            <BoxProduct sx={{ width : "100%", height : "25%" }} >
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Link Nhạc</Typography>
-              <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}} {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_link?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
+              <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}}  {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_link?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
-              <Typography sx={{ padding : "8px 0px" }} >{song?.song_link}</Typography>
-
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "25%" }} >
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
+              <Typography sx={{ padding : "8px 0px" }}  >Tiêu đề bài hát</Typography>
+              <TextField placeholder='Inter Song Title' type='text' {...register("song_title")} helperText={errors.song_title?.message} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
+                height : "10px"
+              } }} />
+            </BoxProduct>
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
               <Typography sx={{ padding : "8px 0px" }}  >Ca sĩ</Typography>
               <TextField placeholder='Inter Song Title' type='text' {...register("song_singer")} helperText={errors.song_singer?.message} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "25%" }} >
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Lời bài hát</Typography>
               <TextField placeholder='Inter Song Lyric' type='text' helperText={errors.song_lyric?.message} {...register("song_lyric")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
@@ -116,7 +120,7 @@ const UpdateSong = () => {
            <div className='w-full h-[5%] flex'>
            <LoadingButtonCl type='submit'  loading={loading} sx={{"& .css-lufg7v-MuiButtonBase-root-MuiButton-root-MuiLoadingButton-root.MuiLoadingButton-loading":{
             color : 'white'
-           }}} >Cập nhật</LoadingButtonCl>
+           }}} >Thêm mới</LoadingButtonCl>
            <Link to={"/admin/listsong"} className='bg-purple-500 text-white w-[150px] text-center h-[90%] py-2 px2 rounded-[4px] ml-2 hover:opacity-[0.9]' >Danh sách nhạc</Link>
            </div>
           </Box>
@@ -139,6 +143,7 @@ const UpdateSong = () => {
                   height : "100%",
                  }
                   }} >
+
           </TextField>
             <Box sx={{ textAlign : "center", margin : "4rem 0rem" }} >
               <img src="../../../../public/Image/upload.png" alt="" style={{marginLeft: "auto", marginRight : "auto", maxWidth : "100%" , height : "auto", display : "block", verticalAlign : "middle"}} />
@@ -146,12 +151,6 @@ const UpdateSong = () => {
               <Typography variant='body1' sx={{ color : "gray" }} >Support: jpeg, png</Typography>
             </Box>
           </BoxUpload>
-         <Box className="w-[100%] mt-[10px] h-[11%] flex justify-start items-center gap-3" >
-          {
-            song ? song.song_image.map(item => <img src={item} className='w-[15%] rounded h-full' />) : ''
-          }
-         </Box>
-
          </Box>
        </form>
     </Box>
