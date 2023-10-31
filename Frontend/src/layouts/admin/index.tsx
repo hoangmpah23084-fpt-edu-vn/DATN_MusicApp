@@ -32,7 +32,6 @@ import Popper from '@mui/material/Popper';
 import Fade from '@mui/material/Fade';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
@@ -286,7 +285,7 @@ export default function LayoutAdmin() {
                     justifyContent: 'center',
                   }} >
                     <LibraryMusicIcon /></ListItemIcon>
-                <ListItemText primary={"Song"} sx={{ opacity: open ? 1 : 0 }} ></ListItemText>
+                <ListItemText primary={"Bài Hát"} sx={{ opacity: open ? 1 : 0 }} ></ListItemText>
                 {openSong ? <MdExpandLess /> : <MdExpandMore />}
               </ListItemButton>
               <Collapse in={openSong} timeout="auto" unmountOnExit>
@@ -296,7 +295,7 @@ export default function LayoutAdmin() {
                         <ListItemIcon>
                           <AddBoxIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Add Song" />
+                        <ListItemText primary="Thêm mới bài hát" />
                       </ListItemButton>
                       </Link>
                       <Link to={"/admin/listsong"} >
@@ -304,7 +303,7 @@ export default function LayoutAdmin() {
                         <ListItemIcon>
                           <ListAltIcon />
                         </ListItemIcon>
-                        <ListItemText primary="List Songs" />
+                        <ListItemText primary="Danh sách bài hát" />
                       </ListItemButton>
                       </Link>
                     </List>
@@ -313,7 +312,7 @@ export default function LayoutAdmin() {
           <ListItem disablePadding sx={{ display : "block" }} >
             <ListItemButton onClick={() => handleArtist()} sx={{ minHeight : 48, justifyContent : open ? "initial" : "center" }} >
               <ListItemIcon sx={{ minWidth : 0, mr : open ? 3 :"auto" }} ><PlaylistAddCircleIcon /></ListItemIcon>
-              <ListItemText primary="Artist" sx={{ opacity : open ? 1 : 0 }} ></ListItemText>
+              <ListItemText primary="Nghệ Sĩ" sx={{ opacity : open ? 1 : 0 }} ></ListItemText>
               {openArtist ? <MdExpandLess /> : <MdExpandMore />}
             </ListItemButton>
             <Collapse in={openArtist} timeout={"auto"} unmountOnExit  >
@@ -323,7 +322,7 @@ export default function LayoutAdmin() {
                         <ListItemIcon>
                         <GroupsIcon/>
                         </ListItemIcon>
-                        <ListItemText primary="Add Artist" />
+                        <ListItemText primary="Thêm mới nghệ sĩ" />
                     </ListItemButton>
                 </Link>
                 <Link to={"/admin/artist"} >
@@ -331,7 +330,7 @@ export default function LayoutAdmin() {
                         <ListItemIcon >
                           <GroupAddIcon/>
                         </ListItemIcon>
-                        <ListItemText primary="List Artist" /> 
+                        <ListItemText primary="Danh sách nghệ sĩ" /> 
                     </ListItemButton>
                 </Link>
             </List>
@@ -340,7 +339,7 @@ export default function LayoutAdmin() {
           <ListItem disablePadding sx={{ display : "block" }} >
             <ListItemButton onClick={() => handleUser()} sx={{ minHeight : 48, justifyContent : open ? "initial" : "center" }} >
               <ListItemIcon sx={{ minWidth : 0, mr : open ? 3 :"auto" }} ><SupervisedUserCircleIcon /></ListItemIcon>
-              <ListItemText primary="Users" sx={{ opacity : open ? 1 : 0 }} ></ListItemText>
+              <ListItemText primary="Người Dùng" sx={{ opacity : open ? 1 : 0 }} ></ListItemText>
               {openArtist ? <MdExpandLess /> : <MdExpandMore />}
             </ListItemButton>
             <Collapse in={openUser} timeout={"auto"} unmountOnExit  >
@@ -350,7 +349,7 @@ export default function LayoutAdmin() {
                 <ListItemIcon>
                 <RecentActorsIcon />
                 </ListItemIcon>
-                <ListItemText primary="List User" />
+                <ListItemText primary="Danh sách người dùng" />
               </ListItemButton>
               </Link>
             </List>
@@ -362,7 +361,7 @@ export default function LayoutAdmin() {
         <ListItem disablePadding sx={{ display : "block" }} >
             <ListItemButton onClick={() => handleGenre()} sx={{ minHeight : 48, justifyContent : open ? "initial" : "center" }} >
               <ListItemIcon sx={{ minWidth : 0, mr : open ? 3 :"auto" }} ><LayersIcon /></ListItemIcon>
-              <ListItemText primary="Genre" sx={{ opacity : open ? 1 : 0 }} ></ListItemText>
+              <ListItemText primary="Thể Loại" sx={{ opacity : open ? 1 : 0 }} ></ListItemText>
               {openArtist ? <MdExpandLess /> : <MdExpandMore />}
             </ListItemButton>
             <Collapse in={openGenre} timeout={"auto"} unmountOnExit  >
@@ -372,7 +371,7 @@ export default function LayoutAdmin() {
                         <ListItemIcon>
                         <AddBoxIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Add Genre" />
+                        <ListItemText primary="Thêm mới thể loại" />
                     </ListItemButton>
               </Link>
               <Link to={"/admin/listgenre"} >
@@ -380,7 +379,7 @@ export default function LayoutAdmin() {
                         <ListItemIcon>
                         <ListAltIcon />
                         </ListItemIcon>
-                        <ListItemText primary="List Genre" />
+                        <ListItemText primary="Danh sách thể loại" />
                     </ListItemButton>
               </Link>
             </List>
@@ -407,7 +406,7 @@ export default function LayoutAdmin() {
                         <ListItemIcon>
                           <AddBoxIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Add Album" />
+                        <ListItemText primary="Thêm mới Album" />
                       </ListItemButton>
                       </Link>
                       <Link to={"/admin/listalbum"} >
@@ -415,7 +414,7 @@ export default function LayoutAdmin() {
                         <ListItemIcon>
                           <ListAltIcon />
                         </ListItemIcon>
-                        <ListItemText primary="List Album" />
+                        <ListItemText primary="Danh sách Album" />
                       </ListItemButton>
                       </Link>
                     </List>

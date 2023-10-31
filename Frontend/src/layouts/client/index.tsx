@@ -1,21 +1,41 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "@/components/Header";
 import SidebarMenu from "@/components/SidebarMenu";
 import Footer from "@/components/Footer";
-import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { Outlet } from "react-router-dom";
-type Props = {};
+import SidebarSong from "@/components/SidebarSong";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { handGetSong } from "@/store/Reducer/Song";
+import { handGetCurrentSong } from "@/store/Reducer/currentSong";
 
-const LayoutClient = (props: Props) => {
+
+const LayoutClient = () => {
+  const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const current = useAppSelector(({ Song }) => Song);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function fetchData() {
+      await dispatch(handGetSong());
+    }
+    void fetchData();
+  }, [dispatch]);
+  useEffect(() => {
+    if (current.song.length > 0) {
+      localStorage.setItem('song', JSON.stringify(current.song[2]));
+      dispatch(handGetCurrentSong(current.song[2]))
+    }
+  }, [current.song]);
   return (
     <>
-      <div className="flex w-[100%] bg-[#170f23]">
+      <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
         <SidebarMenu />
         <Header />
-        <div className="ml-[300px] relative w-[100%] h-[80%] overscroll-y-auto">
+        <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
-        <Footer />
+        <SidebarSong sideBarRight={sideBarRight}  />
+        <Footer setSideBarRight={setSideBarRight} ListData={current.song}  />
       </div>
     </>
   );

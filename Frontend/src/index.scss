@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: Inter;
+  src: url(../../../public/font/Inter-VariableFont_slnt\,wght.ttf);
+}
+
+* {
+  font-family: Inter,sans-serif;
+  image-rendering: -webkit-optimize-contrast;
+}
+
 .zmp3-logo {
-  background: url(./logo-dark.svg) 50% / contain no-repeat;
+  background: url('/logo-dark.svg') 50% / contain no-repeat;
 }
 
 .sidebar-divide::after {
@@ -14,4 +24,25 @@
   right: 25px;
   top: 0;
 }
-
+.wall{
+  &:hover{
+    .wallSong{
+      img{
+        filter: brightness(80%);
+      }
+    }
+    .pause{
+      display: block;
+    }
+  }
+  .pause{
+    display: none;
+  }
+}
+@layer components {
+  .fjc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

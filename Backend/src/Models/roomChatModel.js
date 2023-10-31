@@ -3,6 +3,11 @@ import mongoose from "mongoose";
 const roomModel = new mongoose.Schema({
   nameGroup: String,
   password: String,
+  room_image: [
+    {
+      type: Object,
+    },
+  ],
   memberGroup: [
     {
       type: mongoose.Schema.Types.ObjectId,

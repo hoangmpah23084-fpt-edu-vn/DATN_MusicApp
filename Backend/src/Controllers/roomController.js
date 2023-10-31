@@ -69,7 +69,7 @@ export const getRoom = async (req, res) => {
       .findById(req.params.idChat)
       .populate("memberGroup", "-password")
       .populate("isAdminGroup", "-password")
-      .populate("listMessages", "-password")
+      .populate("listMessages", "-password -id_room")
       .then(async (result) => {
         console.log(result);
         result = await model_user.populate(result, {
@@ -131,6 +131,7 @@ export const joinRoom = async (req, res) => {
   try {
     const { idChat, password } = req.body;
     const Chat = await roomModel.findOne({ _id: idChat });
+    console.log(Chat.password , password);
     if (Chat.memberGroup.length >= 2) {
       return res.status(400).json({
         message: "Phòng đã đủ người",

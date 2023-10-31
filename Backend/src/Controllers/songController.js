@@ -6,8 +6,6 @@ import Genre from "../Models/genreModel.js";
 export const createSong = async (req, res) => {
   try {
     const body = req.body;
-    console.log(body);
-
     const { error } = Validate_Song.validate(req.body, { abortEarly: false });
     if (error) {
       return res.status(400).json({
@@ -57,7 +55,6 @@ export const createSong = async (req, res) => {
 export const get_Songs = async (req, res) => {
   try {
     const data = await SongSchame.find();
-    console.log(req.user);
     return res.status(200).json({
       message: "Get song list Successfully",
       data,
@@ -106,7 +103,14 @@ export const update_Song = async (req, res) => {
     await Artist.findByIdAndUpdate(artistId, {
       $addToSet: { songs: data._id },
     });
-
+    //todo loai bỏ id song khỏi genre
+    await Genre.findByIdAndUpdate(data.id_Genre, {
+      $pull: { list_songs: data._id },
+    });
+    const genreId = data.id_Genre;
+    await Artist.findByIdAndUpdate(genreId, {
+      $addToSet: { list_songs: data._id },
+    });
     return res.status(200).json({
       message: "Updated song successfully",
       data,
