@@ -19,7 +19,7 @@ import { BsMusicNoteList } from "react-icons/bs";
 const ModalSongMenu = () => {
   return (
     <>
-      <div className="absolute z-50 max-h-full bg-[#34224f] rounded-xl w-72 right-16 -mt-64">
+      <div className="absolute z-50 max-h-full bg-[#34224f] rounded-xl w-72 right-[130px] -mt-64">
         <header className="flex items-center py-3 ml-2 pr-10 ">
           <img
             src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg"

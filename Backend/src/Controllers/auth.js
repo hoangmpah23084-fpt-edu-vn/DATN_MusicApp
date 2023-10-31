@@ -36,7 +36,7 @@ const signup = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
-    })
+    });
     newUser.password = undefined;
     return res.json({
       message: "Tạo thành công người dùng mới ^^",
@@ -118,4 +118,4 @@ const getOneUser = async (req, res) => {
     console.log(error);
   }
 };
-export { signin, signup, getAllMembers, getOneUser };
+export { signin, signup, getAllMembers, getOneUser};

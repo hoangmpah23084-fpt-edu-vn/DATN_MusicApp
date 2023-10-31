@@ -55,7 +55,7 @@ const SidebarSong = (props: Props) => {
   return (
     <div
       className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"
-        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#120822] bottom-[90px] fjc px-[8px]`}
+        } sticky z-50 border-[#120822] text-white h-[calc(100vh-90px)] bg-[#120822] bottom-[90px] fjc `}
     >
       <div className="w-full h-full">
         <div className="w-full h-[70px] fjc">
@@ -100,7 +100,7 @@ const SidebarSong = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="w-full fjc">
+        <div className="w-full fjc px-[10px] pb-[10px]">
           <div className="w-full h-[90%] ">
             <div className="w-full h-[50%] flex items-center justify-start ">
               <h2 className="font-bold text-[14px]">Tiếp Theo</h2>
@@ -113,7 +113,7 @@ const SidebarSong = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="w-full fjc h-[calc(100vh-200px)] overflow-y-auto">
+        <div className="w-full fjc h-[calc(100vh-200px)] overflow-y-auto px-[10px]">
           <div className="w-full h-[100%] overflow-y-scroll">
             {renderListSong &&
               renderListSong.song?.length > 0 &&

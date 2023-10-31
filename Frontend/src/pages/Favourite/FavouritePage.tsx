@@ -43,7 +43,7 @@ const FavouritePage = () => {
                 <li><Link to="#" className="px-3 py-1 border-2 rounded-3xl hover:text-[#9b4de0] hover:border-[#9b4de0]">ĐÃ TẢI LÊN</Link></li>
             </ul>
         </div>
-        <div className=" overflow-x-auto ml-16 py-10">
+        <div className="overflow-x-auto mx-16 py-10">
             <ListSong />
         </div>
 
