@@ -17,10 +17,10 @@ const SongCarouselItem = ({item}: Props) => {
         <div className="card-top relative">
           <div className="card-image overflow-hidden rounded-[6px] relative">
             <Link to={`#`} className="overflow-hidden">
-              {<img
+            <img
                 className="rounded-[6px] aspect-square"
                 src={item.song_image[0]}
-              /> || <Skeleton />}
+              />
             </Link>
           </div>
           <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
@@ -56,7 +56,7 @@ const SongCarouselItem = ({item}: Props) => {
           <h4>
             <Link to={`#`}>
               <span className="text-[14px] font-semibold">
-                Artist's Story #33 - Tăng Duy Tân: Viết nhạc để quên đi thực tại
+              Artist's Story #33 - Tăng Duy Tân: Viết nhạc để quên đi thực tại
                 phũ phàng
               </span>
             </Link>

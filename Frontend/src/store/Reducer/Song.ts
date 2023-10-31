@@ -54,7 +54,7 @@ const songReducer = createSlice({
             state.loading = false;
         })
         builder.addCase(handGetSong.pending, (state) => {
-            state.loading = true;
+            state.loading = false;
         })
         builder.addCase(handGetSong.fulfilled, (state, action) => {
             state.loading = true;
@@ -62,8 +62,7 @@ const songReducer = createSlice({
             state.error = ""
         })
         builder.addCase(handGetSong.rejected, (state, action) => {
-            console.log(action);
-            state.loading = true;
+            state.loading = false;
         })
         builder.addCase(handDeleteSong.pending, (state) => {
             state.loading = true;
