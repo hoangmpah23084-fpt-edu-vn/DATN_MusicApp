@@ -6,6 +6,7 @@ export const SongSchame = yup.object().shape({
     song_image: yup.mixed().notRequired(),
     song_singer: yup.string().required('Singer is required.'),
     song_lyric: yup.string().required('Lyrics are required.'),
+    song_title: yup.string().required('Lyrics are required.'),
     id_Genre: yup.string().required('Genre is required.'),
     id_Artists: yup.string().required('Artist is required.'),
 })
