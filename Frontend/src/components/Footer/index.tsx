@@ -48,7 +48,6 @@ const Footer = (props: Props) => {
 
   const togglePlayPause = useCallback(() => {
     const preValue = stateSong;
-    console.log(preValue);
     dispatch(handChangeStateSong(!preValue))
     if (!preValue) {
       void audioRef.current?.play();

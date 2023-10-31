@@ -16,6 +16,11 @@ export const Validate_Song = joi.object({
     "string.required": "image is Required",
     "string.empty": "image is not allowed to be empty",
   }),
+  song_title: joi.string().required().empty().messages({
+    "string.required": "lyric is Required",
+    "string.empty": "lyric is not allowed to be empty",
+    "string.base": "lyric must be a string",
+  }),
   song_singer: joi.string().required().empty().messages({
     "string.required": "singer is Required",
     "string.empty": "singer is not allowed to be empty",

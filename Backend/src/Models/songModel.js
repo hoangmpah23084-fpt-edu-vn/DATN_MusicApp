@@ -10,6 +10,7 @@ const SongSchame = new mongoose.Schema(
         required: true,
       },
     ],
+    song_title: String,
     song_singer: String,
     song_lyric: String,
     is_dowload: {
@@ -24,10 +25,10 @@ const SongSchame = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Artists",
     },
-    total_like:{
-      type:Number,
+    total_like: {
+      type: Number,
       default: 0,
-    }
+    },
   },
   { versionKey: false, timestamps: true }
 );
