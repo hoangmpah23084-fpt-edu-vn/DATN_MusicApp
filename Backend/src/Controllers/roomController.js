@@ -131,17 +131,26 @@ export const joinRoom = async (req, res) => {
   try {
     const { idChat, password } = req.body;
     const Chat = await roomModel.findOne({ _id: idChat });
-    console.log(Chat.password , password);
-    if (Chat.memberGroup.length >= 2) {
+
+    if(!Chat) {
       return res.status(400).json({
-        message: "Phòng đã đủ người",
-      });
-    } else if (password != Chat.password) {
-      return res.status(400).json({
-        message: "Mật khẩu không đúng",
+        message: "Phòng không tồn tại.",
       });
     }
-    const joinChat = await roomModel
+
+    if(!Chat.memberGroup.includes(req.user._id)) {
+
+      if (Chat.memberGroup.length >= 2) {
+        return res.status(400).json({
+          message: "Phòng đã đủ người",
+        });
+      }
+      if (password != Chat.password) {
+        return res.status(400).json({
+          message: "Mật khẩu không đúng",
+        });
+      }
+      const joinChat = await roomModel
       .findByIdAndUpdate(
         idChat,
         {
@@ -162,6 +171,13 @@ export const joinRoom = async (req, res) => {
       message: "Tham gia phòng thành công",
       joinChat,
     });
+    }
+
+     return res.status(200).json({
+      message: "Tham gia phòng thành công",
+    });
+
+    
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -198,3 +214,30 @@ export const deleteUserFromRoom = async (req, res) => {
     });
   }
 };
+
+export const leaveRoom = async (req,res) => {
+  try {
+    const Chat = await roomModel.findById(req.params.id);
+    if(!Chat) {
+      return res.status(400).json({
+        message: "Phòng không còn tồn tại."
+      })
+    }
+    const idAdmin = Chat.isAdminGroup
+    const idUser = req.user._id
+    if(String(idAdmin) == String(idUser)) {
+      await roomModel.findByIdAndDelete(Chat._id)
+      return res.status(200).json({
+        message: "Rời phòng thành công."
+      })
+    }
+
+    return res.status(200).json({
+      message: "Rời phòng thành công."
+    })
+  } catch (error) {
+    return res.status(400).json({
+      message: error
+    })
+  }
+}
