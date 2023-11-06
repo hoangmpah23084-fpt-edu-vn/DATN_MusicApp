@@ -1,13 +1,13 @@
 
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import * as Yup from "yup"
 import { useNavigate } from "react-router-dom";
 import { SigninForm, SigninSchema } from "../Admin/Interface/validateAuth"
-import { signin } from './auth';
+import { signin } from '../../store/Reducer/User';
 import { useLocalStorage } from '@/hooks';
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
+import { toast } from "react-toastify";
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<SigninForm>(
@@ -16,11 +16,14 @@ const Login = () => {
         }
     )
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
     const [user, setUser] = useLocalStorage("token", null)
 
-    const onSubmit = async (data: SigninForm) => {
+    const onSubmit = async (dataSignin: SigninForm) => {
 
-        const { data: { accessToken, user } } = await signin(data)
+        const res: any = await dispatch(signin(dataSignin))
+        toast.success(res.payload.message)
+        const { accessToken, user } = res.payload
         setUser({
             accessToken,
             ...user
@@ -62,11 +65,11 @@ const Login = () => {
                             </a>
 
                             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                            Chào mừng bạn đến với Song Sync
+                                Chào mừng bạn đến với Song Sync
                             </h2>
 
                             <p className="mt-4 leading-relaxed text-white/90">
-                            Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
+                                Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
                             </p>
                         </div>
                     </section>
@@ -98,11 +101,11 @@ const Login = () => {
                                 <h1
                                     className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
                                 >
-                                 Chào mừng bạn đến với Song Sync
+                                    Chào mừng bạn đến với Song Sync
                                 </h1>
 
                                 <p className="mt-4 leading-relaxed text-gray-500">
-                                Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
+                                    Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
                                 </p>
                             </div>
 
@@ -146,12 +149,12 @@ const Login = () => {
                                         Đăng nhập
                                     </button>
                                     <p className="mt-4 text-sm text-white sm:mt-0">
-                                    Bạn chưa có tài khoản hãy đăng ký! 
-                                    <Link to ="http://localhost:5173/signup"> 
-                                    <a className="text-white underline ml-2">Đăng Ký</a>.
-                                    </Link>
-                                   
-                                </p>
+                                        Bạn chưa có tài khoản hãy đăng ký!
+                                        <Link to="http://localhost:5173/signup">
+                                            <a className="text-white underline ml-2">Đăng Ký</a>.
+                                        </Link>
+
+                                    </p>
 
                                 </div>
                             </form>
