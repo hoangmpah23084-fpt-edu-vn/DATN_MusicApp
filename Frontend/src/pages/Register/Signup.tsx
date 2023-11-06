@@ -5,8 +5,10 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { SignupForm, SignupSchema } from "../Admin/Interface/validateAuth"
 import { useNavigate } from "react-router-dom"
-import { signup } from "./auth"
+import { signup } from "../../store/Reducer/User"
 import { Link } from "react-router-dom"
+import { toast } from "react-toastify"
+import { useAppDispatch } from "@/store/hooks"
 
 
 const Signup = () => {
@@ -15,20 +17,22 @@ const Signup = () => {
             resolver: yupResolver(SignupSchema)
         }
     )
-    
-        
-   
+
+
+
     const navigate = useNavigate()
-    const onSubmit : SubmitHandler<any> = async (data) => {
+    const dispatch = useAppDispatch()
+    const onSubmit: SubmitHandler<any> = async (data) => {
         try {
-            await signup(data)
+            const res: any = await dispatch(signup(data))
+            toast.success(res.payload.message)
             navigate("/signin")
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {
+            console.log(error.message)
         }
     }
 
-     
+
 
 
     return <>
@@ -60,7 +64,7 @@ const Signup = () => {
                         </a>
 
                         <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                        Chào mừng bạn đến với Song Sync
+                            Chào mừng bạn đến với Song Sync
                         </h2>
 
                         <p className="mt-4 leading-relaxed text-white/90">
@@ -100,7 +104,7 @@ const Signup = () => {
                             </h1>
 
                             <p className="mt-4 leading-relaxed text-gray-500">
-                            Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
+                                Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
                             </p>
                         </div>
 
@@ -119,7 +123,7 @@ const Signup = () => {
                                     className="mt-1 w-full pl-2 h-[35px] rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
                                 <p className="text-red-600 text-[15px]">{errors.fullName && errors.fullName.message}</p>
-                            </div>                 
+                            </div>
                             <div className="col-span-6 ">
                                 <label htmlFor="Email" className="block text-sm font-medium text-white">
                                     Email
@@ -174,10 +178,10 @@ const Signup = () => {
 
                                 <p className="mt-4 text-sm text-white sm:mt-0">
                                     Bạn có tài khoản rồi đúng không?
-                                    <Link to ="http://localhost:5173/signin"> 
-                                    <a className="text-white underline ml-2">Đăng Nhập</a>.
+                                    <Link to="http://localhost:5173/signin">
+                                        <a className="text-white underline ml-2">Đăng Nhập</a>.
                                     </Link>
-                                   
+
                                 </p>
                             </div>
                         </form>

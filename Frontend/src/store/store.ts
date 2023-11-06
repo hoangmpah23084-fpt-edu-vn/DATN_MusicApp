@@ -32,7 +32,7 @@ const rootReducer = combineReducers({
     genre: genreReducer,
     room: roomReducer,
     favourites: favouriteReducer,
-    currentSong: currentSong
+    currentSong: currentSong,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
