@@ -1,11 +1,12 @@
-import { CreateRoomSchame, IRoom } from "@/pages/Admin/Interface/Room";
+import { CreateRoomSchame } from "@/pages/Admin/Interface/Room";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { SubmitHandler, useForm } from "react-hook-form";
+import {  useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import useClickOutside from "@/hooks/clickOutSide";
 import { useAppDispatch } from "@/store/hooks";
 import { addRoom, getRoom } from "@/store/Reducer/roomReducer";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   onShowModal: () => void;
@@ -21,6 +22,8 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
     resolver: yupResolver(CreateRoomSchame),
   });
 
+  const navigate = useNavigate()
+
   const dispatch = useAppDispatch();
 
   const onHandleSubmit: any = async (data: {
@@ -30,10 +33,8 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
     try {
       const resp: any = await dispatch(addRoom(data))
       await dispatch(getRoom());
-      console.log(resp.payload.message);
-
       toast.success(resp.payload.message)
-      console.log("resp", resp);
+      navigate("/liveroom")
     } catch (error) {
       toast.error(error as string)
     } finally {
@@ -103,7 +104,7 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
                   </div>
 
                   <button className="w-full text-white bg-[#654789] hover:bg-white hover:text-[#654789] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
-                    Tham gia
+                    Tạo phòng
                   </button>
                 </form>
               </div>

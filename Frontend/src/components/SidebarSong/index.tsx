@@ -17,6 +17,7 @@ import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { activeSong, chekcSubString } from "@/constane/song.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
+import { getFavourite } from "@/store/Reducer/favouriteReducer";
 type Props = {
   sideBarRight: boolean;
 };
@@ -29,7 +30,8 @@ const SidebarSong = (props: Props) => {
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
-  }, [dispatch]);
+    dispatch(getFavourite())
+  }, []);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
@@ -48,6 +50,7 @@ const SidebarSong = (props: Props) => {
       setStateColor(false);
     }
   };
+
 
   return (
     <div

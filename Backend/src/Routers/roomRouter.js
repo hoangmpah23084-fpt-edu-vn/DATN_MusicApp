@@ -6,6 +6,7 @@ import {
   getRoom,
   getRooms,
   joinRoom,
+  leaveRoom,
   updateRoomChat,
 } from "../Controllers/roomController.js";
 import authUser from "../Middlewares/authMiddlewere.js";
@@ -17,6 +18,7 @@ roomRouter.get("/room/:idChat", getRoom);
 roomRouter.get("/room", getRooms);
 roomRouter.delete("/room/:idChat", deleteRoom);
 roomRouter.post("/joinroom", authUser, joinRoom);
+roomRouter.delete("/leaveroom/:id", authUser, leaveRoom);
 roomRouter.post("/dluseroom", authUser, deleteUserFromRoom);
 
 export default roomRouter;

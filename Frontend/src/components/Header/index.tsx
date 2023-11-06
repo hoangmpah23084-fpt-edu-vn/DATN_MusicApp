@@ -8,6 +8,7 @@ import {
 } from "react-icons/ai";
 import { GoDesktopDownload } from "react-icons/go";
 import Input from "../Input";
+import { Link } from "react-router-dom";
 type Props = {};
 
 const Header = (props: Props) => {
@@ -37,9 +38,11 @@ const Header = (props: Props) => {
           <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#2f2739] rounded-full">
             <AiOutlineSetting className=" w-10 h-[20px]" />
           </div>
+          <Link to = "http://localhost:5173/signup">
           <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
             <img src="/user-default.3ff115bb.png" className="rounded-full" />
           </div>
+          </Link>
         </div>
       </div>
     </div>
