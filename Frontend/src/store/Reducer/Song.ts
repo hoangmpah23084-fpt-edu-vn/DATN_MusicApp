@@ -33,7 +33,6 @@ export const handUpdateSong = createAsyncThunk("song/updatesong", async (value: 
         const { data } = await axios.put<{ data: ifSongAdmin }>(`http://localhost:8080/api/Song/${_id}`, datafake)
         return data.data
     }
-
 })
 export const handGetOne = async (id: string) => {
     const { data } = await axios.get<{ data: ifSong }>("http://localhost:8080/api/Song/" + id)

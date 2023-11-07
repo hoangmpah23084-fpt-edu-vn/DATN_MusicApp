@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/liveRoom", element: <RoomPage/>
+    path: "/liveRoom/:id", element: <RoomPage/>
   },
   //todo BE
   {

@@ -25,7 +25,6 @@ const HeardRecently = (props: Props) => {
             clearTimeout(timer);
         };
     }, []);
-    console.log(album);
   return (
     <div className="carousel-wrapper relative ">
     <div className="carousel flex -mx-[15px]">

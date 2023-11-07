@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./css.scss";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FiRadio } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
@@ -10,30 +10,45 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { leaveRoom } from "@/store/Reducer/roomReducer";
+import { useAppDispatch } from "@/store/hooks";
 
 type Props = {
   roomLive?: boolean;
 };
 
 const img_slide = [
-  { id: 0, img: "./Image/efb05fb9097a7057aecef6ecb62bff5a.jpg" },
-  { id: 1, img: "./Image/fd79808d2180de9a421afa6aff38953e.jpg" },
-  { id: 2, img: "./Image/bf223818f85e7fe129091b415038ca6c.jpg" },
-  { id: 3, img: "./Image/0ef8beec056970cb6e9596e056fa1c5a.jpg" },
-  { id: 4, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 5, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 6, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 7, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 8, img: "./Image/e663da1f89026b0e73a979ca67a5eb96.jpg" },
-  { id: 9, img: "./Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
-  { id: 10, img: "./Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
-  { id: 11, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 0, img: "../../../public/Image/efb05fb9097a7057aecef6ecb62bff5a.jpg" },
+  { id: 1, img: "../../../public/Image/fd79808d2180de9a421afa6aff38953e.jpg" },
+  { id: 2, img: "../../../public/Image/bf223818f85e7fe129091b415038ca6c.jpg" },
+  { id: 3, img: "../../../public/Image/0ef8beec056970cb6e9596e056fa1c5a.jpg" },
+  { id: 4, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 5, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 6, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 7, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 8, img: "../../../public/Image/e663da1f89026b0e73a979ca67a5eb96.jpg" },
+  { id: 9, img: "../../../public/Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
+  { id: 10, img: "../../../public/Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
+  { id: 11, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
 ];
 
 //background image
-const background = "./Image/e1887a2c79f9d3d04984905cbf443a29.jpg";
+const background = "../../../public/Image/e1887a2c79f9d3d04984905cbf443a29.jpg";
 
 const RoomPage = (props: Props) => {
+  const {id} = useParams();
+  const dispatch = useAppDispatch();
+  window.addEventListener('beforeunload', () => {
+    console.log('User clicked back button');
+  });
+  useEffect(() => {
+    return () => {
+      if (confirm("Are you sure want to remove room ?")) {
+        leaveRoom(id as string);
+      }
+    }
+  },[])
+
   return (
     <div>
       <div
@@ -74,7 +89,7 @@ const RoomPage = (props: Props) => {
                   <div className="w-[80px] h-[80px] overflow-hidden">
                     <img
                       className="rounded-full"
-                      src="./Image/fd79808d2180de9a421afa6aff38953e.jpg"
+                      src="../../../public/Image/fd79808d2180de9a421afa6aff38953e.jpg"
                       alt=""
                     />
                   </div>
@@ -116,7 +131,7 @@ const RoomPage = (props: Props) => {
                     <div className="w-[40px] h-[40px]">
                       <img
                         className="rounded-[5px]"
-                        src="./Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
+                        src="../../../public/Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
                         alt=""
                       />
                     </div>
@@ -181,7 +196,7 @@ const RoomPage = (props: Props) => {
                   <div className="avatar w-[40px] h-[40px]">
                     <img
                       className="rounded-full"
-                      src="./Image/8584d41b88cd6ab9551784035fd74fbe.jpg"
+                      src="../../../public/Image/8584d41b88cd6ab9551784035fd74fbe.jpg"
                       alt=""
                     />
                   </div>
