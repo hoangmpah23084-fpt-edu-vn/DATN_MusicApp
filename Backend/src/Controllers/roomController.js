@@ -74,8 +74,9 @@ export const getRoom = async (req, res) => {
         console.log(result);
         result = await model_user.populate(result, {
           path: "listMessages.id_sender",
-          select: "fullName, email",
+          select: "fullName",
         });
+        // email
         res.status(200).json({
           message: "Lấy phòng thành công",
           data: result,
@@ -132,14 +133,13 @@ export const joinRoom = async (req, res) => {
     const { idChat, password } = req.body;
     const Chat = await roomModel.findOne({ _id: idChat });
 
-    if(!Chat) {
+    if (!Chat) {
       return res.status(400).json({
         message: "Phòng không tồn tại.",
       });
     }
 
-    if(!Chat.memberGroup.includes(req.user._id)) {
-
+    if (!Chat.memberGroup.includes(req.user._id)) {
       if (Chat.memberGroup.length >= 2) {
         return res.status(400).json({
           message: "Phòng đã đủ người",
@@ -151,33 +151,31 @@ export const joinRoom = async (req, res) => {
         });
       }
       const joinChat = await roomModel
-      .findByIdAndUpdate(
-        idChat,
-        {
-          $push: {
-            memberGroup: req.user._id,
+        .findByIdAndUpdate(
+          idChat,
+          {
+            $push: {
+              memberGroup: req.user._id,
+            },
           },
-        },
-        { new: true }
-      )
-      .populate("memberGroup", "-password")
-      .populate("isAdminGroup", "-password");
-    if (!joinChat) {
-      return res.status(404).json({
-        message: "Người dùng không tồn tại",
+          { new: true }
+        )
+        .populate("memberGroup", "-password")
+        .populate("isAdminGroup", "-password");
+      if (!joinChat) {
+        return res.status(404).json({
+          message: "Người dùng không tồn tại",
+        });
+      }
+      return res.status(200).json({
+        message: "Tham gia phòng thành công",
+        joinChat,
       });
     }
+
     return res.status(200).json({
       message: "Tham gia phòng thành công",
-      joinChat,
     });
-    }
-
-     return res.status(200).json({
-      message: "Tham gia phòng thành công",
-    });
-
-    
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -215,29 +213,33 @@ export const deleteUserFromRoom = async (req, res) => {
   }
 };
 
-export const leaveRoom = async (req,res) => {
+export const leaveRoom = async (req, res) => {
   try {
     const Chat = await roomModel.findById(req.params.id);
-    if(!Chat) {
+    if (!Chat) {
       return res.status(400).json({
-        message: "Phòng không còn tồn tại."
-      })
+        message: "Phòng không còn tồn tại.",
+      });
     }
-    const idAdmin = Chat.isAdminGroup
-    const idUser = req.user._id
-    if(String(idAdmin) == String(idUser)) {
-      await roomModel.findByIdAndDelete(Chat._id)
+    const idAdmin = Chat.isAdminGroup;
+    const idUser = req.user._id;
+    if (String(idAdmin) == String(idUser)) {
+      await roomModel.findByIdAndDelete(Chat._id);
       return res.status(200).json({
-        message: "Rời phòng thành công."
-      })
+        message: "Rời phòng thành công.",
+      });
+    } else {
+      await roomModel.findByIdAndUpdate(Chat._id, {
+        $pull: { memberGroup: idUser },
+      });
     }
 
     return res.status(200).json({
-      message: "Rời phòng thành công."
-    })
+      message: "Rời phòng thành công.",
+    });
   } catch (error) {
     return res.status(400).json({
-      message: error
-    })
+      message: error,
+    });
   }
-}
+};

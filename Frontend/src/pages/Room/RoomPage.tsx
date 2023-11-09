@@ -1,39 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./css.scss";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FiRadio } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import RoomLeftItem from "@/components/Room-left-item";
-import RoomCommentListItem from "@/components/Room-comment-list-item";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { leaveRoom } from "@/store/Reducer/roomReducer";
+import { useAppDispatch } from "@/store/hooks";
+import { Socket, io } from "socket.io-client";
+import axios from "axios";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { DetailRoom, listMessages } from "../Admin/Interface/Room";
+import SideBarRoom from "./SideBarRoom";
 
 type Props = {
   roomLive?: boolean;
 };
 
-const img_slide = [
-  { id: 0, img: "./Image/efb05fb9097a7057aecef6ecb62bff5a.jpg" },
-  { id: 1, img: "./Image/fd79808d2180de9a421afa6aff38953e.jpg" },
-  { id: 2, img: "./Image/bf223818f85e7fe129091b415038ca6c.jpg" },
-  { id: 3, img: "./Image/0ef8beec056970cb6e9596e056fa1c5a.jpg" },
-  { id: 4, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 5, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 6, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 7, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 8, img: "./Image/e663da1f89026b0e73a979ca67a5eb96.jpg" },
-  { id: 9, img: "./Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
-  { id: 10, img: "./Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
-  { id: 11, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-];
 
-//background image
-const background = "./Image/e1887a2c79f9d3d04984905cbf443a29.jpg";
-
+let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 const RoomPage = (props: Props) => {
+  const {id} = useParams();
+  const dispatch = useAppDispatch();
+  const [listMess , setListMess] = useState<listMessages[] | []>([]);
+  window.addEventListener('beforeunload', () => {
+    console.log('User clicked back button');
+  });
+  const FetchMessage = () => {
+    axios.get(`http://localhost:8080/api/room/${id}`).then(({data}) =>  {
+      setListMess([...listMess, ...data.data.listMessages])
+      socket.emit('joinRoom', data.data._id)
+    });
+  }
+  useEffect(() => {
+    socket = io("http://localhost:8080");
+    const user = localStorage.getItem('user');
+    if (user) {
+      const convert = JSON.parse(user);
+      socket.emit('setUser', convert.user)
+    }
+    FetchMessage()
+    return () => {
+      if (confirm("Are you sure want to remove room ?")) {
+        leaveRoom(id as string);
+      }
+    }
+  },[])
+  useEffect(() => {
+    socket.on("messRecived", (value) => {
+      setListMess([...listMess, value])
+    })
+  },[listMess])
   return (
     <div>
       <div
@@ -74,7 +95,7 @@ const RoomPage = (props: Props) => {
                   <div className="w-[80px] h-[80px] overflow-hidden">
                     <img
                       className="rounded-full"
-                      src="./Image/fd79808d2180de9a421afa6aff38953e.jpg"
+                      src="../../../public/Image/fd79808d2180de9a421afa6aff38953e.jpg"
                       alt=""
                     />
                   </div>
@@ -116,7 +137,7 @@ const RoomPage = (props: Props) => {
                     <div className="w-[40px] h-[40px]">
                       <img
                         className="rounded-[5px]"
-                        src="./Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
+                        src="../../../public/Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
                         alt=""
                       />
                     </div>
@@ -149,53 +170,8 @@ const RoomPage = (props: Props) => {
               </div>
             </div>
           </div>
-
-          <div className="zm-room-right-content absolute w-[340px] p-[20px] bg-[rgba(0,0,0,.5)] flex flex-col right-[30px] top-[94px] bottom-[30px] rounded-[12px] ">
-            <div className="main-tabs text-[12px] mb-[12px]">
-              <ul className="flex bg-[rgba(254,255,255,.1)] rounded-[15px] justify-center self-center p-[3px] max-w-max relative">
-                <li className="tab-item font-medium px-[20px] py-[3px] rounded-[15px] bg-[rgba(254,255,255,.2)] cursor-pointer">
-                  Trò chuyện
-                </li>
-                <li className="tab-item font-medium px-[20px] py-[3px] cursor-pointer">
-                  Lịch phát
-                </li>
-                <li className="tab-item font-medium px-[20px] py-[3px] cursor-pointer">
-                  Yêu cầu
-                </li>
-              </ul>
-            </div>
-            <div className="content-wrapper flex-1">
-              <div className="zm-room-comment flex flex-col h-full justify-between">
-                <div className="zm-room-comment-list flex flex-col py-[6px] h-[calc(100vh-265px)] overflow-y-auto">
-                  <RoomCommentListItem />
-                  <RoomCommentListItem />
-                  <RoomCommentListItem />
-                  <RoomCommentListItem />
-                  <RoomCommentListItem />
-                  <RoomCommentListItem />
-                  <RoomCommentListItem />
-                  <RoomCommentListItem />
-                  <RoomCommentListItem />
-                </div>
-                <form className="comment-input mt-[16px] flex items-center">
-                  <div className="avatar w-[40px] h-[40px]">
-                    <img
-                      className="rounded-full"
-                      src="./Image/8584d41b88cd6ab9551784035fd74fbe.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="control ml-[10px] flex-1">
-                    <input
-                      className="text-[#fff] rounded-[100px] w-full items-center h-[2.5em] justify-start leading-[1.5] focus:outline-none"
-                      type="text"
-                      placeholder="Nhập bình luận vào đây..."
-                    />
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+          {/* //todo SideBar Rooom */}
+          <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} />
         </div>
       </div>
     </div>
@@ -203,3 +179,27 @@ const RoomPage = (props: Props) => {
 };
 
 export default RoomPage;
+
+
+
+
+
+const img_slide = [
+  { id: 0, img: "../../../public/Image/efb05fb9097a7057aecef6ecb62bff5a.jpg" },
+  { id: 1, img: "../../../public/Image/fd79808d2180de9a421afa6aff38953e.jpg" },
+  { id: 2, img: "../../../public/Image/bf223818f85e7fe129091b415038ca6c.jpg" },
+  { id: 3, img: "../../../public/Image/0ef8beec056970cb6e9596e056fa1c5a.jpg" },
+  { id: 4, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 5, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 6, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 7, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 8, img: "../../../public/Image/e663da1f89026b0e73a979ca67a5eb96.jpg" },
+  { id: 9, img: "../../../public/Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
+  { id: 10, img: "../../../public/Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
+  { id: 11, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+];
+
+
+
+//background image
+const background = "../../../public/Image/e1887a2c79f9d3d04984905cbf443a29.jpg";

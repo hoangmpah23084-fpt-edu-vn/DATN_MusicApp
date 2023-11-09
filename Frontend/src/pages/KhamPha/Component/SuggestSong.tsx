@@ -1,9 +1,20 @@
 import ListSongItem from '@/components/List-songs-item'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import SuggSkeleton from '../Skeleton/Sugg.skeleton'
 
 type Props = {}
 
 const SuggestSong = (props: Props) => {
+  const [loading, setLoading] = useState(true);
+  const [data, dataLoading] = useState([1,2,3,4,5,6,7,8,9]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false)
+    },7000);
+    return () => clearTimeout(timer)
+  },[])
+
   return (
     <div className="suggested-list-songs mt-12">
     <div className="suggested-list-songs-title flex flex-col justify-between mb-[20px]">
@@ -16,15 +27,9 @@ const SuggestSong = (props: Props) => {
     </div>
     <div className="column">
       <div className="list grid grid-cols-3 -mx-[15px]">
-        <ListSongItem section="suggested" />
-        <ListSongItem section="suggested" />
-        <ListSongItem section="suggested" />
-        <ListSongItem section="suggested" />
-        <ListSongItem section="suggested" />
-        <ListSongItem section="suggested" />
-        <ListSongItem section="suggested" />
-        <ListSongItem section="suggested" />
-        <ListSongItem section="suggested" />
+        {
+          loading ? (data.map(item => <SuggSkeleton section="suggested" /> ))  : (data.map(item => <ListSongItem section="suggested" /> )) 
+        }
       </div>
     </div>
   </div>

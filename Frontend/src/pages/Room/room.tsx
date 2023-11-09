@@ -11,8 +11,6 @@ import { getRoom } from "@/store/Reducer/roomReducer";
 import { RootState } from "@/store/store";
 
 const Room = () => {
-
-
   const [isShowModalCreateRoom, setIsShowModalCreateRoom] =
     useState<boolean>(false);
 
@@ -29,7 +27,6 @@ const Room = () => {
       dispatch(getRoom());
     } catch (error) {
       console.log(error);
-      
     }
   };
   useEffect(() => {

@@ -18,6 +18,7 @@ import genreReducer from './Reducer/genreReducer';
 import roomReducer from './Reducer/roomReducer';
 import favouriteReducer from './Reducer/favouriteReducer';
 import currentSong from './Reducer/currentSong';
+import albumReducer from './Reducer/albumReducer';
 
 const persistConfig = {
     key: 'root',
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
     Song: songReducer,
     user: userReducer,
     artist: artistReducer,
+    album: albumReducer,
     genre: genreReducer,
     room: roomReducer,
     favourites: favouriteReducer,

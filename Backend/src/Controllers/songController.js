@@ -55,7 +55,6 @@ export const createSong = async (req, res) => {
 export const get_Songs = async (req, res) => {
   try {
     const data = await SongSchame.find();
-    console.log(req.user);
     return res.status(200).json({
       message: "Get song list Successfully",
       data,

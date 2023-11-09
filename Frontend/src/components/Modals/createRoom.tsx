@@ -33,8 +33,9 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
     try {
       const resp: any = await dispatch(addRoom(data))
       await dispatch(getRoom());
-      toast.success(resp.payload.message)
-      navigate("/liveroom")
+      toast.success(resp.payload.message);
+      
+      navigate(`/liveroom/${resp.payload.data._id}`)
     } catch (error) {
       toast.error(error as string)
     } finally {
