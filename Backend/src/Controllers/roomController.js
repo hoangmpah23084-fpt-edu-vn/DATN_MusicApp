@@ -74,8 +74,9 @@ export const getRoom = async (req, res) => {
         console.log(result);
         result = await model_user.populate(result, {
           path: "listMessages.id_sender",
-          select: "fullName, email",
+          select: "fullName",
         });
+        // email
         res.status(200).json({
           message: "Lấy phòng thành công",
           data: result,

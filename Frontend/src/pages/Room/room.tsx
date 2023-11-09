@@ -27,7 +27,6 @@ const Room = () => {
       dispatch(getRoom());
     } catch (error) {
       console.log(error);
-      
     }
   };
   useEffect(() => {

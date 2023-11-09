@@ -36,6 +36,10 @@ export const getRoom = createAsyncThunk("room/getRoom", async () => {
     const { data } = await instanceAxios.get('/room');
     return data.data;
 })
+export const getDetailRoom = createAsyncThunk("room/getRoom", async (id : string) => {
+    const { data } = await instanceAxios.get(`/room/${id}`);
+    return data.data;
+})
 
 export const joinRoom = createAsyncThunk("room/joinRoom", async (dataForm: joinRoom) => {
     const { data } = await instanceAxios.post("/joinroom", dataForm)

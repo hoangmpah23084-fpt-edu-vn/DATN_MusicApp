@@ -25,7 +25,9 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
       const resq = await dispatch(joinRoom({
         idChat: data._id,
         password: password
-      }))
+      }));
+      console.log(resq);
+      
       toast.success(resq.payload.message)
       navigate(`/liveroom/${resq.payload.data._id}`);
     } catch (error) {
@@ -35,9 +37,7 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
     }
 
   };
-
   const ref = useClickOutside(() => onShowModal());
-
   return (
     <>
       <div className="bg-slate-950/80 absolute w-full h-full text-white z-50">
