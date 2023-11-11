@@ -17,6 +17,10 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { chekcSubString } from "@/constane/song.const";
+import { Socket, io } from "socket.io-client";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { memberGroup } from "@/pages/Admin/Interface/Room";
+import axios from "axios";
 
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
@@ -28,8 +32,11 @@ export const useStyles = makeStyles(() => createStyles({
 type Props = {
   ListData: ifSong[],
   setSideBarRight: Dispatch<SetStateAction<boolean>>,
+  idRoom ?: string,
+  listMember ?: memberGroup[] | [],
 }
 
+let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 const Footer = (props: Props) => {
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState('');
@@ -44,9 +51,8 @@ const Footer = (props: Props) => {
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
-
-
-  const togglePlayPause = useCallback(() => {
+const togglePlayPause = useCallback(() => {
+  const togglePlayPauseChild = () => {
     const preValue = stateSong;
     dispatch(handChangeStateSong(!preValue))
     if (!preValue) {
@@ -56,6 +62,7 @@ const Footer = (props: Props) => {
         audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
       }, 1000);
       setIntervalId(id);
+
     } else {
       audioRef.current?.pause()
       if (intervalId !== null) {
@@ -63,7 +70,72 @@ const Footer = (props: Props) => {
         setIntervalId(null);
       }
     }
+  }
+  if (props.idRoom) {
+    togglePlayPauseChild()
+    socket.emit("toggPlayPause", {
+      idroom : props.idRoom,
+      listMember : props.listMember
+    })
+  }else{
+    togglePlayPauseChild()
+  }
   }, [dispatch, intervalId, stateSong])
+
+
+
+  const togglePlayServer = useCallback(() => {
+    if (props.idRoom) {
+      const preValue = stateSong;
+      dispatch(handChangeStateSong(!preValue))
+      if (!preValue) {
+        void audioRef.current?.play();
+        const id = setInterval(() => {
+          audioRef.current && setRewindAudio(audioRef.current?.currentTime);
+          audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+        }, 1000);
+        setIntervalId(id);
+  
+      } else {
+        audioRef.current?.pause()
+        if (intervalId !== null) {
+          clearInterval(intervalId);
+          setIntervalId(null);
+        }
+      }
+    }
+    }, [dispatch, intervalId, stateSong])
+
+  //todo handEventSocket.
+  //! Send events to the Server
+  useEffect(() => {
+    if(props.idRoom) {
+      socket = io("http://localhost:8080");
+      const user = localStorage.getItem('token');
+      if (user) {
+        const convert = JSON.parse(user);
+        socket.emit('setUser', convert._id)
+      }
+      axios.get(`http://localhost:8080/api/room/${props.idRoom}`).then(({data}) =>  {
+        socket.emit('joinRoom', data.data._id)
+      });
+      return () => {
+        socket.disconnect();
+      };
+    }
+  },[])
+  //todo: Receive events returned from the Server
+  useEffect(() => {
+    if (props.idRoom) {
+      socket.on("recivedHandTogg", (value) => {
+        if (value.idroom && value.listMember) {
+          togglePlayServer()
+        }
+      });
+    }
+    console.log("Lỗi do nhận recivedHandTogg");
+  },[dispatch, intervalId, stateSong])
+
   const SeconToMinuste = (secs: number) => {
     if (secs) {
       const minutes = Math.floor(secs / 60);
@@ -98,6 +170,7 @@ const Footer = (props: Props) => {
   }, [currentTime == SeconToMinuste(duration), randomSong])
 
   useEffect(() => {
+    console.log("Lỗi do nhận render play và pause");
     stateSong ? audioRef.current?.play() : audioRef.current?.pause();
     if (stateSong) {
       const id = setInterval(() => {
@@ -147,14 +220,8 @@ const Footer = (props: Props) => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   }
 
-
-
   return (
     <div
-      // onClick={() => {
-      //   setLiveRoom((value) => !value);
-      //   props.setLiveRoom((value) => !value);
-      // }}
       className="fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer">
       <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">

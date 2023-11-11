@@ -17,7 +17,7 @@ import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { activeSong, chekcSubString } from "@/constane/song.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
-import { getFavourite } from "@/store/Reducer/favouriteReducer";
+// import { getFavourite } from "@/store/Reducer/favouriteReducer";
 type Props = {
   sideBarRight: boolean;
 };
@@ -30,7 +30,7 @@ const SidebarSong = (props: Props) => {
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
-    dispatch(getFavourite())
+    // dispatch(getFavourite())
   }, []);
 
   useEffect(() => {
@@ -117,9 +117,10 @@ const SidebarSong = (props: Props) => {
           <div className="w-full h-[100%] overflow-y-scroll">
             {renderListSong &&
               renderListSong.song?.length > 0 &&
-              renderListSong.song.map((item: ifSong) => {
+              renderListSong.song.map((item: ifSong, index) => {
                 return (
                   <div
+                  key={index}
                     className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
                       ? "bg-[#9B4DE0]"
                       : "hover:bg-[#b4b4b32d]"

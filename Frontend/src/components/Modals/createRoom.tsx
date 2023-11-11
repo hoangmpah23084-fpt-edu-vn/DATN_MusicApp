@@ -42,8 +42,6 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
       reset();
       onShowModal();
     }
-
-
   };
 
   const ref = useClickOutside(() => onShowModal());
