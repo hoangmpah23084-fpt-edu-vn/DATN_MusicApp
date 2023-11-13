@@ -139,17 +139,19 @@ export const joinRoom = async (req, res) => {
       });
     }
 
+    if (password != Chat.password) {
+      return res.status(400).json({
+        message: "Mật khẩu không đúng",
+      });
+    }
+
     if (!Chat.memberGroup.includes(req.user._id)) {
       if (Chat.memberGroup.length >= 2) {
         return res.status(400).json({
           message: "Phòng đã đủ người",
         });
       }
-      if (password != Chat.password) {
-        return res.status(400).json({
-          message: "Mật khẩu không đúng",
-        });
-      }
+
       const joinChat = await roomModel
         .findByIdAndUpdate(
           idChat,
