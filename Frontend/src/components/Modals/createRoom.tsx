@@ -1,6 +1,6 @@
 import { CreateRoomSchame } from "@/pages/Admin/Interface/Room";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {  useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import useClickOutside from "@/hooks/clickOutSide";
 import { useAppDispatch } from "@/store/hooks";
@@ -34,7 +34,6 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
       const resp: any = await dispatch(addRoom(data))
       await dispatch(getRoom());
       toast.success(resp.payload.message);
-      
       navigate(`/liveroom/${resp.payload.data._id}`)
     } catch (error) {
       toast.error(error as string)

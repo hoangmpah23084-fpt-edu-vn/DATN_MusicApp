@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { chekcSubString } from "@/constane/song.const";
+import { RootState } from "@/store/store";
 
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
@@ -43,6 +44,8 @@ const Footer = (props: Props) => {
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
+  const { token } = useAppSelector((state: RootState) => state.user);
+
   const dispatch = useAppDispatch();
 
 
@@ -200,7 +203,7 @@ const Footer = (props: Props) => {
               <div className="flex items-center justify-center w-[40%]">
                 <div className="flex items-center justify-center ml-[20px] ">
                   <div className="level-item">
-                    <button className="bg" onClick={() => onhandleFavourite(dispatch, currentSong?._id as string)}>
+                    <button className="bg" onClick={() => onhandleFavourite(dispatch, currentSong?._id as string, token as string)}>
                       <ActiveFavourites item={currentSong as ifSong} />
                     </button>
                   </div>

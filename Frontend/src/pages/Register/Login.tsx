@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useNavigate } from "react-router-dom";
 import { SigninForm, SigninSchema } from "../Admin/Interface/validateAuth"
 import { signin } from '../../store/Reducer/User';
-import { useLocalStorage } from '@/hooks';
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { toast } from "react-toastify";
@@ -17,18 +16,12 @@ const Login = () => {
     )
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const [user, setUser] = useLocalStorage("token", null)
 
     const onSubmit = async (dataSignin: SigninForm) => {
-
         const res: any = await dispatch(signin(dataSignin))
-        toast.success(res.payload.message)
-        const { accessToken, user } = res.payload
-        setUser({
-            accessToken,
-            ...user
-            /*khi này nó sẽ trả về 2 phần  riêng biệt, để accesstoken nằm trong user thì tha thêm ... trước user*/
-        })
+        toast.success(res.payload?.message)
+        const { accessToken, user } = res?.payload
+        localStorage.setItem("token", accessToken)
         if (user.role !== 'admin') {
             navigate('/')
         } else {

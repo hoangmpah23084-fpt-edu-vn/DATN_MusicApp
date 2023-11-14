@@ -1,6 +1,7 @@
 
 
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { checkToken } from "@/store/Reducer/User";
 import { addFavourite, getFavourite } from "@/store/Reducer/favouriteReducer";
 import { useAppSelector } from "@/store/hooks";
 import { AppDispatch, RootState } from "@/store/store";
@@ -24,11 +25,15 @@ export const ActiveFavourites = ({ item }: props) => {
   )
 }
 
-export const onhandleFavourite = async (dispatch: AppDispatch, id_song: string) => {
+export const onhandleFavourite = async (dispatch: AppDispatch, id_song: string, token: string) => {
   try {
-    const resp: any = await dispatch(addFavourite(id_song))
-    await dispatch(getFavourite())
-    toast.success(resp.payload.message)
+    if (token) {
+      const resp: any = await dispatch(addFavourite(id_song))
+      await dispatch(getFavourite())
+      toast.success(resp.payload.message)
+    } else {
+      dispatch(checkToken(true))
+    }
   } catch (error) {
     toast.error(error as string)
   }
