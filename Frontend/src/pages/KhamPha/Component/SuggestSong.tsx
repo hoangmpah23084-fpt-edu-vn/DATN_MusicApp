@@ -28,7 +28,7 @@ const SuggestSong = (props: Props) => {
     <div className="column">
       <div className="list grid grid-cols-3 -mx-[15px]">
         {
-          loading ? (data.map(item => <SuggSkeleton section="suggested" /> ))  : (data.map(item => <ListSongItem section="suggested" /> )) 
+          loading ? (data.map((_, index) => <SuggSkeleton section="suggested" key={index} /> ))  : (data.map((_, index) => <SuggSkeleton section="suggested" key={index} /> )) 
         }
       </div>
     </div>

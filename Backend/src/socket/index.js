@@ -26,6 +26,21 @@ const ConnectSocket = (server) => {
     socket.on("toggPlayPause", (value) => {
       socket.to(value.idroom).emit("recivedHandTogg", value);
     });
+    socket.on("emitNextClient", (value) => {
+      socket.to(value).emit("emitNextServer", value);
+    });
+    socket.on("emitPrevClient", (value) => {
+      socket.to(value).emit("emitPrevServer", value);
+    });
+    socket.on("handRewindClient", (value) => {
+      socket.to(value.idroom).emit("handRewindServer", value);
+    });
+    // socket.on("handRandomClient", (value) => {
+    //   socket.to(value.idroom).emit("handRandomServer", value);
+    // });
+    // socket.on("autoNextClient", (value) => {
+    //   socket.to(value).emit("autoNextServer", value);
+    // });
 
     socket.on("newMessage", async (value) => {
       const getOneRoom = await roomModel

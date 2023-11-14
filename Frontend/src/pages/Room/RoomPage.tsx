@@ -16,10 +16,10 @@ import axios from "axios";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { listMessages, memberGroup } from "../Admin/Interface/Room";
 import SideBarRoom from "./SideBarRoom";
-import Footer from "@/components/Footer";
 import { handGetSong } from "@/store/Reducer/Song";
-import SidebarSong from "@/components/SidebarSong";
 import { handGetCurrentSong } from "@/store/Reducer/currentSong";
+import SidebarRoom from "@/components/Footer/Room/SidebarRoom";
+import FooterRoom from "@/components/Footer/Room/FooterRoom";
 
 type Props = {
   roomLive?: boolean;
@@ -194,14 +194,8 @@ const RoomPage = (props: Props) => {
           {/* //todo SideBar Rooom */}
           <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} />
         </div>
-        {/* {
-          currMember && currAdmin && currAdmin  == currMember ? <>
-          <SidebarSong sideBarRight={sideBarRight}  />
-          <Footer setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} />
-          </> : ''
-        } */}
-        <SidebarSong sideBarRight={sideBarRight}  />
-        {listMember.length > 0 && <Footer setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} /> } 
+        <SidebarRoom sideBarRight={sideBarRight}  />
+        {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} /> } 
       </div>
     </div>
   );

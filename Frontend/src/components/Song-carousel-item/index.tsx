@@ -9,7 +9,7 @@ type Props = {
 };
 
 const SongCarouselItem = ({item}: Props) => {
-  console.log(item);
+  // console.log(item);
   return (
     <div className="carousel-item flex flex-col px-[14px]">
       <div className="card ">
@@ -36,7 +36,7 @@ const SongCarouselItem = ({item}: Props) => {
               <div>
                 <button className="border rounded-full">
                   {/* <AiOutlinePause className="text-[40px] p-1 pl-[6px]" /> */}
-                  <BsFillPlayFill onclick className="text-[40px] p-1 pl-[6px]" />
+                  <BsFillPlayFill  className="text-[40px] p-1 pl-[6px]" />
                 </button>
               </div>
               <div className="rounded-full">
