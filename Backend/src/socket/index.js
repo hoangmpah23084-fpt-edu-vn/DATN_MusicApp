@@ -35,6 +35,12 @@ const ConnectSocket = (server) => {
     socket.on("handRewindClient", (value) => {
       socket.to(value.idroom).emit("handRewindServer", value);
     });
+    socket.on("randomSongClient", (value) => {
+      socket.to(value.idroom).emit("randomSongServer", value);
+    });
+    socket.on("repeatClient", (value) => {
+      socket.to(value.idroom).emit("repeatServer", value);
+    });
     // socket.on("handRandomClient", (value) => {
     //   socket.to(value.idroom).emit("handRandomServer", value);
     // });

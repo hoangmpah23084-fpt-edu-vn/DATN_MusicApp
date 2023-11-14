@@ -16,7 +16,7 @@ const Message = ({listMess, socket, setListMess}: Props) => {
     const handSendMessage = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key == "Enter") {
       event.preventDefault()
-      const user = localStorage.getItem("token");
+      const user = localStorage.getItem("user");
       if (user) {
         const convert = JSON.parse(user);
         let formData = {
