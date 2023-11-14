@@ -18,6 +18,8 @@ const LayoutClient = () => {
   const current = useAppSelector(({ Song }) => Song);
   const dispatch = useAppDispatch();
   const { isToken } = useAppSelector((state: RootState) => state.user);
+
+  const user = localStorage.getItem('user');
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong());
@@ -38,6 +40,7 @@ const LayoutClient = () => {
     if (token) {
       dispatch(getFavourite())
     }
+
   }, [token])
 
 

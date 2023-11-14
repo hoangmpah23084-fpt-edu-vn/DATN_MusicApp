@@ -21,9 +21,12 @@ const ModalSignin = () => {
     const onSubmit = async (dataSignin: SigninForm) => {
         const res: any = await dispatch(signin(dataSignin))
         toast.success(res.payload?.message)
-        const { accessToken } = res?.payload
-        if (accessToken) {
+        const { accessToken, user } = res?.payload
+        if (accessToken && user) {
+            const userUpgrade = JSON.stringify(user);
             localStorage.setItem("token", accessToken)
+            localStorage.setItem("user", userUpgrade)
+
             dispatch(checkToken(false))
         }
     }

@@ -21,8 +21,11 @@ const Login = () => {
         const res: any = await dispatch(signin(dataSignin))
         toast.success(res.payload?.message)
         const { accessToken, user } = res?.payload
-        if (accessToken) {
+        if (accessToken && user) {
+            const userUpgrade = JSON.stringify(user);
             localStorage.setItem("token", accessToken)
+            localStorage.setItem("user", userUpgrade)
+
             if (user.role !== 'admin') {
                 navigate('/')
             } else {
