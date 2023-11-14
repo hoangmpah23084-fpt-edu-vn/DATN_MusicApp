@@ -15,12 +15,16 @@ interface Inital {
     loading: boolean,
     user: ifUser[],
     error: string,
+    token: string | null,
+    isToken: boolean
 }
 
 const initialState: Inital = {
     loading: false,
     user: [],
-    error: ""
+    error: "",
+    token: null,
+    isToken: false
 }
 
 export const getUsers = createAsyncThunk("user/getUsers", async () => {
@@ -35,7 +39,6 @@ export const signup = createAsyncThunk("user/signup", async (dataSignup: ifSignu
 });
 
 export const signin = createAsyncThunk("user/signin", async (dataSignin: ifSignin) => {
-    console.log(dataSignin);
     const { data } = await instanceAxios.post<ifSignin>("http://localhost:8080/api/signin", dataSignin);
     return data
 });
@@ -44,6 +47,13 @@ const userReducer = createSlice({
     name: "user",
     initialState,
     reducers: {
+
+        checkToken: (state, action) => {
+            state.isToken = action.payload
+        },
+        setToken: (state, action) => {
+            state.token = action.payload
+        }
 
     },
     extraReducers: builder => {
@@ -70,5 +80,7 @@ const userReducer = createSlice({
     }
 })
 
+
+export const { checkToken, setToken } = userReducer.actions
 
 export default userReducer.reducer;

@@ -17,7 +17,8 @@ import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { activeSong, chekcSubString } from "@/constane/song.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
-import { getFavourite } from "@/store/Reducer/favouriteReducer";
+import { RootState } from "@/store/store";
+
 type Props = {
   sideBarRight: boolean;
 };
@@ -25,12 +26,13 @@ type Props = {
 const SidebarSong = (props: Props) => {
   const [stateColor, setStateColor] = React.useState<boolean>(true);
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
+  const { token } = useAppSelector((state: RootState) => state.user);
+
   const dispatch = useAppDispatch();
   const renderListSong = useAppSelector(({ Song }) => Song);
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
-    dispatch(getFavourite())
   }, []);
 
   useEffect(() => {
@@ -176,7 +178,7 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[30%] h-full flex">
                         <div className="w-1/2">
-                          <ListItemButtonStyle onClick={() => onhandleFavourite(dispatch, item?._id as string)}>
+                          <ListItemButtonStyle onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}  >
                             <ListItemIconStyle>
                               <ActiveFavourites item={item} />
                             </ListItemIconStyle>
