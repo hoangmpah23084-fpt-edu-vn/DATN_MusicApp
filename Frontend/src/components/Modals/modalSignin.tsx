@@ -22,8 +22,10 @@ const ModalSignin = () => {
         const res: any = await dispatch(signin(dataSignin))
         toast.success(res.payload?.message)
         const { accessToken } = res?.payload
-        localStorage.setItem("token", accessToken)
-        dispatch(checkToken(false))
+        if (accessToken) {
+            localStorage.setItem("token", accessToken)
+            dispatch(checkToken(false))
+        }
     }
 
     const onShow = () => {

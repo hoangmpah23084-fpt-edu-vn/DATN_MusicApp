@@ -21,12 +21,15 @@ const Login = () => {
         const res: any = await dispatch(signin(dataSignin))
         toast.success(res.payload?.message)
         const { accessToken, user } = res?.payload
-        localStorage.setItem("token", accessToken)
-        if (user.role !== 'admin') {
-            navigate('/')
-        } else {
-            navigate('/admin')
+        if (accessToken) {
+            localStorage.setItem("token", accessToken)
+            if (user.role !== 'admin') {
+                navigate('/')
+            } else {
+                navigate('/admin')
+            }
         }
+
     }
     return (
         <div>
