@@ -109,7 +109,7 @@ const FooterRoom = (props: Props) => {
   useEffect(() => {
     if(props.idRoom) {
       socket = io("http://localhost:8080");
-      const user = localStorage.getItem('token');
+      const user = localStorage.getItem('user');
       if (user) {
         const convert = JSON.parse(user);
         socket.emit('setUser', convert._id)
@@ -233,7 +233,8 @@ const FooterRoom = (props: Props) => {
 
   useEffect(() => {
     // console.log("Lỗi do nhận render play và pause");
-    audioRef.current?.removeEventListener("loadedmetadata", () => stateSong && stateSong ? audioRef.current?.play() : audioRef.current?.pause());
+    // audioRef.current?.removeEventListener("loadedmetadata", () => stateSong && stateSong ? audioRef.current?.play() : audioRef.current?.pause());
+    stateSong && stateSong ? audioRef.current?.play() : audioRef.current?.pause()
     if (stateSong) {
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
@@ -334,9 +335,9 @@ const FooterRoom = (props: Props) => {
               <div className="flex items-center justify-center w-[40%]">
                 <div className="flex items-center justify-center ml-[20px] ">
                   <div className="level-item">
-                    <button className="bg" onClick={() => onhandleFavourite(dispatch, currentSong?._id as string)}>
+                    {/* <button className="bg" onClick={() => onhandleFavourite(dispatch, currentSong?._id as string)}>
                       <ActiveFavourites item={currentSong as ifSong} />
-                    </button>
+                    </button> */}
                   </div>
                   <div className="level-item ml-3">
                     <span id="np_menu">

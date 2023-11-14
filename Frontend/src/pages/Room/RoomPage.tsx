@@ -58,7 +58,7 @@ const RoomPage = (props: Props) => {
   }
   useEffect(() => {
     socket = io("http://localhost:8080");
-    const user = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
     if (user) {
       const convert = JSON.parse(user);
       setCurrMember(convert._id);
