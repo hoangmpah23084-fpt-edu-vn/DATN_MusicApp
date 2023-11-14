@@ -32,7 +32,7 @@ const Message = ({listMess, socket, setListMess}: Props) => {
     }
   return (
     <div className="content-wrapper flex-1">
-    <div className="zm-room-comment flex flex-col h-full justify-between">
+    <div className="zm-room-comment flex flex-col h-[93%] justify-between">
       <div className="zm-room-comment-list flex flex-col py-[6px] h-[calc(100vh-265px)] overflow-y-auto">
         {
           listMess.length > 0 ? listMess.map((item, index) => <RoomCommentListItem item={item} key={index} />) : ''

@@ -71,7 +71,6 @@ export const getRoom = async (req, res) => {
       .populate("isAdminGroup", "-password")
       .populate("listMessages", "-password -id_room")
       .then(async (result) => {
-        console.log(result);
         result = await model_user.populate(result, {
           path: "listMessages.id_sender",
           select: "fullName",

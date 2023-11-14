@@ -13,7 +13,6 @@ export const createSong = async (req, res) => {
       });
     }
     const data = await SongSchame.create(req.body);
-    console.log(data);
     if (!data) {
       return res.status(400).json({
         message: "Create Song failed",

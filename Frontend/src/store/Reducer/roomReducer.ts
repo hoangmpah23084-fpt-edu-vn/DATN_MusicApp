@@ -29,6 +29,7 @@ const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5M
 
 
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
+    console.log(dataToForm);
     const { data } = await instanceAxios.post("/room", dataToForm)
     return data;
 })

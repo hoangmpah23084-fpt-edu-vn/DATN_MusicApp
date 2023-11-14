@@ -20,8 +20,28 @@ const ConnectSocket = (server) => {
     });
     socket.on("setUser", (value) => {
       //todo value => User
-      socket.join(value._id);
+      socket.join(value);
     });
+    //? toggPlayPause
+    socket.on("toggPlayPause", (value) => {
+      socket.to(value.idroom).emit("recivedHandTogg", value);
+    });
+    socket.on("emitNextClient", (value) => {
+      socket.to(value).emit("emitNextServer", value);
+    });
+    socket.on("emitPrevClient", (value) => {
+      socket.to(value).emit("emitPrevServer", value);
+    });
+    socket.on("handRewindClient", (value) => {
+      socket.to(value.idroom).emit("handRewindServer", value);
+    });
+    // socket.on("handRandomClient", (value) => {
+    //   socket.to(value.idroom).emit("handRandomServer", value);
+    // });
+    // socket.on("autoNextClient", (value) => {
+    //   socket.to(value).emit("autoNextServer", value);
+    // });
+
     socket.on("newMessage", async (value) => {
       const getOneRoom = await roomModel
         .findById(value.id_room)
@@ -36,14 +56,12 @@ const ConnectSocket = (server) => {
           return result;
         });
       getOneRoom.memberGroup.forEach(async (item) => {
-        // if (item._id == value.id_sender) return;
         //todo send value for all members from group except yourself
         const fetUser = await model_user.findById(value.id_sender);
         value.id_sender = {
           _id: fetUser._id,
           fullName: fetUser.fullName,
         };
-        // console.log(value.id_room);
         //todo to : gửi cho tất cả mọi người kể cả tôi
         socket.to(value.id_room).emit("messRecived", value);
       });

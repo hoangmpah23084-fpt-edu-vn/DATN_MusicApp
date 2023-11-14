@@ -27,9 +27,7 @@ export const getFavourites = async (req, res) => {
 
 export const createFavourites = async (req, res) => {
   const { id_song } = req.body; // lấy id_user và id_song từ request
-  const id_user = req.user._id
-  console.log(id_user);
-  console.log(req.body);
+  const id_user = req.user._id;
   try {
     const checkFavourite = await Favourites.findOne({
       id_user: id_user,

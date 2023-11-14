@@ -11,13 +11,17 @@ import { Slider } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
-import { NextSong, PrevSong } from "./NextSong";
+import { NextSong, PrevSong } from "../NextSong";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { chekcSubString } from "@/constane/song.const";
-import { RootState } from "@/store/store";
+import { Socket, io } from "socket.io-client";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { memberGroup } from "@/pages/Admin/Interface/Room";
+import axios from "axios";
+import { NextSongRoom, PrevSongRoom } from "./NextSongRoom";
 
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
@@ -29,9 +33,12 @@ export const useStyles = makeStyles(() => createStyles({
 type Props = {
   ListData: ifSong[],
   setSideBarRight: Dispatch<SetStateAction<boolean>>,
+  idRoom ?: string,
+  listMember ?: memberGroup[] | [],
 }
 
-const Footer = (props: Props) => {
+let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+const FooterRoom = (props: Props) => {
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState('');
   const [rewindAudio, setRewindAudio] = useState<number>(0);
@@ -44,12 +51,9 @@ const Footer = (props: Props) => {
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
-  const { token } = useAppSelector((state: RootState) => state.user);
-
   const dispatch = useAppDispatch();
-
-
   const togglePlayPause = useCallback(() => {
+  const togglePlayPauseChild = () => {
     const preValue = stateSong;
     dispatch(handChangeStateSong(!preValue))
     if (!preValue) {
@@ -59,6 +63,7 @@ const Footer = (props: Props) => {
         audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
       }, 1000);
       setIntervalId(id);
+
     } else {
       audioRef.current?.pause()
       if (intervalId !== null) {
@@ -66,7 +71,57 @@ const Footer = (props: Props) => {
         setIntervalId(null);
       }
     }
+  }
+  if (props.idRoom) {
+    togglePlayPauseChild()
+    socket.emit("toggPlayPause", {
+      idroom : props.idRoom,
+      listMember : props.listMember
+    })
+  }else{
+    togglePlayPauseChild()
+  }
   }, [dispatch, intervalId, stateSong])
+
+  const togglePlayServer = useCallback(() => {
+    if (props.idRoom) {
+      const preValue = stateSong;
+      dispatch(handChangeStateSong(!preValue))
+      if (!preValue) {
+        // void audioRef.current?.play();
+        const id = setInterval(() => {
+          audioRef.current && setRewindAudio(audioRef.current?.currentTime);
+          audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+        }, 1000);
+        setIntervalId(id);
+  
+      } else {
+        // audioRef.current?.pause()
+        if (intervalId !== null) {
+          clearInterval(intervalId);
+          setIntervalId(null);
+        }
+      }
+    }
+    }, [dispatch, intervalId, stateSong])
+  //todo handEventSocket.
+  //! Send events to the Server
+  useEffect(() => {
+    if(props.idRoom) {
+      socket = io("http://localhost:8080");
+      const user = localStorage.getItem('token');
+      if (user) {
+        const convert = JSON.parse(user);
+        socket.emit('setUser', convert._id)
+      }
+      axios.get(`http://localhost:8080/api/room/${props.idRoom}`).then(({data}) =>  {
+        socket.emit('joinRoom', data.data._id)
+      });
+      return () => {
+        socket.disconnect();
+      };
+    }
+  },[])
   const SeconToMinuste = (secs: number) => {
     if (secs) {
       const minutes = Math.floor(secs / 60);
@@ -78,6 +133,60 @@ const Footer = (props: Props) => {
       return "00:00"
     }
   }
+  //todo: Start Receive events returned from the Server
+  useEffect(() => {
+    if (props.idRoom) {
+      socket.on("recivedHandTogg", (value) => {
+        if (value.idroom && value.listMember) {
+          togglePlayServer()
+        }
+      });
+      socket.on("emitNextServer", (value) => {
+        if (value) {
+          const findIndexSong = props.ListData.findIndex((item) => item._id == currentSong?._id)
+          const findSong = props.ListData.filter((_item, index) => index == findIndexSong + 1);
+          dispatch(handGetCurrentSong(findSong[0]))
+          localStorage.setItem("song",JSON.stringify(findSong[0]));
+          dispatch(handChangeStateSong(false))
+          setTimeout(() => {
+            dispatch(handChangeStateSong(true)) 
+          },500);
+        }
+      })
+      socket.on('emitPrevServer', value => {
+        if (value) {
+          const findIndexSong = props.ListData.findIndex((item) => item._id == currentSong?._id)
+          const findSong = props.ListData.filter((_item, index) => index == findIndexSong - 1);
+          dispatch(handGetCurrentSong(findSong[0]))
+          localStorage.setItem("song",JSON.stringify(findSong[0]));
+          dispatch(handChangeStateSong(false)) 
+          setTimeout(() => {
+            dispatch(handChangeStateSong(true)) 
+          },500);
+        }
+      });
+      socket.on("handRewindServer", value => {
+        if (value) {
+          if (audioRef.current) {
+            audioRef.current.currentTime = Number(value.rewind);
+            setRewindAudio(value.rewind as number);
+            setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+          }
+          audioRef.current &&
+            setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+          setRewindAudio(value.rewind as number);
+        }
+      })
+      // socket.on("handRandomServer", value => {
+      //   console.log(value);
+      //   value && dispatch(handGetCurrentSong(value.song))
+      // });
+    }
+    // console.log("Lỗi do nhận recivedHandTogg");
+  },[dispatch, intervalId, stateSong, props.ListData, setCurrentTime, setRewindAudio])
+  //todo: End Receive events returned from the Server
+
+
   useEffect(() => {
     const handleAudioEnd = () => {
         if (audioRef.current?.ended && duration > 0 && !repeat && !randomSong) {
@@ -123,7 +232,8 @@ const Footer = (props: Props) => {
 }, [audioRef, duration, repeat, randomSong, currentSong, dispatch, props.ListData]);
 
   useEffect(() => {
-    stateSong ? audioRef.current?.play() : audioRef.current?.pause();
+    // console.log("Lỗi do nhận render play và pause");
+    audioRef.current?.removeEventListener("loadedmetadata", () => stateSong && stateSong ? audioRef.current?.play() : audioRef.current?.pause());
     if (stateSong) {
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
@@ -144,39 +254,41 @@ const Footer = (props: Props) => {
         setRewindAudio(audioRef.current.currentTime);
       }
     });
-  }, [repeat, volume, stateSong, dispatch, currentSong]);
+  }, [repeat, volume, stateSong, dispatch, currentSong, setCurrentTime]);
 
   const handChangeVolume = (_event: any, value: any) => {
     setVolume(value as number);
   };
 
-  const handRewindAudio = (_event: any, value: any) => {
+  const handRewindAudio = ({value}: any) => {
     rewindRef.current &&
-      rewindRef.current.addEventListener("mouseup", () => {
-        if (audioRef.current) {
-          audioRef.current.currentTime = Number(value);
-          setRewindAudio(value as number);
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-        }
-      });
+    rewindRef.current.addEventListener("mouseup", () => {
+      if (audioRef.current) {
+        audioRef.current.currentTime = Number(value);
+        setRewindAudio(value as number);
+        setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+      }
+    });
     audioRef.current &&
       setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
     setRewindAudio(value as number);
+    props.idRoom && socket.emit("handRewindClient", {
+      idroom : props.idRoom,
+      rewind : value
+    })
   }
   const handRandomSong = () => {
     const preRandom = randomSong;
     setRandomSong(!preRandom);
-    preRandom == false && setRepeat(false)
+    preRandom == false && setRepeat(false);
   }
+
   const handTurnVolume: any = () => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   }
+
   return (
     <div
-      // onClick={() => {
-      //   setLiveRoom((value) => !value);
-      //   props.setLiveRoom((value) => !value);
-      // }}
       className="fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer">
       <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
@@ -222,7 +334,7 @@ const Footer = (props: Props) => {
               <div className="flex items-center justify-center w-[40%]">
                 <div className="flex items-center justify-center ml-[20px] ">
                   <div className="level-item">
-                    <button className="bg" onClick={() => onhandleFavourite(dispatch, currentSong?._id as string, token as string)}>
+                    <button className="bg" onClick={() => onhandleFavourite(dispatch, currentSong?._id as string)}>
                       <ActiveFavourites item={currentSong as ifSong} />
                     </button>
                   </div>
@@ -249,7 +361,7 @@ const Footer = (props: Props) => {
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
-                <PrevSong ListData={props.ListData} />
+                <PrevSongRoom ListData={props.ListData} socket={socket} idRoom={props.idRoom} />
                 <div className="w-[24%] h-[100%] ">
                   <PauseListItemButtonStyle onClick={togglePlayPause} >
                     <PauseListItemIconStyle>
@@ -261,7 +373,7 @@ const Footer = (props: Props) => {
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>
-                <NextSong ListData={props.ListData} />
+                <NextSongRoom ListData={props.ListData} socket={socket} idRoom={props.idRoom} />
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle
                     onClick={() => setRepeat((value) => !value)}
@@ -276,7 +388,7 @@ const Footer = (props: Props) => {
               </div>
             </div>
             <div className="w-[100%] h-[30%] flex justify-center items-start">
-              <audio ref={audioRef} src={currentSong ? currentSong.song_link as string : ''} preload={"metadata"} />
+              <audio ref={audioRef} src={currentSong ? currentSong.song_link as string : ''} preload={"metadata"} autoPlay={false} />
               <div className="w-full h-[20px] flex justify-between">
                 <div className="w-[6%] h-full fjc">
                   <p>{currentTime}</p>
@@ -303,7 +415,7 @@ const Footer = (props: Props) => {
                     value={rewindAudio}
                     max={duration}
                     ref={rewindRef}
-                    onChange={handRewindAudio}
+                    onChange={(value) => handRewindAudio(value.target)}
                   />
                 </div>
                 <div className="w-[6%] h-full fjc">
@@ -373,4 +485,4 @@ const Footer = (props: Props) => {
   );
 };
 
-export default Footer;
+export default FooterRoom;

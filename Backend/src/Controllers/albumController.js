@@ -15,7 +15,6 @@ export const create_Album = async (req, res) => {
     if (!data) {
       return res.status(400).json({ message: "Create Album Failed" });
     }
-    console.log(data);
     await Artist.findByIdAndUpdate(
       data.id_artist,
       {
@@ -23,7 +22,6 @@ export const create_Album = async (req, res) => {
       },
       { new: true }
     );
-    console.log(data);
     return res.status(200).json({
       message: "Create Album Success",
       data,

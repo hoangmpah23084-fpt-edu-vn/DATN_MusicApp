@@ -10,12 +10,16 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { leaveRoom } from "@/store/Reducer/roomReducer";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Socket, io } from "socket.io-client";
 import axios from "axios";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
-import { DetailRoom, listMessages } from "../Admin/Interface/Room";
+import { listMessages, memberGroup } from "../Admin/Interface/Room";
 import SideBarRoom from "./SideBarRoom";
+import { handGetSong } from "@/store/Reducer/Song";
+import { handGetCurrentSong } from "@/store/Reducer/currentSong";
+import SidebarRoom from "@/components/Footer/Room/SidebarRoom";
+import FooterRoom from "@/components/Footer/Room/FooterRoom";
 
 type Props = {
   roomLive?: boolean;
@@ -27,28 +31,45 @@ const RoomPage = (props: Props) => {
   const {id} = useParams();
   const dispatch = useAppDispatch();
   const [listMess , setListMess] = useState<listMessages[] | []>([]);
-  window.addEventListener('beforeunload', () => {
-    console.log('User clicked back button');
-  });
+  const [currAdmin, setCurrAdmin] = useState('');
+  const [currMember, setCurrMember] = useState('');
+  const [listMember, setlistMember] = useState<memberGroup[]| []>([]);
+  const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const current = useAppSelector(({ Song }) => Song);
+  useEffect(() => {
+    async function fetchData() {
+      await dispatch(handGetSong());
+    }
+    void fetchData();
+  }, [dispatch]);
+  useEffect(() => {
+    if (current.song.length > 0) {
+      localStorage.setItem('song', JSON.stringify(current.song[2]));
+      dispatch(handGetCurrentSong(current.song[2]))
+    }
+  }, [current.song]);
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({data}) =>  {
       setListMess([...listMess, ...data.data.listMessages])
+      setlistMember(data.data.memberGroup);
+      setCurrAdmin(data.data.isAdminGroup._id)
       socket.emit('joinRoom', data.data._id)
     });
   }
   useEffect(() => {
     socket = io("http://localhost:8080");
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem('token');
     if (user) {
       const convert = JSON.parse(user);
-      socket.emit('setUser', convert.user)
+      setCurrMember(convert._id);
+      socket.emit('setUser', convert._id)
     }
     FetchMessage()
-    return () => {
-      if (confirm("Are you sure want to remove room ?")) {
-        leaveRoom(id as string);
-      }
-    }
+    // return () => {
+    //   if (confirm("Are you sure want to remove room ?")) {
+    //     leaveRoom(id as string);
+    //   }
+    // }
   },[])
   useEffect(() => {
     socket.on("messRecived", (value) => {
@@ -173,6 +194,8 @@ const RoomPage = (props: Props) => {
           {/* //todo SideBar Rooom */}
           <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} />
         </div>
+        <SidebarRoom sideBarRight={sideBarRight}  />
+        {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} /> } 
       </div>
     </div>
   );

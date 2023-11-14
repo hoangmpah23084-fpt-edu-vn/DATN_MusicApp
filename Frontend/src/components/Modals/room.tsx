@@ -7,8 +7,6 @@ import { useAppDispatch } from "@/store/hooks";
 import { joinRoom } from "@/store/Reducer/roomReducer";
 import { toast } from "react-toastify";
 
-
-
 type roomProps = {
   onShowModal: () => void;
   data: IRoom;
@@ -26,8 +24,6 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
         idChat: data._id,
         password: password
       }));
-      console.log(resq);
-      
       toast.success(resq.payload.message)
       navigate(`/liveroom/${resq.payload.data._id}`);
     } catch (error) {
