@@ -19,6 +19,8 @@ const Login = () => {
 
     const onSubmit = async (dataSignin: SigninForm) => {
         const res: any = await dispatch(signin(dataSignin))
+        console.log(res);
+        
         toast.success(res.payload?.message)
         const { accessToken, user } = res?.payload
         if (accessToken && user) {
