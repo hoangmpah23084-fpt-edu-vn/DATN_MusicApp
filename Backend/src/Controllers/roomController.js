@@ -170,12 +170,13 @@ export const joinRoom = async (req, res) => {
       }
       return res.status(200).json({
         message: "Tham gia phòng thành công",
-        joinChat,
+        data: joinChat,
       });
     }
 
     return res.status(200).json({
       message: "Tham gia phòng thành công",
+      data: Chat
     });
   } catch (error) {
     return res.status(500).json({
