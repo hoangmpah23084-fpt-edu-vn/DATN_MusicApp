@@ -1,31 +1,30 @@
 import { IRoom } from '@/pages/Admin/Interface/Room';
-import { BiHomeHeart } from 'react-icons/bi'
-import { CiUnlock, CiLock } from "react-icons/ci"
+import './ItemRoom.scss'
+import { FaRegHandPointer } from 'react-icons/fa';
+import { MdJoinInner } from 'react-icons/md';
 type roomProps = {
     data: IRoom
-    onHandlePassword: (roomData: IRoom) => void;
+    handleSelectedRoom: (data: IRoom) => void;
+    handleShowModalJoinRoom: () => void
 }
 
-const ItemRoom = ({ data, onHandlePassword }: roomProps) => {
+const ItemRoom = ({ data, handleSelectedRoom, handleShowModalJoinRoom }: roomProps) => {
     const onHandleChild = () => {
-        onHandlePassword(data)
+        handleShowModalJoinRoom()
+        handleSelectedRoom(data)
     }
     return (
-        <div className=' relative border-[#6f4d98] border-[1px] w-auto rounded-xl bg-[#2f2739]' >
-            <div className='flex items-center relative mx-2 justify-between'>
-                <div className='flex items-center'>
-                    <span className='relative text-[50px] mx-2'>
-                        <BiHomeHeart />
-                    </span>
-                    <div className='my-2 ml-1 mr-7'>
-                        <h2 className='text-xl font-bold'>{data.name}</h2>
-                        <p className='text-xs'>Số lượng {data.quanlity} / 2</p>
-                    </div>
-                </div>
-                <div className='flex items-center '>
-                    {data.quanlity === 1 ? <button className='relative bg-[#654789] min-w-[100px] py-2 rounded-full hover:bg-white hover:text-[#654789] flex items-center text-xs text-center justify-center ease-in-out duration-300' onClick={() => onHandleChild()}>Tham gia <span className='text-base ml-1'> {data.password ? <CiLock /> : <CiUnlock />}</span></button> :
-                        <h3 className='relative bg-[#ff0a0a7a] px-3 min-w-[100px] py-2 rounded-full hover:bg-white hover:text-[#654789] flex items-center text-xs text-center justify-center ease-in-out duration-300'>Đã đầy <span className='text-base ml-1'> {data.password ? <CiLock /> : <CiUnlock />}</span></h3>}
-                </div>
+        <div className='cursor-pointer room-item--wrapper' onClick={() => onHandleChild()}>
+            <div className='rounded-[5px] overflow-hidden room-item--img relative'>
+                <img src="../../../public/Image/225101dd3c5da17b87872c320a8f6e07.jpg" alt="" />
+                <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 px-[6px] py-[2px] rounded-[3px] border-[1px] border-[gray]'>
+                   Tham gia
+                </span>
+            </div>
+            <div>
+                <span className='pt-[6px] hover:text-[#9b4de0]'>
+                    {data.nameGroup}
+                </span>
             </div>
         </div>
     )

@@ -65,7 +65,7 @@ const ListGenre = () => {
 
   return (
     <>
-    <Title Title='List Genre' />
+    <Title Title='Danh Sách Thể Loại' />
     <Box sx={{ width : "100%" , height : "700px",  display : "grid" }} >
         <DataGrid
         rows={genre}

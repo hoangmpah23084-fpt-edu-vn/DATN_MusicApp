@@ -83,7 +83,7 @@ const ListSong = () => {
       color : "white"
     }
     }} >
-     <Title Title='Show Product' />
+     <Title Title='Danh Sách Nhạc' />
      <DataGrid
         sx={{ height : "600px" }}
         rows={song}
