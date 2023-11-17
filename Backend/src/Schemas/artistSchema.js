@@ -10,6 +10,7 @@ const ArtistValidate = new joi.object({
     "string.required": "image is Required",
     "string.empty": "image is not allowed to be empty",
   }),
+  album: joi.string(),
   description: joi.string(),
 });
 

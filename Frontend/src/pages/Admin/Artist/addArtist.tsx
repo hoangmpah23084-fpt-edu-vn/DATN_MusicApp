@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import Title from "../Title";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { BoxProduct, BoxUpload } from "@/Mui/Component/Product";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { handImage, handleFileUpload } from "@/Mui/Component/handUpload";
+import { handImage } from "@/Mui/Component/handUpload";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";
 import { getAlbum } from "@/store/Reducer/albumReducer";
 import { IArtist, validateArtist } from "../Interface/IArtist";
 import { addArtist } from "@/store/Reducer/artistReducer";
 import { handGetSong } from "@/store/Reducer/Song";
+import { ifAlbum } from "../Interface/validateAlbum";
+import { Link } from "react-router-dom";
 
 const AddArtist = () => {
   const dispatch = useAppDispatch();
   const { album } = useAppSelector(({ album }) => album);
-  const { song } = useAppSelector(({ Song }) => Song);
   useEffect(() => {
     void dispatch(getAlbum());
     void dispatch(handGetSong());
@@ -33,7 +34,7 @@ const AddArtist = () => {
     console.log(value);
     const { payload } = await dispatch(addArtist(value));
     if (payload) {
-      alert("Complete Add Artist");
+      alert("Thêm Artist thành công");
     }
   };
   return (
@@ -61,7 +62,7 @@ const AddArtist = () => {
             </Box>
             <div>
               <BoxProduct sx={{ width: "100%", height: "16%" }}>
-                <Typography sx={{ padding: "8px 0px" }}>Artist name</Typography>
+                <Typography sx={{ padding: "8px 0px" }}>Name</Typography>
                 <TextField
                   helperText={errors.name?.message}
                   placeholder="Enter Artist name"
@@ -104,14 +105,22 @@ const AddArtist = () => {
                 />
               </BoxProduct>
             </div>
-            <Box className="grid grid-cols-2 gap-6 mt-4 mb-5"></Box>
-            <div className="w-full h-[5%]">
-              <button
-                type="submit"
-                className="bg-purple-500 text-white w-[100px] h-[85%] rounded-lg "
-              >
+            <div className="mt-[15px]">
+              <label>Select Album</label>
+              <select required  {...register("album")} className='block w-[50%] border-gray-300 rounded-lg'>
+                <option value={""}>Choose an Album</option>
+                  {
+                    album.length > 0  ? album.map((item : ifAlbum) => <option key={item._id} value={item._id}>{item.album_name}</option> ) : ""
+                  }
+              </select>
+            </div>
+            <div className="mt-5">
+              <Button variant="contained" color="secondary">
                 Submit
-              </button>
+              </Button>
+              <Button variant="outlined" color="success" className="h-[50px]" >
+                <Link to={'/admin/list-artist'}>List Arrtist</Link>
+              </Button>
             </div>
           </Box>
           <Box sx={{ width: "35%", height: "100%" }}>

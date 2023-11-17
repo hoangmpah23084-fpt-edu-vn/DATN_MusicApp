@@ -21,56 +21,19 @@ const ListArtist = () => {
     }
   };
   const columns: GridColDef[] = [
-    {
-      field: "_id",
-      headerName: "ID",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "name",
-      headerName: "Name",
-      headerAlign: "center",
-      editable: false,
-      align: "center",
-      flex: 1,
-    },
-    {
-      field: "age",
-      headerName: "Age",
-      headerAlign: "center",
-      editable: false,
-      align: "center",
-      flex: 1,
-    },
-    {
-      field: "images",
-      headerName: "Images",
-      headerAlign: "center",
-      editable: false,
-      align: "center",
+    { field: "_id", headerName: "ID", flex: 1, align: "center", headerAlign: "center", editable: false },
+    { field: "name", headerName: "Name", headerAlign: "center", editable: false, align: "center", flex: 1 },
+    { field: "age", headerName: "Age", headerAlign: "center", editable: false, align: "center", flex: 1 },
+    { field: "images", headerName: "Images", headerAlign: "center", editable: false, align: "center",
       renderCell : (params) => {
         const image: string[] = params.row.images;
-        return <img src={`${image}`} />;
+        // return <img src={`${image}`} />;
+        return image.length;
       },
-      flex: 1,
+      flex: 1
     },
-    {
-      field: "description",
-      headerName: "Description",
-      headerAlign: "center",
-      editable: false,
-      align: "center",
-      flex: 1,
-    },
-    {
-      field: "Action",
-      headerName: "Action",
-      type: "number",
-      headerAlign: "center",
-      editable: false,
-      align: "center",
+    { field: "description", headerName: "Description", headerAlign: "center", editable: false, align: "center", flex: 1 },
+    { field: "Action", headerName: "Action", type: "number", headerAlign: "center", editable: false, align: "center",
       renderCell: (params: GridRenderCellParams<{ _id: string }>) => {
         const _id: string = params.row._id;
         return (
@@ -86,23 +49,24 @@ const ListArtist = () => {
           </Stack>
         );
       },
-      flex: 1,
+      flex: 1
     },
   ];
 
   return (
     <>
       <Title Title="List Artist" />
-      <Button variant="outlined" color="success" size="small">
+      <Button variant="contained" color="success" size="small">
         <Link to={'/admin/add-artist'}>Add Artist</Link>
       </Button>
-      <Box sx={{ width: "100%", height: "700px", display: "grid", marginTop: "20px" }}>
+      <Box sx={{ width: "100%", display: "grid", marginTop: "20px" }}>
         <DataGrid
           rows={artist}
           columns={columns}
           initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
           getRowId={(row) => row._id}
           pageSizeOptions={[5]}
+          disableRowSelectionOnClick
         />
       </Box>
     </>

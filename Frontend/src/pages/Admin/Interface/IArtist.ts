@@ -15,4 +15,5 @@ export const validateArtist = yup.object({
     age: yup.number().required("Enter the age"),
     images: yup.mixed().notRequired(),
     description: yup.string().required("Enter the description"),
+    album: yup.string().required("Enter id album")
 })

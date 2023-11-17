@@ -13,10 +13,12 @@ import { IArtist, validateArtist } from "../Interface/IArtist";
 import { updateArtist } from "@/store/Reducer/artistReducer";
 import { getOne } from "@/store/Reducer/artistReducer";
 import { handGetSong } from "@/store/Reducer/Song";
+import { ifAlbum } from "../Interface/validateAlbum";
 
 const UpdateArtist = () => {
   const [artist, setArtist] = useState<IArtist>();
   const dispatch = useAppDispatch();
+  const { album } = useAppSelector(({ album }) => album);
   const { id } = useParams<{ id?: string }>();
 
   useEffect(() => {
@@ -105,6 +107,13 @@ const UpdateArtist = () => {
                 />
               </BoxProduct>
             </div>
+            <h3 className="pt-[15px]">Select Album</h3>
+            <select required  {...register("album")} className='block w-[50%] border-gray-300 rounded-lg' >
+            <option value={""} >Choose a Album</option>
+              {
+                album.length > 0  ? album.map((item : ifAlbum) => <option key={item._id} value={item._id}>{item.album_name}</option> ) : ""
+              }
+            </select>
             <button
               type="submit"
               className="bg-purple-500 text-white w-[100px] h-[50px] rounded-lg mt-[20px] mr-[10px]"

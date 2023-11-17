@@ -5,6 +5,8 @@ import Title from "../Title";
 import { Box, Button, Stack } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const ListAlbum = () => {
   const { album } = useAppSelector(({ album }) => album);
@@ -19,19 +21,13 @@ const ListAlbum = () => {
     }
   };
   const columns: GridColDef[] = [
-    { field: "_id", headerName: "ID", flex: 1, align: "center", headerAlign: "center" },
+    { field: "_id", headerName: "ID", headerAlign: "center", editable: false, align: "center", flex: 1 },
     { field: "album_name", headerName: "Name", headerAlign: "center", editable: false, align: "center", flex: 1 },
     { field: "id_artist", headerName: "Artist Name", headerAlign: "center", editable: false, align: "center",
       renderCell: (params) => {
         let data: string = "";        
         if(params.row.id_artist) {
           data = params.row.id_artist.name;
-        } else {
-          return (
-            <Button variant="outlined" color="primary" size="small">
-              <Link to={'/admin/add-artist'}>Add Artist</Link>
-            </Button>
-          )
         }
         return data;
       },
@@ -51,9 +47,13 @@ const ListAlbum = () => {
         return (
           <Stack direction={"row"} spacing={1}>
             <Button variant="outlined" color="warning" size="small">
-              <Link to={`/admin/update-album/${_id}`}>Edit</Link>
+              <Link to={`/admin/update-album/${_id}`}>
+                <EditOutlinedIcon />
+              </Link>
             </Button>
-            <Button variant="outlined" color="error" size="small" onClick={() => handDeleteAlbum(_id)} >Delete</Button>
+            <Button variant="outlined" color="error" size="small" onClick={() => handDeleteAlbum(_id)}>
+              <DeleteOutlineOutlinedIcon />
+            </Button>
           </Stack>
         );
       },
@@ -64,10 +64,10 @@ const ListAlbum = () => {
   return (
     <>
       <Title Title="List Album" />
-      <Button variant="outlined" color="success" size="small">
+      <Button variant="contained" color="success" size="small">
         <Link to={'/admin/add-album'}>Add Album</Link>
       </Button>
-      <Box sx={{ width: "100%", height: "700px", display: "grid", marginTop: "20px" }}>
+      <Box sx={{ width: "100%", display: "grid", marginTop: "20px" }}>
         <DataGrid
           rows={album}
           columns={columns}

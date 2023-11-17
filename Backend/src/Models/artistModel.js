@@ -25,12 +25,10 @@ const artistSchema = new Schema(
       type: String,
     },
 
-    album: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Album",
-      },
-    ],
+    album: {
+      type: mongoose.Types.ObjectId,
+      ref: "Album",
+    },
 
     songs: [
       {
