@@ -25,8 +25,6 @@ interface joinRoom {
     password: string
 }
 
-const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5MTZkMDQwOGIwNWE2YTJjMyIsImlhdCI6MTY5ODM5NTE4NSwiZXhwIjoxNjk4Mzk4Nzg1fQ.FAGLctQtZhFenRK72KZSfk7cqPWsNIBTb3f_sBDeIMM"
-
 
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
     console.log(dataToForm);
@@ -37,6 +35,7 @@ export const getRoom = createAsyncThunk("room/getRoom", async () => {
     const { data } = await instanceAxios.get('/room');
     return data.data;
 })
+
 export const getDetailRoom = createAsyncThunk("room/getRoom", async (id : string) => {
     const { data } = await instanceAxios.get(`/room/${id}`);
     return data.data;

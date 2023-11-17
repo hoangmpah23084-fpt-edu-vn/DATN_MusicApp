@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./css.scss";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FiRadio } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { leaveRoom } from "@/store/Reducer/roomReducer";
+import { getDetailRoom, leaveRoom } from "@/store/Reducer/roomReducer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Socket, io } from "socket.io-client";
 import axios from "axios";
@@ -20,6 +20,7 @@ import { handGetSong } from "@/store/Reducer/Song";
 import { handGetCurrentSong } from "@/store/Reducer/currentSong";
 import SidebarRoom from "@/components/Footer/Room/SidebarRoom";
 import FooterRoom from "@/components/Footer/Room/FooterRoom";
+import { toast } from "react-toastify";
 
 type Props = {
   roomLive?: boolean;
@@ -28,14 +29,16 @@ type Props = {
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 const RoomPage = (props: Props) => {
-  const {id} = useParams();
+  const { id } = useParams();
   const dispatch = useAppDispatch();
-  const [listMess , setListMess] = useState<listMessages[] | []>([]);
+  const [listMess, setListMess] = useState<listMessages[] | []>([]);
   const [currAdmin, setCurrAdmin] = useState('');
   const [currMember, setCurrMember] = useState('');
-  const [listMember, setlistMember] = useState<memberGroup[]| []>([]);
+  const [listMember, setlistMember] = useState<memberGroup[] | []>([]);
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
   const current = useAppSelector(({ Song }) => Song);
+  const navigate = useNavigate()
+  const roomDetail = useAppSelector((data) => data);
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong());
@@ -49,7 +52,7 @@ const RoomPage = (props: Props) => {
     }
   }, [current.song]);
   const FetchMessage = () => {
-    axios.get(`http://localhost:8080/api/room/${id}`).then(({data}) =>  {
+    axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
       setListMess([...listMess, ...data.data.listMessages])
       setlistMember(data.data.memberGroup);
       setCurrAdmin(data.data.isAdminGroup._id)
@@ -70,12 +73,26 @@ const RoomPage = (props: Props) => {
     //     leaveRoom(id as string);
     //   }
     // }
-  },[])
+  }, [])
   useEffect(() => {
     socket.on("messRecived", (value) => {
       setListMess([...listMess, value])
     })
-  },[listMess])
+  }, [listMess])
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") as string)
+    console.log(user?._id);
+    
+    if (id) {
+      axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
+          if(!JSON.stringify(data.data.memberGroup).includes(user?._id)) {
+            toast.success("Bạn không đủ tư cách để ngồi đây.")
+            navigate("/")
+          }
+
+      })
+    }
+  }, [id])
   return (
     <div>
       <div
@@ -194,8 +211,8 @@ const RoomPage = (props: Props) => {
           {/* //todo SideBar Rooom */}
           <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} />
         </div>
-        <SidebarRoom sideBarRight={sideBarRight}  />
-        {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} /> } 
+        <SidebarRoom sideBarRight={sideBarRight} />
+        {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} />}
       </div>
     </div>
   );
