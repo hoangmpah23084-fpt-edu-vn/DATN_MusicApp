@@ -1,7 +1,6 @@
 import { ifSignin, ifSignup, ifUser } from "@/pages/Admin/Interface/User";
 import instanceAxios from "@/utils/axios";
 import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 
 
 

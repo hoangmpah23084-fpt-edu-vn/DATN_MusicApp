@@ -94,7 +94,6 @@ const Footer = (props: Props) => {
                 }, 500);
             }
         }
-
         if (audioRef.current?.ended && duration > 0 && randomSong) {
             const randomSong1 = props.ListData[Math.round(Math.random() * (props.ListData.length - 1))];
             dispatch(handGetCurrentSong(randomSong1));
