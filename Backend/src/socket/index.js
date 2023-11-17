@@ -24,7 +24,7 @@ const ConnectSocket = (server) => {
     });
     //? toggPlayPause
     socket.on("toggPlayPause", (value) => {
-      socket.to(value.idroom).emit("recivedHandTogg", value);
+      socket.in(value.idroom).emit("recivedHandTogg", value);
     });
     socket.on("emitNextClient", (value) => {
       socket.to(value).emit("emitNextServer", value);
@@ -47,7 +47,6 @@ const ConnectSocket = (server) => {
     // socket.on("autoNextClient", (value) => {
     //   socket.to(value).emit("autoNextServer", value);
     // });
-
     socket.on("newMessage", async (value) => {
       const getOneRoom = await roomModel
         .findById(value.id_room)

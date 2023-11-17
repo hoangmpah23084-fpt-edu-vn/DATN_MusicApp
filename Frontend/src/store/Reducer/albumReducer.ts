@@ -31,9 +31,7 @@ export const updateAlbum = createAsyncThunk("album/updateAlbum", async (value : 
     return data.album;
 })
 export const getOneAlbum = async (id : string) => {
-    console.log(id);
     const {data} = await axios.get(`http://localhost:8080/api/album/${id}`);
-    console.log(data);
     return data
 }
 
