@@ -9,7 +9,7 @@ export default {
     extend: {
       fontFamily: {
         inter: ["Inter, sans-serif"],
-      },
+      }
     },
   },
   plugins: [require("flowbite/plugin"), require("tailwind-scrollbar")],

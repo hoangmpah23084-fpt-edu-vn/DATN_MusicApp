@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const SongSchame = new mongoose.Schema(
   {
     song_name: String,
-    song_title: String,
     song_link: String,
     song_image: [
       {
@@ -11,8 +10,8 @@ const SongSchame = new mongoose.Schema(
         required: true,
       },
     ],
+    song_title: String,
     song_singer: String,
-    song_musian: String,
     song_lyric: String,
     is_dowload: {
       type: Boolean,
@@ -26,10 +25,15 @@ const SongSchame = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Artists",
     },
+    total_like: {
+      type: Number,
+      default: 0,
+    },
+    view_song: {
+      type: Number,
+      default: 0,
+    },
   },
   { versionKey: false, timestamps: true }
 );
 export default mongoose.model("Song", SongSchame, "Song");
-
-
-

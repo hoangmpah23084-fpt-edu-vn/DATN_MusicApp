@@ -4,30 +4,31 @@ import roomChatModel from "../Models/roomChatModel.js";
 
 export const createMessage = async (req, res) => {
   try {
-    const { idChat, textMessage } = req.body;
+    const { textMessage, id_room, id_sender } = req.body;
+    const user = await userModel.findById(id_sender);
     const newMessage = {
-      id_room: idChat,
-      id_sender: req.user._id,
+      id_room: id_room,
+      id_sender: id_sender,
       textMessage: textMessage,
     };
     let message = await messModel.create(newMessage);
-    message = await message.populate("id_room");
-    message = await message.populate("id_sender", "fullName");
-    console.log(message);
-    message = await userModel.populate(message, {
-      path: "id_room.memberGroup",
-      select: "fullName email",
-    });
-    console.log(message);
     await roomChatModel.findByIdAndUpdate(
-      idChat,
+      { _id: id_room },
       {
-        $addToSet: { listMessages: message },
+        $addToSet: { listMessages: message._id },
       },
       { new: true }
     );
     return res.status(200).json({
-      data: message,
+      data: {
+        id_room: id_room,
+        id_sender: {
+          _id: user._id,
+          fullName: user.fullName,
+        },
+        textMessage: message.textMessage,
+        _id: message._id,
+      },
     });
   } catch (error) {
     return res.status(500).json({
@@ -56,25 +57,50 @@ export const getMessage = async (req, res) => {
   }
 };
 
+// export const deleteMessage = async (req, res) => {
+//   try {
+//     const { idChat, idMess } = req.body;
+//     const messChat = await roomChatModel
+//       .findByIdAndUpdate(
+//         idChat,
+//         {
+//           $pull: { listMessages: idMess },
+//         },
+//         { new: true }
+//       )
+//       .populate("memberGroup", "-password")
+//       .populate("listMessages")
+//       .populate("isAdminGroup", "-password");
+
+//     return res.status(200).json({
+//       message: "Xóa tin nhắn thành công",
+//       data: messChat,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: error.message,
+//     });
+//   }
+// };
+
 export const deleteMessage = async (req, res) => {
   try {
-    const { idChat, idMess } = req.body;
-    const messChat = await roomChatModel
-      .findByIdAndUpdate(
-        idChat,
-        {
-          $pull: { listMessages: idMess },
-        },
-        { new: true }
-      )
-      .populate("memberGroup", "-password")
-      .populate("listMessages")
-      .populate("isAdminGroup", "-password");
-
-    return res.status(200).json({
-      message: "Xóa tin nhắn thành công",
-      data: messChat,
-    });
+    const idChat = req.params.idChat;
+    const message = await messModel.findById(idChat);
+    if (message) {
+      const { id_room } = message;
+      const resp = await messModel.findByIdAndUpdate(idChat, {
+        textMessage: "Tin nhắn đã được thu hồi.",
+      });
+      return res.status(200).json({
+        message: "Thu hồi tin nhắn thành công",
+        data: resp,
+      });
+    } else {
+      return res.status(200).json({
+        message: "Xóa tin nhắn thất bại.",
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       message: error.message,

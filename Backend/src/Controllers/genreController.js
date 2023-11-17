@@ -31,7 +31,6 @@ export const getAll_Genre = async (req, res) => {
     if (!data) {
       return res.status(400).json({ message: "Get All Genre Failed" });
     }
-    console.log(data);
     return res.status(200).json({
       message: "Get All Genre Success",
       data,
@@ -87,7 +86,6 @@ export const delete_Genre = async (req, res) => {
     const genre = await Genre.findOne({ _id: id });
     //todo  Tìm và chuyển các sản phẩm liên quan sang danh mục "Uncategorized"
     const songsToUpdate = await songModel.find({ id_Genre: id });
-    console.log(songsToUpdate);
 
     //todo Tìm xem đã có danh mục Uncategorized trong db chưa
     const unGenre = await Genre.findOne({ name: "un_genre" });

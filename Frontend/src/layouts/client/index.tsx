@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Header from "@/components/Header";
 import SidebarMenu from "@/components/SidebarMenu";
 import Footer from "@/components/Footer";
 import { Outlet } from "react-router-dom";
 import SidebarSong from "@/components/SidebarSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { handGetSong } from "@/store/Reducer/Song";
+import { handGetCurrentSong } from "@/store/Reducer/currentSong";
+import { RootState } from "@/store/store";
+import ModalSignin from "@/components/Modals/modalSignin";
+import { setToken } from "@/store/Reducer/User";
+import { getFavourite } from "@/store/Reducer/favouriteReducer";
 
 
 const LayoutClient = () => {
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
   const current = useAppSelector(({ Song }) => Song);
   const dispatch = useAppDispatch();
-  const [currentSong, setCurrentSong] = useState<ifSong | null>(null);
+  const { isToken } = useAppSelector((state: RootState) => state.user);
 
+  const user = localStorage.getItem('user');
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong());
@@ -23,19 +28,34 @@ const LayoutClient = () => {
   }, [dispatch]);
   useEffect(() => {
     if (current.song.length > 0) {
-      setCurrentSong(current.song[2]);
+      localStorage.setItem('song', JSON.stringify(current.song[2]));
+      dispatch(handGetCurrentSong(current.song[2]))
     }
   }, [current.song]);
+
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    dispatch(setToken(token));
+    if (token) {
+      dispatch(getFavourite())
+    }
+
+  }, [token])
+
+
   return (
     <>
+
       <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
+        {isToken && <ModalSignin />}
         <SidebarMenu />
         <Header />
-        <div className="ml-[300px] relative w-[100%] h-[80%] overscroll-y-auto">
+        <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
-        <SidebarSong sideBarRight={sideBarRight} setCurrentSong={setCurrentSong} />
-        <Footer setSideBarRight={setSideBarRight} ListData={current.song} currentSong={currentSong} setCurrentSong={setCurrentSong} />
+        <SidebarSong sideBarRight={sideBarRight} />
+        <Footer setSideBarRight={setSideBarRight} ListData={current.song} />
       </div>
     </>
   );

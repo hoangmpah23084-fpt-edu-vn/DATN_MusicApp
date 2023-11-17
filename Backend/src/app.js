@@ -15,6 +15,7 @@ import roomRouter from "./Routers/roomRouter.js";
 import morgan from "morgan";
 import messageRouter from "./Routers/messRouter.js";
 import Route_Video from "./Routers/videoRouter.js";
+import ConnectSocket from "./socket/index.js";
 
 dotenv.config();
 
@@ -22,7 +23,6 @@ const app = express();
 app.use(morgan("short"));
 app.use(express.json());
 app.use(cors());
-
 /* db */
 ConnectDB();
 
@@ -41,8 +41,9 @@ app.use("/api", Route_Video);
 /* router artist */
 app.use("/api/", ArtistRoute);
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
   console.log("Port is running at: " + process.env.PORT);
 });
+ConnectSocket(server);
 
 export const viteNodeApp = app;

@@ -9,7 +9,6 @@ const authUser = async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      console.log(token);
 
       //todo decoded token id
       const decoded = jwt.verify(token, process.env.SECRETKEY);

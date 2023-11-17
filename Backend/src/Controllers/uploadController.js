@@ -48,7 +48,6 @@ export const UploadVideo = async (req, res) => {
     //   api_key: "397545573884224",
     //   api_secret: "2BPHK1CLP_Yc8mQMV4ylPyJFzkI",
     // });
-    console.log(req.file);
     const { path } = req.file; // file becomes available in req at this point
 
     const fName = req.file.originalname.split(".")[0];
@@ -60,7 +59,6 @@ export const UploadVideo = async (req, res) => {
       },
       // Send cloudinary response or catch error
       (err, audio) => {
-        console.log(audio.secure_url);
         if (err) return res.send(err);
 
         fs.unlinkSync(path);
