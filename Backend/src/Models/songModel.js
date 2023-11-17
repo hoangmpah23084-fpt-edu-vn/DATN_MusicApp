@@ -29,6 +29,10 @@ const SongSchame = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    view_song: {
+      type: Number,
+      default: 0,
+    },
   },
   { versionKey: false, timestamps: true }
 );

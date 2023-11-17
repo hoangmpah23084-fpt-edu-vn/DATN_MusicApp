@@ -1,12 +1,12 @@
 
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import * as Yup from "yup"
 import { useNavigate } from "react-router-dom";
 import { SigninForm, SigninSchema } from "../Admin/Interface/validateAuth"
-import { signin } from './auth';
-import { useLocalStorage } from '@/hooks';
-import { useEffect } from "react";
+import { signin } from '../../store/Reducer/User';
+import { Link } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
+import { toast } from "react-toastify";
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<SigninForm>(
@@ -15,32 +15,37 @@ const Login = () => {
         }
     )
     const navigate = useNavigate()
-    const [user, setUser] = useLocalStorage("token", null)
+    const dispatch = useAppDispatch()
 
-    const onSubmit = async (data: SigninForm) => {
+    const onSubmit = async (dataSignin: SigninForm) => {
+        const res: any = await dispatch(signin(dataSignin))
+        console.log(res);
+        
+        toast.success(res.payload?.message)
+        const { accessToken, user } = res?.payload
+        if (accessToken && user) {
+            const userUpgrade = JSON.stringify(user);
+            localStorage.setItem("token", accessToken)
+            localStorage.setItem("user", userUpgrade)
 
-        const { data: { accessToken, user } } = await signin(data)
-        setUser({
-            accessToken,
-            ...user
-            /*khi này nó sẽ trả về 2 phần  riêng biệt, để accesstoken nằm trong user thì tha thêm ... trước user*/
-        })
-        if (user.role !== 'admin') {
-            navigate('/')
-        } else {
-            navigate('/admin')
+            if (user.role !== 'admin') {
+                navigate('/')
+            } else {
+                navigate('/admin')
+            }
         }
+
     }
     return (
         <div>
-            <section className="bg-white">
+            <section className="bg-[#170F23]">
                 <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                     <section
                         className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6"
                     >
                         <img
                             alt="Night"
-                            src="https://images.unsplash.com/photo-1617195737496-bc30194e3a19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                            src="https://images3.alphacoders.com/110/1106874.jpg"
                             className="absolute inset-0 h-full w-full object-cover opacity-80"
                         />
 
@@ -61,12 +66,11 @@ const Login = () => {
                             </a>
 
                             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                                Welcome to Squid 🦑
+                                Chào mừng bạn đến với Song Sync
                             </h2>
 
                             <p className="mt-4 leading-relaxed text-white/90">
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam
-                                dolorum aliquam, quibusdam aperiam voluptatum.
+                                Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
                             </p>
                         </div>
                     </section>
@@ -98,12 +102,11 @@ const Login = () => {
                                 <h1
                                     className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
                                 >
-                                    Welcome to Squid 🦑
+                                    Chào mừng bạn đến với Song Sync
                                 </h1>
 
                                 <p className="mt-4 leading-relaxed text-gray-500">
-                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-                                    nam dolorum aliquam, quibusdam aperiam voluptatum.
+                                    Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
                                 </p>
                             </div>
 
@@ -111,32 +114,32 @@ const Login = () => {
 
 
                                 <div className="col-span-6">
-                                    <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="Email" className="block text-sm font-medium text-white">
                                         Email
                                     </label>
 
                                     <input
                                         {...register("email", { required: true })}
 
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        className="mt-1 w-full pl-2 h-[35px] rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
-                                    <p className="text-red-600 text-[20px]">{errors.email && errors.email.message}</p>
+                                    <p className="text-red-600 text-[15px]">{errors.email && errors.email.message}</p>
                                 </div>
 
                                 <div className="col-span-6 sm:col-span-3">
                                     <label
                                         htmlFor="Password"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-medium text-white"
                                     >
-                                        Password
+                                        Mật Khẩu
                                     </label>
 
                                     <input
                                         type="password"
                                         {...register("password", { required: true })}
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        className="mt-2 w-full h-[35px]  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
-                                    <p className="text-red-600 text-[20px]">{errors.password && errors.password.message}</p>
+                                    <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>
                                 </div>
 
 
@@ -146,7 +149,13 @@ const Login = () => {
                                     >
                                         Đăng nhập
                                     </button>
+                                    <p className="mt-4 text-sm text-white sm:mt-0">
+                                        Bạn chưa có tài khoản hãy đăng ký!
+                                        <Link to="http://localhost:5173/signup">
+                                            <a className="text-white underline ml-2">Đăng Ký</a>.
+                                        </Link>
 
+                                    </p>
 
                                 </div>
                             </form>

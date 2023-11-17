@@ -15,7 +15,6 @@ export const create_Album = async (req, res) => {
     if (!data) {
       return res.status(400).json({ message: "Create Album Failed" });
     }
-    console.log(data);
     await Artist.findByIdAndUpdate(
       data.id_artist,
       {
@@ -23,7 +22,6 @@ export const create_Album = async (req, res) => {
       },
       { new: true }
     );
-    console.log(data);
     return res.status(200).json({
       message: "Create Album Success",
       data,
@@ -52,11 +50,11 @@ export const get_AlbumById = async (req, res) => {
   try {
     const data = await Album.findById(req.params.id).populate("id_artist");
     const dataListSong = [];
-    for (const item of data.id_artist.songs) {
+    for (const item of data.id_artist[0].songs) {
       const findData = await songModel.findById(item);
       dataListSong.push(findData);
     }
-    data.list_song = [...data.list_song, ...dataListSong];
+    data.list_song = [...dataListSong];
     if (!data) {
       return res.status(400).json({ message: "Get Album By Id Failed" });
     }

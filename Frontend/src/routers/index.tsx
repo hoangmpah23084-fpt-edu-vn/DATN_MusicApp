@@ -14,6 +14,10 @@ import { createBrowserRouter } from "react-router-dom";
 import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
+import Room from "@/pages/Room/room";
+import PlaylistPage from "@/pages/Playlist/PlaylistPage";
+import Album from "@/pages/Album/Album";
+import RoomPage from "@/pages/Room/RoomPage";
 
 export const router = createBrowserRouter([
   //todo FE
@@ -22,11 +26,22 @@ export const router = createBrowserRouter([
     element: <LayoutClient />,
     children: [
       { index: true, element: <KhamPhaPage /> },
-      { path: "mymusic/song/favorite", element: <FavouritePage /> }, 
+// <<<<<<< HEAD
+      // { path: "mymusic/song/favorite", element: <FavouritePage /> }, 
       // { path: "profile"}
+  //   ],
+  // },
+
+      { path: "mymusic/song/favorite", element: <FavouritePage /> },
+      { path: "rooms", element: <Room /> },
+      { path: "playlist/:id", element: <PlaylistPage /> },
+      { path: "album", element: <Album /> },
     ],
   },
-
+  {
+    path: "/liveRoom/:id", element: <RoomPage/>
+  },
+// >>>>>>> 7fc146341544ce1310711ffc1f0da54d553a224e
   //todo BE
   {
     path: "/admin",

@@ -29,6 +29,7 @@ const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjYwMGU5M
 
 
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
+    console.log(dataToForm);
     const { data } = await instanceAxios.post("/room", dataToForm)
     return data;
 })
@@ -36,13 +37,23 @@ export const getRoom = createAsyncThunk("room/getRoom", async () => {
     const { data } = await instanceAxios.get('/room');
     return data.data;
 })
+export const getDetailRoom = createAsyncThunk("room/getRoom", async (id : string) => {
+    const { data } = await instanceAxios.get(`/room/${id}`);
+    return data.data;
+})
 
 export const joinRoom = createAsyncThunk("room/joinRoom", async (dataForm: joinRoom) => {
     const { data } = await instanceAxios.post("/joinroom", dataForm)
     return data;
 })
-
-
+export const leaveRoom1 = createAsyncThunk("room/leaveRoom", async (id) => {
+    const { data } = await instanceAxios.delete(`/leaveroom/${id}`)
+    return data;
+})
+export const leaveRoom = async (id : string) => {
+    await instanceAxios.delete(`/leaveroom/${id}`);
+    console.log("leaveroom successfully");  
+}
 
 const roomReducer = createSlice({
     name: 'room',
@@ -77,6 +88,9 @@ const roomReducer = createSlice({
             })
             .addCase(joinRoom.rejected, (state) => {
                 state.loading = true;
+            })
+            .addCase(leaveRoom1.fulfilled, (state, action) => {
+                state.loading = false;
             })
     }
 })

@@ -7,8 +7,6 @@ import { useAppDispatch } from "@/store/hooks";
 import { joinRoom } from "@/store/Reducer/roomReducer";
 import { toast } from "react-toastify";
 
-
-
 type roomProps = {
   onShowModal: () => void;
   data: IRoom;
@@ -25,10 +23,9 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
       const resq = await dispatch(joinRoom({
         idChat: data._id,
         password: password
-      }))
-
+      }));
       toast.success(resq.payload.message)
-      navigate("/liveroom");
+      navigate(`/liveroom/${resq.payload.data._id}`);
     } catch (error) {
       toast.error(error as string)
     } finally {
@@ -36,9 +33,7 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
     }
 
   };
-
   const ref = useClickOutside(() => onShowModal());
-
   return (
     <>
       <div className="bg-slate-950/80 absolute w-full h-full text-white z-50">

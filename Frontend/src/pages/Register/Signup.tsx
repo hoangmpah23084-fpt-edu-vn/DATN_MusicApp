@@ -5,8 +5,10 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { SignupForm, SignupSchema } from "../Admin/Interface/validateAuth"
 import { useNavigate } from "react-router-dom"
-import { signup } from "./auth"
-
+import { signup } from "../../store/Reducer/User"
+import { Link } from "react-router-dom"
+import { toast } from "react-toastify"
+import { useAppDispatch } from "@/store/hooks"
 
 
 const Signup = () => {
@@ -15,31 +17,33 @@ const Signup = () => {
             resolver: yupResolver(SignupSchema)
         }
     )
-    
-        
-   
+
+
+
     const navigate = useNavigate()
-    const onSubmit : SubmitHandler<any> = async (data) => {
+    const dispatch = useAppDispatch()
+    const onSubmit: SubmitHandler<any> = async (data) => {
         try {
-            await signup(data)
+            const res: any = await dispatch(signup(data))
+            toast.success(res.payload.message)
             navigate("/signin")
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {
+            console.log(error.message)
         }
     }
 
-     
+
 
 
     return <>
-        <section className="bg-white">
+        <section className="bg-[#170F23]">
             <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                 <section
                     className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6"
                 >
                     <img
                         alt="Night"
-                        src="https://images.unsplash.com/photo-1617195737496-bc30194e3a19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                        src="https://images3.alphacoders.com/110/1106874.jpg"
                         className="absolute inset-0 h-full w-full object-cover opacity-80"
                     />
 
@@ -60,12 +64,11 @@ const Signup = () => {
                         </a>
 
                         <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                            Welcome to Squid 🦑
+                            Chào mừng bạn đến với Song Sync
                         </h2>
 
                         <p className="mt-4 leading-relaxed text-white/90">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam
-                            dolorum aliquam, quibusdam aperiam voluptatum.
+                            Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
                         </p>
                     </div>
                 </section>
@@ -97,12 +100,11 @@ const Signup = () => {
                             <h1
                                 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
                             >
-                                Welcome to Squid 🦑
+                                Chào mừng bạn đến với Song Sync
                             </h1>
 
                             <p className="mt-4 leading-relaxed text-gray-500">
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-                                nam dolorum aliquam, quibusdam aperiam voluptatum.
+                                Trải nhiệm âm nhạc chất lượng âm nhạc cao, không giới hạn. Hãy cùng nhau đắm chìm trong thế giới âm nhạc nào.
                             </p>
                         </div>
 
@@ -111,36 +113,36 @@ const Signup = () => {
                             <div className="col-span-6 sm:col-span-3">
                                 <label
                                     htmlFor="FirstName"
-                                    className="block text-sm font-medium text-gray-700"
+                                    className="block text-sm font-medium text-white"
                                 >
-                                    Name
+                                    Tên
                                 </label>
 
                                 <input
                                     {...register("fullName", { required: true })}
-                                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                    className="mt-1 w-full pl-2 h-[35px] rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
-                                <p className="text-red-600 text-[20px]">{errors.fullName && errors.fullName.message}</p>
-                            </div>                 
-                            <div className="col-span-6">
-                                <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
+                                <p className="text-red-600 text-[15px]">{errors.fullName && errors.fullName.message}</p>
+                            </div>
+                            <div className="col-span-6 ">
+                                <label htmlFor="Email" className="block text-sm font-medium text-white">
                                     Email
                                 </label>
 
                                 <input
                                     {...register("email", { required: true })}
 
-                                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                    className="mt-1 w-full pl-2 h-[35px] rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
-                                <p className="text-red-600 text-[20px]">{errors.email && errors.email.message}</p>
+                                <p className="text-red-600 text-[15px]">{errors.email && errors.email.message}</p>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3">
                                 <label
                                     htmlFor="Password"
-                                    className="block text-sm font-medium text-gray-700"
+                                    className="block text-sm font-medium text-white"
                                 >
-                                    Password
+                                    Mật Khẩu
                                 </label>
 
                                 <input
@@ -148,15 +150,15 @@ const Signup = () => {
                                     {...register("password", { required: true })}
                                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
-                                <p className="text-red-600 text-[20px]">{errors.password && errors.password.message}</p>
+                                <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3">
                                 <label
                                     htmlFor="PasswordConfirmation"
-                                    className="block text-sm font-medium text-gray-700"
+                                    className="block text-sm font-medium text-white"
                                 >
-                                    Password Confirmation
+                                    Nhập Lại Mật Khẩu
                                 </label>
 
                                 <input
@@ -165,18 +167,21 @@ const Signup = () => {
 
                                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
-                                <p className="text-red-600 text-[20px]">{errors.confirmPassword && errors.confirmPassword.message}</p>
+                                <p className="text-red-600 text-[15px]">{errors.confirmPassword && errors.confirmPassword.message}</p>
                             </div>
                             <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                                 <button
                                     className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
                                 >
-                                    Create an account
+                                    Tạo Tài Khoản
                                 </button>
 
-                                <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                                    Already have an account?
-                                    <a href="#" className="text-gray-700 underline">Log in</a>.
+                                <p className="mt-4 text-sm text-white sm:mt-0">
+                                    Bạn có tài khoản rồi đúng không?
+                                    <Link to="http://localhost:5173/signin">
+                                        <a className="text-white underline ml-2">Đăng Nhập</a>.
+                                    </Link>
+
                                 </p>
                             </div>
                         </form>

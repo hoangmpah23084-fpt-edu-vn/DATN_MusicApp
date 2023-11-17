@@ -9,27 +9,27 @@ import ModalCreateRoom from "@/components/Modals/createRoom";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getRoom } from "@/store/Reducer/roomReducer";
 import { RootState } from "@/store/store";
+import { checkToken } from "@/store/Reducer/User";
 
 const Room = () => {
-
-
   const [isShowModalCreateRoom, setIsShowModalCreateRoom] =
     useState<boolean>(false);
 
-    const [isShowModalJoinRoom, setIsShowModalJoinRoom] =
+  const [isShowModalJoinRoom, setIsShowModalJoinRoom] =
     useState<boolean>(false);
 
-    const [selectedRoom,setSelectedRoom] = useState<IRoom>({} as IRoom)
+  const [selectedRoom, setSelectedRoom] = useState<IRoom>({} as IRoom)
 
-  const { room } = useAppSelector((state:RootState) => state.room);
+  const { room } = useAppSelector((state: RootState) => state.room);
+  const { token } = useAppSelector((state: RootState) => state.user);
+
   const dispatch = useAppDispatch();
 
-  const fetchRoom =() => {
+  const fetchRoom = () => {
     try {
       dispatch(getRoom());
     } catch (error) {
       console.log(error);
-      
     }
   };
   useEffect(() => {
@@ -37,14 +37,22 @@ const Room = () => {
   }, [dispatch]);
 
   const handleShowModalCreateRoom = () => {
-    setIsShowModalCreateRoom(!isShowModalCreateRoom);
+    if (token) {
+      setIsShowModalCreateRoom(!isShowModalCreateRoom);
+    } else {
+      dispatch(checkToken(true))
+    }
   };
 
-  const handleShowModalJoinRoom = () => { 
-    setIsShowModalJoinRoom(!isShowModalJoinRoom);
+  const handleShowModalJoinRoom = () => {
+    if (token) {
+      setIsShowModalJoinRoom(!isShowModalJoinRoom);
+    } else {
+      dispatch(checkToken(true))
+    }
   };
 
-  const handleSelectedRoom = (data:IRoom) => {
+  const handleSelectedRoom = (data: IRoom) => {
     setSelectedRoom(data)
   }
 
@@ -80,7 +88,7 @@ const Room = () => {
             </button>
           </div>
           <div className="pb-[40%] px-16 grid grid-cols-6 gap-6 mt-5">
-            {room.map((data: IRoom , index:number) => {
+            {room.map((data: IRoom, index: number) => {
               return <ItemRoom key={index} data={data} handleSelectedRoom={handleSelectedRoom} handleShowModalJoinRoom={handleShowModalJoinRoom} />;
             })}
           </div>
