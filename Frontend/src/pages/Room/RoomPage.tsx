@@ -80,19 +80,26 @@ const RoomPage = (props: Props) => {
     })
   }, [listMess])
   useEffect(() => {
+    handleRouter()
+  }, [id])
+
+  const handleRouter = async () => {
     const user = JSON.parse(localStorage.getItem("user") as string)
     console.log(user?._id);
-    
     if (id) {
-      axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
-          if(!JSON.stringify(data.data.memberGroup).includes(user?._id)) {
-            toast.success("Bạn không đủ tư cách để ngồi đây.")
-            navigate("/")
-          }
+     try {
+      const resp = await axios.get(`http://localhost:8080/api/room/${id}`)
 
-      })
+      if(!JSON.stringify(resp.data.data.memberGroup).includes(user?._id)) {
+        toast.success("Bạn không đủ tư cách để ngồi đây.")
+        navigate("/")
+      }
+     } catch (error) {
+      toast.error("Lỗi hệ thống")
+      navigate("/")
+     }
     }
-  }, [id])
+  }
   return (
     <div>
       <div
