@@ -71,7 +71,7 @@ const signin = async (req, res) => {
       });
     }
     const token = await jwt.sign({ id: user._id }, SECRETKEY, {
-      expiresIn: "1h",
+      expiresIn: "3d",
     });
     return res.json({
       message: "Đăng nhập thành công",
