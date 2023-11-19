@@ -49,26 +49,32 @@ return (
         <Box sx={{ width : "100%", height : "90%" }} >
           <Box sx={{ width : "100%", mt : "10px" ,height : "8%" }} ></Box>
           <Box sx={{ width : "100%", height : "70%" }} >
-            <BoxProduct sx={{ width : "100%", height : "25%" }} >
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Tên nhạc</Typography>
               <TextField helperText={errors.song_name?.message} type='text' placeholder='Inter Song Name' {...register("song_name")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
                  <p>{errors.song_image?.message}</p>
-            <BoxProduct sx={{ width : "100%", height : "25%" }} >
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Link Nhạc</Typography>
               <TextField placeholder='Inter Song Title' type='file' inputProps={{ multiple: true}}  {...register("song_link")} error={Boolean(errors.song_link)} helperText={errors.song_link?.message}  sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "25%" }} >
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
+              <Typography sx={{ padding : "8px 0px" }}  >Tiêu đề bài hát</Typography>
+              <TextField placeholder='Inter Song Title' type='text' {...register("song_title")} helperText={errors.song_title?.message} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
+                height : "10px"
+              } }} />
+            </BoxProduct>
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
               <Typography sx={{ padding : "8px 0px" }}  >Ca sĩ</Typography>
               <TextField placeholder='Inter Song Title' type='text' {...register("song_singer")} helperText={errors.song_singer?.message} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"
               } }} />
             </BoxProduct>
-            <BoxProduct sx={{ width : "100%", height : "25%" }} >
+            <BoxProduct sx={{ width : "100%", height : "20%" }} >
               <Typography sx={{ padding : "8px 0px" }} >Lời bài hát</Typography>
               <TextField placeholder='Inter Song Lyric' type='text' helperText={errors.song_lyric?.message} {...register("song_lyric")} sx={{ width : "100%", '& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input' : {
                 height : "10px"

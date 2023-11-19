@@ -19,8 +19,8 @@ const Header = (props: Props) => {
 
   return (
     <div
-      className={`flex h-[70px] items-center fixed bg-[#170f23] left-[240px] z-20 px-[59px] w-[calc(100vw-240px)] transition-all duration-700 ${
-        props.sideBarRight ? "w-[calc(100vw-570px)]" : " "
+      className={`flex h-[70px] items-center fixed bg-[#170f23] left-[240px] z-20 px-[59px] transition-all duration-700 ${
+        props.sideBarRight ? "w-[calc(100vw-570px)]" : "w-[calc(100vw-240px)] "
       }`}
     >
       <div className="flex items-center z-1 w-full justify-between">
@@ -40,10 +40,10 @@ const Header = (props: Props) => {
 
         <div className="flex text-[#fff] justify-around">
           <div className=" bg-[#2f2739] rounded-full">
-            <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee]">
+            {/* <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee]">
               <GoDesktopDownload className="mr-[5px]" />
               <span className="font-inter">Tải bản macOS</span>
-            </div>
+            </div> */}
           </div>
           <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#2f2739] rounded-full">
             <AiOutlineSetting className=" w-10 h-[20px]" />

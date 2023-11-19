@@ -20,3 +20,76 @@
 ::-webkit-scrollbar-thumb:hover {
   background: gray;
 }
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu-vertical .ant-menu-item {
+  display: flex;
+  align-items: center;
+  color: #dadada;
+  width: 100%;
+  margin-inline: 0;
+  padding: 14px 21px;
+  margin-inline: 0;
+  margin-block: 0;
+  line-height: 20px;
+  border-radius: 0;
+  height: unset;
+  border-left: 3px solid #231b2e;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu-light
+  .ant-menu-item:not(.ant-menu-item-selected):not(
+    .ant-menu-submenu-selected
+  ):hover {
+  color: #dadada;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu-light
+  .ant-menu-item-active {
+  background-color: #3a3244;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu-light
+  .ant-menu-item-selected {
+  background-color: #3a3244;
+  color: #fff;
+  border-left: 3px solid #9b4de0;
+}
+
+.ant-layout-sider-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 40px !important;
+  height: 40px;
+  background-color: hsla(0, 0%, 100%, 0.1);
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin:0 auto;
+  bottom: 10px;
+  border-radius: 50%;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu .ant-menu-item-divider {
+  position: relative;
+  overflow: unset;
+  margin: 18px 0;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu
+  .ant-menu-item-divider::after {
+  content: "";
+  border-top: 1px solid #32323d;
+  position: absolute;
+  left: 25px;
+  right: 25px;
+  top: 0;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu
+  .ant-menu-item
+  .ant-menu-item-icon
+  + span {
+  margin-inline-start: 15px;
+}

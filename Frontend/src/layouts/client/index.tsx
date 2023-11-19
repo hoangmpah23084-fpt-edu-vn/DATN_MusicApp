@@ -29,11 +29,11 @@ const LayoutClient = () => {
   return (
     <>
       <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
-        <SidebarMenu />
+        <SidebarMenu/>
         {/* <Header /> */}
         <Header sideBarRight={sideBarRight}  />
 
-        <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
+        <div className="relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
         <SidebarSong sideBarRight={sideBarRight}  />
