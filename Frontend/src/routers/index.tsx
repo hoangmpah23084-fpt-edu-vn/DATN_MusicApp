@@ -20,9 +20,9 @@ import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import AddAlbum from "@/pages/Admin/Album/AddAlbum";
 import ListAlbum from "@/pages/Admin/Album/ListAlbum";
 import UpdateAlbum from "@/pages/Admin/Album/UpdateAlbum";
-import ListArtist from "@/pages/Admin/Artist/ListArtist";
-import AddArtist from "@/pages/Admin/Artist/AddArtist";
-import UpdateArtist from "@/pages/Admin/Artist/UpdateArtist";
+import ListArtist from "@/pages/Admin/Artist/listArtist";
+import AddArtist from "@/pages/Admin/Artist/addArtist";
+import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
 
 export const router = createBrowserRouter([
   //todo FE

@@ -27,7 +27,7 @@ const ListAlbum = () => {
       renderCell: (params) => {
         let data: string = "";        
         if(params.row.id_artist) {
-          data = params.row.id_artist.name;
+          data = params.row.id_artist.length;
         }
         return data;
       },
