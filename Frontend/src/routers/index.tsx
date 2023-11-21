@@ -26,12 +26,6 @@ export const router = createBrowserRouter([
     element: <LayoutClient />,
     children: [
       { index: true, element: <KhamPhaPage /> },
-// <<<<<<< HEAD
-      // { path: "mymusic/song/favorite", element: <FavouritePage /> }, 
-      // { path: "profile"}
-  //   ],
-  // },
-
       { path: "mymusic/song/favorite", element: <FavouritePage /> },
       { path: "rooms", element: <Room /> },
       { path: "playlist/:id", element: <PlaylistPage /> },
@@ -41,7 +35,6 @@ export const router = createBrowserRouter([
   {
     path: "/liveRoom/:id", element: <RoomPage/>
   },
-// >>>>>>> 7fc146341544ce1310711ffc1f0da54d553a224e
   //todo BE
   {
     path: "/admin",
