@@ -1,16 +1,15 @@
 import { AiOutlineHeart } from "react-icons/ai";
 import { BsThreeDots, BsFillPlayFill } from "react-icons/bs";
-import {  AiOutlinePause } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import "./index.scss";
-import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { ifAlbum } from "@/pages/Admin/Interface/validateAlbum";
 type Props = {
-  item : ifSong
+  item : ifAlbum
 };
 
 const SongCarouselItem = ({item}: Props) => {
+  // console.log(item);
   return (
     <div className="carousel-item flex flex-col px-[14px]">
       <div className="card ">
@@ -19,7 +18,7 @@ const SongCarouselItem = ({item}: Props) => {
             <Link to={`#`} className="overflow-hidden">
             <img
                 className="rounded-[6px] aspect-square"
-                src={item.song_image[0]}
+                src={"https://res.cloudinary.com/dsbiugddk/image/upload/v1698746181/DATN/vcn8wqdxusccmsox0t0b.jpg"}
               />
             </Link>
           </div>
@@ -37,7 +36,7 @@ const SongCarouselItem = ({item}: Props) => {
               <div>
                 <button className="border rounded-full">
                   {/* <AiOutlinePause className="text-[40px] p-1 pl-[6px]" /> */}
-                  <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" />
+                  <BsFillPlayFill  className="text-[40px] p-1 pl-[6px]" />
                 </button>
               </div>
               <div className="rounded-full">
@@ -56,8 +55,7 @@ const SongCarouselItem = ({item}: Props) => {
           <h4>
             <Link to={`#`}>
               <span className="text-[14px] font-semibold">
-              Artist's Story #33 - Tăng Duy Tân: Viết nhạc để quên đi thực tại
-                phũ phàng
+              {item.album_name}
               </span>
             </Link>
           </h4>

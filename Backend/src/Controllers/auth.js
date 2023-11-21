@@ -36,7 +36,7 @@ const signup = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
-    })
+    });
     newUser.password = undefined;
     return res.json({
       message: "Tạo thành công người dùng mới ^^",
@@ -71,7 +71,7 @@ const signin = async (req, res) => {
       });
     }
     const token = await jwt.sign({ id: user._id }, SECRETKEY, {
-      expiresIn: "1h",
+      expiresIn: "3d",
     });
     return res.json({
       message: "Đăng nhập thành công",

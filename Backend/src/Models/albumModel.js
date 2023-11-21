@@ -6,12 +6,7 @@ const Album = new mongoose.Schema(
       type: String,
       required: true,
     },
-    list_song: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Song",
-      },
-    ],
+    list_song: [],
     id_artist: [
       {
         type: mongoose.Schema.Types.ObjectId,

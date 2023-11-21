@@ -17,6 +17,8 @@ import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { activeSong, chekcSubString } from "@/constane/song.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
+import { RootState } from "@/store/store";
+
 type Props = {
   sideBarRight: boolean;
 };
@@ -24,12 +26,14 @@ type Props = {
 const SidebarSong = (props: Props) => {
   const [stateColor, setStateColor] = React.useState<boolean>(true);
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
+  const { token } = useAppSelector((state: RootState) => state.user);
+
   const dispatch = useAppDispatch();
   const renderListSong = useAppSelector(({ Song }) => Song);
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
@@ -48,6 +52,7 @@ const SidebarSong = (props: Props) => {
       setStateColor(false);
     }
   };
+
 
   return (
     <div
@@ -114,9 +119,10 @@ const SidebarSong = (props: Props) => {
           <div className="w-full h-[100%] overflow-y-scroll">
             {renderListSong &&
               renderListSong.song?.length > 0 &&
-              renderListSong.song.map((item: ifSong) => {
+              renderListSong.song.map((item: ifSong, index) => {
                 return (
                   <div
+                  key={index}
                     className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
                       ? "bg-[#9B4DE0]"
                       : "hover:bg-[#b4b4b32d]"
@@ -173,7 +179,7 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[30%] h-full flex">
                         <div className="w-1/2">
-                          <ListItemButtonStyle onClick={() => onhandleFavourite(dispatch, item?._id as string)}>
+                          <ListItemButtonStyle onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}  >
                             <ListItemIconStyle>
                               <ActiveFavourites item={item} />
                             </ListItemIconStyle>
