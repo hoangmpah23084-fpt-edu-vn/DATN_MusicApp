@@ -74,7 +74,7 @@ const columns: GridColDef[] = [
 const ListUser = () => {
     const dispatch = useAppDispatch();
     const {user} = useAppSelector(({user}) => user);
-    console.log(user);
+    // console.log(user);
     
    useEffect(() => {
      void dispatch(getUsers())
@@ -90,7 +90,7 @@ const ListUser = () => {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 10,
             },
           },
         }}
