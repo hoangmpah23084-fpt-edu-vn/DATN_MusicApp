@@ -68,11 +68,11 @@ const RoomPage = (props: Props) => {
       socket.emit('setUser', convert._id)
     }
     FetchMessage()
-    // return () => {
-    //   if (confirm("Are you sure want to remove room ?")) {
-    //     leaveRoom(id as string);
-    //   }
-    // }
+    return () => {
+      if (confirm("Are you sure want to remove room ?")) {
+        leaveRoom(id as string);
+      }
+    }
   }, [])
   useEffect(() => {
     socket.on("messRecived", (value) => {
