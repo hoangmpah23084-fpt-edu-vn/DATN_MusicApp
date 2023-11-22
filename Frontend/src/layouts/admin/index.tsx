@@ -325,7 +325,7 @@ export default function LayoutAdmin() {
                         <ListItemText primary="Thêm mới nghệ sĩ" />
                     </ListItemButton>
                 </Link>
-                <Link to={"/admin/artist"} >
+                <Link to={"/admin/list-artist"} >
                 <ListItemButton sx={{ pl: 4 }}>
                         <ListItemIcon >
                           <GroupAddIcon/>
@@ -401,7 +401,7 @@ export default function LayoutAdmin() {
               </ListItemButton>
               <Collapse in={openAlbum} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                      <Link  to={"/admin/addalbum"} >
+                      <Link  to={"/admin/add-album"} >
                       <ListItemButton sx={{ pl: 4 }}>
                         <ListItemIcon>
                           <AddBoxIcon />
@@ -409,7 +409,7 @@ export default function LayoutAdmin() {
                         <ListItemText primary="Thêm mới Album" />
                       </ListItemButton>
                       </Link>
-                      <Link to={"/admin/listalbum"} >
+                      <Link to={"/admin/list-album"} >
                       <ListItemButton sx={{ pl: 4 }}>
                         <ListItemIcon>
                           <ListAltIcon />

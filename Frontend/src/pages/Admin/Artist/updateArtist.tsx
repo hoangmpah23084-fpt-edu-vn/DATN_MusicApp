@@ -1,145 +1,195 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-import { useAppDispatch } from "@/store/hooks";
+import Title from "../Title";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { BoxProduct, BoxUpload } from "@/Mui/Component/Product";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IArtist, formArtist } from "../Interface/IArtist";
-import { handleGetOne, handleUpdateArtist } from "../../../store/Reducer/artistReducer";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { handImage } from "@/Mui/Component/handUpload";
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import Title from '../Title';
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { getAlbum } from "@/store/Reducer/albumReducer";
+import { handImage, handleFileUpload } from "@/Mui/Component/handUpload";
+import { IArtist, validateArtist } from "../Interface/IArtist";
+import { updateArtist } from "@/store/Reducer/artistReducer";
+import { getOne } from "@/store/Reducer/artistReducer";
+import { handGetSong } from "@/store/Reducer/Song";
+import { ifAlbum } from "../Interface/validateAlbum";
 
 const UpdateArtist = () => {
-  const [artist , setArtist] = React.useState<IArtist>();
+  const [artist, setArtist] = useState<IArtist>();
   const dispatch = useAppDispatch();
-  const {id} = useParams<{id ?: string}>();
+  const { album } = useAppSelector(({ album }) => album);
+  const { id } = useParams<{ id?: string }>();
+
   useEffect(() => {
     if (id) {
-      handleGetOne(id).then(({data}) => setArtist(data)).catch((error) => console.error(error));
+      getOne(id).then(({ data }) => { setArtist(data) }).catch((error) => console.error(error));
     }
-  },[id])
+    void dispatch(getAlbum());
+    void dispatch(handGetSong());
+  }, [id, dispatch]);
+  const { register, reset, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(validateArtist) });
 
-  const {register, reset , handleSubmit, formState : {errors}} = useForm({
-    resolver : yupResolver(formArtist)
-  });
   useEffect(() => {
     return reset(artist);
-  },[reset, artist])
-  
-
+  }, [reset, artist]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit : SubmitHandler<any> = async (value : IArtist) => {
-    value.images = await handImage(value.images)
-    const data = await dispatch(handleUpdateArtist(value));
-    console.log(data);
-  }
-    return <div className="">
-        <Title Title='Update Artist' />
-        <h5>
-          <b>Basic Information</b>
-        </h5>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="lg:col-span-2">
-              <div className="card mb-4 border-0 pb-6 py-4 md:border-gray-200 md:dark:border-gray-600 rounded-br-none rounded-bl-none card-border">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex flex-col">
-                    <label>Name</label>
-                    <input
-                      className="border border-gray-300 rounded-md p-2"
-                      placeholder="Name"
-                      {...register("name")}
-                    />
-                    <div className="text-sm text-red-500">{errors.name?.message}</div>
-                  </div>
-                  <div className="flex flex-col">
-                    <label>Age</label>
-                    <input
-                      type="number"
-                      min={0}
-                      className="border border-gray-300 rounded-md p-2"
-                      placeholder="Age"
-                      {...register("age")}
-                    />
-                    <div className="text-sm text-red-500">{errors.age?.message}</div>
-                  </div>
-                </div>
-                <div className="flex flex-col mt-[20px]">
-                  <label>Description</label>
-                  <textarea
-                    className="border border-gray-300 rounded-md p-2"
-                    placeholder="Description"
-                    {...register("description")}
-                  ></textarea>
-                  <div className="text-sm text-red-500">{errors.description?.message}</div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-[20px]">
-                  <div className="flex flex-col">
-                    <label>Album</label>
-                    <select
-                      required
-                      {...register("album")}
-                      className="block w-full border-gray-300 rounded-lg"
-                    >
-                      <option value={""}>
-                        Choose Album
-                      </option>
-                      <option value="1">Hết Sức Thật Lòng</option>
-                      <option value="2">Gieo</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="card mb-4 border-0 card-border grid grid-cols-1 md:grid-cols-1 gap-4">
-              <div className="form-item vertical">
-                <label className="form-label">Artist Image</label>
-                <div className="upload upload-draggable rounded-md border-dashed border-2 outline-gray-200 hover:border-indigo-600">
-                  <input
-                    multiple 
-                    className="upload-input draggable"
-                    type="file"
-                    accept="image/*"
-                    {...register("images")}
-                  />
-                  <div className="my-16 text-center">
-                    <AddPhotoAlternateOutlinedIcon />
-                    <p className="font-semibold">
-                      <span className="text-gray-800 dark:text-white">
-                        Drop your image here, or{" "}
-                      </span>
-                      <span className="text-blue-500">browse</span>
-                    </p>
-                    <p className="mt-1 opacity-60 dark:text-white">
-                      Support: jpeg, png
-                    </p>
-                  </div>
-                  <div className="text-sm text-red-500">{errors.images?.message}</div>
-                </div>
-              </div>
-            </div>
-            <div className="sticky -bottom-1 -mx-8 px-8 flex items-center justify-between py-4 border-t bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-              <div className="md:flex items-center jusstify-end">
-                <button
-                  type="button"
-                  className="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-500 focus:outline-none bg-white rounded-lg border border-gray-300 hover:bg-gray-100"
-                >
-                  Discard
-                </button>
-                <button
-                  type="submit"
-                  className="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-100 focus:outline-none bg-indigo-700 rounded-lg border border-gray-300 hover:bg-indigo-600"
-                >
-                  <SaveOutlinedIcon></SaveOutlinedIcon>
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-}
+  const handSubmitHandler: SubmitHandler<any> = async (value: IArtist) => {
+    value.images = await handImage(value.images);
+    const { data } = await dispatch(updateArtist(value));
+    alert("Cập nhật Artist thành công")
+  };
 
-export default UpdateArtist
+  return (
+    <>
+      <Title Title="Update Artist" />
+      <Box sx={{ width: "100%" }}>
+        <form
+          onSubmit={handleSubmit(handSubmitHandler)}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+          encType="multipart/form-data"
+        >
+          <Box sx={{ width: "60%", height: "100%" }}>
+            <Box sx={{ width: "100%", mt: "10px", height: "8%" }}>
+              <Typography variant="h6" sx={{ fontWeight: "700" }}>
+                Basic Information
+              </Typography>
+              <Typography>
+                Section to config basic product information
+              </Typography>
+            </Box>
+            <div>
+              <BoxProduct sx={{ width: "100%", height: "16%" }}>
+                <Typography sx={{ padding: "8px 0px" }}>Artist name</Typography>
+                <TextField
+                  helperText={errors.name?.message}
+                  placeholder="Enter Artist name"
+                  {...register("name")}
+                  sx={{
+                    width: "100%",
+                    "& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input": {
+                      height: "10px",
+                    },
+                  }}
+                />
+              </BoxProduct>
+              <BoxProduct sx={{ width: "100%", height: "16%" }}>
+                <Typography sx={{ padding: "8px 0px" }}>Age</Typography>
+                <TextField
+                  placeholder="Enter Artist Age"
+                  helperText={errors.age?.message}
+                  {...register("age")}
+                  sx={{
+                    width: "100%",
+                    "& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input": {
+                      height: "10px",
+                    },
+                  }}
+                />
+              </BoxProduct>
+              <BoxProduct sx={{ width: "100%", height: "16%" }}>
+                <Typography sx={{ padding: "8px 0px" }}>Description</Typography>
+                <TextField
+                  placeholder="Enter Description"
+                  {...register("description")}
+                  helperText={errors.description?.message}
+                  sx={{
+                    width: "100%",
+                    "& .css-24rejj-MuiInputBase-input-MuiOutlinedInput-input": {
+                      height: "10px",
+                    },
+                  }}
+                />
+              </BoxProduct>
+            </div>
+            <h3 className="pt-[15px]">Select Album</h3>
+            <select required  {...register("album")} className='block w-[50%] border-gray-300 rounded-lg' >
+            <option value={""} >Choose a Album</option>
+              {
+                album.length > 0  ? album.map((item : ifAlbum) => <option key={item._id} value={item._id}>{item.album_name}</option> ) : ""
+              }
+            </select>
+            <button
+              type="submit"
+              className="bg-purple-500 text-white w-[100px] h-[50px] rounded-lg mt-[20px] mr-[10px]"
+            >
+              Submit
+            </button>
+            <Button variant="outlined" color="success" className="h-[50px]" >
+              <Link to={'/admin/list-artist'}>List Arrtist</Link>
+            </Button>
+          </Box>
+          <Box sx={{ width: "35%", height: "100%" }}>
+            <Box sx={{ width: "100%", mt: "10px", height: "8%" }}>
+              <Typography variant="h6" sx={{ fontWeight: "700" }}>
+                Basic Information
+              </Typography>
+              <Typography>
+                Section to config basic product information
+              </Typography>
+            </Box>
+            <BoxUpload>
+              <TextField
+                {...register("images")}
+                type="file"
+                inputProps={{ multiple: true }}
+                error={Boolean(errors.images)}
+                helperText={errors.images?.message}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  position: "absolute",
+                  cursor: "pointer",
+                  opacity: 0,
+                  inset: "0px",
+                  fontSize: "100%",
+                  "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root": {
+                    width: "100%",
+                    height: "100%",
+                    cursor: "pointer",
+                  },
+                  "& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {
+                    height: "100%",
+                  },
+                }}
+              ></TextField>
+              <Box sx={{ textAlign: "center", margin: "4rem 0rem" }}>
+                <img
+                  src="../../../../public/Image/upload.png"
+                  alt=""
+                  style={{
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    maxWidth: "100%",
+                    height: "auto",
+                    display: "block",
+                    verticalAlign: "middle",
+                  }}
+                />
+                <Typography variant="body1">
+                  <span style={{ fontWeight: 600 }}>
+                    Drop your Video here, or{" "}
+                  </span>
+                  <span style={{ fontWeight: 600, color: "#1D5D9B" }}>
+                    {" "}
+                    browse
+                  </span>
+                </Typography>
+                <Typography variant="body1" sx={{ color: "gray" }}>
+                  Support: jpeg, png
+                </Typography>
+              </Box>
+            </BoxUpload>
+          </Box>
+        </form>
+      </Box>
+    </>
+  );
+};
+export default UpdateArtist;

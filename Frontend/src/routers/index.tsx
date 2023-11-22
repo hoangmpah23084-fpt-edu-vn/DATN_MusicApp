@@ -1,9 +1,6 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
 import FavouritePage from "@/pages/Favourite/FavouritePage";
-import Artist from "@/pages/Admin/Artist/listArtist";
-import AddArtist from "@/pages/Admin/Artist/addArtist";
-import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
 import AddSong from "@/pages/Admin/Song/AddSong";
 import ListSong from "@/pages/Admin/Song/ListSong";
@@ -14,12 +11,19 @@ import { createBrowserRouter } from "react-router-dom";
 import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
-import Room from "@/pages/Room/room";
-import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import Album from "@/pages/Album/Album";
-import RoomPage from "@/pages/Room/RoomPage";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
+import Room from "@/pages/Room/room";
+import RoomPage from "@/pages/Room/RoomPage";
+import PlaylistPage from "@/pages/Playlist/PlaylistPage";
+import AddAlbum from "@/pages/Admin/Album/AddAlbum";
+import ListAlbum from "@/pages/Admin/Album/ListAlbum";
+import UpdateAlbum from "@/pages/Admin/Album/UpdateAlbum";
+import ListArtist from "@/pages/Admin/Artist/listArtist";
+import AddArtist from "@/pages/Admin/Artist/addArtist";
+import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
+
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -77,8 +81,8 @@ export const router = createBrowserRouter([
         element: <ListUser />,
       },
       {
-        path: "artist",
-        element: <Artist/>,
+        path: "list-artist",
+        element: <ListArtist/>,
       },
       {
         path: "add-artist",
@@ -86,9 +90,8 @@ export const router = createBrowserRouter([
       },
       {
         path: "update-artist/:id",
-        element: <UpdateArtist/>,
-      }
-      ,
+        element: <UpdateArtist />,
+      },
       {
         path: "addgenre",
         element: <Genre />
