@@ -41,7 +41,7 @@ const SidebarSong = (props: Props) => {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
       dispatch(setDataLocal(currentlocal))
     }
-  }, [stateSong]);
+  }, [stateSong, renderListSong.song.length]);
 
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;

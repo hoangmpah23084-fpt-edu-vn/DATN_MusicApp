@@ -1,4 +1,5 @@
 import { ifSong, ifSongAdmin } from "@/pages/Admin/Interface/ValidateSong";
+import { IGenre } from "@/pages/Admin/Interface/genre";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -27,12 +28,18 @@ export const handDeleteSong = createAsyncThunk("song/deleteSong", async (id: str
     await axios.delete("http://localhost:8080/api/Song/" + id)
     return id
 })
-export const handUpdateSong = createAsyncThunk("song/updatesong", async (value: ifSongAdmin) => {
+export const handUpdateSong = createAsyncThunk("song/updatesong", async (value: ifSong) => {
     const { _id, ...datafake } = value;
     if (_id) {
-        const { data } = await axios.put<{ data: ifSongAdmin }>(`http://localhost:8080/api/Song/${_id}`, datafake)
+        const { data } = await axios.put<{ data: ifSong }>(`http://localhost:8080/api/Song/${_id}`, datafake)
         return data.data
     }
+});
+export const handGetSongInGenre = createAsyncThunk("genresong/get", async (id : string) => {
+    const {data} = await axios.get<{data : IGenre}>(`http://localhost:8080/api/genre/${id}`).then(({data}) => data);
+    console.log(data);
+    
+    return data;
 })
 export const handGetOne = async (id: string) => {
     const { data } = await axios.get<{ data: ifSong }>("http://localhost:8080/api/Song/" + id)
@@ -60,7 +67,19 @@ const songReducer = createSlice({
             state.song = action.payload;
             state.error = ""
         })
-        builder.addCase(handGetSong.rejected, (state, action) => {
+        builder.addCase(handGetSong.rejected, (state) => {
+            state.loading = false;
+        })
+        builder.addCase(handGetSongInGenre.pending, (state) => {
+            state.loading = false;
+        })
+        builder.addCase(handGetSongInGenre.fulfilled, (state, action) => {
+            console.log(action.payload.list_songs);
+            state.loading = true;
+            state.song = action.payload.list_songs
+            state.error = ""
+        })
+        builder.addCase(handGetSongInGenre.rejected, (state) => {
             state.loading = false;
         })
         builder.addCase(handDeleteSong.pending, (state) => {
@@ -82,7 +101,7 @@ const songReducer = createSlice({
                 const { _id } = action.payload;
                 state.loading = true;
                 // state.song = state.song.map(((song : ifSong) => song._id == _id ? action.payload : song))
-                const data = state.song.filter(((song: ifSongAdmin) => song._id != _id))
+                const data = state.song.filter(((song: ifSong) => song._id != _id))
                 state.song = [action.payload, ...data];
                 state.error = ""
             }

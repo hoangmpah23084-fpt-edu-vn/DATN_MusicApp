@@ -41,7 +41,7 @@ const UpdateSong = () => {
   },[reset, song])
   console.log(song);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handSubmitHandler : SubmitHandler<any> = async (value : ifSongAdmin) => {
+  const handSubmitHandler : SubmitHandler<any> = async (value : ifSong) => {
     setLoading(true);
     value.song_link = await handleFileUpload(value.song_link);
     value.song_image = await handImage(value.song_image)

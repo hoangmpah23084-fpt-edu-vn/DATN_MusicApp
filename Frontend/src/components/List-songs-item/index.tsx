@@ -5,6 +5,7 @@ import "./css.scss";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { activeSong } from "@/constane/song.const";
+import { handGetSongInGenre } from "@/store/Reducer/Song";
 
 type Props = {
   section?: string;
@@ -16,10 +17,11 @@ const  ListSongItem = ({ section, item }: Props) => {
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
   const dispatch = useAppDispatch();
   const handToggle = () => {
-    const state = stateSong;
-    state &&
-     dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start")
+    dispatch(handGetSongInGenre(item.id_Genre))
+    stateSong &&
+     dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start");
   }
+    
   return (
     <div className="list-items px-[15px]">
       <div
@@ -38,7 +40,7 @@ const  ListSongItem = ({ section, item }: Props) => {
             <span className="number is-top-1 mr-[15px]">1</span>
           </div>
 
-          <div className="song-thumb block relative shrink-0 overflow-hidden cursor-pointer mr-[10px]">
+          <div className="song-thumb block relative shrink-0 overflow-hidden cursor-pointer mr-[10px]" onClick={handToggle}>
             <div
               className={`${
                 section === "chanel" && "card-image"
@@ -55,7 +57,7 @@ const  ListSongItem = ({ section, item }: Props) => {
               />
               <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
               <div className="action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%]  hidden">
-                <div className="flex gap-[20px] h-full justify-center items-center" onClick={() => handToggle()}>
+                <div className="flex gap-[20px] h-full justify-center items-center" >
                   <div>
                     <div
                       className={`${
