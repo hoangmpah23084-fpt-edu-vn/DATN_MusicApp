@@ -120,7 +120,7 @@ const Login = () => {
 
                                     <input
                                         {...register("email", { required: true })}
-
+                                        placeholder="example@gmail.com"
                                         className="mt-1 w-full pl-2 h-[35px] rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                     <p className="text-red-600 text-[15px]">{errors.email && errors.email.message}</p>
@@ -137,6 +137,7 @@ const Login = () => {
                                     <input
                                         type="password"
                                         {...register("password", { required: true })}
+                                        placeholder="********"
                                         className="mt-2 w-full h-[35px]  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                     <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>
@@ -150,7 +151,7 @@ const Login = () => {
                                         Đăng nhập
                                     </button>
                                     <p className="mt-4 text-sm text-white sm:mt-0">
-                                        Bạn chưa có tài khoản hãy đăng ký!
+                                        Bạn chưa có tài khoản, hãy đăng ký!
                                         <Link to="http://localhost:5173/signup">
                                             <a className="text-white underline ml-2">Đăng Ký</a>.
                                         </Link>
