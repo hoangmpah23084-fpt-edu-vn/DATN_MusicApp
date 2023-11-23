@@ -18,10 +18,20 @@ import Room from "@/pages/Room/room";
 import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import Album from "@/pages/Album/Album";
 import RoomPage from "@/pages/Room/RoomPage";
-
+import Signnup from "@/pages/Register/Signup";
+import Signin from "@/pages/Register/Login";
 export const router = createBrowserRouter([
   //todo FE
   {
+    path: "/signup",
+    element: <Signnup />,
+  },
+  {
+    path: "/signin",
+    element: <Signin />
+  },
+  {
+    
     path: "/",
     element: <LayoutClient />,
     children: [

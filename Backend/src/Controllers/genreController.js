@@ -27,13 +27,23 @@ export const create_Genre = async (req, res) => {
 
 export const getAll_Genre = async (req, res) => {
   try {
-    const data = await Genre.find();
+    const data = await Genre.find().populate("list_songs");
     if (!data) {
       return res.status(400).json({ message: "Get All Genre Failed" });
     }
+    const filData = data.filter((item) => item.name != "un_genre");
+    // const findData = filData.filter((item) => item.name == "TẤT CẢ");
+    filData.forEach((item) => {
+      filData[0].list_songs = [...filData[0].list_songs, ...item.list_songs];
+    });
+    filData.forEach((_, index) => {
+      filData[index].list_songs = filData[index].list_songs
+        .sort((a, b) => b.view_song - a.view_song)
+        .slice(0, 9);
+    });
     return res.status(200).json({
       message: "Get All Genre Success",
-      data,
+      data: filData,
     });
   } catch (error) {
     return res.status(500).json({
@@ -48,6 +58,9 @@ export const get_GenreById = async (req, res) => {
     if (!data) {
       return res.status(400).json({ message: "Get Genre By Id Failed" });
     }
+    data.list_songs = data.list_songs
+      .sort((a, b) => b.view_song - a.view_song)
+      .slice(0, 9);
     return res.status(200).json({
       message: "Get Genre By Id Success",
       data,
