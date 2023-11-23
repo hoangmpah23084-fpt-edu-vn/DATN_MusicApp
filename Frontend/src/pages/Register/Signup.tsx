@@ -118,6 +118,7 @@ const Signup = () => {
 
                                 <input
                                     {...register("fullName", { required: true })}
+                                    placeholder="Full Name"
                                     className="mt-1 w-full pl-2 h-[35px] rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
                                 <p className="text-red-600 text-[15px]">{errors.fullName && errors.fullName.message}</p>
@@ -129,7 +130,7 @@ const Signup = () => {
 
                                 <input
                                     {...register("email", { required: true })}
-
+                                    placeholder="example@gmail.com"
                                     className="mt-1 w-full pl-2 h-[35px] rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
                                 <p className="text-red-600 text-[15px]">{errors.email && errors.email.message}</p>
@@ -146,6 +147,7 @@ const Signup = () => {
                                 <input
                                     type="password"
                                     {...register("password", { required: true })}
+                                    placeholder="********"
                                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
                                 <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>
@@ -162,7 +164,7 @@ const Signup = () => {
                                 <input
                                     type="password"
                                     {...register("confirmPassword", { required: true })}
-
+                                    placeholder="********"
                                     className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
                                 <p className="text-red-600 text-[15px]">{errors.confirmPassword && errors.confirmPassword.message}</p>
