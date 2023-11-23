@@ -65,13 +65,14 @@ export const updateRoomChat = async (req, res) => {
 };
 export const getRoom = async (req, res) => {
   try {
-    await roomModel
+    const result  =  await roomModel
       .findById(req.params.idChat)
       .populate("memberGroup", "-password")
       .populate("isAdminGroup", "-password")
       .populate("listMessages", "-password -id_room")
-      .then(async (result) => {
-        result = await model_user.populate(result, {
+     
+      if(result) {
+        await model_user.populate(result, {
           path: "listMessages.id_sender",
           select: "fullName",
         });
@@ -80,9 +81,14 @@ export const getRoom = async (req, res) => {
           message: "Lấy phòng thành công",
           data: result,
         });
-      });
+      }
+      else {
+        return res.status(400).json({
+          message: error.message,
+        });
+      }
   } catch (error) {
-    return res.status(500).json({
+    return res.status(400).json({
       message: error.message,
     });
   }
