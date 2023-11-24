@@ -87,17 +87,17 @@ const RoomPage = (props: Props) => {
     const user = JSON.parse(localStorage.getItem("user") as string)
     console.log(user?._id);
     if (id) {
-     try {
-      const resp = await axios.get(`http://localhost:8080/api/room/${id}`)
+      try {
+        const resp = await axios.get(`http://localhost:8080/api/room/${id}`)
 
-      if(!JSON.stringify(resp.data.data.memberGroup).includes(user?._id)) {
-        toast.success("Bạn không đủ tư cách để ngồi đây.")
+        if (!JSON.stringify(resp.data.data.memberGroup).includes(user?._id)) {
+          toast.success("Bạn không đủ tư cách để ngồi đây.")
+          navigate("/")
+        }
+      } catch (error) {
+        toast.error("Lỗi hệ thống")
         navigate("/")
       }
-     } catch (error) {
-      toast.error("Lỗi hệ thống")
-      navigate("/")
-     }
     }
   }
   return (
