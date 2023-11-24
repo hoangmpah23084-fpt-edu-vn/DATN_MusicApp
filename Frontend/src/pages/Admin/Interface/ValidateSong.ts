@@ -20,6 +20,8 @@ export interface ifSong {
     song_singer: string;
     song_musian: string;
     song_lyric: string
+    view_song: number,
+    total_like: number,
     id_Genre: string; // Make it required
     id_Artists: string; // Make it required
   }

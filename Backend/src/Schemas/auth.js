@@ -19,6 +19,12 @@ const signupSchema = joi.object({
     "any.only": "Confirm Password không khớp",
     "any.required": "Confirm Password là bắt buộc",
   }),
+  image: joi.array().items(
+    joi.object({
+      url: joi.string(), 
+      publicId: joi.string(),
+    })
+  )
 });
 
 const signinSchema = joi.object({

@@ -1,4 +1,4 @@
-import { ifCurrentSong, ifSong, ifSongAdmin } from "@/pages/Admin/Interface/ValidateSong";
+import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface initState {
@@ -18,8 +18,6 @@ const initialState: initState = {
 
 export const handGetCurrentSong = createAsyncThunk("currentSongReducer/getSong", (item: ifSong) => item);
 export const handChangeStateSong = createAsyncThunk("currentSongReducer/stateSong", (item: boolean) => item);
-
-
 
 const currentSong = createSlice({
     name: "currentSong",
