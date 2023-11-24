@@ -7,7 +7,7 @@ const ConnectSocket = (server) => {
     //todo nếu 60s ko có ai send request thì nó sẽ disconnect
     pingTimeout: 60000,
     cors: {
-      origin: "http://localhost:5173",
+      origin: ["http://localhost:5173" , "http://127.0.0.1:5173"],
       //todo các method có thể dùng cho socket
       methods: ["GET", "POST", "PUT", "DELETE"],
     },
