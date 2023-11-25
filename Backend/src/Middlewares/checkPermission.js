@@ -18,7 +18,7 @@ export const checkPermission = async (req, res, next) => {
     const { id } = await jwt.verify(token, SECRETKEY);
 
     const user = await User.findById(id);
-
+    req.user = user;
     if (user.role !== "admin") {
       throw new Error("Bạn không có quyền để thực hiện hành động này ^^");
     }
