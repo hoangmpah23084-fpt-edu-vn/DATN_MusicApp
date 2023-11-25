@@ -32,13 +32,13 @@ const RoomPage = (props: Props) => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const [listMess, setListMess] = useState<listMessages[] | []>([]);
-  const [currAdmin, setCurrAdmin] = useState('');
-  const [currMember, setCurrMember] = useState('');
   const [listMember, setlistMember] = useState<memberGroup[] | []>([]);
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const [stateSideBar, setStateSideBar] = useState<string>("trochuyen")
+  const roomDetail = useAppSelector((data) => data);
   const current = useAppSelector(({ Song }) => Song);
   const navigate = useNavigate()
-  const roomDetail = useAppSelector((data) => data);
+
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong());
@@ -47,15 +47,15 @@ const RoomPage = (props: Props) => {
   }, [dispatch]);
   useEffect(() => {
     if (current.song.length > 0) {
-      localStorage.setItem('song', JSON.stringify(current.song[2]));
-      dispatch(handGetCurrentSong(current.song[2]))
+      localStorage.setItem('song', JSON.stringify(current.song[0]));
+      dispatch(handGetCurrentSong(current.song[0]))
     }
   }, [current.song]);
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
+      console.log(data);
       setListMess([...listMess, ...data.data.listMessages])
       setlistMember(data.data.memberGroup);
-      setCurrAdmin(data.data.isAdminGroup._id)
       socket.emit('joinRoom', data.data._id)
     });
   }
@@ -64,7 +64,6 @@ const RoomPage = (props: Props) => {
     const user = localStorage.getItem('user');
     if (user) {
       const convert = JSON.parse(user);
-      setCurrMember(convert._id);
       socket.emit('setUser', convert._id)
     }
     FetchMessage()
@@ -216,7 +215,7 @@ const RoomPage = (props: Props) => {
             </div>
           </div>
           {/* //todo SideBar Rooom */}
-          <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} />
+          <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar}  />
         </div>
         <SidebarRoom sideBarRight={sideBarRight} />
         {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} />}

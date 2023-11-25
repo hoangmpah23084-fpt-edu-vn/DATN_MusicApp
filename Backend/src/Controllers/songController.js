@@ -52,11 +52,25 @@ export const createSong = async (req, res) => {
 };
 
 export const get_Songs = async (req, res) => {
+  const { _limit = 10, _page = 1, search } = req.query;
+  const options = {
+    limit: _limit,
+    page: _page,
+  };
   try {
-    const data = await SongSchame.find();
+    let query = {};
+
+    if (search) {
+      query = {
+        $or: [{ song_name: { $regex: search, $options: "i" } }],
+      };
+    }
+    const data = await SongSchame.paginate(query, options);
+    const total = await SongSchame.find();
     return res.status(200).json({
       message: "Get song list Successfully",
-      data,
+      totalSongList: total.length,
+      data: data.docs,
     });
   } catch (error) {
     return res.status(500).json({
@@ -152,24 +166,23 @@ export const deleteSong = async (req, res) => {
   }
 };
 
-
-export const updateViewSong = async(req, res)=>{
-  const id_song = req.params.id
-  const data_song = await SongSchame.findOne({_id: id_song});
-  if (!data_song){
+export const updateViewSong = async (req, res) => {
+  const id_song = req.params.id;
+  const data_song = await SongSchame.findOne({ _id: id_song });
+  if (!data_song) {
     return res.status(401).json({
       message: "Không thành công",
     });
-  }else{
+  } else {
     await SongSchame.findOneAndUpdate(
-      {_id: id_song }, 
-       { 
+      { _id: id_song },
+      {
         view_song: data_song.view_song + 1,
-       },
-      { upsert: true, new: true } 
+      },
+      { upsert: true, new: true }
     );
     return res.status(201).json({
       message: "Thành công",
     });
   }
-}
+};
