@@ -40,12 +40,10 @@ const AddArtist = () => {
   return (
     <>
       <Title Title="Add Artist" />
-      <Box sx={{ width: "100%", height: 1300 }}>
+      <Box sx={{ width: "100%" }}>
         <form
           onSubmit={handleSubmit(handSubmitHandler)}
           style={{
-            width: "100%",
-            height: "100%",
             display: "flex",
             justifyContent: "space-between",
           }}
@@ -118,7 +116,7 @@ const AddArtist = () => {
               <Button variant="contained" color="secondary">
                 Submit
               </Button>
-              <Button variant="outlined" color="success" className="h-[50px]" >
+              <Button variant="contained" color="secondary" sx={{ ml: "10px" }}>
                 <Link to={'/admin/list-artist'}>List Arrtist</Link>
               </Button>
             </div>

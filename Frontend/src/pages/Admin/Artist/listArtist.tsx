@@ -24,6 +24,12 @@ const ListArtist = () => {
     { field: "_id", headerName: "ID", flex: 1, align: "center", headerAlign: "center", editable: false },
     { field: "name", headerName: "Name", headerAlign: "center", editable: false, align: "center", flex: 1 },
     { field: "age", headerName: "Age", headerAlign: "center", editable: false, align: "center", flex: 1 },
+    { field: "album", headerName: "Album", headerAlign: "center", editable: false, align: "center", 
+      renderCell : (params) => {
+        // return params.row.album.album_name;
+        return params.row.album_name;
+      },
+      flex: 1 },
     { field: "images", headerName: "Images", headerAlign: "center", editable: false, align: "center",
       renderCell : (params) => {
         const image: string[] = params.row.images;

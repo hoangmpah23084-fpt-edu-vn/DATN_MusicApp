@@ -6,8 +6,7 @@ export interface IArtist {
     age: number,
     images: string[] | undefined,
     description: string,
-    album: string[] | undefined,
-    songs: string[] | undefined,
+    album: string | undefined,
 }
 
 export const validateArtist = yup.object({
