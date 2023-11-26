@@ -8,7 +8,6 @@ const instanceAxios = axios.create({
     "Authorization": "Bearer token"
   }
 })
-export default instanceAxios
 
 
 // Add a request interceptor
@@ -19,22 +18,43 @@ instanceAxios.interceptors.request.use(function (config) {
       config.headers.Authorization = `Bearer ${token}`
     }
   }
-  // Do something before request is sent
   return config;
 }, function (error) {
-  // Do something with request error
   return Promise.reject(error);
 });
 
-// Add a response interceptor
 instanceAxios.interceptors.response.use(function (response) {
-  // Any status code that lie within the range of 2xx cause this function to trigger
-  // Do something with response data
-  return response;
-}, function (error) {
-  // Any status codes that falls outside the range of 2xx cause this function to trigger
-  // Do something with response error
 
+  return response;
+}, async function (error) {
+
+  const originalRequest = error.config;
+  if (error.response.status === 401 && !originalRequest._retry) {
+    originalRequest._retry = true;
+    const newToken = await refreshToken();
+    instanceAxios.defaults.headers.common['Authorization'] = 'Bearer ' + newToken;
+    return instanceAxios(originalRequest);
+  }
   toast.error(error.response?.data?.message)
   return Promise.reject(error);
 });
+
+const refreshToken = async () => {
+  const user = localStorage.getItem('user');
+
+  if (user) {
+    const { _id } = JSON.parse(user)
+    try {
+      const response = await instanceAxios.post('/token/refresh', { _id });
+      const newToken = response.data.accessToken;
+      localStorage.setItem('token', newToken);
+      return newToken;
+    } catch (error) {
+      console.error('Lỗi khi làm mới token:', error);
+    }
+  }
+
+
+};
+
+export default instanceAxios

@@ -23,7 +23,7 @@ const initialState: Inital = {
     user: [],
     error: "",
     token: null,
-    isToken: false
+    isToken: false,
 }
 
 export const getUsers = createAsyncThunk("user/getUsers", async () => {
@@ -52,7 +52,8 @@ const userReducer = createSlice({
         },
         setToken: (state, action) => {
             state.token = action.payload
-        }
+        },
+
 
     },
     extraReducers: builder => {
