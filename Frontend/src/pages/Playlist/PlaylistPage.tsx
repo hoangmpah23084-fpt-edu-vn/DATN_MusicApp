@@ -8,26 +8,45 @@ import { getOneAlbum } from "@/store/Reducer/albumReducer";
 import { ifAlbum } from "../Admin/Interface/validateAlbum";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
+import instanceAxios from "@/utils/axios";
+import { toast } from "react-toastify";
+import { getPlaylist } from "@/store/Reducer/playlistReducer";
+
 type Props = {};
 
 const PlaylistPage = (props: Props) => {
-  const {id} = useParams<{id ?: string}>();
-  const currentSong = useAppSelector(({currentSong}) => currentSong)
+  const { id } = useParams<{ id?: string }>();
+  const currentSong = useAppSelector(({ currentSong }) => currentSong)
+  const playlistDetail = useAppSelector(({ playlist }) => playlist)
   const [album, setAlbum] = useState<ifAlbum | null>(null);
+  const [playlist, setPlaylist] = useState<any>([])
   const dispatch = useAppDispatch();
   useEffect(() => {
-    id && getOneAlbum(id as string).then(({data}) => {
+    id && getOneAlbum(id as string).then(({ data }) => {
       setAlbum(data)
       dispatch(handChangeStateSong(false))
       dispatch(handGetCurrentSong(data.list_song[0]))
       setTimeout(() => dispatch(handChangeStateSong(true)), 500);
     }).catch(error => console.error(error))
-  },[id])
+  }, [id])
 
   const handToggSong = () => {
     const state = currentSong.stateSong;
     dispatch(handChangeStateSong(!state));
   }
+
+
+  const fetchData = async () => {
+    try {
+      dispatch(getPlaylist(id as string))  
+    } catch (error) {
+      toast.error(error as any)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   return (
     <div className="zm-section">
@@ -64,7 +83,7 @@ const PlaylistPage = (props: Props) => {
 
                       <div>
                         <button className="border rounded-full">
-                          {currentSong ? <AiOutlinePause className="text-[40px] p-1 pl-[6px]" /> : <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" /> }
+                          {currentSong ? <AiOutlinePause className="text-[40px] p-1 pl-[6px]" /> : <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" />}
                         </button>
                       </div>
 
@@ -98,8 +117,8 @@ const PlaylistPage = (props: Props) => {
                   </div>
                   <div className="actions flex flex-col items-center justify-center">
                     <button className="flex bg-[#9b4de0] items-center rounded-[25px] my-[20px] px-[20px] py-[5px]" onClick={handToggSong} >
-                      {currentSong.stateSong  ?  <AiOutlinePause className='text-[25px] font-black pr-1' /> : <BsFillPlayFill className='text-[25px] pr-1' />}
-                      <span className="uppercase text-[14px] font-normal">{currentSong.stateSong ? 'Dừng Phát' : 'Tiếp tục phát' } </span>
+                      {currentSong.stateSong ? <AiOutlinePause className='text-[25px] font-black pr-1' /> : <BsFillPlayFill className='text-[25px] pr-1' />}
+                      <span className="uppercase text-[14px] font-normal">{currentSong.stateSong ? 'Dừng Phát' : 'Tiếp tục phát'} </span>
                     </button>
                     <div className="flex">
                       <button className="group relative flex justify-center items-center rounded-full px-[5px] ">
@@ -121,9 +140,8 @@ const PlaylistPage = (props: Props) => {
                   </div>
                 </div>
               </div>
-
               <div className="playlist-content ml-[330px]">
-                <ListSong />
+                <ListSong listSong={playlistDetail.playlistDetail?.list_song} />
               </div>
             </div>
           </div>

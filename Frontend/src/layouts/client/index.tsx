@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import SidebarMenu from "@/components/SidebarMenu";
 import Footer from "@/components/Footer";
@@ -9,8 +9,9 @@ import { handGetSong } from "@/store/Reducer/Song";
 import { handGetCurrentSong } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
 import ModalSignin from "@/components/Modals/modalSignin";
-import { setToken } from "@/store/Reducer/User";
+import { checkToken, setToken } from "@/store/Reducer/User";
 import { getFavourite } from "@/store/Reducer/favouriteReducer";
+import ModalCreatePlaylist from "@/components/Modals/createPlaylist";
 
 
 const LayoutClient = () => {
@@ -18,6 +19,7 @@ const LayoutClient = () => {
   const current = useAppSelector(({ Song }) => Song);
   const dispatch = useAppDispatch();
   const { isToken } = useAppSelector((state: RootState) => state.user);
+  const [isShowModalCreatePlaylist,setIsShowModalCreatePlaylist] = useState<boolean>(false)
 
   const user = localStorage.getItem('user');
   useEffect(() => {
@@ -43,13 +45,25 @@ const LayoutClient = () => {
 
   }, [token])
 
+  const handleShowModalCreateRoom = () => {
+    if (token) {
+      setIsShowModalCreatePlaylist(!isShowModalCreatePlaylist);
+    } else {
+      dispatch(checkToken(true))
+    }
+
+  };
+
 
   return (
     <>
 
       <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
+      {
+              isShowModalCreatePlaylist && <ModalCreatePlaylist onShowModal={handleShowModalCreateRoom} />
+            }
         {isToken && <ModalSignin />}
-        <SidebarMenu />
+        <SidebarMenu handleShowModalCreateRoom={handleShowModalCreateRoom} />
         <Header />
         <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
