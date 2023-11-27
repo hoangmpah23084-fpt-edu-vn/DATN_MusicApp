@@ -50,5 +50,10 @@ export const RoomSchame = yup.object().shape({
 export const CreateRoomSchame = yup.object().shape({
     password: yup.string(),
     nameGroup: yup.string().required('Tên phòng không được để trống'),
+})
+
+export const CreatePlaylistSchame = yup.object().shape({
+    playlist_name: yup.string().required('Tên phòng không được để trống'),
 
 })
+

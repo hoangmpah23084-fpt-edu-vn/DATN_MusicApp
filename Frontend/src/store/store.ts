@@ -19,6 +19,7 @@ import roomReducer from './Reducer/roomReducer';
 import favouriteReducer from './Reducer/favouriteReducer';
 import currentSong from './Reducer/currentSong';
 import albumReducer from './Reducer/albumReducer';
+import playlistReducer from './Reducer/playlistReducer';
 
 const persistConfig = {
     key: 'root',
@@ -28,6 +29,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     Song: songReducer,
+    playlist: playlistReducer,
     user: userReducer,
     artist: artistReducer,
     album: albumReducer,

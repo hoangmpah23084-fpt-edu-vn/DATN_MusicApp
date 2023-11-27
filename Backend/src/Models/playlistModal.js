@@ -10,6 +10,7 @@ const playlistSchema = new mongoose.Schema(
     id_user: {
       type: String,
       required: true,
+      ref: "User",
     },
     list_song: [
       {
