@@ -167,7 +167,7 @@ import { useStyles } from "./FooterRoom";
                         </div>
                         <div className="w-[48%] ml-[2%] h-full">
                           <div className="w-full h-[50%]">
-                            <h1 className="font-semibold">{chekcSubString(item.song_name as string)}</h1>
+                            <h1 className="font-semibold">{chekcSubString(item.song_name as string, 10)}</h1>
                           </div>
                           <div className="w-full h-[50%]">
                             <p className="text-gray-500 text-[12px]">

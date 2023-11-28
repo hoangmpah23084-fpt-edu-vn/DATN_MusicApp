@@ -12,20 +12,12 @@ import { activeSong } from "@/constane/song.const";
 import { onhandleFavourite } from "@/constane/favourites.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
-
-
 type props = {
   item: ifSong
 }
-
 const ItemSong = ({ item }: props) => {
-
-
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch()
-
-
-
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
   const { token } = useAppSelector((state: RootState) => state.user);
 

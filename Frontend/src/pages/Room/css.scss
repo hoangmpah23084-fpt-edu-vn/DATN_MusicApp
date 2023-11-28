@@ -121,7 +121,8 @@
   border: none;
   color: #eeeeee7c;
   font-size: 13px;
-  &:focus{
-    outline: none;
+  &:focus {
+    outline: none !important;;
+    box-shadow: none;
   }
 }

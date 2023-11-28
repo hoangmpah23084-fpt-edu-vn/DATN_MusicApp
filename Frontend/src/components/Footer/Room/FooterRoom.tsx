@@ -15,7 +15,7 @@ import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
-import { chekcSubString } from "@/constane/song.const";
+import { activeSong, chekcSubString } from "@/constane/song.const";
 import { Socket, io } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { isAdminGroup, memberGroup } from "@/pages/Admin/Interface/Room";
@@ -31,7 +31,6 @@ export const useStyles = makeStyles(() => createStyles({
 }));
 type Props = {
   ListData: ifSong[],
-  setSideBarRight: Dispatch<SetStateAction<boolean>>,
   idRoom ?: string,
   listMember ?: memberGroup[] | [],
 }
@@ -44,9 +43,7 @@ const FooterRoom = (props: Props) => {
   const [volume, setVolume] = useState<number>(50);
   const [repeat, setRepeat] = useState(false);
   const [randomSong, setRandomSong] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
-  const [admin, setAdmin] = useState<isAdminGroup>();
-  const [member, setMember] = useState<isAdminGroup>();
+  const [admin, setAdmin] = useState<isAdminGroup>()
   const audioRef = useRef<HTMLAudioElement>(null);
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
@@ -59,11 +56,7 @@ const FooterRoom = (props: Props) => {
   if (props.idRoom) {
     console.log("Đã Click Button");
     const preValue = stateSong;
-    console.log("1");
-
     dispatch(handChangeStateSong(!preValue))
-    console.log("2");
-
     if (!preValue) {
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
@@ -82,8 +75,7 @@ const FooterRoom = (props: Props) => {
     })
   }
   }, [dispatch, intervalId, stateSong])
-  // , props.idRoom, props.listMember
-  
+
   //todo handEventSocket.
   //! Send events to the Server
   useEffect(() => {
@@ -92,7 +84,6 @@ const FooterRoom = (props: Props) => {
       const user = localStorage.getItem('user');
       if (user) {
         const convert = JSON.parse(user);
-        setMember(convert)
         socket.emit('setUser', convert._id)
       }
       axios.get(`http://localhost:8080/api/room/${props.idRoom}`).then(({data}) =>  {
@@ -101,7 +92,6 @@ const FooterRoom = (props: Props) => {
       });
     }
   },[])
-  // dispatch, intervalId, stateSong, props.idRoom
 
   const SeconToMinuste = (secs: number) => {
     if (secs) {
@@ -114,13 +104,11 @@ const FooterRoom = (props: Props) => {
       return "00:00"
     }
   }
-
   //todo: Start Receive events returned from the Server
 
   useEffect(() => {
     if (props.idRoom) {
       socket.on("recivedHandTogg", (value) => {
-        console.log("Đã nhận value");
         if (value) {
           if (props.idRoom) {
             const preValue = stateSong;
@@ -142,8 +130,7 @@ const FooterRoom = (props: Props) => {
         }
       });
     }
-  },[dispatch, intervalId])
-  // dispatch, intervalId, stateSong
+  },[stateSong, dispatch])
   useEffect(() => {
     if (props.idRoom) {
       socket.on("emitNextServer", (value) => {
@@ -181,7 +168,7 @@ const FooterRoom = (props: Props) => {
             setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
           setRewindAudio(value.rewind as number);
         }
-      })
+      });
     }
   })
   // ,[dispatch, intervalId, stateSong, props.ListData, setCurrentTime, setRewindAudio]
@@ -207,7 +194,31 @@ const FooterRoom = (props: Props) => {
       })
     }
   },[])
-
+  useEffect(() => {
+    if (props.idRoom) {
+      socket.on('serverStartSongSideBar', value => {
+        if (value) {
+          const preValue = value.stateSong;
+          if (preValue) {
+            console.log("Lời chào từ Server");
+            console.log(stateSong + 'stoppppp');
+            // dispatch(handGetCurrentSong(value.song));
+            // dispatch(handGetCurrentSong(value.song));
+            // dispatch(handChangeStateSong(false))
+            activeSong(dispatch, value.song, "stopPause")
+          }else{
+            // activeSong(dispatch, value.song, 'stopPause')
+            console.log("Lời chào từ Server2");
+            console.log(stateSong + 'starttttt');
+            // dispatch(handGetCurrentSong(value.song));
+            // dispatch(handChangeStateSong(true))
+            activeSong(dispatch, value.song, 'start')
+          }
+        }
+      })
+    }
+  })
+  // ,[stateSong, dispatch]
 
   //todo: End Receive events returned from the Server
   useEffect(() => {
@@ -325,8 +336,6 @@ useEffect(() => {
     })
     setRepeat((value) => !value)
   }
-  // member && admin && 
-  // ${admin?._id == member?._id ? '' : 'invisible'}
   return (
     <div
       className={`fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer `}>
@@ -354,7 +363,7 @@ useEffect(() => {
                       <Link to={"#"}>
                         <div className="title-wrapper">
                           <span className="item-title title text-[14px] text-[#fff]">
-                            {chekcSubString(currentSong?.song_name as string)}
+                            {chekcSubString(currentSong?.song_name as string, 15)}
                           </span>
                         </div>
                       </Link>
@@ -506,8 +515,6 @@ useEffect(() => {
               "& .MuiTouchRipple-root": {
                 display: "none"
               }
-            }} onClick={() => {
-              props.setSideBarRight(value => !value);
             }} >
               <ListItemIconStyle sx={{
                 backgroundColor: "#9B4DE0", borderRadius: "5px",

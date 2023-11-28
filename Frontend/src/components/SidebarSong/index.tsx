@@ -53,7 +53,6 @@ const SidebarSong = (props: Props) => {
     }
   };
 
-
   return (
     <div
       className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"
@@ -169,7 +168,7 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[48%] ml-[2%] h-full">
                         <div className="w-full h-[50%]">
-                          <h1 className="font-semibold">{chekcSubString(item.song_name as string)}</h1>
+                          <h1 className="font-semibold">{chekcSubString(item.song_name as string, 15)}</h1>
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">

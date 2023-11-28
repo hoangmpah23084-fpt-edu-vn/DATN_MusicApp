@@ -41,6 +41,60 @@ export const createRoom = async (req, res) => {
   }
 };
 
+export const addSongInRoom = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await roomModel.findById(id).populate("listSong");
+    if (data.listSong.find((item) => item._id == req.body._id)) {
+      return res.status(400).json({
+        message: "Bài nhạc đã tồn tại",
+      });
+    }
+    await roomModel
+      .findByIdAndUpdate(id, {
+        $addToSet: { listSong: [req.body, ...data.listSong] },
+      })
+      .populate("listSong");
+    data.listSong = [req.body, ...data.listSong];
+    const currentData = await roomModel.findById(id).populate("listSong");
+    console.log(currentData);
+    return res.status(200).json({
+      message: "Thêm nhạc thành công",
+      data: currentData,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+export const deleteSongInRoom = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const formData = req.body;
+    const data = await roomModel.findById(id).populate("listSong");
+    if (data.listSong.length <= 1) {
+      return ré.status(400).json({
+        message: "Phòng chỉ có một bài hát không thể xóa",
+      });
+    }
+    await roomModel.findByIdAndUpdate(data._id, {
+      $pull: {
+        listSong: formData._id,
+      },
+    });
+    const currentData = await roomModel.findById(id).populate("listSong");
+    return res.status(200).json({
+      message: "Xóa bài hát thành công",
+      data: currentData,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const updateRoomChat = async (req, res) => {
   try {
     const getRoom = await roomModel.findById(req.params.idChat);
@@ -78,7 +132,7 @@ export const getRoom = async (req, res) => {
         path: "listMessages.id_sender",
         select: "fullName",
       });
-      if (result.listSong.length < 6) {
+      if (result.listSong.length < 1) {
         const song = (await songModel.find())
           .sort((a, b) => b.view_song - a.view_song)
           .slice(0, 6);

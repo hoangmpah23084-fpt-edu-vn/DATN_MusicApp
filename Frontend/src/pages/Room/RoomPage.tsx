@@ -21,6 +21,7 @@ import { handGetCurrentSong } from "@/store/Reducer/currentSong";
 import SidebarRoom from "@/components/Footer/Room/SidebarRoom";
 import FooterRoom from "@/components/Footer/Room/FooterRoom";
 import { toast } from "react-toastify";
+import { ifSong } from "../Admin/Interface/ValidateSong";
 
 type Props = {
   roomLive?: boolean;
@@ -35,9 +36,11 @@ const RoomPage = (props: Props) => {
   const [listMember, setlistMember] = useState<memberGroup[] | []>([]);
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
   const [stateSideBar, setStateSideBar] = useState<string>("trochuyen")
-  const roomDetail = useAppSelector((data) => data);
+  const [listSong, setListSong] = useState<ifSong[] | []>([])
   const current = useAppSelector(({ Song }) => Song);
+  const {currentSong} = useAppSelector(({currentSong}) => currentSong)
   const navigate = useNavigate()
+console.log(current);
 
   useEffect(() => {
     async function fetchData() {
@@ -54,6 +57,7 @@ const RoomPage = (props: Props) => {
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
       console.log(data);
+      setListSong(data.data.listSong);
       setListMess([...listMess, ...data.data.listMessages])
       setlistMember(data.data.memberGroup);
       socket.emit('joinRoom', data.data._id)
@@ -181,17 +185,17 @@ const RoomPage = (props: Props) => {
                     <div className="w-[40px] h-[40px]">
                       <img
                         className="rounded-[5px]"
-                        src="../../../public/Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
+                        src={`${currentSong?.song_image[0]}`}
                         alt=""
                       />
                     </div>
                   </div>
                   <div className="media-content grow shrink">
                     <div className="name text-[14px]">
-                      <span>Kill this love</span>
+                      <span>{currentSong?.song_name}</span>
                     </div>
                     <h3 className="subtitle text-[rgba(254,255,255,.6)]  text-[12px] uppercase">
-                      Blackpink
+                      {currentSong?.song_singer}
                     </h3>
                   </div>
                   <div className="media-right grow-0 shrink-0 flex items-center">
@@ -217,8 +221,7 @@ const RoomPage = (props: Props) => {
           {/* //todo SideBar Rooom */}
           <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar}  />
         </div>
-        <SidebarRoom sideBarRight={sideBarRight} />
-        {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} />}
+        {listMember.length > 0 && listSong.length > 0 && <FooterRoom ListData={listSong} idRoom={id} listMember={listMember} />}
       </div>
     </div>
   );
