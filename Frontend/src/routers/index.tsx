@@ -20,6 +20,7 @@ import Album from "@/pages/Album/Album";
 import RoomPage from "@/pages/Room/RoomPage";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
+import Playlist from "@/pages/Playlist/Playlist";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
       { index: true, element: <KhamPhaPage /> },
       { path: "mymusic/song/favorite", element: <FavouritePage /> },
       { path: "rooms", element: <Room /> },
+      { path: "playlist", element: <Playlist /> },
       { path: "playlist/:id", element: <PlaylistPage /> },
       { path: "album", element: <Album /> },
     ],
