@@ -52,11 +52,27 @@ export const createSong = async (req, res) => {
 };
 
 export const get_Songs = async (req, res) => {
+  const { _limit = 10, _page = 1,search } = req.query;
+  const options = {
+    limit: _limit,
+    page: _page,
+};
   try {
-    const data = await SongSchame.find();
+    let query = {};
+    if (search) {
+      query = {
+        $or: [
+          { song_name: { $regex: search, $options: 'i' } },
+          { song_singer: { $regex: search, $options: 'i' } },
+        ],
+      };
+    }
+    const data = await SongSchame.paginate(query,options);
+    const total = await SongSchame.find()
     return res.status(200).json({
       message: "Get song list Successfully",
-      data,
+      totalSongList: total.length,
+      data:data.docs,
     });
   } catch (error) {
     return res.status(500).json({
@@ -66,6 +82,7 @@ export const get_Songs = async (req, res) => {
 };
 
 export const get_Song = async (req, res) => {
+ 
   try {
     const { id } = req.params;
     const data = await SongSchame.findById(id);

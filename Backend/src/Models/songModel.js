@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import mongoosePaginate from "mongoose-paginate-v2";
 const SongSchame = new mongoose.Schema(
   {
     song_name: String,
@@ -36,4 +36,6 @@ const SongSchame = new mongoose.Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+SongSchame.plugin(mongoosePaginate);
 export default mongoose.model("Song", SongSchame, "Song");
