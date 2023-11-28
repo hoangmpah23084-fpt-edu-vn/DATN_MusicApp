@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoIosClose } from "react-icons/io";
 import { MdPlayCircleOutline } from "react-icons/md";
@@ -19,7 +19,7 @@ const Playlist = () => {
     const [playlistSelected, setPlaylistSelected] = useState<any>({})
 
 
-    const getPlaylist = useAppSelector(( {playlist} ) => playlist);
+    const getPlaylist = useAppSelector(({ playlist }) => playlist);
     const dispatch = useAppDispatch();
 
 
@@ -34,17 +34,18 @@ const Playlist = () => {
     }
 
     useEffect(() => {
-        dispatch(getPlaylists())      
+        dispatch(getPlaylists())
         fetchData()
     }, [])
 
     const handleShowModal = () => {
         setIsShowModalCreate(!isShowModalCreate)
     }
-    const handleShowModalDelele = (item?:any) => {
+    const handleShowModalDelele = (item?: any) => {
         setPlaylistSelected(item)
         setIsShowModalDelete(!isShowModalDelete)
     }
+    
 
     return (
         <div>
@@ -67,13 +68,43 @@ const Playlist = () => {
                         playlist?.map((item: any) => (
                             <div key={item?._id} className="cursor-pointer room-item--wrapper ">
                                 <div className="rounded-[5px]  overflow-hidden room-item--img relative">
-                                    <img
-                                        src="../../../public/Image/225101dd3c5da17b87872c320a8f6e07.jpg"
-                                        alt=""
-                                    />
-                                    <span className="absolute top-[50%] flex items-center justify-between left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 py-[2px] min-w-[220px]">
+                                    {
+                                        item.list_song.length > 3 ? <div className="grid grid-cols-2">
+                                            <div><img 
+
+                                                src={item?.list_song[0]?.song_image[0]}
+                                                alt=""
+                                            /></div>
+                                            <div><img 
+                                                src={item?.list_song[1]?.song_image[0]}
+                                                alt=""
+                                            /></div>
+                                            <div ><img 
+                                                src={item?.list_song[2]?.song_image[0]}
+                                                alt=""
+                                            /></div>
+                                            <div><img 
+                                                src={item?.list_song[3]?.song_image[0]}
+                                                alt=""
+                                            /></div>
+                                        </div>  :  item.list_song?.length >= 1 ?  <div>
+                                            <img 
+                                            className="w-full"
+                                               src={item?.list_song[0].song_image[0]}
+                                                alt=""
+                                            />
+                                        </div> : <div>
+                                            <img 
+                                            className="w-full opacity-[0.7]"
+                                               src="https://media.istockphoto.com/id/1175435360/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-ghi-ch%C3%BA-nh%E1%BA%A1c-minh-h%E1%BB%8Da-vect%C6%A1.jpg?s=612x612&w=0&k=20&c=3w_KqtRKtiQ_Dgwy0pqGrx8ys4WkktOSSfjS36VI10A="
+                                                alt=""
+                                            />
+                                        </div>
+                                    }
+
+                                    <span className="absolute top-[50%] flex items-center justify-between left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 py-[2px] w-full px-[32px]">
                                         <IoIosClose onClick={() => handleShowModalDelele(item)} className="text-white text-[32px] w-[40px] h-[40px] hover:rounded-[999px] hover:bg-[hsla(0,0%,100%,0.5)]" />
-                                    <Link to={`/playlist/${item._id}`}><MdPlayCircleOutline className="text-white text-[32px]" /></Link>   
+                                        <Link to={`/playlist/${item._id}`}><MdPlayCircleOutline className="text-white text-[60px]" /></Link>
                                         <HiOutlineDotsHorizontal className="text-white text-[32px] w-[40px] h-[40px] hover:rounded-[999px] hover:bg-[hsla(0,0%,100%,0.5)]" />
                                     </span>
                                 </div>
