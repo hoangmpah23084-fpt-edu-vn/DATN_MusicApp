@@ -3,7 +3,7 @@ import { playlistSchema } from "../Schemas/playlistSchema.js";
 
 const getAllPlaylist = async (req, res) => {
   try {
-    const playlists = await PlayList.find({id_user: req.user._id}).populate("id_user");
+    const playlists = await PlayList.find({id_user: req.user._id}).populate("id_user").populate("list_song");
     if (playlists.length == 0) {
       return res.json({
         message: "Không có playlist nào",
@@ -22,7 +22,7 @@ const getAllPlaylist = async (req, res) => {
 
 const getOnePlaylist = async (req, res) => {
   try {
-    const data = await PlayList.findById(req.params.id).populate("list_song")
+    const data = await PlayList.findById(req.params.id).populate("list_song").populate("id_user")
     if (!data) {
       return res.json({
         message: "playlist không tồn tại",
