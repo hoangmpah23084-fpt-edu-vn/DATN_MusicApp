@@ -54,10 +54,12 @@ const FooterRoom = (props: Props) => {
   
   const togglePlayPause = useCallback(() => {
   if (props.idRoom) {
-    console.log("Đã Click Button");
     const preValue = stateSong;
+    console.log(preValue);
     dispatch(handChangeStateSong(!preValue))
+    console.log(!preValue);
     if (!preValue) {
+      audioRef.current && audioRef.current.play();
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
         audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
@@ -65,13 +67,17 @@ const FooterRoom = (props: Props) => {
       setIntervalId(id);
     } else {
       if (intervalId !== null) {
+        console.log("STOP");
+        audioRef.current && audioRef.current.pause();
         clearInterval(intervalId);
         setIntervalId(null);
       }
     }
+    console.log(preValue);
     socket.emit("toggPlayPause", {
       idroom : props.idRoom,
-      listMember : props.listMember
+      listMember : props.listMember,
+      stateSong: preValue
     })
   }
   }, [dispatch, intervalId, stateSong])
@@ -111,26 +117,31 @@ const FooterRoom = (props: Props) => {
       socket.on("recivedHandTogg", (value) => {
         if (value) {
           if (props.idRoom) {
-            const preValue = stateSong;
-            dispatch(handChangeStateSong(!preValue))
+            const preValue = value.stateSong;
+            dispatch(handChangeStateSong(!value.stateSong))
             if (!preValue) {
+              document.addEventListener("click", () => {
+                audioRef.current && audioRef.current.play();
+              })
               const id = setInterval(() => {
                 audioRef.current && setRewindAudio(audioRef.current?.currentTime);
                 audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
               }, 1000);
               setIntervalId(id);
-        
             } else {
-              if (intervalId !== null) {
-                clearInterval(intervalId);
+              document.addEventListener("click", () => {
+                audioRef.current && audioRef.current.pause();
+                intervalId && clearInterval(intervalId);
                 setIntervalId(null);
-              }
+              })
+
             }
           }
         }
       });
     }
-  },[stateSong, dispatch])
+  },[stateSong, dispatch]);
+
   useEffect(() => {
     if (props.idRoom) {
       socket.on("emitNextServer", (value) => {
@@ -274,7 +285,7 @@ const FooterRoom = (props: Props) => {
 
 
 useEffect(() => {
-    stateSong && audioRef.current && stateSong ? audioRef.current.play() : audioRef.current?.pause()
+    // stateSong && audioRef.current && stateSong ? audioRef.current.play() : audioRef.current?.pause();
     if (stateSong) {
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
@@ -437,7 +448,7 @@ useEffect(() => {
               </div>
             </div>
             <div className="w-[100%] h-[30%] flex justify-center items-start">
-              <audio ref={audioRef} src={currentSong ? currentSong.song_link as string : ''} preload={"metadata"} autoPlay={false} />
+              <audio ref={audioRef} src={currentSong ? currentSong.song_link as string : ''} id="sliderFooter"  preload={"metadata"} autoPlay={false} />
               <div className="w-full h-[20px] flex justify-between">
                 <div className="w-[6%] h-full fjc">
                   <p>{currentTime || "00:00"}</p>
