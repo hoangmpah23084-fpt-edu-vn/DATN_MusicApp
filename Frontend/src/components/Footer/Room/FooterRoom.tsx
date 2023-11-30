@@ -33,10 +33,11 @@ type Props = {
   ListData: ifSong[],
   idRoom ?: string,
   listMember ?: memberGroup[] | [],
+  audioRef: React.RefObject<HTMLAudioElement>;
 }
 
 var socket: Socket<DefaultEventsMap, DefaultEventsMap>;
-const FooterRoom = (props: Props) => {
+const FooterRoom = ({listMember, ListData, audioRef, idRoom}: Props) => {
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState('');
   const [rewindAudio, setRewindAudio] = useState<number>(0);
@@ -44,16 +45,15 @@ const FooterRoom = (props: Props) => {
   const [repeat, setRepeat] = useState(false);
   const [randomSong, setRandomSong] = useState(false);
   const [admin, setAdmin] = useState<isAdminGroup>()
-  const audioRef = useRef<HTMLAudioElement>(null);
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
   const [intervalId, setIntervalId] = useState<number | null>(null);
-  const { currentSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
+  const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
   
   const togglePlayPause = useCallback(() => {
-  if (props.idRoom) {
+  if (idRoom) {
     const preValue = stateSong;
     console.log(preValue);
     dispatch(handChangeStateSong(!preValue))
@@ -75,8 +75,8 @@ const FooterRoom = (props: Props) => {
     }
     console.log(preValue);
     socket.emit("toggPlayPause", {
-      idroom : props.idRoom,
-      listMember : props.listMember,
+      idroom : idRoom,
+      listMember : listMember,
       stateSong: preValue
     })
   }
@@ -85,14 +85,14 @@ const FooterRoom = (props: Props) => {
   //todo handEventSocket.
   //! Send events to the Server
   useEffect(() => {
-    if(props.idRoom) {
+    if(idRoom) {
       socket = io("http://localhost:8080");
       const user = localStorage.getItem('user');
       if (user) {
         const convert = JSON.parse(user);
         socket.emit('setUser', convert._id)
       }
-      axios.get(`http://localhost:8080/api/room/${props.idRoom}`).then(({data}) =>  {
+      axios.get(`http://localhost:8080/api/room/${idRoom}`).then(({data}) =>  {
         setAdmin(data.data.isAdminGroup)
         socket.emit('joinRoom', data.data._id)
       });
@@ -113,10 +113,10 @@ const FooterRoom = (props: Props) => {
   //todo: Start Receive events returned from the Server
 
   useEffect(() => {
-    if (props.idRoom) {
+    if (idRoom) {
       socket.on("recivedHandTogg", (value) => {
         if (value) {
-          if (props.idRoom) {
+          if (idRoom) {
             const preValue = value.stateSong;
             dispatch(handChangeStateSong(!value.stateSong))
             if (!preValue) {
@@ -143,11 +143,11 @@ const FooterRoom = (props: Props) => {
   },[stateSong, dispatch]);
 
   useEffect(() => {
-    if (props.idRoom) {
+    if (idRoom) {
       socket.on("emitNextServer", (value) => {
         if (value) {
-          const findIndexSong = props.ListData.findIndex((item) => item._id == currentSong?._id)
-          const findSong = props.ListData.filter((_item, index) => index == findIndexSong + 1);
+          const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
+          const findSong = ListData.filter((_item, index) => index == findIndexSong + 1);
           dispatch(handGetCurrentSong(findSong[0]))
           localStorage.setItem("song",JSON.stringify(findSong[0]));
           dispatch(handChangeStateSong(false))
@@ -158,8 +158,8 @@ const FooterRoom = (props: Props) => {
       })
       socket.on('emitPrevServer', value => {
         if (value) {
-          const findIndexSong = props.ListData.findIndex((item) => item._id == currentSong?._id)
-          const findSong = props.ListData.filter((_item, index) => index == findIndexSong - 1);
+          const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
+          const findSong = ListData.filter((_item, index) => index == findIndexSong - 1);
           dispatch(handGetCurrentSong(findSong[0]))
           localStorage.setItem("song",JSON.stringify(findSong[0]));
           dispatch(handChangeStateSong(false)) 
@@ -182,10 +182,10 @@ const FooterRoom = (props: Props) => {
       });
     }
   })
-  // ,[dispatch, intervalId, stateSong, props.ListData, setCurrentTime, setRewindAudio]
+  // ,[dispatch, intervalId, stateSong, ListData, setCurrentTime, setRewindAudio]
 
   useEffect(() => {
-    if (props.idRoom) {
+    if (idRoom) {
       socket.on("randomSongServer", value => {
         if (value) {
           dispatch(handGetCurrentSong(value.song));
@@ -197,7 +197,7 @@ const FooterRoom = (props: Props) => {
   },[dispatch])
   
   useEffect(() => {
-    if (props.idRoom) {
+    if (idRoom) {
       socket.on("repeatServer", value => {
         if (value) {
           setRepeat(!value.state);
@@ -211,8 +211,8 @@ const FooterRoom = (props: Props) => {
   useEffect(() => {
     const handleAudioEnd = () => {
         if (audioRef.current?.ended && duration > 0 && !repeat && !randomSong) {
-            const findIndexSong = props.ListData.findIndex((item) => item._id === currentSong?._id);
-            const findSong = props.ListData.filter((_item, index) => index === findIndexSong + 1);
+            const findIndexSong = ListData.findIndex((item) => item._id === currentSong?._id);
+            const findSong = ListData.filter((_item, index) => index === findIndexSong + 1);
 
             if (findSong.length > 0) {
                 dispatch(handGetCurrentSong(findSong[0]));
@@ -228,9 +228,9 @@ const FooterRoom = (props: Props) => {
           if (getUser) {
             const parseUser = JSON.parse(getUser);
             if (admin && parseUser._id == admin._id) {
-              const randomSong1 = props.ListData[Math.round(Math.random() * (props.ListData.length - 1))];
+              const randomSong1 = ListData[Math.round(Math.random() * (ListData.length - 1))];
               socket.emit("randomSongClient", {
-                idroom : props.idRoom,
+                idroom : idRoom,
                 song : randomSong1
               });
               dispatch(handGetCurrentSong(randomSong1));
@@ -243,7 +243,6 @@ const FooterRoom = (props: Props) => {
           }
         }
     };
-
     const handleLoadedMetadata = () => {
         const audioDuration = audioRef.current?.duration;
         if (!isNaN(audioDuration as number) && (audioDuration as number) > 0) {
@@ -257,11 +256,11 @@ const FooterRoom = (props: Props) => {
         audioRef.current?.removeEventListener("ended", handleAudioEnd);
         audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-}, [audioRef, duration, repeat, randomSong, currentSong, dispatch, props.ListData]);
+}, [audioRef, duration, repeat, randomSong, currentSong, dispatch, ListData]);
 
 
 useEffect(() => {
-    stateSong && audioRef.current && stateSong ? audioRef.current.play() : audioRef.current?.pause();
+    // stateSong && audioRef.current && stateSong ? audioRef.current.play() : audioRef.current?.pause();
     if (stateSong) {
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
@@ -300,8 +299,8 @@ useEffect(() => {
     audioRef.current &&
       setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
     setRewindAudio(value as number);
-    props.idRoom && socket.emit("handRewindClient", {
-      idroom : props.idRoom,
+    idRoom && socket.emit("handRewindClient", {
+      idroom : idRoom,
       rewind : value
     })
   }
@@ -318,7 +317,7 @@ useEffect(() => {
   
   const handchangeRepeat = () => {
     socket.emit("repeatClient", {
-      idroom : props.idRoom,
+      idroom : idRoom,
       state : repeat
     })
     setRepeat((value) => !value)
@@ -397,7 +396,7 @@ useEffect(() => {
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
-                <PrevSongRoom ListData={props.ListData} socket={socket} idRoom={props.idRoom} />
+                <PrevSongRoom ListData={ListData} socket={socket} idRoom={idRoom} />
                 <div className="w-[24%] h-[100%] ">
                   <PauseListItemButtonStyle onClick={togglePlayPause} >
                     <PauseListItemIconStyle>
@@ -409,7 +408,7 @@ useEffect(() => {
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>
-                <NextSongRoom ListData={props.ListData} socket={socket} idRoom={props.idRoom} />
+                <NextSongRoom ListData={ListData} socket={socket} idRoom={idRoom} />
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle
                     onClick={handchangeRepeat}

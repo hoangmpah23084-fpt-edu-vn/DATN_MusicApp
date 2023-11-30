@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./css.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FiRadio } from "react-icons/fi";
@@ -34,12 +34,12 @@ const RoomPage = (props: Props) => {
   const dispatch = useAppDispatch();
   const [listMess, setListMess] = useState<listMessages[] | []>([]);
   const [listMember, setlistMember] = useState<memberGroup[] | []>([]);
-  const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
   const [stateSideBar, setStateSideBar] = useState<string>("trochuyen")
   const [listSong, setListSong] = useState<ifSong[] | []>([])
   const current = useAppSelector(({ Song }) => Song);
   const {currentSong} = useAppSelector(({currentSong}) => currentSong)
   const navigate = useNavigate();
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -218,9 +218,9 @@ const RoomPage = (props: Props) => {
             </div>
           </div>
           {/* //todo SideBar Rooom */}
-          <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar}  />
+          <SideBarRoom listMess={listMess} setListMess={setListMess} audioRef={audioRef} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar}  />
         </div>
-        {listMember.length > 0 && listSong.length > 0 && <FooterRoom ListData={listSong} idRoom={id} listMember={listMember} />}
+        {listMember.length > 0 && listSong.length > 0 && <FooterRoom ListData={listSong} audioRef={audioRef}  idRoom={id} listMember={listMember} />}
       </div>
     </div>
   );

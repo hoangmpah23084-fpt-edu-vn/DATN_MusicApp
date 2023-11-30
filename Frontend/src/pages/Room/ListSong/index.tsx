@@ -16,15 +16,17 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 import { Socket } from "socket.io-client";
+import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 
 type Props = {
   stateSong: boolean,
   currentSong: ifSong | null,
   listSong: ifSong[],
   socket : Socket,
-  setListSong: Dispatch<SetStateAction<ifSong[]>>
+  setListSong: Dispatch<SetStateAction<ifSong[]>>,
+  audioRef: React.RefObject<HTMLAudioElement>;
 }
-const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong}: Props) => {
+const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, audioRef}: Props) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const {id} = useParams();
@@ -50,39 +52,55 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong}:
         listSong: listSong,
       })
     }
-    const handToggSong = useCallback((item : ifSong) => {
+    
+    const handToggSong = useCallback(async (item : ifSong) => {
       const preValue = stateSong;
       const formData = {
         idroom : id,
         song : item,
         stateSong : stateSong
       }
+      // await dispatch(handChangeStateSong(!preValue));
+      await dispatch(handGetCurrentSong(item));
+      console.log(preValue);
+      
       if (preValue && currentSong?._id == item._id) {
         console.log("stop");
-        activeSong(dispatch, item, "stopPause")
+        dispatch(handChangeStateSong(false))
+        audioRef.current?.pause();
+      // activeSong(dispatch, item, "stopPause")
       }else{
         console.log("start");
-        activeSong(dispatch, item, "start")
+        dispatch(handChangeStateSong(true))
+        audioRef.current?.play();
+        // activeSong(dispatch, item, "start")
       }
       socket.emit('clientStartSongSideBar', formData)
-    },[dispatch, stateSong, currentSong]);
+    },[dispatch, stateSong]);
+    // currentSong
 
     useEffect(() => {
       if (id) {
-        socket.on('serverStartSongSideBar', value => {
+        socket.on('serverStartSongSideBar', async (value) => {
           if (value) {
             const preValue = value.stateSong;
+            await dispatch(handGetCurrentSong(value.song));
             if (preValue && currentSong?._id == value.song._id) {
               console.log("stop");
-              activeSong(dispatch, value.song, "stopPause")
+              dispatch(handChangeStateSong(false))
+              audioRef.current?.pause();
+              // activeSong(dispatch, value.song, "stopPause")
             }else{
               console.log("start");
-              activeSong(dispatch, value.song, 'start')
+              dispatch(handChangeStateSong(true))
+              audioRef.current?.play();
+              // activeSong(dispatch, value.song, 'start')
             }
           }
         })
       }
-    },[dispatch])
+    },[dispatch, stateSong])
+
     useEffect(() => {
       socket.on('serverDeleteSongInRoom', (value) => {
         if (value) {

@@ -15,10 +15,11 @@ type Props = {
   socket : Socket,
   setListMess : React.Dispatch<React.SetStateAction<listMessages[]>>,
   setStateSideBar: React.Dispatch<React.SetStateAction<string>>,
-  stateSideBar: string
+  stateSideBar: string,
+  audioRef: React.RefObject<HTMLAudioElement>;
 }
 
-const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSideBar }: Props) => {
+const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSideBar, audioRef }: Props) => {
   const [listSong, setListSong] = useState<ifSong[] | []>([]);
   const {id} = useParams();
   const { stateSong,currentSong } = useAppSelector(({ currentSong }) => currentSong);
@@ -49,7 +50,7 @@ const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSide
       stateSideBar == 'trochuyen' ? <Message listMess={listMess} socket={socket} setListMess={setListMess} /> : ''
     }
     {
-      stateSideBar == 'listsong' ? <ListSongInRoom stateSong={stateSong} socket={socket} currentSong={currentSong} listSong={listSong}  setListSong={setListSong} /> : ''
+      stateSideBar == 'listsong' ? <ListSongInRoom audioRef={audioRef} stateSong={stateSong} socket={socket} currentSong={currentSong} listSong={listSong}  setListSong={setListSong} /> : ''
     }
     {
       stateSideBar == 'search' ? <SearchSongInRoom listSong={listSong} socket={socket} setListSong={setListSong} /> : ''
