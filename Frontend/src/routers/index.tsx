@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
     element: <Signin />
   },
   {
-    
+
     path: "/",
     element: <LayoutClient />,
     children: [
@@ -45,7 +45,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/liveRoom/:id", element: <RoomPage/>
+    path: "/liveRoom/:id", element: <RoomPage />
   },
   //todo BE
   {
@@ -54,13 +54,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element:  <DashBoard />,
-      },
-      {
-        path: "dashboard",
-        element:  <div>
-        Hehe
-      </div>,
+        element: <DashBoard />,
       },
       {
         path: "song",
@@ -80,15 +74,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "artist",
-        element: <Artist/>,
+        element: <Artist />,
       },
       {
         path: "add-artist",
-        element: <AddArtist/>,
+        element: <AddArtist />,
       },
       {
         path: "update-artist/:id",
-        element: <UpdateArtist/>,
+        element: <UpdateArtist />,
       }
       ,
       {
@@ -101,8 +95,8 @@ export const router = createBrowserRouter([
         element: <ListGenre />
       },
       {
-        path : "UpdateGenre/:id",
-        element : <UpdateGenre />
+        path: "UpdateGenre/:id",
+        element: <UpdateGenre />
       }
     ],
   },

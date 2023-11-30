@@ -9,8 +9,8 @@ export const albumValidate = joi.object({
     "string.empty": 'Trường "List Song" không được để trống',
     "any.required": 'Trường "List Song" là bắt buộc',
   }),
-  id_artist: joi.string().required().messages({
-    "string.empty": 'Trường "id_artist" không được để trống',
-    "any.required": 'Trường "id_artist" là bắt buộc',
+  id_singer: joi.string().required().messages({
+    "string.empty": 'Trường "id_singer" không được để trống',
+    "any.required": 'Trường "id_singer" là bắt buộc',
   }),
 });

@@ -1,4 +1,3 @@
-import React from 'react'
 import Title from '../Title/index'
 import { Box } from '@mui/material'
 
@@ -7,10 +6,10 @@ import { Box } from '@mui/material'
 const DashBoard = () => {
   return (
     <>
-    <Title Title="DashBoard" />
-    <Box sx={{ width : "100%", minHeight : 800 }} >
+      <Title Title="DashBoard" />
+      <Box sx={{ width: "100%", minHeight: 800 }} >
 
-    </Box>
+      </Box>
     </>
   )
 }
