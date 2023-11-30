@@ -18,7 +18,6 @@ export interface ifSong {
   song_link: string[] | string | undefined;
   song_image: string[];
   song_singer: string;
-  song_musian: string;
   song_lyric: string
   view_song: number,
   total_like: number,
@@ -31,7 +30,6 @@ export interface ifSongAdmin {
   song_link: string[] | string | undefined;
   song_image: string[] | undefined;
   song_singer: string;
-  song_lyric: string
   id_Genre: string; // Make it required
   id_Artists: string; // Make it required
   song_title: string; // Make it required

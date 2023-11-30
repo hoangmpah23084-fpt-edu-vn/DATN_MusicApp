@@ -13,6 +13,7 @@
   /* width */
 ::-webkit-scrollbar {
     width: 5px;
+
   }
   
   /* Track */
@@ -24,7 +25,7 @@
   
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #ccc;
+    background: #ccc !important;
     border-radius: 10px;
   }
   
@@ -40,7 +41,8 @@
   
   /* Track (the area on the sides of the scrollbar) */
   ::-webkit-scrollbar-track {
-    background: #ccc; /* Light grey */
+    background: #ebebeb !important; /* Light grey */
+
   }
   
   /* Handle (the draggable part of the scrollbar) */
@@ -52,5 +54,8 @@
   /* On hover, don't forget this */
   ::-webkit-scrollbar-thumb:hover {
     background: #555; /* Dark grey */
-    cursor: pointer;
+    cursor: pointer !important;
   }
+
+
+  /* table */

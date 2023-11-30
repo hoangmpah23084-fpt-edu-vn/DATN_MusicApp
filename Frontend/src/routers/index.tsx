@@ -57,12 +57,6 @@ export const router = createBrowserRouter([
         element: <DashBoard />,
       },
       {
-        path: "dashboard",
-        element: <div>
-          Thóng kê
-        </div>,
-      },
-      {
         path: "song",
         element: <AddSong />,
       },

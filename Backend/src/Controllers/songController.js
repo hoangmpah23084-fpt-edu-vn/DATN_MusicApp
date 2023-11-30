@@ -1,6 +1,6 @@
 import { Validate_Song } from "../Schemas/songSchemas.js";
 import SongSchame from "../Models/songModel.js";
-import Artist from "../Models/artistModel.js";
+import Singer from "../Models/singer.js";
 import Genre from "../Models/genreModel.js";
 
 export const createSong = async (req, res) => {
@@ -19,8 +19,8 @@ export const createSong = async (req, res) => {
       });
     }
     /* update artist */
-    await Artist.findByIdAndUpdate(
-      data.id_Artists,
+    await Singer.findByIdAndUpdate(
+      data.id_Singer,
       {
         $addToSet: { songs: data._id },
       },
@@ -68,6 +68,7 @@ export const get_Songs = async (req, res) => {
       };
     }
     const data = await SongSchame.paginate(query,options);
+    console.log(data);
     const total = await SongSchame.find()
     return res.status(200).json({
       message: "Get song list Successfully",
@@ -112,11 +113,11 @@ export const update_Song = async (req, res) => {
     );
     /* update artist */
     //todo loai bỏ id song khỏi Artist
-    await Artist.findByIdAndUpdate(data.id_Artists, {
+    await Singer.findByIdAndUpdate(data.id_Singer, {
       $pull: { songs: data._id },
     });
-    const artistId = data.id_Artists;
-    await Artist.findByIdAndUpdate(artistId, {
+    const SingerId = data.id_Singer;
+    await Singer.findByIdAndUpdate(SingerId, {
       $addToSet: { songs: data._id },
     });
     //todo loai bỏ id song khỏi genre
@@ -149,7 +150,7 @@ export const deleteSong = async (req, res) => {
     }
 
     /* delete song in artist */
-    await Artist.findByIdAndUpdate(data.id_Artists, {
+    await Singer.findByIdAndUpdate(data.id_Singer, {
       $pull: { songs: data._id },
     });
 
