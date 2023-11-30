@@ -60,10 +60,9 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
         song : item,
         stateSong : stateSong
       }
-      // await dispatch(handChangeStateSong(!preValue));
       await dispatch(handGetCurrentSong(item));
       console.log(preValue);
-      
+      await dispatch(handChangeStateSong(!preValue));
       if (preValue && currentSong?._id == item._id) {
         console.log("stop");
         dispatch(handChangeStateSong(false))
@@ -85,6 +84,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
           if (value) {
             const preValue = value.stateSong;
             await dispatch(handGetCurrentSong(value.song));
+            await dispatch(handChangeStateSong(!preValue));
             if (preValue && currentSong?._id == value.song._id) {
               console.log("stop");
               dispatch(handChangeStateSong(false))

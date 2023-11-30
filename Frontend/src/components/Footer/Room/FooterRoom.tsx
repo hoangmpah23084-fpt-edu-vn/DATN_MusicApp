@@ -206,14 +206,12 @@ const FooterRoom = ({listMember, ListData, audioRef, idRoom}: Props) => {
     }
   },[])
   // ,[stateSong, dispatch]
-
   //todo: End Receive events returned from the Server
   useEffect(() => {
     const handleAudioEnd = () => {
         if (audioRef.current?.ended && duration > 0 && !repeat && !randomSong) {
             const findIndexSong = ListData.findIndex((item) => item._id === currentSong?._id);
             const findSong = ListData.filter((_item, index) => index === findIndexSong + 1);
-
             if (findSong.length > 0) {
                 dispatch(handGetCurrentSong(findSong[0]));
                 localStorage.setItem('song', JSON.stringify(findSong[0]));
@@ -249,11 +247,21 @@ const FooterRoom = ({listMember, ListData, audioRef, idRoom}: Props) => {
             setDuration(audioDuration as number);
         }
     };
-    audioRef.current && audioRef.current.addEventListener("ended", handleAudioEnd);
+    audioRef.current && audioRef.current.addEventListener("ended", () => {
+      handleAudioEnd();
+      setInterval(() => {
+        audioRef.current?.play();
+      },1000)
+    });
     audioRef.current && audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
 
     return () => {
-        audioRef.current?.removeEventListener("ended", handleAudioEnd);
+        audioRef.current?.removeEventListener("ended", () => {
+          handleAudioEnd();
+          setInterval(() => {
+            audioRef.current?.play();
+          },1000)
+        });
         audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
 }, [audioRef, duration, repeat, randomSong, currentSong, dispatch, ListData]);
@@ -286,7 +294,6 @@ useEffect(() => {
   const handChangeVolume = (_event: any, value: any) => {
     setVolume(value as number);
   };
-
   const handRewindAudio = ({value}: any) => {
     rewindRef.current &&
     rewindRef.current.addEventListener("mouseup", () => {
