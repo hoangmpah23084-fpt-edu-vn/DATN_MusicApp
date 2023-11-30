@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { CiSearch } from "react-icons/ci";
 import axios from 'axios';
 import { ifSong } from '@/pages/Admin/Interface/ValidateSong';
@@ -7,24 +7,28 @@ import { useParams } from 'react-router-dom';
 import '../css.scss'
 import { toast } from 'react-toastify';
 import { Socket } from 'socket.io-client';
+import { useDebouncedCallback } from 'use-debounce';
 
 type Props = {
   listSong: ifSong[],
   socket : Socket,
   setListSong: Dispatch<SetStateAction<ifSong[]>>
 }
-
-const SearchSongInRoom = ({listSong, setListSong}: Props) => {
-  const [listDataSearch , setListDataSearch] = useState<ifSong[] | []>([]);
-  const {id} = useParams();
-  const hanSearchSong = async (value : string) => {
-    console.log(value);
-    if ((value.length as number) == 0) {
+const SearchSongInRoom = ({listSong, setListSong, socket}: Props) => {
+const [listDataSearch , setListDataSearch] = useState<ifSong[] | []>([]);
+  
+const debounced = useDebouncedCallback(
+  async (value) => {
+        if ((value.length as number) == 0) {
       await axios.get(`http://localhost:8080/api/Song?_limit=8&search=${value}`).then(({data}) => setListDataSearch(data.data));
     }else{
       await axios.get(`http://localhost:8080/api/Song?_limit=100&search=${value}`).then(({data}) => setListDataSearch(data.data));
     }
-  }
+  },
+  500,
+  { maxWait: 2000 }
+);
+  const {id} = useParams();
   const handAddSong = async (item : ifSong) => {
     if (listSong.find((element : ifSong) => element._id == item._id)) {
       toast.warning("Bài hát Đã Tồn tại")
@@ -35,12 +39,25 @@ const SearchSongInRoom = ({listSong, setListSong}: Props) => {
         toast.success(data.message);
       });
     }
+    socket.emit('addSongInListRoom', {
+      idroom: id,
+      song: item,
+      listSong: listSong,
+    })
   }
+  useEffect(() => {
+    if (id) {
+      socket.on('serverAddSongInListRoom', (value) => {
+        setListSong((prevList) => [...prevList, value.song]);
+      });
+    }
+  }, [socket, id, setListSong]);
+
   return (
     <div className='w-full flex flex-col'>
       <div className='w-full flex justify-center items-center'>
         <CiSearch className="bg-[#2F2739] h-full w-[40px] p-2 rounded-l-full" />
-        <input type="text" onChange={(e) => hanSearchSong(e.target.value)} className='w-full h-full bg-[#2F2739] text-white rounded-r-full outline-none focus:outline-none border-none px-[3px] OutlineSearch font-inter'
+        <input type="text" onChange={(e) => debounced(e.target.value)} className='w-full h-full bg-[#2F2739] text-white rounded-r-full outline-none focus:outline-none border-none px-[3px] OutlineSearch font-inter'
          autoComplete="off"
         placeholder='Search...' />
       </div>
@@ -48,7 +65,7 @@ const SearchSongInRoom = ({listSong, setListSong}: Props) => {
         {
            listDataSearch.length > 0 && listDataSearch.map((item, index) => {
             return <div className='w-full flex' key={index}>
-            <div className={`w-full h-[60px] flex justify-center rounded-md items-center hover:bg-[#b4b4b32d] cursor-pointer wall`} onClick={void handAddSong(item)}>
+            <div className={`w-full h-[60px] flex justify-center rounded-md items-center hover:bg-[#b4b4b32d] cursor-pointer wall`} onClick={() => handAddSong(item)}>
                <div className="w-[95%] h-[80%] flex justify-between ">
                     <div className="w-[17%] h-full">
                     <div className="w-full h-full flex justify-start items-center relative wallSong">

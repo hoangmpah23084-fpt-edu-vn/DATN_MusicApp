@@ -45,6 +45,13 @@ const ConnectSocket = (server) => {
       console.log(value);
       socket.to(value.idroom).emit("serverStartSongSideBar", value);
     });
+    socket.on("deleteSongInRoom", (value) => {
+      console.log(value);
+      socket.to(value.idroom).emit("serverDeleteSongInRoom", value);
+    });
+    socket.on("addSongInListRoom", (value) => {
+      socket.to(value.idroom).emit("serverAddSongInListRoom", value);
+    });
 
     socket.on("newMessage", async (value) => {
       const getOneRoom = await roomModel

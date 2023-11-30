@@ -39,8 +39,7 @@ const RoomPage = (props: Props) => {
   const [listSong, setListSong] = useState<ifSong[] | []>([])
   const current = useAppSelector(({ Song }) => Song);
   const {currentSong} = useAppSelector(({currentSong}) => currentSong)
-  const navigate = useNavigate()
-console.log(current);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
@@ -76,7 +75,7 @@ console.log(current);
         leaveRoom(id as string);
       }
     }
-  }, [])
+  }, [setListSong])
   useEffect(() => {
     socket.on("messRecived", (value) => {
       setListMess([...listMess, value])

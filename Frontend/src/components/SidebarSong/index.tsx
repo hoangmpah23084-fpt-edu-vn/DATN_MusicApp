@@ -118,7 +118,7 @@ const SidebarSong = (props: Props) => {
           <div className="w-full h-[100%] overflow-y-scroll">
             {renderListSong &&
               renderListSong.song?.length > 0 &&
-              renderListSong.song.map((item: ifSong, index) => {
+              renderListSong.song.map((item: ifSong, index : number) => {
                 return (
                   <div
                   key={index}

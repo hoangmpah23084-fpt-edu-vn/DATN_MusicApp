@@ -9,12 +9,12 @@ import {
 import { useStyles } from '@/components/Footer';
 import { activeSong, chekcSubString } from '@/constane/song.const';
 import { FaRegTrashCan } from "react-icons/fa6";
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ifSong } from '@/pages/Admin/Interface/ValidateSong';
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Dispatch, SetStateAction, useCallback } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -24,43 +24,73 @@ type Props = {
   socket : Socket,
   setListSong: Dispatch<SetStateAction<ifSong[]>>
 }
-const ListSongInRoom = ({stateSong, currentSong, socket,listSong, setListSong}: Props) => {
+const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong}: Props) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
-    
     const {id} = useParams();
+
     const handDeleteSongInRoom = (item : ifSong) => {
-      axios.put<string , any>(`http://localhost:8080/api/dlSongInRoom/${id}`,item).then(({data}) => {
-        if (data.message.trim().toLowerCase().includes('Phòng chỉ có một bài hát không thể xóa'.trim().toLowerCase())) {
-          toast.warning(data.message)
-        }else{
-          setListSong(data.data.listSong);
-          toast.success(data.message)
-        }
+      if (item._id == currentSong?._id) {
+        toast.warning('Không thẻ xóa bài hát được chọn')
+        return;
+      }else{
+        axios.put<string , any>(`http://localhost:8080/api/dlSongInRoom/${id}`,item).then(({data}) => {
+          if (data.message.trim().toLowerCase().includes('Phòng chỉ có một bài hát không thể xóa'.trim().toLowerCase())) {
+            toast.warning(data.message)
+            return;
+          }else{
+            setListSong(data.data.listSong);
+            toast.success(data.message)
+          }
+        })
+      }
+      socket.emit('deleteSongInRoom', {
+        idroom: id,
+        songItem : item,
+        listSong: listSong,
       })
     }
     const handToggSong = useCallback((item : ifSong) => {
-      const currentState = stateSong;
-      if (currentState) {
-        console.log("Giá trị khi là true ");
-        const formData = {
-          idroom : id,
-          song : item,
-          stateSong : stateSong
-        }
-        activeSong(dispatch, item, "stopPause")
-        socket.emit('clientStartSongSideBar', formData)
-      }else{
-        console.log("Giá trị khi là false ");
-        const formData = {
-          idroom : id,
-          song : item,
-          stateSong : stateSong
-        }
-        activeSong(dispatch, item, 'start')
-        socket.emit('clientStartSongSideBar', formData)
+      const preValue = stateSong;
+      const formData = {
+        idroom : id,
+        song : item,
+        stateSong : stateSong
       }
+      if (preValue && currentSong?._id == item._id) {
+        console.log("stop");
+        activeSong(dispatch, item, "stopPause")
+      }else{
+        console.log("start");
+        activeSong(dispatch, item, "start")
+      }
+      socket.emit('clientStartSongSideBar', formData)
     },[dispatch, stateSong, currentSong]);
+
+    useEffect(() => {
+      if (id) {
+        socket.on('serverStartSongSideBar', value => {
+          if (value) {
+            const preValue = value.stateSong;
+            if (preValue && currentSong?._id == value.song._id) {
+              console.log("stop");
+              activeSong(dispatch, value.song, "stopPause")
+            }else{
+              console.log("start");
+              activeSong(dispatch, value.song, 'start')
+            }
+          }
+        })
+      }
+    },[dispatch])
+    useEffect(() => {
+      socket.on('serverDeleteSongInRoom', (value) => {
+        if (value) {
+          const filterData = value.listSong.filter((item : ifSong) => item._id != value.songItem._id);
+          setListSong(filterData)
+        }
+      })
+    },[])
     
   return (
     <div className='w-full h-full overflow-y-scroll bg-[#130C1C] rounded-md p-2'>
@@ -119,9 +149,9 @@ const ListSongInRoom = ({stateSong, currentSong, socket,listSong, setListSong}: 
                         <div className="w-1/2">
                         </div>
                         <div className="w-1/2">
-                          <ListItemButtonStyle>
+                          <ListItemButtonStyle onClick={() => handDeleteSongInRoom(item)} >
                             <ListItemIconStyle>
-                              <FaRegTrashCan className='text-white text-[15px]' onClick={() => handDeleteSongInRoom(item)} />
+                              <FaRegTrashCan className='text-white text-[15px]'/>
                             </ListItemIconStyle>
                           </ListItemButtonStyle>
                         </div>
@@ -136,7 +166,3 @@ const ListSongInRoom = ({stateSong, currentSong, socket,listSong, setListSong}: 
 }
 
 export default ListSongInRoom
-
-// ${dataLocal && dataLocal?._id == item._id
-//     ? "bg-[#9B4DE0]"
-//     : "hover:bg-[#b4b4b32d]"

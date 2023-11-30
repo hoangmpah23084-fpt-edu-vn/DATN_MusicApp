@@ -21,11 +21,13 @@ type Props = {
 const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSideBar }: Props) => {
   const [listSong, setListSong] = useState<ifSong[] | []>([]);
   const {id} = useParams();
-  const { stateSong, dataLocal,currentSong } = useAppSelector(({ currentSong }) => currentSong);
+  const { stateSong,currentSong } = useAppSelector(({ currentSong }) => currentSong);
   useEffect(() => {
       if (id) {
       axios.get(`http://localhost:8080/api/room/${id}`).then(({data}) => setListSong(data.data.listSong))
       }
+      console.log("RENDER AGAIN DATA WHEN SET STATE");
+      
   },[setListSong])
   
   return (
@@ -43,7 +45,6 @@ const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSide
         </li>
       </ul>
     </div>
-    {/* message */}
     {
       stateSideBar == 'trochuyen' ? <Message listMess={listMess} socket={socket} setListMess={setListMess} /> : ''
     }

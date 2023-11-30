@@ -48,7 +48,7 @@ const FooterRoom = (props: Props) => {
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
   const [intervalId, setIntervalId] = useState<number | null>(null);
-  const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
+  const { currentSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
   
@@ -205,30 +205,6 @@ const FooterRoom = (props: Props) => {
       })
     }
   },[])
-  useEffect(() => {
-    if (props.idRoom) {
-      socket.on('serverStartSongSideBar', value => {
-        if (value) {
-          const preValue = value.stateSong;
-          if (preValue) {
-            console.log("Lời chào từ Server");
-            console.log(stateSong + 'stoppppp');
-            // dispatch(handGetCurrentSong(value.song));
-            // dispatch(handGetCurrentSong(value.song));
-            // dispatch(handChangeStateSong(false))
-            activeSong(dispatch, value.song, "stopPause")
-          }else{
-            // activeSong(dispatch, value.song, 'stopPause')
-            console.log("Lời chào từ Server2");
-            console.log(stateSong + 'starttttt');
-            // dispatch(handGetCurrentSong(value.song));
-            // dispatch(handChangeStateSong(true))
-            activeSong(dispatch, value.song, 'start')
-          }
-        }
-      })
-    }
-  })
   // ,[stateSong, dispatch]
 
   //todo: End Receive events returned from the Server
@@ -285,7 +261,7 @@ const FooterRoom = (props: Props) => {
 
 
 useEffect(() => {
-    // stateSong && audioRef.current && stateSong ? audioRef.current.play() : audioRef.current?.pause();
+    stateSong && audioRef.current && stateSong ? audioRef.current.play() : audioRef.current?.pause();
     if (stateSong) {
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
