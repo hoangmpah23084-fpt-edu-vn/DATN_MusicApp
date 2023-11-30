@@ -1,6 +1,6 @@
 import { albumValidate } from "../Schemas/albumSchema.js";
 import Album from "../Models/albumModel.js";
-import Artist from "../Models/artistModel.js";
+import Singer from "../Models/singer.js";
 import songModel from "../Models/songModel.js";
 
 export const create_Album = async (req, res) => {
@@ -15,8 +15,8 @@ export const create_Album = async (req, res) => {
     if (!data) {
       return res.status(400).json({ message: "Create Album Failed" });
     }
-    await Artist.findByIdAndUpdate(
-      data.id_artist,
+    await Singer.findByIdAndUpdate(
+      data.id_singer,
       {
         $addToSet: { album: data._id },
       },
@@ -48,9 +48,9 @@ export const getAll_Album = async (req, res) => {
 
 export const get_AlbumById = async (req, res) => {
   try {
-    const data = await Album.findById(req.params.id).populate("id_artist");
+    const data = await Album.findById(req.params.id).populate("id_singer");
     const dataListSong = [];
-    for (const item of data.id_artist[0].songs) {
+    for (const item of data.id_singer[0].songs) {
       const findData = await songModel.findById(item);
       dataListSong.push(findData);
     }
@@ -77,10 +77,10 @@ export const update_Album = async (req, res) => {
         message: "Get Album By Id Failed",
       });
     }
-    await Artist.findByIdAndUpdate(album.id_artist, {
+    await Singer.findByIdAndUpdate(album.id_singer, {
       $pull: album._id,
     });
-    await Artist.findByIdAndUpdate(album.id_artist, {
+    await Singer.findByIdAndUpdate(album.id_singer, {
       $addToSet: album._id,
     });
     return res.status(200).json({

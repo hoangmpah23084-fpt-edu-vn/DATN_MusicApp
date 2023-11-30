@@ -121,7 +121,7 @@ const SidebarSong = (props: Props) => {
               renderListSong.song.map((item: ifSong, index : number) => {
                 return (
                   <div
-                  key={index}
+                    key={index}
                     className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
                       ? "bg-[#9B4DE0]"
                       : "hover:bg-[#b4b4b32d]"

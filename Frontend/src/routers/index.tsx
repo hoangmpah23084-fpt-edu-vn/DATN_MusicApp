@@ -20,6 +20,7 @@ import Album from "@/pages/Album/Album";
 import RoomPage from "@/pages/Room/RoomPage";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
+import Playlist from "@/pages/Playlist/Playlist";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -31,19 +32,20 @@ export const router = createBrowserRouter([
     element: <Signin />
   },
   {
-    
+
     path: "/",
     element: <LayoutClient />,
     children: [
       { index: true, element: <KhamPhaPage /> },
       { path: "mymusic/song/favorite", element: <FavouritePage /> },
       { path: "rooms", element: <Room /> },
+      { path: "playlist", element: <Playlist /> },
       { path: "playlist/:id", element: <PlaylistPage /> },
       { path: "album", element: <Album /> },
     ],
   },
   {
-    path: "/liveRoom/:id", element: <RoomPage/>
+    path: "/liveRoom/:id", element: <RoomPage />
   },
   //todo BE
   {
@@ -52,13 +54,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element:  <DashBoard />,
-      },
-      {
-        path: "dashboard",
-        element:  <div>
-        Hehe
-      </div>,
+        element: <DashBoard />,
       },
       {
         path: "song",
@@ -78,15 +74,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "artist",
-        element: <Artist/>,
+        element: <Artist />,
       },
       {
         path: "add-artist",
-        element: <AddArtist/>,
+        element: <AddArtist />,
       },
       {
         path: "update-artist/:id",
-        element: <UpdateArtist/>,
+        element: <UpdateArtist />,
       }
       ,
       {
@@ -99,8 +95,8 @@ export const router = createBrowserRouter([
         element: <ListGenre />
       },
       {
-        path : "UpdateGenre/:id",
-        element : <UpdateGenre />
+        path: "UpdateGenre/:id",
+        element: <UpdateGenre />
       }
     ],
   },

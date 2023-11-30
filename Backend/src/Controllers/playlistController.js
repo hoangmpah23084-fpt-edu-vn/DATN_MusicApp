@@ -3,7 +3,7 @@ import { playlistSchema } from "../Schemas/playlistSchema.js";
 
 const getAllPlaylist = async (req, res) => {
   try {
-    const playlists = await PlayList.find();
+    const playlists = await PlayList.find({id_user: req.user._id}).populate("id_user").populate("list_song");
     if (playlists.length == 0) {
       return res.json({
         message: "Không có playlist nào",
@@ -11,7 +11,7 @@ const getAllPlaylist = async (req, res) => {
     }
     return res.status(200).json({
       message: "Danh sách playlist",
-      playlists,
+     data: playlists,
     });
   } catch (error) {
     return res.status(500).json({
@@ -22,7 +22,7 @@ const getAllPlaylist = async (req, res) => {
 
 const getOnePlaylist = async (req, res) => {
   try {
-    const data = await PlayList.findById(req.params.id);
+    const data = await PlayList.findById(req.params.id).populate("list_song").populate("id_user")
     if (!data) {
       return res.json({
         message: "playlist không tồn tại",
@@ -51,7 +51,12 @@ const createPlaylist = async (req, res) => {
       });
     }
 
-    const data = await PlayList.create(req.body);
+    const params = {
+      ...req.body,
+      id_user: req.user._id
+    }
+
+    const data = await PlayList.create(params);
     if (!data) {
       return res.status(404).json({
         message: "Tạo playlist thất bại ",
@@ -132,6 +137,10 @@ const addSongToPlaylist = async (req, res) => {
         message: "Bài hát đã có trong playlist",
       });
     }
+
+    console.log(
+      req.params.id,id_song
+    );
 
     const data = await PlayList.findByIdAndUpdate(req.params.id, {
       $addToSet: {

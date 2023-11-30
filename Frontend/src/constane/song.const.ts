@@ -20,10 +20,11 @@ export const activeSong = (
     }
 };
 
-export const chekcSubString = (text: string, length: number) => {
+
+export const chekcSubString = (text: string, size?: number) => {
     if (text) {
-        let newText = text.substring(0, length);
-        if (text.length > length) {
+        let newText = text.substring(0, size ? size : 10);
+        if (text.length > 10) {
             newText = newText + "...";
         }
         return newText;

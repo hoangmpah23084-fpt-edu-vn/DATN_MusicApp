@@ -134,7 +134,7 @@ const ItemSong = ({ item }: props) => {
                   className="z-40 absolute w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
                   onClick={() => setModal(false)}
                 ></div>
-                <ModalSongMenu />
+                <ModalSongMenu song={item} />
               </>
             )}
 
