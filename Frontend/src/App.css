@@ -56,6 +56,10 @@
     background: #555; /* Dark grey */
     cursor: pointer !important;
   }
-
-
   /* table */
+
+
+  /* form */
+  .ant-form-item .ant-form-item-control-input{
+    min-width: 470px
+  }

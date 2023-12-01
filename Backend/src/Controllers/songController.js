@@ -52,10 +52,13 @@ export const createSong = async (req, res) => {
 };
 
 export const get_Songs = async (req, res) => {
-  const { _limit = 10, _page = 1,search } = req.query;
+  const { _limit = 10, _page = 1,search ,_sort = "createdAt", _order = "asc"} = req.query;
   const options = {
     limit: _limit,
     page: _page,
+    sort:{
+      [_sort]: _order === "desc" ? -1 : 1,
+    }
 };
   try {
     let query = {};
