@@ -11,7 +11,7 @@ const BXHSong = (props: Props) => {
     <>
     <div className="chanel-section mt-12 ">
     <div className="chanel-section-title flex justify-between mb-[20px]">
-      <h3 className="text-xl font-semibold capitalize">
+      <h3 className="text-xl font-semibold capitalize text-[#3BC8E7]">
         BXH Nhạc mới
       </h3>
     </div>

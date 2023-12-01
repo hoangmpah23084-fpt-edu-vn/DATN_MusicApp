@@ -42,7 +42,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
       </nav>
       <div className=" mb-[16px]">
         <ul className=" ">
-          <li className="bg-[#3a3244] border-l-2 border-l-[#9b4de0]">
+          <li className="bg-[#3a3244] border-l-2 border-l-[#3BC8E7]">
             <Link
               to={"/"}
               className="flex items-center leading-[20px] py-[6px] px-[21px]"
@@ -141,14 +141,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
           </div> */}
 
           {/* Đã đăng nhập */}
-          <div className="py-[15px] px-[8px] mx-[20px] my-[10px] text-center text-[#fff] bg-gradient-to-r from-[#5a4be7] to-[#c86dd7] rounded-[8px]">
-            <div className="text-[12px] mb-[10px] font-semibold">
-              Nghe nhạc không quảng cáo cùng kho nhạc PREMIUM
-            </div>
-            <button className="rounded-[20px] flex justify-center items-center text-[#32323d] bg-[#ffdb01] py-[6px] px-3 text-[12px] font-bold uppercase mx-auto">
-              <Link to={"#"}>Nâng cấp tài khoản</Link>
-            </button>
-          </div>
+         
 
           <nav>
             <ul className="">

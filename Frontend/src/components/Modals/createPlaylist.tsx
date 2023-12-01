@@ -81,7 +81,7 @@ const ModalCreatePlaylist = ({ onShowModal }: IProps) => {
                    
                   </div>
               
-                  <button disabled={errors.playlist_name ? true : false} className={`${errors.playlist_name ? "opacity-[0.7]" : ""} w-full text-white bg-[#654789]  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center `}>
+                  <button disabled={errors.playlist_name ? true : false} className={`${errors.playlist_name ? "opacity-[0.7]" : ""} w-full text-white bg-[#3BC8E7]  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center `}>
                     Tạo mới
                   </button>
                 </form>

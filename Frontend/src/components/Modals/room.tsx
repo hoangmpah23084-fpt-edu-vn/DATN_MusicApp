@@ -71,7 +71,7 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
                       className="bg-[#3a3244] text-white text-sm rounded-lg block w-full p-2.5"
                     />
                   </div>
-                  <button className="w-full text-white bg-[#654789] hover:bg-white hover:text-[#654789] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                  <button className="w-full text-white bg-[#3BC8E7] hover:bg-white hover:text-[#3BC8E7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
                     Tham gia
                   </button>
                 </form>

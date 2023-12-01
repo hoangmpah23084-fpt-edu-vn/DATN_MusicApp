@@ -196,7 +196,7 @@ const PlaylistPage = (props: Props) => {
                   </div>
                   <div className="actions flex flex-col items-center justify-center">
                     <button
-                      className="flex bg-[#9b4de0] items-center rounded-[25px] my-[20px] px-[20px] py-[5px]"
+                      className="flex bg-[#3BC8E7] items-center rounded-[25px] my-[20px] px-[20px] py-[5px]"
                       onClick={handToggSong}
                     >
                       {currentSong.stateSong ? (

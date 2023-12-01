@@ -35,14 +35,14 @@ const SuggestSong = (props: Props) => {
       <h4 className="text-[rgb(140,136,146)] font-light flex">
         Bắt đầu nghe từ một bài hát
       </h4>
-      <h3 className="text-xl font-semibold capitalize">
+      <h3 className="text-xl font-semibold capitalize text-[#3BC8E7]">
        Top bài nhạc thịnh hành
       </h3>
     </div>
     <div className="column">
       <div className='flex justify-start items-center gap-4 px-[15px] py-[10px]'>
         {
-          gener.length > 0 && gener.map((item, index) => <button className={`border-[1px] border-[#f5f7f82d] rounded-full text-[12px] px-5 py-1 ${indexOf == index ? 'bg-[#9B4DE0]' : ''}`} onClick={() => handShowGenre(item, index)}>{item.name}</button>)
+          gener.length > 0 && gener.map((item, index) => <button className={`border-[1px] border-[#f5f7f82d] rounded-full text-[12px] px-5 py-1 ${indexOf == index ? 'bg-[#3BC8E7]' : ''}`} onClick={() => handShowGenre(item, index)}>{item.name}</button>)
         }
       </div>
       <div className="list grid grid-cols-3 -mx-[15px]">

@@ -9,7 +9,9 @@
     align-items: center !important;
   
   }
+*{
 
+}
   /* width */
 ::-webkit-scrollbar {
     width: 5px;

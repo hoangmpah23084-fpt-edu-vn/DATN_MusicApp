@@ -30,7 +30,7 @@ const Header = (props: Props) => {
         </div>
         <div className="flex text-[#fff] justify-around ml-56">
           <div className=" bg-[#2f2739] rounded-full">
-            <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee]">
+            <div className="flex px-[24px] py-[8px] items-center justify-center text-[#3BC8E7]">
               <GoDesktopDownload className="mr-[5px]" />
               <span className="font-inter">Tải bản macOS</span>
             </div>

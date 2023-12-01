@@ -78,7 +78,7 @@ const Room = () => {
               required
             />
             <button
-              className="relative bg-[#b76cea] min-w-[130px] py-2 rounded-full hover:bg-white hover:text-[#654789] flex items-center text-md text-center justify-center ease-in-out duration-300"
+              className="relative bg-[#3BC8E7] min-w-[130px] py-2 rounded-full hover:bg-white hover:text-[#3BC8E7] flex items-center text-md text-center justify-center ease-in-out duration-300"
               onClick={() => handleShowModalCreateRoom()}
             >
               Tạo phòng{" "}
