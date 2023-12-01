@@ -14,6 +14,7 @@ import userReducer from "./Reducer/User";
 
 import storage from 'redux-persist/lib/storage';
 import artistReducer from './Reducer/artistReducer';
+import albumReducer from './Reducer/albumReducer';
 import genreReducer from './Reducer/genreReducer';
 import roomReducer from './Reducer/roomReducer';
 import favouriteReducer from './Reducer/favouriteReducer';

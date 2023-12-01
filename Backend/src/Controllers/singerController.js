@@ -15,12 +15,14 @@ export const getSingers = async (req, res) => {
 
 export const createSinger = async (req, res) => {
   try {
+    console.log("1");
     const body = req.body;
     /* validate */
     const { error } = SingerValidate.validate(body, { abortEarly: false });
     if (error) {
       return res.status(400).json({ message: error.message });
     }
+    console.log("2");
     /* create */
     const Singerdata = await Singer.create(body);
     if (!Singerdata) {

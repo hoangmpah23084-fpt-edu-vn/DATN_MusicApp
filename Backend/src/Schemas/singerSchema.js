@@ -10,9 +10,8 @@ const SingerValidate = new joi.object({
     "string.required": "image is Required",
     "string.empty": "image is not allowed to be empty",
   }),
+  album: joi.string(),
   description: joi.string(),
-  album: joi.array().items(joi.string()),
-  songs: joi.array().items(joi.string()),
 });
 
 export default SingerValidate;
