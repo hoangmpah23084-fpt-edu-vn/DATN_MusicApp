@@ -15,27 +15,13 @@ export interface ifSong {
   _id?: string;
   song_name: string;
   song_title: string;
-  song_link: string[] | string | undefined;
+  song_link: string;
   song_image: string[];
-  song_singer: string;
-  song_lyric: string
-  view_song: number,
-  total_like: number,
-  id_Genre: string; // Make it required
-  id_Artists: string; // Make it required
-}
-export interface ifSongAdmin {
-  _id?: string;
-  song_name: string;
-  song_link: string[] | string | undefined;
-  song_image: string[] | undefined;
-  song_singer: string;
-  id_Genre: string; // Make it required
-  id_Artists: string; // Make it required
-  song_title: string; // Make it required
-  view_song: number;
-  total_like: number;
-  song_musian: string; // Make it required
+  view_song?: number,
+  total_like?: number,
+  id_Genre: string;
+  id_Singer: string;
+  song_lyric?: string
 }
 export interface ifCurrentSong {
   _id?: string;
@@ -61,7 +47,14 @@ export type TypeSong = {
 }
 
 export type IApiSong = {
-  page: number;
-  pageSize: number;
-  search: string;
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  sort?: string;
+  order?: string
+}
+
+export interface SongLink {
+  name: string;
+  value: string;
 }

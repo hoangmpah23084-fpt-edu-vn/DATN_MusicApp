@@ -1,6 +1,6 @@
 import * as Yup from "yup"
 
-export interface IArtist {
+export interface ISinger {
     _id: string,
     name: string,
     age: number,
@@ -9,15 +9,7 @@ export interface IArtist {
     album: string,
     songs: string[]
 }
-export type TypeArtist = {
-    _id?: string,
-    name: string,
-    age: number,
-    images: string[] | undefined,
-    description: string,
-    album: string,
-    songs: string[]
-}
+
 
 export const formArtist = Yup.object({
     name: Yup.string().required("Enter the name"),
