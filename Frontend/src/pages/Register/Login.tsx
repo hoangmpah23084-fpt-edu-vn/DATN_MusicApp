@@ -7,8 +7,15 @@ import { signin } from '../../store/Reducer/User';
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const Login = () => {
+    const [type, setType] = useState('password');
+
+    const onHandleChangePassword = () => {
+        type == 'password'? setType('text') : setType('password');
+    }
+
     const { register, handleSubmit, formState: { errors } } = useForm<SigninForm>(
         {
             resolver: yupResolver(SigninSchema)
@@ -126,20 +133,29 @@ const Login = () => {
                                     <p className="text-red-600 text-[15px]">{errors.email && errors.email.message}</p>
                                 </div>
 
-                                <div className="col-span-6 sm:col-span-3">
-                                    <label
-                                        htmlFor="Password"
-                                        className="block text-sm font-medium text-white"
-                                    >
-                                        Mật Khẩu
-                                    </label>
+                                <div className="col-span-6 flex space-x-5 items-center">
+                                    <div>
+                                        <label
+                                            htmlFor="Password"
+                                            className="block text-sm font-medium text-white"
+                                        >
+                                            Mật Khẩu
+                                        </label>
 
-                                    <input
-                                        type="password"
-                                        {...register("password", { required: true })}
-                                        placeholder="********"
-                                        className="mt-2 w-full h-[35px]  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                                    />
+                                        <input
+                                            type={type}
+                                            {...register("password", { required: true })}
+                                            placeholder="********"
+                                            className="mt-2 h-[35px]  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        />
+                                    </div>
+                                    <div className=" flex items-center space-x-1 mt-5 text-white">
+                                        <input type="checkbox" id="show_password" 
+                                        onChange={onHandleChangePassword} 
+
+                                        />
+                                        <label htmlFor="show_password">Hiển thị mật khẩu</label>
+                                    </div>
                                     <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>
                                 </div>
 

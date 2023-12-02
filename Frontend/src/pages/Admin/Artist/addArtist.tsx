@@ -1,15 +1,22 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IArtist, formArtist } from "../Interface/IArtist";
 import { handleAddArtist } from "../../../store/Reducer/artistReducer";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { handImage } from "@/Mui/Component/handUpload";
+import { useEffect } from "react";
+import { getAlbum } from "@/store/Reducer/albumReducer";
 
 const AddArtist = () => {
   const dispatch = useAppDispatch();
+  const { album } = useAppSelector(({album}) => album);
+  console.log("album: ", album);
+  useEffect(() => {
+    void dispatch(getAlbum());
+  }, [dispatch]);
   const {
     register,
     handleSubmit,
@@ -19,14 +26,19 @@ const AddArtist = () => {
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handOnSubmit: SubmitHandler<any> = async (value : IArtist) => {
-    value.images = await handImage(value.images)
-    console.log(value);
-    console.log("Lalala");
-    const { payload } = await dispatch(handleAddArtist(value));
-    if (payload) {
-      alert(payload);
+    try {
+      value.images = await handImage(value.images)
+      console.log(value);
+      console.log("Lalala");
+      const { payload } = await dispatch(handleAddArtist(value));
+      if (payload) {
+        alert(payload);
+      }
+    } catch (error) {
+      console.log(error); 
     }
   };
+  
   return (
     <div className="">
       <h4 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
@@ -86,8 +98,11 @@ const AddArtist = () => {
                     className="block w-full border-gray-300 rounded-lg"
                   >
                     <option value={""}>Choose Album</option>
-                    <option value="1">Hết Sức Thật Lòng</option>
-                    <option value="2">Gieo</option>
+                    {album?.map((album: any) => (
+                      <option key={album._id} value={album._id}>{album.album_name}</option>
+                    ))}
+                    {/* <option value="1">Hết Sức Thật Lòng</option>
+                    <option value="2">Gieo</option> */}
                   </select>
                 </div>
               </div>

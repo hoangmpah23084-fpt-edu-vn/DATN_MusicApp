@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import SidebarMenu from "@/components/SidebarMenu";
 import Footer from "@/components/Footer";
@@ -11,9 +11,12 @@ import { RootState } from "@/store/store";
 import ModalSignin from "@/components/Modals/modalSignin";
 import { setToken } from "@/store/Reducer/User";
 import { getFavourite } from "@/store/Reducer/favouriteReducer";
+import SideBarMobile from "@/components/SidebarMenu/SideBarMobile";
 
 
 const LayoutClient = () => {
+  const [widthBrowser, setWidthBrowser] = useState(window.innerWidth);
+  const [width, setWidth] = useState(false);
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
   const current = useAppSelector(({ Song }) => Song);
   const dispatch = useAppDispatch();
@@ -43,13 +46,26 @@ const LayoutClient = () => {
 
   }, [token])
 
-
+  useEffect(() => {
+    const handleResize = () => {
+      setWidthBrowser(window.innerWidth);
+      if(widthBrowser <= 640) setWidth(true);
+    }
+    window.addEventListener('resize',handleResize);
+    console.log(widthBrowser);
+    
+    return () => {
+      window.removeEventListener('resize',handleResize);
+      
+    }
+  }, []);
   return (
     <>
-
-      <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
+    {/* <h2>{widthBrowser}</h2> */}
+      <div className="md:flex w-[100%] bg-[#170f23] overflow-hidden">
         {isToken && <ModalSignin />}
-        <SidebarMenu />
+        {width && <SideBarMobile />}
+        <SidebarMenu width={widthBrowser} />
         <Header />
         <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
