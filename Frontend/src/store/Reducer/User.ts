@@ -2,9 +2,6 @@ import { ifSignin, ifSignup, ifUser } from "@/pages/Admin/Interface/User";
 import instanceAxios from "@/utils/axios";
 import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-
-
-
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>
 type PendingAction = ReturnType<GenericAsyncThunk['pending']>
 type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>
@@ -34,27 +31,24 @@ export const getUsers = createAsyncThunk("user/getUsers", async () => {
 
 export const signup = createAsyncThunk("user/signup", async (dataSignup: ifSignup) => {
     const { data } = await instanceAxios.post<ifSignup>("http://localhost:8080/api/signup", dataSignup);
-    return data
+    return data;
 });
 
 export const signin = createAsyncThunk("user/signin", async (dataSignin: ifSignin) => {
     const { data } = await instanceAxios.post<ifSignin>("http://localhost:8080/api/signin", dataSignin);
-    return data
+    return data;
 });
 
 const userReducer = createSlice({
     name: "user",
     initialState,
     reducers: {
-
         checkToken: (state, action) => {
             state.isToken = action.payload
         },
         setToken: (state, action) => {
             state.token = action.payload
         },
-
-
     },
     extraReducers: builder => {
         builder
@@ -79,7 +73,6 @@ const userReducer = createSlice({
             )
     }
 })
-
 
 export const { checkToken, setToken } = userReducer.actions
 

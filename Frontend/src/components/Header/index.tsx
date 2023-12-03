@@ -1,27 +1,58 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import type { MenuProps } from "antd";
 import { Avatar, Dropdown } from "antd";
-import { UserOutlined } from '@ant-design/icons';
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { AiOutlineSearch, AiOutlineSetting } from "react-icons/ai";
 import { GoDesktopDownload } from "react-icons/go";
+import { LogoutOutlined } from "@ant-design/icons";
 import Input from "../Input";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
+import { ifUser } from "@/pages/Admin/Interface/User";
 
 type Props = {};
 const items: MenuProps["items"] = [
   {
     key: "1",
-    label: <Link to="http://localhost:5173/signin">Đăng nhập</Link>,
+    label: <>
+    
+    </>,
   },
   {
     key: "2",
-    label: <Link to="http://localhost:5173/signup">Đăng ký</Link>,
+    label: <hr/>,
   },
+  {
+    key: "3",
+    label: "Đổi ảnh đại diện",
+  },
+  {
+    key: "4",
+    label: "Đổi mật khẩu",
+  },
+  {
+    key: "5",
+    label: <hr/>
+  },
+  {
+    key: "6",
+    label: "Đăng xuất",
+    icon: <LogoutOutlined />
+  }
 ];
 
 const Header = (props: Props) => {
+  const [userLocal, setUserLocal] = useState<ifUser | null>(null);
+  useEffect(() => {
+    const currentUser = localStorage.getItem("user");
+    if (currentUser) {
+      const parseCurrentUser = JSON.parse(currentUser);
+      setUserLocal(parseCurrentUser);
+      console.log(parseCurrentUser);
+    }
+  },[])
+  
+  if (userLocal || useLocation().pathname === '/') {
     return (
       <div className="flex h-[70px] items-center fixed bg-[#170f23] ml-[240px] z-50 w-full">
         <div className="flex items-center z-1 w-[100%] px-[59px]">
@@ -48,15 +79,23 @@ const Header = (props: Props) => {
             <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#2f2739] rounded-full">
               <AiOutlineSetting className=" w-10 h-[20px]" />
             </div>
-            <Dropdown menu={{ items }} placement="bottomRight" className="bg-[#34224f]">
-            <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
-              <img src="/user-default.3ff115bb.png" className="rounded-full" />
-            </div>
-            </Dropdown>
+            {userLocal
+              ?
+              <>
+              <Dropdown menu={{ items }} placement="bottomRight" className="bg-[#34224f]">
+                <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
+                  <img src="/user-default.3ff115bb.png" className="rounded-full" />
+                </div>
+              </Dropdown>
+              </>
+              :
+              <Link to="http://localhost:5173/signin">Đăng nhập</Link>
+            }
+            
           </div>
         </div>
       </div>
-    );
+    )};
   };
 
 export default Header;
