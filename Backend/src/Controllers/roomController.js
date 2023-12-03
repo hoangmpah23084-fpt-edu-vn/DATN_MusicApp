@@ -95,8 +95,18 @@ export const getRoom = async (req, res) => {
 };
 
 export const getRooms = async (req, res) => {
+  const {search } = req.query;
   try {
-    const getRooms = await roomModel.find();
+
+    let query = {};
+    if (search) {
+      query = {
+        $or: [
+          { nameGroup: { $regex: search, $options: 'i' } },
+        ],
+      };
+    }
+    const getRooms = await roomModel.paginate(query);
     if (!getRooms) {
       return res.status(404).json({
         message: "Không tìm thấy phòng",
@@ -104,7 +114,7 @@ export const getRooms = async (req, res) => {
     }
     return res.status(200).json({
       message: "Lấy phòng thành công",
-      data: getRooms,
+      data: getRooms.docs,
     });
   } catch (error) {
     return res.status(500).json({
