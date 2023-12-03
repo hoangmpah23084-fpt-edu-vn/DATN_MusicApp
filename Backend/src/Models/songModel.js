@@ -25,6 +25,10 @@ const SongSchame = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Artists",
     },
+    month: {
+      type: String,
+      default:"{}"
+    },
     total_like: {
       type: Number,
       default: 0,

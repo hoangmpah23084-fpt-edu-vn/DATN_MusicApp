@@ -152,24 +152,43 @@ export const deleteSong = async (req, res) => {
   }
 };
 
+export const updateViewSong = async (req, res) => {
+  const id_song = req.params.id;
+  let setMonth = {}
+  const today = new Date();
 
-export const updateViewSong = async(req, res)=>{
-  const id_song = req.params.id
-  const data_song = await SongSchame.findOne({_id: id_song});
-  if (!data_song){
+  const month = `${today.getFullYear()}-${Number(today.getMonth()) + 1}`;
+  const songCurrent = await SongSchame.findOne({ _id: id_song });
+  if (songCurrent.month.includes(month)) {
+    const getMonth = JSON.parse(songCurrent.month);
+    for (const item in getMonth) {
+      if(item == month) {
+        setMonth = {
+          ...getMonth , [item]: getMonth[item] + 1
+        }
+      }
+    }
+  } else {
+    const getMonth = JSON.parse(songCurrent.month);
+    setMonth = {
+    ...getMonth , [month]: 1
+    }
+  }
+  if (!songCurrent) {
     return res.status(401).json({
       message: "Không thành công",
     });
-  }else{
+  } else {
     await SongSchame.findOneAndUpdate(
-      {_id: id_song }, 
-       { 
-        view_song: data_song.view_song + 1,
-       },
-      { upsert: true, new: true } 
+      { _id: id_song },
+      {
+        month: JSON.stringify(setMonth),
+      },
+      { upsert: true, new: true }
     );
     return res.status(201).json({
       message: "Thành công",
+      data: songCurrent
     });
   }
-}
+};
