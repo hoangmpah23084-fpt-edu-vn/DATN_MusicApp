@@ -67,17 +67,13 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
         console.log("stop");
         dispatch(handChangeStateSong(false))
         audioRef.current?.pause();
-      // activeSong(dispatch, item, "stopPause")
       }else{
         console.log("start");
         dispatch(handChangeStateSong(true))
         audioRef.current?.play();
-        // activeSong(dispatch, item, "start")
       }
       socket.emit('clientStartSongSideBar', formData)
     },[dispatch, stateSong]);
-    // currentSong
-
     useEffect(() => {
       if (id) {
         socket.on('serverStartSongSideBar', async (value) => {
@@ -89,17 +85,15 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
               console.log("stop");
               dispatch(handChangeStateSong(false))
               audioRef.current?.pause();
-              // activeSong(dispatch, value.song, "stopPause")
             }else{
               console.log("start");
               dispatch(handChangeStateSong(true))
               audioRef.current?.play();
-              // activeSong(dispatch, value.song, 'start')
             }
           }
         })
       }
-    },[dispatch, stateSong])
+    },[dispatch, stateSong]);
 
     useEffect(() => {
       socket.on('serverDeleteSongInRoom', (value) => {
@@ -108,7 +102,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
           setListSong(filterData)
         }
       })
-    },[])
+    },[setListSong])
     
   return (
     <div className='w-full h-full overflow-y-scroll bg-[#130C1C] rounded-md p-2'>

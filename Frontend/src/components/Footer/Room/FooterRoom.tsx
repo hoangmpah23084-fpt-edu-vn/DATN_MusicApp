@@ -21,8 +21,6 @@ import { isAdminGroup, memberGroup } from "@/pages/Admin/Interface/Room";
 import axios from "axios";
 import { NextSongRoom, PrevSongRoom } from "./NextSongRoom";
 import { useDebouncedCallback } from "use-debounce";
-
-// const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
   root: {
     color: "white",
@@ -67,7 +65,6 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
         setIntervalId(id);
       } else {
         if (intervalId !== null) {
-          console.log("STOP");
           audioRef.current && audioRef.current.pause();
           clearInterval(intervalId);
           setIntervalId(null);
@@ -99,25 +96,16 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
     500
   );
   const debouncedClick = useDebouncedCallback(
-    (value) => {
-      const preValue = value.stateSong;
-      dispatch(handChangeStateSong(!value.stateSong))
-      if (!preValue) {
-        document.addEventListener("click", () => {
-          audioRef.current && audioRef.current.play();
-        });
-        const id = setInterval(() => {
-          audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-          audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-        }, 1000);
-        setIntervalId(id);
-      } else {
-        document.addEventListener("click", () => {
-          audioRef.current && audioRef.current.pause();
-          intervalId && clearInterval(intervalId);
-          setIntervalId(null);
-        })
-      }
+    () => {
+      document.addEventListener("click", () => {
+        audioRef.current && audioRef.current.play();
+      });
+      const id = setInterval(() => {
+        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
+        audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+      }, 1000);
+      setIntervalId(id);
+      console.log("play");
     },
     500
   );
@@ -156,36 +144,49 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
       socket.on("recivedHandTogg", (value) => {
         if (value) {
           if (idRoom) {
-            debouncedClick(value);
+            const preValue = value.stateSong;
+            dispatch(handChangeStateSong(!value.stateSong))
+            if (!preValue) {
+              debouncedClick();
+            }else{
+              document.addEventListener("click", () => {
+                console.log("pause");
+                audioRef.current && audioRef.current.pause();
+                intervalId && clearInterval(intervalId);
+                setIntervalId(null);
+              })
+            }
           }
         }
       });
     }
-  }, [stateSong, dispatch]);
+  });
 
   useEffect(() => {
     if (idRoom) {
       socket.on("emitNextServer", (value) => {
         if (value) {
           const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
-          const findSong = ListData.filter((_item, index) => index == findIndexSong + 1);
+          const findSong = ListData.filter((_item, index) => findIndexSong + 1 == ListData.length ? index === 0 : index == findIndexSong + 1);
           dispatch(handGetCurrentSong(findSong[0]))
           localStorage.setItem("song", JSON.stringify(findSong[0]));
           dispatch(handChangeStateSong(false))
           setTimeout(() => {
-            dispatch(handChangeStateSong(true))
+            dispatch(handChangeStateSong(true));
+            audioRef.current && audioRef.current?.play();
           }, 500);
         }
       })
       socket.on('emitPrevServer', value => {
         if (value) {
           const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
-          const findSong = ListData.filter((_item, index) => index == findIndexSong - 1);
+          const findSong = ListData.filter((_item, index) => findIndexSong - 1 < 0 ? index === ListData.length - 1 : index == findIndexSong - 1);
           dispatch(handGetCurrentSong(findSong[0]))
           localStorage.setItem("song", JSON.stringify(findSong[0]));
           dispatch(handChangeStateSong(false))
           setTimeout(() => {
-            dispatch(handChangeStateSong(true))
+            dispatch(handChangeStateSong(true));
+            audioRef.current && audioRef.current?.play();
           }, 500);
         }
       });
@@ -200,18 +201,6 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
 
   useEffect(() => {
     if (idRoom) {
-      socket.on("randomSongServer", value => {
-        if (value) {
-          dispatch(handGetCurrentSong(value.song));
-          localStorage.setItem('song', JSON.stringify(value.song));
-          dispatch(handChangeStateSong(false));
-        }
-      })
-    }
-  }, [dispatch])
-
-  useEffect(() => {
-    if (idRoom) {
       socket.on("repeatServer", value => {
         if (value) {
           setRepeat(!value.state);
@@ -220,10 +209,11 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
     }
   }, [])
   // ,[stateSong, dispatch]
-  
+
   //todo: End Receive events returned from the Server
 
   useEffect(() => {
+    const getUser = localStorage.getItem('user');
     const handleAudioEnd = () => {
       if (audioRef.current?.ended && duration > 0 && !repeat && !randomSong) {
         const findIndexSong = ListData.findIndex((item) => item._id === currentSong?._id);
@@ -238,7 +228,6 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
         }
       }
       if (audioRef.current?.ended && duration > 0 && randomSong) {
-        const getUser = localStorage.getItem('user');
         if (getUser) {
           const parseUser = JSON.parse(getUser);
           if (admin && parseUser._id == admin._id) {
@@ -257,7 +246,6 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
         }
       }
     };
-
     const handleLoadedMetadata = () => {
       const audioDuration = audioRef.current?.duration;
       if (!isNaN(audioDuration as number) && (audioDuration as number) > 0) {
@@ -270,18 +258,37 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
         audioRef.current?.play();
       }, 1000)
     });
-    audioRef.current && audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audioRef.current && audioRef.current.addEventListener("loadedmetadata", () => handleLoadedMetadata);
 
     return () => {
-      audioRef.current?.removeEventListener("ended", () => {
-        handleAudioEnd();
-        setInterval(() => {
-          audioRef.current?.play();
-        }, 1000)
-      });
+      audioRef.current?.removeEventListener("ended", handleAudioEnd);
       audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [audioRef, duration, repeat, randomSong, currentSong, dispatch, ListData]);
+  }, [audioRef, duration, repeat, randomSong, currentSong, dispatch, ListData, idRoom]);
+
+  useEffect(() => {
+    if (idRoom) {
+      socket.on("randomSongServer", value => {
+        const handleLoadedMetadata = () => {
+          const audioDuration = audioRef.current?.duration;
+          if (!isNaN(audioDuration as number) && (audioDuration as number) > 0) {
+            setDuration(audioDuration as number);
+          }
+        };
+        if (value) {
+          console.log("Chay vao day âa", value);
+          audioRef.current?.removeEventListener("ended", () => {
+            console.log(value.song);
+            dispatch(handGetCurrentSong(value.song));
+            localStorage.setItem('song', JSON.stringify(value.song));
+            dispatch(handChangeStateSong(false));
+          });
+          audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        }
+        console.log("Chay vao day useffectnext");
+      })
+    }
+  })
 
 
   useEffect(() => {
@@ -308,6 +315,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
     });
   }, [repeat, volume, stateSong, dispatch, currentSong, setCurrentTime]);
 
+
   const handChangeVolume = (_event: any, value: any) => {
     setVolume(value as number);
   };
@@ -320,7 +328,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
           setRewindAudio(value as number);
           setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
         }
-    });
+      });
     audioRef.current &&
       setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
     setRewindAudio(value as number);
@@ -421,7 +429,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
-                <PrevSongRoom ListData={ListData} socket={socket} idRoom={idRoom} />
+                <PrevSongRoom ListData={ListData} audioRef={audioRef} socket={socket} idRoom={idRoom} />
                 <div className="w-[24%] h-[100%] ">
                   <PauseListItemButtonStyle onClick={togglePlayPause} >
                     <PauseListItemIconStyle>
@@ -433,7 +441,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>
-                <NextSongRoom ListData={ListData} socket={socket} idRoom={idRoom} />
+                <NextSongRoom ListData={ListData} audioRef={audioRef} socket={socket} idRoom={idRoom} />
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle
                     onClick={handchangeRepeat}

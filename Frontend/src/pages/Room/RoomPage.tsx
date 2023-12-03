@@ -55,7 +55,6 @@ const RoomPage = (props: Props) => {
   }, [current.song]);
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
-      console.log(data);
       setListSong(data.data.listSong);
       setListMess([...listMess, ...data.data.listMessages])
       setlistMember(data.data.memberGroup);
@@ -69,7 +68,7 @@ const RoomPage = (props: Props) => {
       const convert = JSON.parse(user);
       socket.emit('setUser', convert._id)
     }
-    FetchMessage()
+    FetchMessage();
     return () => {
       if (confirm("Are you sure want to remove room ?")) {
         leaveRoom(id as string);
