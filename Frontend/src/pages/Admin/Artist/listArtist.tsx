@@ -8,7 +8,7 @@
 // import { handleDeleteArtist, handleGetArtist } from "../../../store/Reducer/singerReducer";
 // import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
-const Artist = () => {
+const ListArtist = () => {
   // const dispatch = useAppDispatch();
   // const { artist } = useAppSelector(({ artist }) => artist);
   // console.log(artist);
