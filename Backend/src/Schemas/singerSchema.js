@@ -1,6 +1,6 @@
 import joi from "joi";
 
-const ArtistValidate = new joi.object({
+const SingerValidate = new joi.object({
   name: joi.string().required().messages({
     "string.empty": "Please enter a name",
     "any.required": "Please enter name required",
@@ -10,8 +10,9 @@ const ArtistValidate = new joi.object({
     "string.required": "image is Required",
     "string.empty": "image is not allowed to be empty",
   }),
-  album: joi.string(),
   description: joi.string(),
+  album: joi.array().items(joi.string()),
+  songs: joi.array().items(joi.string()),
 });
 
-export default ArtistValidate;
+export default SingerValidate;

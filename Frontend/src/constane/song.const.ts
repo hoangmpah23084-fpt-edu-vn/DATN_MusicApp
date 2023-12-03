@@ -20,11 +20,11 @@ export const activeSong = (
         dispatch(setDataLocal(currentlocal))
     }
 };
- 
 
-export const chekcSubString = (text: string) => {
+
+export const chekcSubString = (text: string, size?: number) => {
     if (text) {
-        let newText = text.substring(0, 10);
+        let newText = text.substring(0, size ? size : 10);
         if (text.length > 10) {
             newText = newText + "...";
         }

@@ -1,6 +1,6 @@
 import { Validate_Song } from "../Schemas/songSchemas.js";
 import SongSchame from "../Models/songModel.js";
-import Artist from "../Models/artistModel.js";
+import Singer from "../Models/singer.js";
 import Genre from "../Models/genreModel.js";
 
 export const createSong = async (req, res) => {
@@ -19,8 +19,8 @@ export const createSong = async (req, res) => {
       });
     }
     /* update artist */
-    await Artist.findByIdAndUpdate(
-      data.id_Artists,
+    await Singer.findByIdAndUpdate(
+      data.id_Singer,
       {
         $addToSet: { songs: data._id },
       },
@@ -52,11 +52,31 @@ export const createSong = async (req, res) => {
 };
 
 export const get_Songs = async (req, res) => {
+  const { _limit = 10, _page = 1,search ,_sort = "createdAt", _order = "asc"} = req.query;
+  const options = {
+    limit: _limit,
+    page: _page,
+    sort:{
+      [_sort]: _order === "desc" ? -1 : 1,
+    }
+};
   try {
-    const data = await SongSchame.find();
+    let query = {};
+    if (search) {
+      query = {
+        $or: [
+          { song_name: { $regex: search, $options: 'i' } },
+          { song_singer: { $regex: search, $options: 'i' } },
+        ],
+      };
+    }
+    const data = await SongSchame.paginate(query,options);
+    console.log(data);
+    const total = await SongSchame.find()
     return res.status(200).json({
       message: "Get song list Successfully",
-      data,
+      totalSongList: total.length,
+      data:data.docs,
     });
   } catch (error) {
     return res.status(500).json({
@@ -66,6 +86,7 @@ export const get_Songs = async (req, res) => {
 };
 
 export const get_Song = async (req, res) => {
+ 
   try {
     const { id } = req.params;
     const data = await SongSchame.findById(id);
@@ -95,11 +116,11 @@ export const update_Song = async (req, res) => {
     );
     /* update artist */
     //todo loai bỏ id song khỏi Artist
-    await Artist.findByIdAndUpdate(data.id_Artists, {
+    await Singer.findByIdAndUpdate(data.id_Singer, {
       $pull: { songs: data._id },
     });
-    const artistId = data.id_Artists;
-    await Artist.findByIdAndUpdate(artistId, {
+    const SingerId = data.id_Singer;
+    await Singer.findByIdAndUpdate(SingerId, {
       $addToSet: { songs: data._id },
     });
     //todo loai bỏ id song khỏi genre
@@ -132,7 +153,7 @@ export const deleteSong = async (req, res) => {
     }
 
     /* delete song in artist */
-    await Artist.findByIdAndUpdate(data.id_Artists, {
+    await Singer.findByIdAndUpdate(data.id_Singer, {
       $pull: { songs: data._id },
     });
 

@@ -7,12 +7,10 @@ const Album = new mongoose.Schema(
       required: true,
     },
     list_song: [],
-    id_artist: [
-      {
+    id_singer:   {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Artists",
+        ref: "Singer",
       },
-    ],
   },
   { versionKey: false, timestamps: true }
 );
