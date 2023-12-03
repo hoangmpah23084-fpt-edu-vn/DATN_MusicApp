@@ -71,7 +71,6 @@ export const get_Songs = async (req, res) => {
       };
     }
     const data = await SongSchame.paginate(query,options);
-    console.log(data);
     const total = await SongSchame.find()
     return res.status(200).json({
       message: "Get song list Successfully",
