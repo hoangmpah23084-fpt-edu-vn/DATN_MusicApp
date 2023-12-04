@@ -55,9 +55,9 @@ const ConnectSocket = (server) => {
     socket.on("autoNextSong", (value) => {
       socket.to(value.idroom).emit("serverAutoNextSong", value);
     });
-    socket.on("setRandomSong", (value) => {
-      socket.to(value.idroom).emit("serverSetRandomSong", value);
-    });
+    // socket.on("setRandomSong", (value) => {
+    //   socket.to(value.idroom).emit("serverSetRandomSong", value);
+    // });
 
     socket.on("newMessage", async (value) => {
       const getOneRoom = await roomModel

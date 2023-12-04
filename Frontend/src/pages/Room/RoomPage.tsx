@@ -17,7 +17,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { listMessages, memberGroup } from "../Admin/Interface/Room";
 import SideBarRoom from "./SideBarRoom";
 import { handGetSong } from "@/store/Reducer/Song";
-import { handGetCurrentSong } from "@/store/Reducer/currentSong";
+import { handGetCurrentSong, setCurrentSong } from "@/store/Reducer/currentSong";
 import SidebarRoom from "@/components/Footer/Room/SidebarRoom";
 import FooterRoom from "@/components/Footer/Room/FooterRoom";
 import { toast } from "react-toastify";
@@ -48,17 +48,28 @@ const RoomPage = (props: Props) => {
     void fetchData();
   }, [dispatch]);
   useEffect(() => {
-    if (current.song.length > 0) {
-      localStorage.setItem('song', JSON.stringify(current.song[0]));
-      dispatch(handGetCurrentSong(current.song[0]))
+    const getSongLocal = localStorage.getItem('song');
+    if (getSongLocal) {
+      const convertSong = JSON.parse(getSongLocal);
+      console.log(convertSong);
+      if (convertSong) {
+        dispatch(setCurrentSong(convertSong))
+      }
+    }else{
+      if (current.song.length > 0) {
+        localStorage.setItem('song', JSON.stringify(current.song[0]));
+        dispatch(setCurrentSong(current.song[0]))
+      }
     }
-  }, [current.song]);
+
+  }, []);
+  // current.song
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
       setListSong(data.data.listSong);
-      setListMess([...listMess, ...data.data.listMessages])
+      setListMess([...listMess, ...data.data.listMessages]);
       setlistMember(data.data.memberGroup);
-      socket.emit('joinRoom', data.data._id)
+      socket.emit('joinRoom', data.data._id);
     });
   }
   useEffect(() => {

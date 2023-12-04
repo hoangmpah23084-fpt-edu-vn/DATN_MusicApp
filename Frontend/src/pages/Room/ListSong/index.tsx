@@ -16,7 +16,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
+import { handChangeStateSong, handGetCurrentSong, setCurrentSong } from "@/store/Reducer/currentSong";
 import { useDebouncedCallback } from "use-debounce";
 
 type Props = {
@@ -61,8 +61,8 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
         song : item,
         stateSong : preValue
       }
-      await dispatch(handGetCurrentSong(item));
-      console.log(preValue);
+      await dispatch(setCurrentSong(item));
+      localStorage.setItem('song', JSON.stringify(item));
       await dispatch(handChangeStateSong(!preValue));
       if (preValue && currentSong?._id == item._id) {
         console.log("stop");
@@ -79,6 +79,13 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
     const handDelayPlay = useDebouncedCallback(() => {
       audioRef.current?.play();
     },500);
+    useEffect(() => {
+      if (id) {
+        socket.on('serverAddSongInListRoom', (value) => {
+          setListSong((prev) => [value.song, ...prev]);
+        });
+      }
+    }, [socket, id, setListSong]);
 
     useEffect(() => {
       if (id) {

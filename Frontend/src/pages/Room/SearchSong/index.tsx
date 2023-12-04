@@ -19,7 +19,7 @@ const [listDataSearch , setListDataSearch] = useState<ifSong[] | []>([]);
   
 const debounced = useDebouncedCallback(
   async (value) => {
-        if ((value.length as number) == 0) {
+    if ((value.length as number) == 0) {
       await axios.get(`http://localhost:8080/api/Song?_limit=8&search=${value}`).then(({data}) => setListDataSearch(data.data));
     }else{
       await axios.get(`http://localhost:8080/api/Song?_limit=100&search=${value}`).then(({data}) => setListDataSearch(data.data));
@@ -45,13 +45,6 @@ const debounced = useDebouncedCallback(
       listSong: listSong,
     })
   }
-  useEffect(() => {
-    if (id) {
-      socket.on('serverAddSongInListRoom', (value) => {
-        setListSong((prevList) => [...prevList, value.song]);
-      });
-    }
-  }, [socket, id, setListSong]);
 
   return (
     <div className='w-full flex flex-col'>

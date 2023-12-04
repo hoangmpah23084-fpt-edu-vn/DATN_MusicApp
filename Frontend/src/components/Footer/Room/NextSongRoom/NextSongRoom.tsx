@@ -1,6 +1,6 @@
 import { ListItemButtonStyle, ListItemIconStyle } from '@/Mui/style/Footer/StyleAction';
 import {  ifSong } from '@/pages/Admin/Interface/ValidateSong';
-import { handChangeStateSong, handGetCurrentSong } from '@/store/Reducer/currentSong';
+import { handChangeStateSong, handGetCurrentSong, setCurrentSong } from '@/store/Reducer/currentSong';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { RefObject } from 'react';
@@ -21,7 +21,7 @@ const NextSongRoom = ({ListData, socket, idRoom, audioRef} : Props) => {
     const handNextSong = () => {
       const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
       const findSong = ListData.filter((_item, index) => findIndexSong + 1 == ListData.length ? index === 0 : index == findIndexSong + 1);
-      dispatch(handGetCurrentSong(findSong[0]))
+      dispatch(setCurrentSong(findSong[0]))
       localStorage.setItem("song",JSON.stringify(findSong[0]));
       dispatch(handChangeStateSong(false))
       setTimeout(() => {
