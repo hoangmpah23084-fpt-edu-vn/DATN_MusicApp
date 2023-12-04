@@ -26,6 +26,10 @@ const currentSong = createSlice({
         setDataLocal: (state, action: PayloadAction<ifSong>) => {
             state.dataLocal = action.payload
         },
+        setCurrentSong:(state, action: PayloadAction<any>) => {
+            state.currentSong = action.payload; 
+            console.log('NewPayload : ', action.payload);
+        },
     },
     extraReducers: builder => {
         builder
@@ -44,5 +48,5 @@ const currentSong = createSlice({
             })
     }
 })
-export const { setDataLocal } = currentSong.actions
+export const { setDataLocal,setCurrentSong } = currentSong.actions
 export default currentSong.reducer

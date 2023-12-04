@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
+import { useDebouncedCallback } from "use-debounce";
 
 type Props = {
   stateSong: boolean,
@@ -58,7 +59,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
       const formData = {
         idroom : id,
         song : item,
-        stateSong : stateSong
+        stateSong : preValue
       }
       await dispatch(handGetCurrentSong(item));
       console.log(preValue);
@@ -74,6 +75,11 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
       }
       socket.emit('clientStartSongSideBar', formData)
     },[dispatch, stateSong]);
+
+    const handDelayPlay = useDebouncedCallback(() => {
+      audioRef.current?.play();
+    },500);
+
     useEffect(() => {
       if (id) {
         socket.on('serverStartSongSideBar', async (value) => {
@@ -81,14 +87,14 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
             const preValue = value.stateSong;
             await dispatch(handGetCurrentSong(value.song));
             await dispatch(handChangeStateSong(!preValue));
-            if (preValue && currentSong?._id == value.song._id) {
-              console.log("stop");
-              dispatch(handChangeStateSong(false))
-              audioRef.current?.pause();
-            }else{
-              console.log("start");
+            if (!preValue) {
               dispatch(handChangeStateSong(true))
-              audioRef.current?.play();
+              console.log("start 1");
+              handDelayPlay();
+            }else{
+              dispatch(handChangeStateSong(false))
+              console.log("stop 1");
+              audioRef.current?.pause();
             }
           }
         })

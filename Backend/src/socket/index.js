@@ -52,8 +52,11 @@ const ConnectSocket = (server) => {
     socket.on("addSongInListRoom", (value) => {
       socket.to(value.idroom).emit("serverAddSongInListRoom", value);
     });
-    socket.on("nextSongWhenEnd", (value) => {
-      socket.to(value.idroom).emit("serverNextSongWhenEnd", value);
+    socket.on("autoNextSong", (value) => {
+      socket.to(value.idroom).emit("serverAutoNextSong", value);
+    });
+    socket.on("setRandomSong", (value) => {
+      socket.to(value.idroom).emit("serverSetRandomSong", value);
     });
 
     socket.on("newMessage", async (value) => {

@@ -27,7 +27,7 @@ const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSide
       if (id) {
       axios.get(`http://localhost:8080/api/room/${id}`).then(({data}) => setListSong(data.data.listSong))
       }
-  },[setListSong, listSong])
+  },[setListSong])
   
   return (
     <div className="zm-room-right-content absolute w-[340px] p-[20px] bg-[#130C1C] flex flex-col right-[30px] top-[94px] bottom-[30px] rounded-[12px] ">
