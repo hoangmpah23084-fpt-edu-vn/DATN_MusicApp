@@ -6,6 +6,7 @@ import { ConnectDB } from "./Config/connect.js";
 
 import Route_Song from "./Routers/songRouter.js";
 import Router_Playlist from "./Routers/playlistRoute.js";
+import RouterStatistical from "./Routers/statisticalRouter.js";
 import GenderRouter from "./Routers/genreRouter.js";
 import AlbumRouter from "./Routers/albumRouter.js";
 import routerAuth from "./Routers/router_auth.js";
@@ -36,6 +37,7 @@ app.use("/api", routerAuth);
 app.use("/api", roomRouter);
 app.use("/api", messageRouter);
 app.use("/api", Route_Video);
+app.use("/api", RouterStatistical);
 
 /* router artist */
 app.use("/api/", SingerRoute);

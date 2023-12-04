@@ -1,19 +1,19 @@
 // import { ifSong, ifSongAdmin } from "@/pages/Admin/Interface/ValidateSong";
 import { IGenre } from "@/pages/Admin/Interface/genre";
-import { IApiSong, ifSong, ifSongAdmin } from "@/pages/Admin/Interface/ValidateSong";
+import { IApiSong, ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import instanceAxios from "@/utils/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
 interface initState {
-    error: string,
-    loading: boolean,
-    song: ifSong[],
-    totalSong: number,
-    loadingRemove: boolean,
-    loadingGetone: boolean,
-    dataOne: ifSong | null
+    error: string;
+    loading: boolean;
+    song: ifSong[];
+    totalSong: number;
+    loadingRemove: boolean;
+    loadingGetone: boolean;
+    dataOne: ifSong | null;
+    loadingAdd: boolean;
 }
 
 const initialState: initState = {
@@ -23,9 +23,10 @@ const initialState: initState = {
     totalSong: 0,
     loadingRemove: false,
     loadingGetone: false,
-    dataOne: null
+    dataOne: null,
+    loadingAdd: false
 }
-export const handAddSong = createAsyncThunk("song/addSong", async (song: ifSongAdmin) => {
+export const handAddSong = createAsyncThunk("song/addSong", async (song: ifSong) => {
     const { data } = await instanceAxios.post<{ message: string }>("http://localhost:8080/api/Song", song);
     return data.message
 })
@@ -59,17 +60,25 @@ const songReducer = createSlice({
     name: "Song",
     initialState,
     reducers: {},
-    extraReducers: builder => {
-        builder.addCase(handAddSong.fulfilled, (state) => {
-        })
+    extraReducers: (builder) => {
+        builder
+            .addCase(handAddSong.pending, (state) => {
+                state.loadingAdd = true;
+            })
+            .addCase(handAddSong.rejected, (state) => {
+                state.loadingAdd = false;
+            })
+            .addCase(handAddSong.fulfilled, (state) => {
+                state.loadingAdd = false;
+            })
             .addCase(handGetSong.pending, (state) => {
                 state.loading = true;
             })
             .addCase(handGetSong.fulfilled, (state, action) => {
                 state.loading = false;
                 state.song = action.payload.data;
-                state.error = ""
-                state.totalSong = action.payload.totalSongList
+                state.error = "";
+                state.totalSong = action.payload.totalSongList;
             })
             .addCase(handGetSong.rejected, (state) => {
                 state.loading = true;
@@ -79,8 +88,10 @@ const songReducer = createSlice({
             })
             .addCase(handDeleteSong.fulfilled, (state, action) => {
                 state.loadingRemove = false;
-                state.song = state.song.filter(((song: ifSong) => song._id != action.payload))
-                state.error = ""
+                state.song = state.song.filter(
+                    (song: ifSong) => song._id != action.payload
+                );
+                state.error = "";
             })
             .addCase(handDeleteSong.rejected, (state) => {
                 state.loadingRemove = false;
@@ -89,11 +100,12 @@ const songReducer = createSlice({
                 if (action.payload) {
                     const { _id } = action.payload;
                     // state.song = state.song.map(((song : ifSong) => song._id == _id ? action.payload : song))
-                    const data = state.song.filter((song => song._id != _id))
+                    const data = state.song.filter((song) => song._id != _id);
                     state.song = [action.payload, ...data];
-                    state.error = ""
+                    state.error = "";
                 }
-            }).addCase(handGetOne.rejected, (state) => {
+            })
+            .addCase(handGetOne.rejected, (state) => {
                 state.loadingGetone = true;
             })
             .addCase(handGetOne.pending, (state) => {
@@ -101,8 +113,8 @@ const songReducer = createSlice({
             })
             .addCase(handGetOne.fulfilled, (state, action) => {
                 state.loadingGetone = false;
-                state.dataOne = action.payload
-            })
-    }
-})
+                state.dataOne = action.payload;
+            });
+    },
+});
 export default songReducer.reducer;

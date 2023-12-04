@@ -52,10 +52,19 @@ export const createSong = async (req, res) => {
 };
 
 export const get_Songs = async (req, res) => {
-  const { _limit = 10, _page = 1, search } = req.query;
+  const {
+    _limit = 10,
+    _page = 1,
+    search,
+    _sort = "createdAt",
+    _order = "asc",
+  } = req.query;
   const options = {
     limit: _limit,
     page: _page,
+    sort: {
+      [_sort]: _order === "desc" ? -1 : 1,
+    },
   };
   try {
     let query = {};
@@ -68,7 +77,6 @@ export const get_Songs = async (req, res) => {
       };
     }
     const data = await SongSchame.paginate(query, options);
-    console.log(data);
     const total = await SongSchame.find();
     return res.status(200).json({
       message: "Get song list Successfully",
@@ -171,8 +179,29 @@ export const deleteSong = async (req, res) => {
 
 export const updateViewSong = async (req, res) => {
   const id_song = req.params.id;
-  const data_song = await SongSchame.findOne({ _id: id_song });
-  if (!data_song) {
+  let setMonth = {};
+  const today = new Date();
+
+  const month = `${today.getFullYear()}-${Number(today.getMonth()) + 1}`;
+  const songCurrent = await SongSchame.findOne({ _id: id_song });
+  if (songCurrent.month.includes(month)) {
+    const getMonth = JSON.parse(songCurrent.month);
+    for (const item in getMonth) {
+      if (item == month) {
+        setMonth = {
+          ...getMonth,
+          [item]: getMonth[item] + 1,
+        };
+      }
+    }
+  } else {
+    const getMonth = JSON.parse(songCurrent.month);
+    setMonth = {
+      ...getMonth,
+      [month]: 1,
+    };
+  }
+  if (!songCurrent) {
     return res.status(401).json({
       message: "Không thành công",
     });
@@ -180,12 +209,13 @@ export const updateViewSong = async (req, res) => {
     await SongSchame.findOneAndUpdate(
       { _id: id_song },
       {
-        view_song: data_song.view_song + 1,
+        month: JSON.stringify(setMonth),
       },
       { upsert: true, new: true }
     );
     return res.status(201).json({
       message: "Thành công",
+      data: songCurrent,
     });
   }
 };
