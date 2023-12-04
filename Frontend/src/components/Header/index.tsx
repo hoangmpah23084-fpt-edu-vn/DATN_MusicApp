@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Avatar, Alert, Dropdown, Menu } from "antd";
+import { Avatar, Alert, Dropdown, Menu, message } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { AiOutlineSearch, AiOutlineSetting } from "react-icons/ai";
 import { GoDesktopDownload } from "react-icons/go";
@@ -8,11 +8,14 @@ import Input from "../Input";
 import { Link, useLocation } from "react-router-dom";
 import { ifUser } from "@/pages/Admin/Interface/User";
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 type Props = {};
 const Header = (props: Props) => {
 const [userLocal, setUserLocal] = useState<ifUser | null>(null);
-const [selectedOption, setSelectedOption] = useState<string | null>(null);
+// const [selectedOption, setSelectedOption] = useState<string | null>(null);
+const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+const navigate = useNavigate();
 
 useEffect(() => {
   const currentUser = localStorage.getItem("user");
@@ -24,19 +27,31 @@ useEffect(() => {
 },[]);
 
 const handleMenuClick = (e: any) => {
-  // Khi menu được chọn
   if (e.key === 'logout') {
     handleLogout();
-  } else {
-    console.log('Menu item clicked:', e.key);
+    navigate('/signin');
+    toast.success("Đăng xuất thành công!")
+  } else if (e.key === 'avt'){
+    
   }
 };
 
+//change avt
+const handleAvatarUpload = (info: any) => {
+  if (info.file.status === 'done') {
+    // Lấy đường dẫn ảnh đã tải lên từ response
+    const imageUrl = info.file.response.imageUrl;
+    setAvatarUrl(imageUrl);
+
+    message.success('Tải ảnh lên thành công');
+  } else if (info.file.status === 'error') {
+    message.error('Lỗi tải ảnh lên');
+  }
+};
+
+//logout
 const handleLogout = () => {
   localStorage.removeItem("user");
-  const navigate = useNavigate();
-  navigate('/login');
-  <Alert message="Success Tips" type="success" showIcon />
 };
 
 const menu = (
@@ -46,7 +61,7 @@ const menu = (
       <b> dtv</b>
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item><b>Cá nhân</b></Menu.Item>
+    <Menu.Item key="personal"><b>Cá nhân</b></Menu.Item>
     <Menu.Item key="avt">Đổi ảnh đại diện</Menu.Item>
     <Menu.Item key="pw">Đổi mật khẩu</Menu.Item>
     <Menu.Divider />
