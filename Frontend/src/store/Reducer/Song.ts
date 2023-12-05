@@ -1,7 +1,6 @@
-import {
-    IApiSong,
-    ifSong,
-} from "@/pages/Admin/Interface/ValidateSong";
+// import { ifSong, ifSongAdmin } from "@/pages/Admin/Interface/ValidateSong";
+import { IGenre } from "@/pages/Admin/Interface/genre";
+import { IApiSong, ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import instanceAxios from "@/utils/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";

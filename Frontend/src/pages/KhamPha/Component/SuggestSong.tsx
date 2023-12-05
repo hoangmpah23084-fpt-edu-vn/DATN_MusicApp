@@ -24,6 +24,7 @@ const SuggestSong = (props: Props) => {
   },[])
   
   const handShowGenre = (item : IGenre, index : number) => {
+    console.log(item);
     setIndexOf(index)
     dataLoading(item)
   }

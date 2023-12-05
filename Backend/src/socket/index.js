@@ -7,7 +7,7 @@ const ConnectSocket = (server) => {
     //todo nếu 60s ko có ai send request thì nó sẽ disconnect
     pingTimeout: 60000,
     cors: {
-      origin: ["http://localhost:5173" , "http://127.0.0.1:5173"],
+      origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
       //todo các method có thể dùng cho socket
       methods: ["GET", "POST", "PUT", "DELETE"],
     },
@@ -41,12 +41,24 @@ const ConnectSocket = (server) => {
     socket.on("repeatClient", (value) => {
       socket.to(value.idroom).emit("repeatServer", value);
     });
-    // socket.on("handRandomClient", (value) => {
-    //   socket.to(value.idroom).emit("handRandomServer", value);
+    socket.on("clientStartSongSideBar", (value) => {
+      console.log(value);
+      socket.to(value.idroom).emit("serverStartSongSideBar", value);
+    });
+    socket.on("deleteSongInRoom", (value) => {
+      console.log(value);
+      socket.to(value.idroom).emit("serverDeleteSongInRoom", value);
+    });
+    socket.on("addSongInListRoom", (value) => {
+      socket.to(value.idroom).emit("serverAddSongInListRoom", value);
+    });
+    socket.on("autoNextSong", (value) => {
+      socket.to(value.idroom).emit("serverAutoNextSong", value);
+    });
+    // socket.on("setRandomSong", (value) => {
+    //   socket.to(value.idroom).emit("serverSetRandomSong", value);
     // });
-    // socket.on("autoNextClient", (value) => {
-    //   socket.to(value).emit("autoNextServer", value);
-    // });
+
     socket.on("newMessage", async (value) => {
       const getOneRoom = await roomModel
         .findById(value.id_room)

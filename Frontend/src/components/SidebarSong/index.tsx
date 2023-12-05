@@ -41,7 +41,7 @@ const SidebarSong = (props: Props) => {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
       dispatch(setDataLocal(currentlocal))
     }
-  }, [stateSong]);
+  }, [stateSong, renderListSong.song.length]);
 
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;
@@ -52,7 +52,6 @@ const SidebarSong = (props: Props) => {
       setStateColor(false);
     }
   };
-
 
   return (
     <div
@@ -119,7 +118,7 @@ const SidebarSong = (props: Props) => {
           <div className="w-full h-[100%] overflow-y-scroll">
             {renderListSong &&
               renderListSong.song?.length > 0 &&
-              renderListSong.song.map((item: ifSong, index) => {
+              renderListSong.song.map((item: ifSong, index : number) => {
                 return (
                   <div
                     key={index}
@@ -169,7 +168,7 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[48%] ml-[2%] h-full">
                         <div className="w-full h-[50%]">
-                          <h1 className="font-semibold">{chekcSubString(item.song_name as string)}</h1>
+                          <h1 className="font-semibold">{chekcSubString(item.song_name as string, 15)}</h1>
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">

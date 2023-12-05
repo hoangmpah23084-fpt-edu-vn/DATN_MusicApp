@@ -13,7 +13,6 @@ export const activeSong = (
     } else if (action === "stopPause") {
         dispatch(handChangeStateSong(false));
     }
-
     const getSongLocal = localStorage?.getItem("song") || "";
     if (getSongLocal) {
         const currentlocal: ifSong = JSON?.parse(getSongLocal);
