@@ -16,7 +16,6 @@ import morgan from "morgan";
 import messageRouter from "./Routers/messRouter.js";
 import Route_Video from "./Routers/videoRouter.js";
 import ConnectSocket from "./socket/index.js";
-import BHXRouter from "./Routers/BXHSinger.js";
 
 dotenv.config();
 
@@ -31,7 +30,6 @@ app.use("/api", Route_Song);
 
 app.use("/api", routerFavourite);
 app.use("/api", GenderRouter);
-app.use("/api", BHXRouter);
 
 app.use("/api", AlbumRouter);
 app.use("/api", Router_Playlist);

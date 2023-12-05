@@ -1,30 +1,9 @@
 import Singer from "../Models/singer.js";
 import SingerValidate from "../Schemas/singerSchema.js";
-import BXHSinger from "../Models/BXHSinger.js";
 
 export const getSingers = async (req, res) => {
   try {
     const data = await Singer.find().populate("album").populate("songs");
-    const date = new Date();
-    const currentMonth = `${date.getFullYear()}-${date.getMonth() + 1}`;
-    const BXH = await BXHSinger.findOne({ time: currentMonth });
-    if (BXH) {
-      console.log(BXH);
-      await BXHSinger.findByIdAndUpdate(
-        { _id: BXH._id },
-        {
-          $addToSet: { BXHSinger: data },
-        },
-        {
-          new: true,
-        }
-      );
-    } else {
-      await BXHSinger.create({
-        time: currentMonth,
-        BXHSinger: data,
-      });
-    }
     if (!data) {
       return res.status(404).send({ message: "fail", error: "Loi" });
     }
@@ -104,21 +83,3 @@ export const getItem = async (req, res) => {
     return res.status(500).send({ message: "fail", error: error });
   }
 };
-
-// if (dataBXH.length > 0) {
-//   for (const iterator of dataBXH) {
-//     if (iterator.time.localeCompare(currentMonth)) {
-//       console.log(true);
-//       await BXHSingerModel.create({
-//         time: currentMonth,
-//         BXHSinger: data,
-//       });
-//     } else {
-//     }
-//   }
-// } else if (dataBXH.length == 0) {
-//   await BXHSingerModel.create({
-//     time: currentMonth,
-//     BXHSinger: data,
-//   });
-// }

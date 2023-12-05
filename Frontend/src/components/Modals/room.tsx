@@ -24,7 +24,7 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
         idChat: data._id,
         password: password
       }));
-      console.log(resq.payload);
+      localStorage.removeItem('song');
       navigate(`/liveroom/${resq.payload.data._id}`);
       toast.success(resq.payload.message)
     } catch (error) {

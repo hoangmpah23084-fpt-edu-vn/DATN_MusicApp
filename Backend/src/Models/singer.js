@@ -24,18 +24,6 @@ const singerSchema = new Schema(
     description: {
       type: String,
     },
-    BXHSinger: {
-      type: Object,
-      default: {
-        time: {
-          type: mongoose.Types.String,
-        },
-        songs: {
-          type: mongoose.Types.ObjectId,
-          ref: "Song",
-        },
-      },
-    },
     album: [
       {
         type: mongoose.Types.ObjectId,
@@ -52,15 +40,6 @@ const singerSchema = new Schema(
   },
   { timestamps: true, versionKey: false }
 );
-singerSchema.pre("find", function (next) {
-  this.populate("BXHSinger.songs");
-  next();
-});
-
-singerSchema.pre("find", function (next) {
-  this.populate("BXHSinger.songs");
-  next();
-});
 
 const Singer = mongoose.model("Singer", singerSchema, "Singer");
 export default Singer;
