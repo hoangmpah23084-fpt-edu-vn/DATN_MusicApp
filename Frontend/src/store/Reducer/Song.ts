@@ -15,6 +15,8 @@ interface initState {
     loadingGetone: boolean;
     dataOne: ifSong | null;
     loadingAdd: boolean;
+    loadingSearch: boolean;
+    songSearch: ifSong[]
 }
 
 const initialState: initState = {
@@ -26,6 +28,8 @@ const initialState: initState = {
     loadingGetone: false,
     dataOne: null,
     loadingAdd: false,
+    loadingSearch: false,
+    songSearch: []
 };
 export const handAddSong = createAsyncThunk(
     "song/addSong",
@@ -48,6 +52,19 @@ export const handGetSong = createAsyncThunk(
         return data;
     }
 );
+
+export const handGetSongSearch = createAsyncThunk(
+    "song/getSongSearch",
+    async (option?: IApiSong) => {
+        const { data } = await instanceAxios.get(
+            `http://localhost:8080/api/Song/?_limit=${option?.pageSize ? option?.pageSize : 10
+            }&_page=${option?.page ? option?.page : 1}&search=${option?.search ? option?.search : ""
+            }&_sort=${option?.sort ? option?.sort : "createdAt"}&_order=${option?.order ? option?.order : "desc"}`
+        );
+        return data;
+    }
+);
+
 export const handDeleteSong = createAsyncThunk(
     "song/deleteSong",
     async (id: string) => {
@@ -136,7 +153,14 @@ const songReducer = createSlice({
             .addCase(handGetOne.fulfilled, (state, action) => {
                 state.loadingGetone = false;
                 state.dataOne = action.payload;
-            });
+            }).addCase(handGetSongSearch.pending, (state) => {
+                state.loadingSearch = true
+            }).addCase(handGetSongSearch.rejected, (state) => {
+                state.loadingSearch = false;
+            }).addCase(handGetSongSearch.fulfilled, (state, action) => {
+                state.songSearch = action.payload.data
+                state.loadingSearch = false;
+            })
     },
 });
 export default songReducer.reducer;

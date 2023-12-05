@@ -173,7 +173,7 @@ const SidebarSong = (props: Props) => {
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">
-                            {item.song_singer}
+                            {item.id_Singer.name}
                           </p>
                         </div>
                       </div>

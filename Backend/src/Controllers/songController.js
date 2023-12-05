@@ -58,7 +58,8 @@ export const get_Songs = async (req, res) => {
     page: _page,
     sort:{
       [_sort]: _order === "desc" ? -1 : 1,
-    }
+    },
+    populate: ["id_Singer", "id_Genre"],
 };
   try {
     let query = {};
@@ -66,11 +67,10 @@ export const get_Songs = async (req, res) => {
       query = {
         $or: [
           { song_name: { $regex: search, $options: 'i' } },
-          { song_singer: { $regex: search, $options: 'i' } },
         ],
       };
     }
-    const data = await SongSchame.paginate(query,options);
+    const data = await SongSchame.paginate(query, options);
     const total = await SongSchame.find()
     return res.status(200).json({
       message: "Get song list Successfully",
