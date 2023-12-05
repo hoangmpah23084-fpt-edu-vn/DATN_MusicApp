@@ -9,6 +9,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ifUser } from "@/pages/Admin/Interface/User";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
+import './index.css'
 
 type Props = {};
 const Header = (props: Props) => {
@@ -71,8 +72,8 @@ const menu = (
 
 if (userLocal || useLocation().pathname === '/') {
   return (
-    <div className="flex h-[70px] items-center fixed bg-[#170f23] ml-[240px] z-50 w-full">
-      <div className="flex items-center z-1 w-[100%] px-[59px]">
+    <div className="flex h-[70px] items-center fixed bg-[#170f23] ml-[240px] z-50 w-full" >
+        <div className="flex items-center justify-between z-1 w-[100%] px-[59px]">
         <div className="flex">
           <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] flex items-center h-[40px]" />
           <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px]" />
@@ -86,7 +87,7 @@ if (userLocal || useLocation().pathname === '/') {
             />
           </div>
         </div>
-        <div className="flex text-[#fff] justify-around ml-56">
+        <div className="flex text-[#fff] mr-52">
           <div className="bg-[#2f2739] rounded-full">
             <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee]">
               <GoDesktopDownload className="mr-[5px]" />
@@ -98,13 +99,13 @@ if (userLocal || useLocation().pathname === '/') {
           </div>
           { userLocal
             ?
-            <>
-            <Dropdown overlay={menu}>
+            <div className='dropdown-profile'>
+            <Dropdown overlay={menu} >
               <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
                 <img src="/user-default.3ff115bb.png" className="rounded-full" onClick={(e) => e.preventDefault()} />
               </div>
             </Dropdown>
-            </>
+            </div>
             :
             <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee] bg-[#2f2739] rounded-full ml-5">
               <Link to="http://localhost:5173/signin">Đăng nhập</Link>
