@@ -102,7 +102,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
             <ul className="">
               <li className="">
                 <Link
-                  to={"/"}
+                  to={"/music_charts"}
                   className="flex items-center leading-[20px] py-[6px] px-[24px]"
                 >
                   <BsMusicNoteBeamed className="w-[22px] text-[#ccc] h-[40px]" />

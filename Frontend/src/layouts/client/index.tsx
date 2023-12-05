@@ -15,6 +15,8 @@ import ModalCreatePlaylist from "@/components/Modals/createPlaylist";
 
 
 const LayoutClient = () => {
+  const [widthBrowser, setWidthBrowser] = useState(window.innerWidth);
+  const [width, setWidth] = useState(false);
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
   const current = useAppSelector(({ Song }) => Song);
   const dispatch = useAppDispatch();
