@@ -5,22 +5,20 @@ import Artist from "@/pages/Admin/Artist/listArtist";
 import AddArtist from "@/pages/Admin/Artist/addArtist";
 import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
-import AddSong from "@/pages/Admin/Song/AddSong";
 import ListSong from "@/pages/Admin/Song/ListSong";
-import UpdateSong from "@/pages/Admin/Song/UpdateSong";
 import ListUser from "@/pages/Admin/User/ListUser";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter } from "react-router-dom";
 import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
+import Room from "@/pages/Room/room";
+import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import Album from "@/pages/Album/Album";
+import RoomPage from "@/pages/Room/RoomPage";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
-import Room from "@/pages/Room/room";
-import RoomPage from "@/pages/Room/RoomPage";
-import PlaylistPage from "@/pages/Playlist/PlaylistPage";
-
+import Playlist from "@/pages/Playlist/Playlist";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -32,18 +30,20 @@ export const router = createBrowserRouter([
     element: <Signin />
   },
   {
+
     path: "/",
     element: <LayoutClient />,
     children: [
       { index: true, element: <KhamPhaPage /> },
       { path: "mymusic/song/favorite", element: <FavouritePage /> },
       { path: "rooms", element: <Room /> },
+      { path: "playlist", element: <Playlist /> },
       { path: "playlist/:id", element: <PlaylistPage /> },
       { path: "album", element: <Album /> },
     ],
   },
   {
-    path: "/liveRoom/:id", element: <RoomPage/>
+    path: "/liveRoom/:id", element: <RoomPage />
   },
   //todo BE
   {
@@ -54,21 +54,10 @@ export const router = createBrowserRouter([
         index: true,
         element: <DashBoard />,
       },
-      {
-        path: "dashboard",
-        element: <div>Hehe</div>,
-      },
-      {
-        path: "song",
-        element: <AddSong />,
-      },
+
       {
         path: "listsong",
         element: <ListSong />,
-      },
-      {
-        path: "updatesong/:id",
-        element: <UpdateSong />,
       },
       {
         path: "listuser",
@@ -85,19 +74,21 @@ export const router = createBrowserRouter([
       {
         path: "update-artist/:id",
         element: <UpdateArtist />,
-      },
+      }
+      ,
       {
         path: "addgenre",
-        element: <Genre />,
-      },
+        element: <Genre />
+      }
+      ,
       {
         path: "listgenre",
-        element: <ListGenre />,
+        element: <ListGenre />
       },
       {
         path: "UpdateGenre/:id",
-        element: <UpdateGenre />,
-      },
+        element: <UpdateGenre />
+      }
     ],
   },
 ]);

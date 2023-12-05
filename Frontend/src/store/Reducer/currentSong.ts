@@ -1,4 +1,4 @@
-import { ifCurrentSong, ifSong, ifSongAdmin } from "@/pages/Admin/Interface/ValidateSong";
+import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface initState {
@@ -19,14 +19,20 @@ const initialState: initState = {
 export const handGetCurrentSong = createAsyncThunk("currentSongReducer/getSong", (item: ifSong) => item);
 export const handChangeStateSong = createAsyncThunk("currentSongReducer/stateSong", (item: boolean) => item);
 
-
-
 const currentSong = createSlice({
     name: "currentSong",
     initialState: initialState,
     reducers: {
         setDataLocal: (state, action: PayloadAction<ifSong>) => {
             state.dataLocal = action.payload
+        },
+        setCurrentSong:(state, action: PayloadAction<any>) => {
+            state.currentSong = action.payload; 
+            console.log('NewPayload : ', action.payload);
+        },
+        setStateSong:(state, action: PayloadAction<boolean>) => {
+            state.stateSong = action.payload; 
+            console.log('NewPayload : ', action.payload);
         },
     },
     extraReducers: builder => {
@@ -46,5 +52,5 @@ const currentSong = createSlice({
             })
     }
 })
-export const { setDataLocal } = currentSong.actions
+export const { setDataLocal,setCurrentSong, setStateSong } = currentSong.actions
 export default currentSong.reducer

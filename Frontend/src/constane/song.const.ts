@@ -13,18 +13,17 @@ export const activeSong = (
     } else if (action === "stopPause") {
         dispatch(handChangeStateSong(false));
     }
-
     const getSongLocal = localStorage?.getItem("song") || "";
     if (getSongLocal) {
         const currentlocal: ifSong = JSON?.parse(getSongLocal);
         dispatch(setDataLocal(currentlocal))
     }
 };
- 
 
-export const chekcSubString = (text: string) => {
+
+export const chekcSubString = (text: string, size?: number) => {
     if (text) {
-        let newText = text.substring(0, 15);
+        let newText = text.substring(0, size ? size : 10);
         if (text.length > 10) {
             newText = newText + "...";
         }

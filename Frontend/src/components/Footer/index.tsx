@@ -243,7 +243,7 @@ const Footer = (props: Props) => {
                       <Link to={"#"}>
                         <div className="title-wrapper">
                           <span className="item-title title text-[14px] text-[#fff]">
-                            {chekcSubString(currentSong?.song_name as string)}
+                            {chekcSubString(currentSong?.song_name as string, 15)}
                           </span>
                         </div>
                       </Link>

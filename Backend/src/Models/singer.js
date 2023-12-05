@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const artistSchema = new Schema(
+const singerSchema = new Schema(
   {
     name: {
       type: String,
@@ -42,5 +42,5 @@ const artistSchema = new Schema(
   { timestamps: true, versionKey: false }
 );
 
-const Artist = mongoose.model("Artists", artistSchema, "Artists");
-export default Artist;
+const Singer = mongoose.model("Singer", singerSchema, "Singer");
+export default Singer;

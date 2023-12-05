@@ -150,7 +150,7 @@ const SidebarMenu = () => {
         <button className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px]  border-t-[1px] border-[#32323d]">
           <Link to={"#"} className="flex items-center justify-start ">
             <AiOutlinePlus className="w-[20px] text-[#ccc] h-[40px] mr-4" />
-            <span>Tạo playlist mới</span>
+            <span >Tạo playlist mới</span>
           </Link>
         </button>
       </div>

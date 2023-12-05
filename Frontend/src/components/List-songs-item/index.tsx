@@ -1,14 +1,27 @@
-import React from "react";
 import { AiOutlineHeart } from "react-icons/ai";
-import { BsThreeDots, BsFillPlayFill } from "react-icons/bs";
+import { BsThreeDots, BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import "./css.scss";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
+import { activeSong } from "@/constane/song.const";
+import { handGetSongInGenre } from "@/store/Reducer/Song";
 
 type Props = {
   section?: string;
+  item : ifSong
 };
 
-const  ListSongItem = ({ section }: Props) => {
+const  ListSongItem = ({ section, item }: Props) => {
+  const {stateSong, dataLocal} = useAppSelector(({currentSong}) => currentSong);
+  const {currentSong} = useAppSelector(({currentSong}) => currentSong);
+  const dispatch = useAppDispatch();
+  const handToggle = () => {
+    dispatch(handGetSongInGenre(item.id_Genre))
+    stateSong &&
+     dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start");
+  }
+    
   return (
     <div className="list-items px-[15px]">
       <div
@@ -27,7 +40,7 @@ const  ListSongItem = ({ section }: Props) => {
             <span className="number is-top-1 mr-[15px]">1</span>
           </div>
 
-          <div className="song-thumb block relative shrink-0 overflow-hidden cursor-pointer mr-[10px]">
+          <div className="song-thumb block relative shrink-0 overflow-hidden cursor-pointer mr-[10px]" onClick={handToggle}>
             <div
               className={`${
                 section === "chanel" && "card-image"
@@ -39,19 +52,19 @@ const  ListSongItem = ({ section }: Props) => {
                 } ${section === "zingchart" && "w-[60px] h-[60px]"} ${
                   section === "chanel" && "w-[120px] h-[120px]"
                 }`}
-                src="./Image/6974fd1ab921429cc4f4d14564269660.jpg"
+                src={`${item?.song_image[0]}`}
                 alt=""
               />
               <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
-              <div className="action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%] hidden">
-                <div className="flex gap-[20px] h-full justify-center">
+              <div className="action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%]  hidden">
+                <div className="flex gap-[20px] h-full justify-center items-center" >
                   <div>
                     <div
                       className={`${
                         section === "chanel" && "border rounded-full"
-                      }`}
+                      } flex justify-center items-center`}
                     >
-                      <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" />
+                    { currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill clasName="text-[40px] p-4 pl-[6px]" /> }  
                     </div>
                   </div>
                 </div>
@@ -66,7 +79,7 @@ const  ListSongItem = ({ section }: Props) => {
           >
             <div>
               <div className="capitalize text-[15px]">
-                <span>Chài Điếp Noọng (Anh Yêu Em)</span>
+                <span>{item?.song_name}</span>
               </div>
               <div className="text-[rgb(140,136,146)] text-[12px] hover:text-[#c273ed] hover:underline">
                 <Link to={`#`}>Double2T, Hoà Minzy, DuongK</Link>

@@ -71,7 +71,7 @@ const signin = async (req, res) => {
       });
     }
     const token = await jwt.sign({ id: user._id }, SECRETKEY, {
-      expiresIn: "1h",
+      expiresIn: "30m",
     });
     return res.json({
       message: "Đăng nhập thành công",
@@ -81,6 +81,17 @@ const signin = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const refreshToken = async (req, res) => {
+  const { _id } = req.body;
+  const token = await jwt.sign({ id: _id }, SECRETKEY, {
+    expiresIn: "30m",
+  });
+  return res.json({
+    message: "Làm mới thành công",
+    accessToken: token,
+  });
 };
 
 const getAllMembers = async (req, res) => {
@@ -118,4 +129,5 @@ const getOneUser = async (req, res) => {
     console.log(error);
   }
 };
-export { signin, signup, getAllMembers, getOneUser};
+
+export { signin, signup, getAllMembers, getOneUser, refreshToken };

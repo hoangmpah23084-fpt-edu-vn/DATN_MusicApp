@@ -108,3 +108,21 @@
   border-right: 7px solid transparent;
   border-bottom: 7px solid #000;
 }
+
+.tabSidebarSoom {
+  font-weight: 500;
+  padding: 3px 14px;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+.OutlineSearch{
+  border: none;
+  color: #eeeeee7c;
+  font-size: 13px;
+  &:focus {
+    outline: none !important;;
+    box-shadow: none;
+  }
+}

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import mongoosePaginate from "mongoose-paginate-v2";
 const SongSchame = new mongoose.Schema(
   {
     song_name: String,
@@ -11,8 +11,6 @@ const SongSchame = new mongoose.Schema(
       },
     ],
     song_title: String,
-    song_singer: String,
-    song_lyric: String,
     is_dowload: {
       type: Boolean,
       default: true,
@@ -21,9 +19,13 @@ const SongSchame = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Genre",
     },
-    id_Artists: {
+    id_Singer: {
       type: mongoose.Types.ObjectId,
-      ref: "Artists",
+      ref: "Singer",
+    },
+    month: {
+      type: String,
+      default:"{}"
     },
     total_like: {
       type: Number,
@@ -36,4 +38,6 @@ const SongSchame = new mongoose.Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+SongSchame.plugin(mongoosePaginate);
 export default mongoose.model("Song", SongSchame, "Song");

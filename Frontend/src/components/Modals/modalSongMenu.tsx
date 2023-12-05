@@ -15,11 +15,79 @@ import {
   AiOutlineRight,
 } from "react-icons/ai";
 import { BsMusicNoteList } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import instanceAxios from "@/utils/axios";
+import { toast } from "react-toastify";
+import ModalCreatePlaylist from "./createPlaylist";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  deleteSongToPlaylist,
+  getPlaylist,
+} from "@/store/Reducer/playlistReducer";
+import { useAppDispatch } from "@/store/hooks";
 
-const ModalSongMenu = () => {
+const ModalSongMenu = ({ song }: any) => {
+  const { id } = useParams<{ id?: string }>();
+  const [playlist, setPlaylist] = useState<any>([]);
+  const [isShowModalCreate, setIsShowModalCreate] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const fetchDataPlaylist = async () => {
+    try {
+      const { data } = await instanceAxios.get(`/playlist`);
+      setPlaylist(data.data);
+    } catch (error) {
+      toast.error(error as any);
+    }
+  };
+
+  const handleAddToPlaylist = async (id: string) => {
+    try {
+      const resp: any = await instanceAxios.put(`/playlist/create/song/${id}`, {
+        id_song: song._id,
+      });
+      toast.success(resp.data.message);
+      navigate(`/playlist/${resp.data.data._id}`);
+    } catch (error) {
+      toast.error(error as string);
+    }
+  };
+
+  const handleDeleteToPlaylist = async () => {
+    try {
+      const resp: any = await instanceAxios.put(`/playlist/delete/song/${id}`, {
+        id_song: song._id,
+      });
+
+      dispatch(
+        deleteSongToPlaylist(id as string, {
+          id_song: song._id,
+        })
+      );
+      dispatch(getPlaylist(id as string));
+      toast.success(resp.data.message);
+      navigate(`/playlist/${resp.data.data._id}`);
+    } catch (error) {
+      toast.error(error as string);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataPlaylist();
+  }, []);
+
+  const handleShowModalCreatePlaylist = () => {
+    setIsShowModalCreate(!isShowModalCreate);
+  };
+
+  console.log(window.location.pathname);
+
   return (
     <>
-      <div className="absolute z-50 max-h-full bg-[#34224f] rounded-xl w-72 right-[130px] -mt-64">
+      {isShowModalCreate && (
+        <ModalCreatePlaylist onShowModal={handleShowModalCreatePlaylist} />
+      )}
+      <div className="absolute z-[9999] bg-[#34224f] rounded-xl w-72 right-16 -mt-64">
         <header className="flex items-center py-3 ml-2 pr-10 ">
           <img
             src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg"
@@ -115,7 +183,10 @@ const ModalSongMenu = () => {
                   />
                 </header>
                 <div className="px-5 py-2 mt-4 hover:bg-[#594b6f] ">
-                  <button className="flex items-center text-white">
+                  <button
+                    onClick={() => handleShowModalCreatePlaylist()}
+                    className="flex items-center text-white"
+                  >
                     <span className="bg-[#ca8dc6] px-2 py-1 text-white rounded-lg">
                       <AiOutlinePlus />
                     </span>
@@ -124,48 +195,18 @@ const ModalSongMenu = () => {
                 </div>
                 <div className="">
                   <ul className=" text-white">
-                    <li className="flex px-5 py-2 my-1  items-center hover:bg-[#594b6f]">
-                      <span>
-                        <BsMusicNoteList />
-                      </span>
-                      <p className="ml-3">Test</p>
-                    </li>
-                    <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span>
-                        <BsMusicNoteList />
-                      </span>
-                      <p className="ml-3">Test</p>
-                    </li>
-                    <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span>
-                        <BsMusicNoteList />
-                      </span>
-                      <p className="ml-3">Test</p>
-                    </li>
-                    <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span>
-                        <BsMusicNoteList />
-                      </span>
-                      <p className="ml-3">Test</p>
-                    </li>
-                    <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span>
-                        <BsMusicNoteList />
-                      </span>
-                      <p className="ml-3">Test</p>
-                    </li>
-                    <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span>
-                        <BsMusicNoteList />
-                      </span>
-                      <p className="ml-3">Test</p>
-                    </li>
-                    <li className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]">
-                      <span>
-                        <BsMusicNoteList />
-                      </span>
-                      <p className="ml-3">Test</p>
-                    </li>
+                    {playlist?.map((item: any) => (
+                      <li
+                        key={item._id}
+                        onClick={() => handleAddToPlaylist(item._id)}
+                        className="flex px-5 py-2 my-1 items-center hover:bg-[#594b6f]"
+                      >
+                        <span>
+                          <BsMusicNoteList />
+                        </span>
+                        <p className="ml-3">{item.playlist_name}</p>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -209,6 +250,19 @@ const ModalSongMenu = () => {
                 </div>
               </div>
             </li>
+            {window.location.pathname.includes("/playlist/") && (
+              <li
+                onClick={() => handleDeleteToPlaylist()}
+                className="py-1 hover:bg-[#594b6f] ease-in-out duration-300"
+              >
+                <button className="flex items-center">
+                  <span className="mx-5">
+                    <ImCopy />
+                  </span>
+                  Xóa bài hát khỏi Playlist
+                </button>
+              </li>
+            )}
           </ul>
         </div>
         <footer className="py-2 text-center text-[#867b95]">

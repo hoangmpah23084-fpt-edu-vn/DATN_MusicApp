@@ -3,15 +3,19 @@ import { AiFillPlayCircle, } from "react-icons/ai"
 import { BsPlusLg } from "react-icons/bs"
 import { Link } from "react-router-dom"
 import ListSong from "@/components/Favourites/ListSong"
-import { useAppDispatch } from "@/store/hooks"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { useEffect } from "react"
 import { getFavourite } from "@/store/Reducer/favouriteReducer"
+import { RootState } from "@/store/store"
 
 
 
 const FavouritePage = () => {
-
+    const { listFavourites } = useAppSelector((state: RootState) => state.favourites)
     const dispatch = useAppDispatch()
+
+    console.log(listFavourites);
+    
 
     useEffect(() => {
         dispatch(getFavourite())
@@ -43,8 +47,8 @@ const FavouritePage = () => {
                 <li><Link to="#" className="px-3 py-1 border-2 rounded-3xl hover:text-[#9b4de0] hover:border-[#9b4de0]">ĐÃ TẢI LÊN</Link></li>
             </ul>
         </div>
-        <div className="overflow-x-auto mx-16 py-10">
-            <ListSong />
+        <div className=" overflow-x-auto ml-16 py-10">
+            <ListSong listSong={listFavourites} />
         </div>
 
     </div>)
