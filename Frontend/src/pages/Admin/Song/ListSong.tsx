@@ -89,7 +89,7 @@ const ListSong = () => {
       id: chekcSubString(item._id as string, 5),
       ten: chekcSubString(item.song_name as string, 20),
       anh: <img src={item.song_image[0]} className="w-14 h-14 rounded-xl" />,
-      casi: item.id_Singer,
+      casi: item.id_Singer.name,
       luotnghe: item.view_song,
       yeuthich: item.total_like,
 
@@ -439,7 +439,7 @@ const ListSong = () => {
         <div>
           <p><strong>ID:</strong> {dataOne?._id}</p>
           <p><strong>Tên bài hát:</strong> {dataOne?.song_name}</p>
-          <p><strong>Ca sĩ:</strong> {dataOne?.id_Singer}</p>
+          <p><strong>Ca sĩ:</strong> {dataOne?.id_Singer.name}</p>
           <p><strong>Link:</strong> <a href={dataOne?.song_link}>{chekcSubString(dataOne?.song_link as string, 50)}</a></p>
           <p><strong>Mô tả: </strong>{chekcSubString(dataOne?.song_lyric as string, 20)}</p>
           <p><strong>Lượt nghe:</strong> {dataOne?.view_song}</p>
