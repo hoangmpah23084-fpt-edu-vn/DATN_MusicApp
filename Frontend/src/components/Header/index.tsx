@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Avatar, Alert, Dropdown, Menu, message } from "antd";
+import { Avatar, Dropdown, Menu, message } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { AiOutlineSearch, AiOutlineSetting } from "react-icons/ai";
 import { GoDesktopDownload } from "react-icons/go";
@@ -29,7 +29,7 @@ useEffect(() => {
 const handleMenuClick = (e: any) => {
   if (e.key === 'logout') {
     handleLogout();
-    navigate('/signin');
+    navigate('/');
     toast.success("Đăng xuất thành công!")
   } else if (e.key === 'avt'){
     
