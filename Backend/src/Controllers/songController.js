@@ -52,8 +52,16 @@ export const createSong = async (req, res) => {
 };
 
 export const get_Songs = async (req, res) => {
+  const {_sort = "createdAt", _order = "desc", _limit = "10"} = req.query;
+  const option = {
+    limit: _limit, 
+    sort: {
+      [_sort]: _order === "desc" ? -1 : 1,
+    }
+
+  }
   try {
-    const data = await SongSchame.find();
+    const data = await SongSchame.paginate({}, option);
     return res.status(200).json({
       message: "Get song list Successfully",
       data,

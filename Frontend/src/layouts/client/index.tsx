@@ -65,7 +65,7 @@ const LayoutClient = () => {
       <div className="md:flex w-[100%] bg-[#170f23] overflow-hidden">
         {isToken && <ModalSignin />}
         {width && <SideBarMobile />}
-        <SidebarMenu width={widthBrowser} />
+        <SidebarMenu />
         <Header />
         <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
