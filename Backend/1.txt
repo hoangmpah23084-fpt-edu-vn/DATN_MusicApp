@@ -1,2 +1,33 @@
 PORT = 8080
 URI_MONGODB = "mongodb://127.0.0.1:27017/DATN_Music"
+
+
+
+    const date = new Date();
+    const currentMonth = `${date.getFullYear()}-${date.getMonth() + 1}`;
+    for (const item of data) {
+      console.log(item.BXHSinger.time[0]);
+      if (!currentMonth.localeCompare(item.BXHSinger.time[0])) {
+        // currentMonth == item.BXHSinger.time[0])
+        console.log(1);
+      } else {
+        await Singer.findByIdAndUpdate(
+          item._id,
+          {
+            $addToSet: {
+              "BXHSinger.time": currentMonth,
+              "BXHSinger.songs": item.songs,
+            },
+          },
+          { new: true }
+        );
+        console.log("month 13");
+      }
+    }
+    const string2 = "2000-11";
+    const string3 = "2000-11";
+    if (!string2.localeCompare(string3)) {
+      console.log("success");
+    } else {
+      console.log("error");
+    }
