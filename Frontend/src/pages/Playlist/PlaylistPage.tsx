@@ -1,13 +1,34 @@
-import SongCarouselItem from "@/components/Song-carousel-item";
-import React from "react";
+import { useEffect, useState } from "react";
 import { BsThreeDots, BsFillPlayFill } from "react-icons/bs";
-import { AiOutlineHeart } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { AiOutlineHeart, AiOutlinePause } from "react-icons/ai";
+import { Link, useParams } from "react-router-dom";
 import "./css.scss";
 import ListSong from "@/components/Favourites/ListSong";
+import { getOneAlbum } from "@/store/Reducer/albumReducer";
+import { ifAlbum } from "../Admin/Interface/validateAlbum";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
 type Props = {};
 
 const PlaylistPage = (props: Props) => {
+  const {id} = useParams<{id ?: string}>();
+  const currentSong = useAppSelector(({currentSong}) => currentSong)
+  const [album, setAlbum] = useState<ifAlbum | null>(null);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    id && getOneAlbum(id as string).then(({data}) => {
+      setAlbum(data)
+      dispatch(handChangeStateSong(false))
+      dispatch(handGetCurrentSong(data.list_song[0]))
+      setTimeout(() => dispatch(handChangeStateSong(true)), 500);
+    }).catch(error => console.error(error))
+  },[id])
+
+  const handToggSong = () => {
+    const state = currentSong.stateSong;
+    dispatch(handChangeStateSong(!state));
+  }
+
   return (
     <div className="zm-section">
       <main className="px-[59px] text-white">
@@ -43,7 +64,7 @@ const PlaylistPage = (props: Props) => {
 
                       <div>
                         <button className="border rounded-full">
-                          <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" />
+                          {currentSong ? <AiOutlinePause className="text-[40px] p-1 pl-[6px]" /> : <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" /> }
                         </button>
                       </div>
 
@@ -76,9 +97,9 @@ const PlaylistPage = (props: Props) => {
                     </div>
                   </div>
                   <div className="actions flex flex-col items-center justify-center">
-                    <button className="flex bg-[#9b4de0] items-center rounded-[25px] my-[20px] px-[20px] py-[5px]">
-                      <BsFillPlayFill className='text-[25px]' />
-                      <span className="uppercase text-[14px] font-light">Tiếp tục phát</span>
+                    <button className="flex bg-[#9b4de0] items-center rounded-[25px] my-[20px] px-[20px] py-[5px]" onClick={handToggSong} >
+                      {currentSong.stateSong  ?  <AiOutlinePause className='text-[25px] font-black pr-1' /> : <BsFillPlayFill className='text-[25px] pr-1' />}
+                      <span className="uppercase text-[14px] font-normal">{currentSong.stateSong ? 'Dừng Phát' : 'Tiếp tục phát' } </span>
                     </button>
                     <div className="flex">
                       <button className="group relative flex justify-center items-center rounded-full px-[5px] ">

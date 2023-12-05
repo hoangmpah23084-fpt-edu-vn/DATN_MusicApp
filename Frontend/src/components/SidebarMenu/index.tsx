@@ -110,7 +110,7 @@ const SidebarMenu = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   return (
-    <div className="text-[#dadada] text-[14px] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#2a213a] z-0">
+    <div className="text-[#dadada] text-[14px] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#2a213a] z-0 hidden sm:block">
       <nav className="zm-navbar ">
         <div className="zm-navbar-brand w-[240px] h-[70px] fixed top-0 pt-0 pr-[25px] pl-[28px] flex items-center">
           <div className="zm-navbar-item">

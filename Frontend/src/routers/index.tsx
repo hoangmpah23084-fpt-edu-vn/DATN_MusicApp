@@ -38,12 +38,12 @@ export const router = createBrowserRouter([
       { index: true, element: <KhamPhaPage /> },
       { path: "mymusic/song/favorite", element: <FavouritePage /> },
       { path: "rooms", element: <Room /> },
-      { path: "playlist", element: <PlaylistPage /> },
+      { path: "playlist/:id", element: <PlaylistPage /> },
       { path: "album", element: <Album /> },
     ],
   },
   {
-    path: "/liveRoom", element: <RoomPage/>
+    path: "/liveRoom/:id", element: <RoomPage/>
   },
   //todo BE
   {

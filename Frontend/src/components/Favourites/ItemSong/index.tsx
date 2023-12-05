@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { activeSong } from "@/constane/song.const";
 import { onhandleFavourite } from "@/constane/favourites.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
+import { RootState } from "@/store/store";
 
 type props = {
   item: ifSong;
@@ -25,9 +26,10 @@ const ItemSong = ({ item }: props) => {
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
-  const { stateSong, dataLocal } = useAppSelector(
-    ({ currentSong }) => currentSong
-  );
+
+
+  const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
+  const { token } = useAppSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
@@ -128,10 +130,7 @@ const ItemSong = ({ item }: props) => {
               </div>
             </button>
 
-            <button
-              className="text-[#9b4de0] mx-2 group relative "
-              onClick={() => onhandleFavourite(dispatch, item?._id as string)}
-            >
+            <button className="text-[#9b4de0] mx-2 group relative " onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}>
               <AiFillHeart className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <p className="text-white">Xoá khỏi thư viện</p>

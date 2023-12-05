@@ -13,7 +13,6 @@ export const createSong = async (req, res) => {
       });
     }
     const data = await SongSchame.create(req.body);
-    console.log(data);
     if (!data) {
       return res.status(400).json({
         message: "Create Song failed",
@@ -55,7 +54,6 @@ export const createSong = async (req, res) => {
 export const get_Songs = async (req, res) => {
   try {
     const data = await SongSchame.find();
-    console.log(req.user);
     return res.status(200).json({
       message: "Get song list Successfully",
       data,
@@ -153,3 +151,25 @@ export const deleteSong = async (req, res) => {
     });
   }
 };
+
+
+export const updateViewSong = async(req, res)=>{
+  const id_song = req.params.id
+  const data_song = await SongSchame.findOne({_id: id_song});
+  if (!data_song){
+    return res.status(401).json({
+      message: "Không thành công",
+    });
+  }else{
+    await SongSchame.findOneAndUpdate(
+      {_id: id_song }, 
+       { 
+        view_song: data_song.view_song + 1,
+       },
+      { upsert: true, new: true } 
+    );
+    return res.status(201).json({
+      message: "Thành công",
+    });
+  }
+}

@@ -11,7 +11,13 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
-import { Advertisement, BXHSong, HeardRecently, SuggestSong, WantToListent } from "./Component";
+import {
+  Advertisement,
+  BXHSong,
+  HeardRecently,
+  SuggestSong,
+  WantToListent,
+} from "./Component";
 
 const img_slide = [
   { id: 0, img: "/Image/b0fa9fbfce103d1dce15d73aaceb68be.jpg" },
@@ -26,19 +32,28 @@ const KhamPhaPage = () => {
   return (
     <>
       <div className="zm-section">
-        <main className="px-[59px] text-white">
+        <main className="px-[15px] md:px-[59px] text-white">
           <div className="home-page-content mt-[70px]">
             <div className="container">
               <div className="gallery mx-[-15px] pt-[32px]">
                 <div className="gallery-container flex relative">
                   <Swiper
                     modules={[Autoplay, Navigation]}
-                    slidesPerView={3}
+                    slidesPerView={1}
                     navigation
                     loop={true}
                     className="mySwiper"
                     autoplay={{
-                      delay: 5000,
+                      delay: 3000,
+                    }}
+                    breakpoints={{
+                      768: {
+                        slidesPerView: 2,
+                      },
+                      1024: {
+                        slidesPerView: 3,
+                        // navigation:true
+                      },
                     }}
                   >
                     {img_slide.map((slide) => {
@@ -67,29 +82,29 @@ const KhamPhaPage = () => {
                     className="text-[#fff] uppercase text-xs font-light flex items-center "
                   >
                     Tất cả
-                    <GrFormNext className="stroke-[#fff]"/>
+                    <GrFormNext className="stroke-[#fff]" />
                   </Link>
                 </div>
-                
-              {/* Start Component HeardRecently */}
-              <HeardRecently />
-              {/* End Component HeardRecently */} 
-              </div>
-              {/* Start Component SuggestSong */} 
-              <SuggestSong />
-              {/* End Component SuggestSong */} 
-              
-              {/* Start Component WantToListent */} 
-              <WantToListent />
-              {/* End Component WantToListent */} 
 
-              {/* Start Component WantToListent */} 
-              <BXHSong />
-              {/* End Component WantToListent */} 
-             
-              {/* Start Component WantToListent */} 
+                {/* Start Component HeardRecently */}
+                <HeardRecently />
+                {/* End Component HeardRecently */}
+              </div>
+              {/* Start Component SuggestSong */}
+              <SuggestSong />
+              {/* End Component SuggestSong */}
+
+              {/* Start Component WantToListent */}
+              <WantToListent />
+              {/* End Component WantToListent */}
+
+              {/* Start Component WantToListent */}
+              {/* <BXHSong /> */}
+              {/* End Component WantToListent */}
+
+              {/* Start Component WantToListent */}
               <Advertisement />
-              {/* End Component WantToListent */} 
+              {/* End Component WantToListent */}
             </div>
           </div>
         </main>

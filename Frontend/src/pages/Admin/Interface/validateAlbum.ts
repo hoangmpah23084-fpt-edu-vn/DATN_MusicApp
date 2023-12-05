@@ -5,8 +5,9 @@ export const validateGenre= yup.object().shape({
     name : yup.string().min(6).required("Please enter name genre")
 })
 export interface ifAlbum {
-    name : string,
-    list_songs ?: ifSong[],
+    _id ?: string,
+    album_name : string,
+    list_song ?: ifSong[],
 }
 export interface ifGenre {
     _id ?: string,

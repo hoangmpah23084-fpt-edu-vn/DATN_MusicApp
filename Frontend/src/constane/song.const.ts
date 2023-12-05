@@ -24,7 +24,7 @@ export const activeSong = (
 
 export const chekcSubString = (text: string) => {
     if (text) {
-        let newText = text.substring(0, 10);
+        let newText = text.substring(0, 15);
         if (text.length > 10) {
             newText = newText + "...";
         }

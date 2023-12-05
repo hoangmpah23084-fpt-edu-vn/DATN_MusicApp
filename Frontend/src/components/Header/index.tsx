@@ -13,20 +13,22 @@ import ModalHeader from "../Modals/modalHeader";
 type Props = {
   sideBarRight: boolean;
 };
+import { Link } from "react-router-dom";
+// type Props = {};
 
 const Header = (props: Props) => {
   const [modal, setModal] = useState<boolean>(false);
 
   return (
     <div
-      className={`flex h-[70px] items-center fixed bg-[#170f23] left-[240px] z-20 px-[59px] transition-all duration-700 ${
+      className={`flex h-[70px] items-center fixed bg-[#170f23] left-0 z-20 px-[15px] w-full sm:left-[240px] md:px-[59px] md:w-fit transition-all duration-700 ${
         props.sideBarRight ? "w-[calc(100vw-570px)]" : "w-[calc(100vw-240px)] "
       }`}
     >
       <div className="flex items-center z-1 w-full justify-between">
-        <div className="flex">
-          <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] flex items-center h-[40px]" />
-          <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px]" />
+        <div className="flex flex-1">
+          <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] hidden items-center h-[40px] md:flex" />
+          <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px] hidden md:flex" />
           <div className="search w-full lg:flex items-center justify-center text-[#fff]">
             <Input
               prefix={
@@ -48,15 +50,11 @@ const Header = (props: Props) => {
           <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#2f2739] rounded-full">
             <AiOutlineSetting className=" w-10 h-[20px]" />
           </div>
-
-          <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5 relative">
-            <img
-              src="/user-default.3ff115bb.png"
-              className="rounded-full"
-              onClick={() => setModal(!modal)}
-            />
-            {modal && <ModalHeader />}
+          <Link to = "http://localhost:5173/signup">
+          <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
+            <img src="/user-default.3ff115bb.png" className="rounded-full" />
           </div>
+          </Link>
         </div>
       </div>
     </div>

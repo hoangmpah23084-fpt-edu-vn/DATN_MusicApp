@@ -1,40 +1,106 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./css.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FiRadio } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import RoomLeftItem from "@/components/Room-left-item";
-import RoomCommentListItem from "@/components/Room-comment-list-item";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import RoomComment from "@/components/CommentRoom";
+import { getDetailRoom, leaveRoom } from "@/store/Reducer/roomReducer";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { Socket, io } from "socket.io-client";
+import axios from "axios";
+import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { listMessages, memberGroup } from "../Admin/Interface/Room";
+import SideBarRoom from "./SideBarRoom";
+import { handGetSong } from "@/store/Reducer/Song";
+import { handGetCurrentSong } from "@/store/Reducer/currentSong";
+import SidebarRoom from "@/components/Footer/Room/SidebarRoom";
+import FooterRoom from "@/components/Footer/Room/FooterRoom";
+import { toast } from "react-toastify";
 
 type Props = {
   roomLive?: boolean;
 };
 
-const img_slide = [
-  { id: 0, img: "./Image/efb05fb9097a7057aecef6ecb62bff5a.jpg" },
-  { id: 1, img: "./Image/fd79808d2180de9a421afa6aff38953e.jpg" },
-  { id: 2, img: "./Image/bf223818f85e7fe129091b415038ca6c.jpg" },
-  { id: 3, img: "./Image/0ef8beec056970cb6e9596e056fa1c5a.jpg" },
-  { id: 4, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 5, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 6, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 7, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-  { id: 8, img: "./Image/e663da1f89026b0e73a979ca67a5eb96.jpg" },
-  { id: 9, img: "./Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
-  { id: 10, img: "./Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
-  { id: 11, img: "./Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
-];
 
-//background image
-const background = "./Image/e1887a2c79f9d3d04984905cbf443a29.jpg";
-
+let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 const RoomPage = (props: Props) => {
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
+  const [listMess, setListMess] = useState<listMessages[] | []>([]);
+  const [currAdmin, setCurrAdmin] = useState('');
+  const [currMember, setCurrMember] = useState('');
+  const [listMember, setlistMember] = useState<memberGroup[] | []>([]);
+  const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const current = useAppSelector(({ Song }) => Song);
+  const navigate = useNavigate()
+  const roomDetail = useAppSelector((data) => data);
+  useEffect(() => {
+    async function fetchData() {
+      await dispatch(handGetSong());
+    }
+    void fetchData();
+  }, [dispatch]);
+  useEffect(() => {
+    if (current.song.length > 0) {
+      localStorage.setItem('song', JSON.stringify(current.song[2]));
+      dispatch(handGetCurrentSong(current.song[2]))
+    }
+  }, [current.song]);
+  const FetchMessage = () => {
+    axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
+      setListMess([...listMess, ...data.data.listMessages])
+      setlistMember(data.data.memberGroup);
+      setCurrAdmin(data.data.isAdminGroup._id)
+      socket.emit('joinRoom', data.data._id)
+    });
+  }
+  useEffect(() => {
+    socket = io("http://localhost:8080");
+    const user = localStorage.getItem('user');
+    if (user) {
+      const convert = JSON.parse(user);
+      setCurrMember(convert._id);
+      socket.emit('setUser', convert._id)
+    }
+    FetchMessage()
+    // return () => {
+    //   if (confirm("Are you sure want to remove room ?")) {
+    //     leaveRoom(id as string);
+    //   }
+    // }
+  }, [])
+  useEffect(() => {
+    socket.on("messRecived", (value) => {
+      setListMess([...listMess, value])
+    })
+  }, [listMess])
+  useEffect(() => {
+    handleRouter()
+  }, [id])
+
+  const handleRouter = async () => {
+    const user = JSON.parse(localStorage.getItem("user") as string)
+    console.log(user?._id);
+    if (id) {
+     try {
+      const resp = await axios.get(`http://localhost:8080/api/room/${id}`)
+
+      if(!JSON.stringify(resp.data.data.memberGroup).includes(user?._id)) {
+        toast.success("Bạn không đủ tư cách để ngồi đây.")
+        navigate("/")
+      }
+     } catch (error) {
+      toast.error("Lỗi hệ thống")
+      navigate("/")
+     }
+    }
+  }
   return (
     <div>
       <div
@@ -75,7 +141,7 @@ const RoomPage = (props: Props) => {
                   <div className="w-[80px] h-[80px] overflow-hidden">
                     <img
                       className="rounded-full"
-                      src="./Image/fd79808d2180de9a421afa6aff38953e.jpg"
+                      src="../../../public/Image/fd79808d2180de9a421afa6aff38953e.jpg"
                       alt=""
                     />
                   </div>
@@ -117,7 +183,7 @@ const RoomPage = (props: Props) => {
                     <div className="w-[40px] h-[40px]">
                       <img
                         className="rounded-[5px]"
-                        src="./Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
+                        src="../../../public/Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
                         alt=""
                       />
                     </div>
@@ -150,12 +216,38 @@ const RoomPage = (props: Props) => {
               </div>
             </div>
           </div>
-
-          <RoomComment/>
+          {/* //todo SideBar Rooom */}
+          <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} />
         </div>
+        <SidebarRoom sideBarRight={sideBarRight} />
+        {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} />}
       </div>
     </div>
   );
 };
 
 export default RoomPage;
+
+
+
+
+
+const img_slide = [
+  { id: 0, img: "../../../public/Image/efb05fb9097a7057aecef6ecb62bff5a.jpg" },
+  { id: 1, img: "../../../public/Image/fd79808d2180de9a421afa6aff38953e.jpg" },
+  { id: 2, img: "../../../public/Image/bf223818f85e7fe129091b415038ca6c.jpg" },
+  { id: 3, img: "../../../public/Image/0ef8beec056970cb6e9596e056fa1c5a.jpg" },
+  { id: 4, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 5, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 6, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 7, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+  { id: 8, img: "../../../public/Image/e663da1f89026b0e73a979ca67a5eb96.jpg" },
+  { id: 9, img: "../../../public/Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
+  { id: 10, img: "../../../public/Image/ef629460aba3bf16ced1931b951a9dc6.jpg" },
+  { id: 11, img: "../../../public/Image/9787e738668f7eec23d2e8e4306baac4.jpg" },
+];
+
+
+
+//background image
+const background = "../../../public/Image/e1887a2c79f9d3d04984905cbf443a29.jpg";
