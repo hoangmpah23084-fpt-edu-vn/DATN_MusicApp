@@ -9,9 +9,9 @@ import { handGetSong } from "@/store/Reducer/Song";
 import { handGetCurrentSong } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
 import ModalSignin from "@/components/Modals/modalSignin";
-import { setToken } from "@/store/Reducer/User";
+import { checkToken, setToken } from "@/store/Reducer/User";
 import { getFavourite } from "@/store/Reducer/favouriteReducer";
-import SideBarMobile from "@/components/SidebarMenu/SideBarMobile";
+import ModalCreatePlaylist from "@/components/Modals/createPlaylist";
 
 
 const LayoutClient = () => {
@@ -21,23 +21,28 @@ const LayoutClient = () => {
   const current = useAppSelector(({ Song }) => Song);
   const dispatch = useAppDispatch();
   const { isToken } = useAppSelector((state: RootState) => state.user);
+  const [isShowModalCreatePlaylist,setIsShowModalCreatePlaylist] = useState<boolean>(false)
 
   const user = localStorage.getItem('user');
   useEffect(() => {
     async function fetchData() {
-      await dispatch(handGetSong());
+      await dispatch(handGetSong()).then(({payload}) => {
+        if (payload.length > 0) {
+          localStorage.setItem('song', JSON.stringify(payload[0]));
+          dispatch(handGetCurrentSong(payload[0]))
+        }
+      } );
     }
     void fetchData();
-  }, [dispatch]);
-  useEffect(() => {
-    if (current.song.length > 0) {
-      localStorage.setItem('song', JSON.stringify(current.song[2]));
-      dispatch(handGetCurrentSong(current.song[2]))
-    }
-  }, [current.song]);
-
+  }, []);
+  // dispatch
+  // useEffect(() => {
+  //   if (current.song.length > 0) {
+  //     localStorage.setItem('song', JSON.stringify(current.song[0]));
+  //     dispatch(handGetCurrentSong(current.song[0]))
+  //   }
+  // }, []);
   const token = localStorage.getItem('token');
-
   useEffect(() => {
     dispatch(setToken(token));
     if (token) {
@@ -46,26 +51,25 @@ const LayoutClient = () => {
 
   }, [token])
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWidthBrowser(window.innerWidth);
-      if(widthBrowser <= 640) setWidth(true);
+  const handleShowModalCreateRoom = () => {
+    if (token) {
+      setIsShowModalCreatePlaylist(!isShowModalCreatePlaylist);
+    } else {
+      dispatch(checkToken(true))
     }
-    window.addEventListener('resize',handleResize);
-    console.log(widthBrowser);
-    
-    return () => {
-      window.removeEventListener('resize',handleResize);
-      
-    }
-  }, []);
+
+  };
+
+
   return (
     <>
-    {/* <h2>{widthBrowser}</h2> */}
-      <div className="md:flex w-[100%] bg-[#170f23] overflow-hidden">
+
+      <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
+      {
+              isShowModalCreatePlaylist && <ModalCreatePlaylist onShowModal={handleShowModalCreateRoom} />
+            }
         {isToken && <ModalSignin />}
-        {width && <SideBarMobile />}
-        <SidebarMenu />
+        <SidebarMenu handleShowModalCreateRoom={handleShowModalCreateRoom} />
         <Header />
         <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />

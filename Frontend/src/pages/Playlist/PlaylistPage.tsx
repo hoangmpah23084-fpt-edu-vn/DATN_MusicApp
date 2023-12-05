@@ -7,27 +7,59 @@ import ListSong from "@/components/Favourites/ListSong";
 import { getOneAlbum } from "@/store/Reducer/albumReducer";
 import { ifAlbum } from "../Admin/Interface/validateAlbum";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/currentSong";
+import {
+  handChangeStateSong,
+  handGetCurrentSong,
+} from "@/store/Reducer/currentSong";
+import instanceAxios from "@/utils/axios";
+import { toast } from "react-toastify";
+import { getPlaylist } from "@/store/Reducer/playlistReducer";
+import dayjs from "dayjs";
+import moment from "moment";
+
 type Props = {};
 
+const dateFormat = "DD-MM-YYYY";
+
 const PlaylistPage = (props: Props) => {
-  const {id} = useParams<{id ?: string}>();
-  const currentSong = useAppSelector(({currentSong}) => currentSong)
+  const { id } = useParams<{ id?: string }>();
+  const currentSong = useAppSelector(({ currentSong }) => currentSong);
+  const playlistDetail = useAppSelector(({ playlist }) => playlist);
   const [album, setAlbum] = useState<ifAlbum | null>(null);
+  const [playlist, setPlaylist] = useState<any>([]);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    id && getOneAlbum(id as string).then(({data}) => {
-      setAlbum(data)
-      dispatch(handChangeStateSong(false))
-      dispatch(handGetCurrentSong(data.list_song[0]))
-      setTimeout(() => dispatch(handChangeStateSong(true)), 500);
-    }).catch(error => console.error(error))
-  },[id])
+    id &&
+      getOneAlbum(id as string)
+        .then(({ data }) => {
+          setAlbum(data);
+          dispatch(handChangeStateSong(false));
+          dispatch(handGetCurrentSong(data.list_song[0]));
+          setTimeout(() => dispatch(handChangeStateSong(true)), 500);
+        })
+        .catch((error) => console.error(error));
+  }, [id]);
 
   const handToggSong = () => {
     const state = currentSong.stateSong;
     dispatch(handChangeStateSong(!state));
-  }
+  };
+
+  const fetchData = async () => {
+    try {
+      dispatch(getPlaylist(id as string));
+    } catch (error) {
+      toast.error(error as any);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const formatDate = () => {
+    return moment(playlistDetail.playlistDetail?.createdAt);
+  };
 
   return (
     <div className="zm-section">
@@ -42,10 +74,69 @@ const PlaylistPage = (props: Props) => {
                       to={`#`}
                       className="overflow-hidden w-[300px] h-[300px]"
                     >
-                      <img
-                        className="rounded-[8px] aspect-square"
-                        src="/Image/35c4a097c0780f97c94bd50255cec667.jpg"
-                      />
+                      <div className="rounded-[5px] overflow-hidden max-w-[350px] max-h-[350px] room-item--img relative">
+                        {playlistDetail.playlistDetail?.list_song?.length >
+                        3 ? (
+                          <div className="grid grid-cols-2">
+                            <div>
+                              <img
+                                src={
+                                  playlistDetail.playlistDetail?.list_song[0]
+                                    ?.song_image[0]
+                                }
+                                alt=""
+                              />
+                            </div>
+                            <div>
+                              <img
+                                src={
+                                  playlistDetail.playlistDetail?.list_song[1]
+                                    ?.song_image[0]
+                                }
+                                alt=""
+                              />
+                            </div>
+                            <div>
+                              <img
+                                src={
+                                  playlistDetail.playlistDetail?.list_song[2]
+                                    ?.song_image[0]
+                                }
+                                alt=""
+                              />
+                            </div>
+                            <div>
+                              <img
+                                src={
+                                  playlistDetail.playlistDetail?.list_song[3]
+                                    ?.song_image[0]
+                                }
+                                alt=""
+                              />
+                            </div>
+                          </div>
+                        ) : playlistDetail.playlistDetail?.list_song?.length >=
+                          1 ? (
+                          <div>
+                            <img
+                              className="w-full h-full"
+                              src={
+                                playlistDetail.playlistDetail?.list_song[0]
+                                  .song_image[0]
+                              }
+                              alt=""
+                            />
+                          </div>
+                        ) : (
+                          <div>
+                            <img
+                              className="w-full h-full opacity-[0.7]"
+                              src="https://media.istockphoto.com/id/1175435360/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-ghi-ch%C3%BA-nh%E1%BA%A1c-minh-h%E1%BB%8Da-vect%C6%A1.jpg?s=612x612&w=0&k=20&c=3w_KqtRKtiQ_Dgwy0pqGrx8ys4WkktOSSfjS36VI10A="
+                              alt=""
+                            />
+                          </div>
+                        )}
+                      </div>
                     </Link>
                   </div>
 
@@ -64,7 +155,11 @@ const PlaylistPage = (props: Props) => {
 
                       <div>
                         <button className="border rounded-full">
-                          {currentSong ? <AiOutlinePause className="text-[40px] p-1 pl-[6px]" /> : <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" /> }
+                          {currentSong ? (
+                            <AiOutlinePause className="text-[40px] p-1 pl-[6px]" />
+                          ) : (
+                            <BsFillPlayFill className="text-[40px] p-1 pl-[6px]" />
+                          )}
                         </button>
                       </div>
 
@@ -83,23 +178,35 @@ const PlaylistPage = (props: Props) => {
                 <div className="media-content text-center mt-[12px]">
                   <div className="content-top">
                     <h3 className="title text-[20px] font-semibold">
-                      Artist's Story #33 - Tăng Duy Tân: Viết nhạc để quên đi
-                      thực tại phũ phàng
+                      {playlistDetail.playlistDetail?.playlist_name}
                     </h3>
                     <div className="release text-[12px] leading-7 text-[rgba(255,255,255,.5)]">
-                      Cập nhật: 13/10/2023
+                      Tạo bởi:{" "}
+                      {playlistDetail.playlistDetail?.id_user?.fullName}
                     </div>
-                    <div className="artists text-[12px] leading-7 text-[rgba(255,255,255,.5)]">
+                    {/* <div className="artists text-[12px] leading-7 text-[rgba(255,255,255,.5)]">
                       <a className="is-ghost">Tăng Duy Tân</a>
-                    </div>
-                    <div className="like text-[12px] leading-7 text-[rgba(255,255,255,.5)]">
-                      204K người yêu thích
+                    </div> */}
+                    <div className="release text-[12px] leading-7 text-[rgba(255,255,255,.5)]">
+                      Ngày tạo:{" "}
+                      {moment(playlistDetail.playlistDetail?.createdAt).format(
+                        "DD-MM-YYYY"
+                      )}
                     </div>
                   </div>
                   <div className="actions flex flex-col items-center justify-center">
-                    <button className="flex bg-[#9b4de0] items-center rounded-[25px] my-[20px] px-[20px] py-[5px]" onClick={handToggSong} >
-                      {currentSong.stateSong  ?  <AiOutlinePause className='text-[25px] font-black pr-1' /> : <BsFillPlayFill className='text-[25px] pr-1' />}
-                      <span className="uppercase text-[14px] font-normal">{currentSong.stateSong ? 'Dừng Phát' : 'Tiếp tục phát' } </span>
+                    <button
+                      className="flex bg-[#9b4de0] items-center rounded-[25px] my-[20px] px-[20px] py-[5px]"
+                      onClick={handToggSong}
+                    >
+                      {currentSong.stateSong ? (
+                        <AiOutlinePause className="text-[25px] font-black pr-1" />
+                      ) : (
+                        <BsFillPlayFill className="text-[25px] pr-1" />
+                      )}
+                      <span className="uppercase text-[14px] font-normal">
+                        {currentSong.stateSong ? "Dừng Phát" : "Tiếp tục phát"}{" "}
+                      </span>
                     </button>
                     <div className="flex">
                       <button className="group relative flex justify-center items-center rounded-full px-[5px] ">
@@ -121,9 +228,8 @@ const PlaylistPage = (props: Props) => {
                   </div>
                 </div>
               </div>
-
               <div className="playlist-content ml-[330px]">
-                <ListSong />
+                <ListSong listSong={playlistDetail.playlistDetail?.list_song} />
               </div>
             </div>
           </div>

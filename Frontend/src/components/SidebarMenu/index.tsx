@@ -20,7 +20,15 @@ import "./index.scss"
 
 // type Props = {};
 
-const SidebarMenu = () => {
+interface props {
+  handleShowModalCreateRoom: () => void
+}
+
+const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
+
+
+
+
   return (
     <aside className="fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e] z-0">
       <nav className="zm-navbar ">
@@ -206,10 +214,10 @@ const SidebarMenu = () => {
 
       <div className="add-playlist-sidebar text-[14px]">
         {" "}
-        <button className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px] bg-[#170f23] border-t-[1px] border-[#32323d]">
+        <button onClick={() =>handleShowModalCreateRoom()} className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px] bg-[#170f23] border-t-[1px] border-[#32323d]">
           <Link to={"#"} className="flex items-center justify-start ">
             <AiOutlinePlus className="w-[20px] text-[#ccc] h-[40px] mr-4" />
-            <span>Tạo playlist mới</span>
+            <span >Tạo playlist mới</span>
           </Link>
         </button>
       </div>

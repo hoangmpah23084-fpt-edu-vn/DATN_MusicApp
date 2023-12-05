@@ -11,7 +11,7 @@ type Props = {}
 const HeardRecently = (props: Props) => {
     const song = useAppSelector(({Song}) => {
       console.log(Song);
-      return Song?.song?.filter((item , index) => index >= 7 && index <= 11 && item)
+      return Song.song.filter((item , index) => index >= 7 && index <= 11 && item)
     });
     const condition = useAppSelector(({Song}) => Song);
     const [showSkeleton, setShowSkeleton] = useState(true);

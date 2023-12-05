@@ -26,7 +26,7 @@ const Signup = () => {
             resolver: yupResolver(SignupSchema)
         }
     )
-
+    
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const onSubmit: SubmitHandler<any> = async (data) => {

@@ -1,9 +1,9 @@
-import Artist from "../Models/artistModel.js";
-import ArtistValidate from "../Schemas/artistSchema.js";
+import Singer from "../Models/singer.js";
+import SingerValidate from "../Schemas/singerSchema.js";
 
-const getArtists = async (req, res) => {
+export const getSingers = async (req, res) => {
   try {
-    const data = await Artist.find().populate("album");
+    const data = await Singer.find().populate("album");
     if (!data) {
       return res.status(404).send({ message: "fail", error: "Loi" });
     }
@@ -13,29 +13,29 @@ const getArtists = async (req, res) => {
   }
 };
 
-const createArtist = async (req, res) => {
+export const createSinger = async (req, res) => {
   try {
     const body = req.body;
     /* validate */
-    const { error } = ArtistValidate.validate(body, { abortEarly: false });
+    const { error } = SingerValidate.validate(body, { abortEarly: false });
     if (error) {
       return res.status(400).json({ message: error.message });
     }
     /* create */
-    const artist = await Artist.create(body);
-    if (!artist) {
-      return res.status(400).json({ message: "Create artist failed" });
+    const Singerdata = await Singer.create(body);
+    if (!Singerdata) {
+      return res.status(400).json({ message: "Create Singer failed" });
     }
-    return res.status(201).json({ data: artist });
+    return res.status(201).json({ data: Singerdata });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
 
-const updateArtist = async (req, res) => {
+export const updateSinger = async (req, res) => {
   try {
     const { id } = req.params;
-    const data = await Artist.findByIdAndUpdate(id, req.body, {
+    const data = await Singer.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -43,7 +43,7 @@ const updateArtist = async (req, res) => {
     if (!data) {
       return res
         .status(404)
-        .send({ message: "fail", error: "Khong tim thay artist de update" });
+        .send({ message: "fail", error: "Khong tim thay Singer de update" });
     }
     return res.status(200).send({ message: "success", data: data });
   } catch (error) {
@@ -51,14 +51,14 @@ const updateArtist = async (req, res) => {
   }
 };
 
-const deleteArtist = async (req, res) => {
+export const deleteSinger = async (req, res) => {
   try {
     const { id } = req.params;
-    const data = await Artist.findByIdAndDelete(id);
+    const data = await Singer.findByIdAndDelete(id);
     if (!data) {
       return res
         .status(404)
-        .send({ message: "fail", error: "Khong tim thay artist de delete" });
+        .send({ message: "fail", error: "Khong tim thay Singer de delete" });
     }
     return res.status(200).send({ message: "success", data: data });
   } catch (error) {
@@ -66,14 +66,14 @@ const deleteArtist = async (req, res) => {
   }
 };
 
-const getItem = async (req, res) => {
+export const getItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const data = await Artist.findById(id).populate("songs");
+    const data = await Singer.findById(id).populate("songs");
     if (!data) {
       return res
         .status(404)
-        .send({ message: "fail", error: "Khong tim thay artist " });
+        .send({ message: "fail", error: "Khong tim thay Singer " });
     }
     return res.status(200).json({
       message: "Get data successfully",
@@ -82,12 +82,4 @@ const getItem = async (req, res) => {
   } catch (error) {
     return res.status(500).send({ message: "fail", error: error });
   }
-};
-
-export default {
-  getArtists,
-  createArtist,
-  updateArtist,
-  deleteArtist,
-  getItem,
 };
