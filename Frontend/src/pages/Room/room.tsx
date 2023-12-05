@@ -3,13 +3,16 @@ import ModalRoom from "@/components/Modals/room";
 import { useEffect, useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
-
 import { IRoom } from "../Admin/Interface/Room";
 import ModalCreateRoom from "@/components/Modals/createRoom";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getRoom } from "@/store/Reducer/roomReducer";
 import { RootState } from "@/store/store";
 import { checkToken } from "@/store/Reducer/User";
+
+
+import { Skeleton } from 'antd';
+
 
 const Room = () => {
   const [isShowModalCreateRoom, setIsShowModalCreateRoom] =
@@ -20,7 +23,7 @@ const Room = () => {
 
   const [selectedRoom, setSelectedRoom] = useState<IRoom>({} as IRoom)
 
-  const { room } = useAppSelector((state: RootState) => state.room);
+  const { room, loading } = useAppSelector((state: RootState) => state.room);
   const { token } = useAppSelector((state: RootState) => state.user);
 
   const dispatch = useAppDispatch();
@@ -56,13 +59,41 @@ const Room = () => {
     setSelectedRoom(data)
   }
 
+  const handleSerach = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (e) {
+      dispatch(getRoom(e.target.value as string));
+    }
+  }
+
+
+  const renderSkeletonImages = (count: number) => {
+    const skeletons = [];
+    for (let i = 0; i < count; i++) {
+      const skeleton = (
+        <Skeleton.Image
+          key={i}
+          active
+          style={{ width: "200px", height: "200px", backgroundColor: '#352849' }}
+        />
+      );
+
+      skeletons.push(skeleton);
+    }
+
+    return skeletons;
+  };
+
   return (
     <>
+
       {isShowModalJoinRoom && <ModalRoom data={selectedRoom} onShowModal={handleShowModalJoinRoom} />}
       {isShowModalCreateRoom && (
         <ModalCreateRoom onShowModal={handleShowModalCreateRoom} />
       )}
       <div>
+
+
+
         <div className="text-white w-full h-[100%]">
           <div className="flex items-center justify-between mt-24 mx-16 ">
             <h1 className="flex items-center text-[40px] font-bold ">
@@ -76,6 +107,7 @@ const Room = () => {
               className="bg-[#3a3244] ouline-none text-white text-sm rounded-lg block w-96 p-2.5"
               placeholder="Tìm phòng"
               required
+              onChange={(e) => { handleSerach(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) }}
             />
             <button
               className="relative bg-[#b76cea] min-w-[130px] py-2 rounded-full hover:bg-white hover:text-[#654789] flex items-center text-md text-center justify-center ease-in-out duration-300"
@@ -88,9 +120,12 @@ const Room = () => {
             </button>
           </div>
           <div className="pb-[40%] px-16 grid grid-cols-6 gap-6 mt-5">
-            {room.map((data: IRoom, index: number) => {
-              return <ItemRoom key={index} data={data} handleSelectedRoom={handleSelectedRoom} handleShowModalJoinRoom={handleShowModalJoinRoom} />;
-            })}
+            {loading ? renderSkeletonImages(room.length)
+              : room.map((data: IRoom, index: number) => {
+                return <ItemRoom key={index} data={data} handleSelectedRoom={handleSelectedRoom} handleShowModalJoinRoom={handleShowModalJoinRoom} />;
+              })
+            }
+
           </div>
         </div>
       </div>

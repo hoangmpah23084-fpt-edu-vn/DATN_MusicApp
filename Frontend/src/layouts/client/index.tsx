@@ -15,6 +15,8 @@ import ModalCreatePlaylist from "@/components/Modals/createPlaylist";
 
 
 const LayoutClient = () => {
+  const [widthBrowser, setWidthBrowser] = useState(window.innerWidth);
+  const [width, setWidth] = useState(false);
   const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
   const current = useAppSelector(({ Song }) => Song);
   const dispatch = useAppDispatch();
@@ -24,19 +26,23 @@ const LayoutClient = () => {
   const user = localStorage.getItem('user');
   useEffect(() => {
     async function fetchData() {
-      await dispatch(handGetSong());
+      await dispatch(handGetSong()).then(({payload}) => {
+        if (payload.length > 0) {
+          localStorage.setItem('song', JSON.stringify(payload[0]));
+          dispatch(handGetCurrentSong(payload[0]))
+        }
+      } );
     }
     void fetchData();
-  }, [dispatch]);
-  useEffect(() => {
-    if (current.song.length > 0) {
-      localStorage.setItem('song', JSON.stringify(current.song[2]));
-      dispatch(handGetCurrentSong(current.song[2]))
-    }
-  }, [current.song]);
-
+  }, []);
+  // dispatch
+  // useEffect(() => {
+  //   if (current.song.length > 0) {
+  //     localStorage.setItem('song', JSON.stringify(current.song[0]));
+  //     dispatch(handGetCurrentSong(current.song[0]))
+  //   }
+  // }, []);
   const token = localStorage.getItem('token');
-
   useEffect(() => {
     dispatch(setToken(token));
     if (token) {

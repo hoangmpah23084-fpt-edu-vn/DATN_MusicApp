@@ -19,6 +19,7 @@ import RoomPage from "@/pages/Room/RoomPage";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
 import Playlist from "@/pages/Playlist/Playlist";
+import MusicCharts from "@/pages/BXH/MusicCharts";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -40,6 +41,7 @@ export const router = createBrowserRouter([
       { path: "playlist", element: <Playlist /> },
       { path: "playlist/:id", element: <PlaylistPage /> },
       { path: "album", element: <Album /> },
+      { path: "music_charts", element: <MusicCharts />}
     ],
   },
   {

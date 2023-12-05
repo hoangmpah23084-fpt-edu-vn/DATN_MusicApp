@@ -52,31 +52,36 @@ export const createSong = async (req, res) => {
 };
 
 export const get_Songs = async (req, res) => {
-  const { _limit = 10, _page = 1,search ,_sort = "createdAt", _order = "asc"} = req.query;
+  const {
+    _limit = 10,
+    _page = 1,
+    search,
+    _sort = "createdAt",
+    _order = "asc",
+  } = req.query;
   const options = {
     limit: _limit,
     page: _page,
-    sort:{
+    sort: {
       [_sort]: _order === "desc" ? -1 : 1,
-    }
-};
+    },
+  };
   try {
     let query = {};
     if (search) {
       query = {
         $or: [
-          { song_name: { $regex: search, $options: 'i' } },
-          { song_singer: { $regex: search, $options: 'i' } },
+          { song_name: { $regex: search, $options: "i" } },
+          { song_singer: { $regex: search, $options: "i" } },
         ],
       };
     }
-    const data = await SongSchame.paginate(query,options);
-    console.log(data);
-    const total = await SongSchame.find()
+    const data = await SongSchame.paginate(query, options);
+    const total = await SongSchame.find();
     return res.status(200).json({
       message: "Get song list Successfully",
       totalSongList: total.length,
-      data:data.docs,
+      data: data.docs,
     });
   } catch (error) {
     return res.status(500).json({
@@ -86,7 +91,6 @@ export const get_Songs = async (req, res) => {
 };
 
 export const get_Song = async (req, res) => {
- 
   try {
     const { id } = req.params;
     const data = await SongSchame.findById(id);
@@ -173,24 +177,45 @@ export const deleteSong = async (req, res) => {
   }
 };
 
+export const updateViewSong = async (req, res) => {
+  const id_song = req.params.id;
+  let setMonth = {};
+  const today = new Date();
 
-export const updateViewSong = async(req, res)=>{
-  const id_song = req.params.id
-  const data_song = await SongSchame.findOne({_id: id_song});
-  if (!data_song){
+  const month = `${today.getFullYear()}-${Number(today.getMonth()) + 1}`;
+  const songCurrent = await SongSchame.findOne({ _id: id_song });
+  if (songCurrent.month.includes(month)) {
+    const getMonth = JSON.parse(songCurrent.month);
+    for (const item in getMonth) {
+      if (item == month) {
+        setMonth = {
+          ...getMonth,
+          [item]: getMonth[item] + 1,
+        };
+      }
+    }
+  } else {
+    const getMonth = JSON.parse(songCurrent.month);
+    setMonth = {
+      ...getMonth,
+      [month]: 1,
+    };
+  }
+  if (!songCurrent) {
     return res.status(401).json({
       message: "Không thành công",
     });
-  }else{
+  } else {
     await SongSchame.findOneAndUpdate(
-      {_id: id_song }, 
-       { 
-        view_song: data_song.view_song + 1,
-       },
-      { upsert: true, new: true } 
+      { _id: id_song },
+      {
+        month: JSON.stringify(setMonth),
+      },
+      { upsert: true, new: true }
     );
     return res.status(201).json({
       message: "Thành công",
+      data: songCurrent,
     });
   }
-}
+};

@@ -26,17 +26,18 @@ interface joinRoom {
 }
 
 
+
 export const addRoom = createAsyncThunk("room/addRoom", async (dataToForm: roomForm) => {
     console.log(dataToForm);
     const { data } = await instanceAxios.post("/room", dataToForm)
     return data;
 })
-export const getRoom = createAsyncThunk("room/getRoom", async () => {
-    const { data } = await instanceAxios.get('/room');
+export const getRoom = createAsyncThunk("room/getRoom", async (search?: string) => {
+    const { data } = await instanceAxios.get(`/room?search=${search ? search : ""}`);
     return data.data;
 })
 
-export const getDetailRoom = createAsyncThunk("room/getRoom", async (id : string) => {
+export const getDetailRoom = createAsyncThunk("room/getRoom", async (id: string) => {
     const { data } = await instanceAxios.get(`/room/${id}`);
     return data.data;
 })
@@ -49,9 +50,9 @@ export const leaveRoom1 = createAsyncThunk("room/leaveRoom", async (id) => {
     const { data } = await instanceAxios.delete(`/leaveroom/${id}`)
     return data;
 })
-export const leaveRoom = async (id : string) => {
+export const leaveRoom = async (id: string) => {
     await instanceAxios.delete(`/leaveroom/${id}`);
-    console.log("leaveroom successfully");  
+    console.log("leaveroom successfully");
 }
 
 const roomReducer = createSlice({
