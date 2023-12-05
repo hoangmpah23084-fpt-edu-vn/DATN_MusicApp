@@ -11,22 +11,15 @@ import {
   handChangeStateSong,
   handGetCurrentSong,
 } from "@/store/Reducer/currentSong";
-import instanceAxios from "@/utils/axios";
 import { toast } from "react-toastify";
 import { getPlaylist } from "@/store/Reducer/playlistReducer";
-import dayjs from "dayjs";
 import moment from "moment";
 
-type Props = {};
-
-const dateFormat = "DD-MM-YYYY";
-
-const PlaylistPage = (props: Props) => {
+const PlaylistPage = () => {
   const { id } = useParams<{ id?: string }>();
   const currentSong = useAppSelector(({ currentSong }) => currentSong);
   const playlistDetail = useAppSelector(({ playlist }) => playlist);
   const [album, setAlbum] = useState<ifAlbum | null>(null);
-  const [playlist, setPlaylist] = useState<any>([]);
   const dispatch = useAppDispatch();
   useEffect(() => {
     id &&
@@ -57,10 +50,6 @@ const PlaylistPage = (props: Props) => {
     fetchData();
   }, []);
 
-  const formatDate = () => {
-    return moment(playlistDetail.playlistDetail?.createdAt);
-  };
-
   return (
     <div className="zm-section">
       <main className="px-[59px] text-white">
@@ -76,7 +65,7 @@ const PlaylistPage = (props: Props) => {
                     >
                       <div className="rounded-[5px] overflow-hidden max-w-[350px] max-h-[350px] room-item--img relative">
                         {playlistDetail.playlistDetail?.list_song?.length >
-                        3 ? (
+                          3 ? (
                           <div className="grid grid-cols-2">
                             <div>
                               <img
