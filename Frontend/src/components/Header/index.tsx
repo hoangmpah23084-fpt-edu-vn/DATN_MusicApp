@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Avatar, Dropdown, Menu, message ,Input} from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
-import {  AiOutlineSetting } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineSetting } from "react-icons/ai";
 import { GoDesktopDownload } from "react-icons/go";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
@@ -17,6 +17,7 @@ import ItemSong from "../Favourites/ItemSong";
 import { IApiSong } from "@/pages/Admin/Interface/ValidateSong";
 import { useAppDispatch } from "@/store/hooks";
 import { handGetSongSearch } from "@/store/Reducer/Song";
+import { useLocalStorage } from "@/hooks";
 
 type Props = {};
 const Header = (props: Props) => {
@@ -63,6 +64,7 @@ const handleAvatarUpload = (info: any) => {
 const handleLogout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
+
 };
 
 const menu = (
@@ -82,7 +84,7 @@ const menu = (
 const { songSearch, } = useSelector((state: RootState) => state.Song)
 const items: MenuProps['items'] = songSearch.map((item: any) => {
   return {
-    label: <Link to={`/singer/${item.id_Singer._id}`}> <ItemSong item={item} active={true} /></ Link>,
+    label: <Link to={`/singer/${item.id_Singer?._id}`}> <ItemSong item={item} active={true} /></ Link>,
     key: item.id,
   }
 })
@@ -103,6 +105,7 @@ useEffect(() => {
   }))
 }, [])
 
+const token = localStorage.getItem('token')
 
 
   return (
@@ -128,8 +131,7 @@ useEffect(() => {
             <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#2f2739] rounded-full">
               <AiOutlineSetting className=" w-10 h-[20px]" />
             </div>
-          </div>
-          { userLocal
+            { userLocal && token
             ?
             <div className='dropdown-profile'>
             <Dropdown overlay={menu} >
@@ -143,6 +145,8 @@ useEffect(() => {
               <Link to="http://localhost:5173/signin">Đăng nhập</Link>
             </div>
           }
+          </div>
+          
         </div>
       </div>
     </>
