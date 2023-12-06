@@ -143,5 +143,4 @@ const AddArtist = () => {
   //   </div>
   return <></>
 };
-
 export default AddArtist;
