@@ -7,17 +7,20 @@ import Genre from "../Models/genreModel.js";
 export const getFavourites = async (req, res) => {
   try {
     const list_songFavourites = await Favourites.findOne({id_user:req.user._id}).populate("list_songFavourites")
-    const singerSongs = await SongSchame.populate(list_songFavourites.list_songFavourites, {
-      path: 'id_Singer',
-      model: Singer,
-      select: 'name',
-    });
-    const genreSongs = await SongSchame.populate(singerSongs, {
-      path: 'id_Genre',
-      model: Genre,
-      select: 'name',
-    });
-    list_songFavourites.list_songFavourites =genreSongs
+         if(list_songFavourites){
+          const singerSongs = await SongSchame.populate(list_songFavourites.list_songFavourites, {
+            path: 'id_Singer',
+            model: Singer,
+            select: 'name',
+          });
+          const genreSongs = await SongSchame.populate(singerSongs, {
+            path: 'id_Genre',
+            model: Genre,
+            select: 'name',
+          });
+          list_songFavourites.list_songFavourites =genreSongs
+         }
+
     if (!list_songFavourites) {
       return res.status(201).json({
         message: "Danh sách không tồn tại",
