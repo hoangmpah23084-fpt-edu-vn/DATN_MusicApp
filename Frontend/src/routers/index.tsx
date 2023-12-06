@@ -22,6 +22,7 @@ import Playlist from "@/pages/Playlist/Playlist";
 import MusicCharts from "@/pages/BXH/MusicCharts";
 import DetailAlbum from "@/pages/Album/DetailAlbum";
 import DetailSinger from "@/pages/Singer/DetailSinger";
+import DSong from "@/pages/DSong";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -45,8 +46,8 @@ export const router = createBrowserRouter([
       { path: "album", element: <Album /> },
       { path: "album/:id", element: <DetailAlbum /> },
       { path: "singer/:id", element: <DetailSinger /> },
-      { path: "music_charts", element: <MusicCharts /> }
-
+      { path: "music_charts", element: <MusicCharts /> },
+      { path: "dsong", element: <DSong /> }
     ],
   },
   {

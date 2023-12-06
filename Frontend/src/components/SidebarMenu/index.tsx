@@ -30,7 +30,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
 
 
   return (
-    <aside className="fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e] z-0">
+    <aside className="fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e]">
       <nav className="zm-navbar ">
         <div className="zm-navbar-brand w-[240px] h-[70px] fixed top-0 pt-0 pr-[25px] pl-[28px] flex items-center">
           <div className="zm-navbar-item">
@@ -120,7 +120,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
               </li>
               <li className="">
                 <Link
-                  to={"/"}
+                  to={"/music_charts"}
                   className="flex items-center leading-[20px] py-[6px] px-[24px]"
                 >
                   <AiOutlineStar className="w-[22px] text-[#ccc] h-[40px]" />

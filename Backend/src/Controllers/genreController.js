@@ -33,6 +33,7 @@ export const getAll_Genre = async (req, res) => {
     }
     const filData = data.filter((item) => item.name != "un_genre");
     // const findData = filData.filter((item) => item.name == "TẤT CẢ");
+    console.log(filData);
     filData.forEach((item) => {
       filData[0].list_songs = [...filData[0].list_songs, ...item.list_songs];
     });

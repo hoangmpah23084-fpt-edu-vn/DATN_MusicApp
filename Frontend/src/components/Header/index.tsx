@@ -20,7 +20,7 @@ const Header = () => {
   const { songSearch, } = useSelector((state: RootState) => state.Song)
   const items: MenuProps['items'] = songSearch.map((item: any) => {
     return {
-      label: <Link to={`/singer/${item.id_Singer._id}`}> <ItemSong item={item} active={true} /></ Link>,
+      label: <Link to={`/singer/${item.id_Singer}`}> <ItemSong item={item} active={true} /></ Link>,
       key: item.id,
     }
   })

@@ -29,7 +29,7 @@ const SidebarSong = (props: Props) => {
   const { token } = useAppSelector((state: RootState) => state.user);
 
   const dispatch = useAppDispatch();
-  const renderListSong = useAppSelector(({ Song }) => Song);
+  const {song} = useAppSelector(({ Song }) => Song);
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
@@ -41,7 +41,7 @@ const SidebarSong = (props: Props) => {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
       dispatch(setDataLocal(currentlocal))
     }
-  }, [stateSong, renderListSong.song.length]);
+  }, [stateSong, song.length]);
 
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;
@@ -116,9 +116,9 @@ const SidebarSong = (props: Props) => {
         </div>
         <div className="w-full fjc h-[calc(100vh-200px)] overflow-y-auto">
           <div className="w-full h-[100%] overflow-y-scroll">
-            {renderListSong &&
-              renderListSong.song?.length > 0 &&
-              renderListSong.song.map((item: ifSong, index : number) => {
+            {song &&
+              song?.length > 0 &&
+              song.map((item: ifSong, index : number) => {
                 return (
                   <div
                     key={index}
