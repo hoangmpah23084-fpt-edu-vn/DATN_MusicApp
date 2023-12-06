@@ -12,11 +12,9 @@ import { RootState } from "@/store/store"
 
 const FavouritePage = () => {
     const { listFavourites } = useAppSelector((state: RootState) => state.favourites)
+    console.log('listFavourites', listFavourites);
+
     const dispatch = useAppDispatch()
-
-    console.log(listFavourites);
-    
-
     useEffect(() => {
         dispatch(getFavourite())
     }, [])

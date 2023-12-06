@@ -24,11 +24,12 @@ const singerSchema = new Schema(
     description: {
       type: String,
     },
-
-    album: {
-      type: mongoose.Types.ObjectId,
-      ref: "Album",
-    },
+    album: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Album",
+      },
+    ],
 
     songs: [
       {

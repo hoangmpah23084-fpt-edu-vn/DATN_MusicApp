@@ -35,13 +35,6 @@ const LayoutClient = () => {
     }
     void fetchData();
   }, []);
-  // dispatch
-  // useEffect(() => {
-  //   if (current.song.length > 0) {
-  //     localStorage.setItem('song', JSON.stringify(current.song[0]));
-  //     dispatch(handGetCurrentSong(current.song[0]))
-  //   }
-  // }, []);
   const token = localStorage.getItem('token');
   useEffect(() => {
     dispatch(setToken(token));
