@@ -1,7 +1,7 @@
 import { albumValidate } from "../Schemas/albumSchema.js";
 import Album from "../Models/albumModel.js";
 import Singer from "../Models/singer.js";
-import songModel from "../Models/songModel.js";
+import SongSchame from "../Models/songModel.js";
 
 export const create_Album = async (req, res) => {
   try {
@@ -50,18 +50,21 @@ export const get_AlbumById = async (req, res) => {
   try {
     const data = await Album.findById(req.params.id).populate("id_singer");
     const dataListSong = [];
-    for (const item of data.id_singer[0].songs) {
-      const findData = await songModel.findById(item);
-      dataListSong.push(findData);
+    if(data){
+      for (const item of data.id_singer.songs) {
+        const findData = await SongSchame.findById(item);
+        dataListSong.push(findData);
+      }
+      data.list_song = [...dataListSong];
+      if (!data) {
+        return res.status(400).json({ message: "Get Album By Id Failed" });
+      }
+      return res.status(200).json({
+        message: "Get Album By Id Success",
+        data,
+      });
     }
-    data.list_song = [...dataListSong];
-    if (!data) {
-      return res.status(400).json({ message: "Get Album By Id Failed" });
-    }
-    return res.status(200).json({
-      message: "Get Album By Id Success",
-      data,
-    });
+   
   } catch (error) {
     console.log(error);
   }
