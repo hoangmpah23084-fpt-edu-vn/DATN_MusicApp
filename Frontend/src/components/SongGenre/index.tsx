@@ -4,21 +4,21 @@ import { Link } from "react-router-dom";
 import 'react-loading-skeleton/dist/skeleton.css'
 import "./index.scss";
 import { ifAlbum } from "@/pages/Admin/Interface/validateAlbum";
+import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 type Props = {
-  item ?: ifAlbum
+  item : ifSong
 };
 
-const SongCarouselItem = ({item}: Props) => {
-  // console.log(item);
+const SongGenre = ({item}: Props) => {
   return (
-    <div className="carousel-item flex flex-col">
+    <div className="carousel-item flex flex-col h-full">
       <div className="card ">
         <div className="card-top relative">
           <div className="card-image overflow-hidden rounded-[6px] relative">
             <Link to={`#`} className="overflow-hidden">
             <img
                 className="rounded-[6px] w-full aspect-square"
-                src={"https://res.cloudinary.com/dsbiugddk/image/upload/v1698746181/DATN/vcn8wqdxusccmsox0t0b.jpg"}
+                src={`${item.song_image[0]}`}
               />
             </Link>
           </div>
@@ -55,7 +55,8 @@ const SongCarouselItem = ({item}: Props) => {
           <h4>
             <Link to={`#`}>
               <span className="text-[14px] font-semibold">
-              {item?.album_name}
+              {/* {item?.album_name} */}
+              thangpham
               </span>
             </Link>
           </h4>
@@ -65,4 +66,4 @@ const SongCarouselItem = ({item}: Props) => {
   );
 };
 
-export default SongCarouselItem;
+export default SongGenre;

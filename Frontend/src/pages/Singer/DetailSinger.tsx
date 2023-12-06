@@ -13,7 +13,6 @@ const DetailSinger = () => {
     const currentSong = useAppSelector(({ currentSong }) => currentSong);
     const dispatch = useAppDispatch()
     const { dataOne } = useAppSelector((state: RootState) => state.singer)
-
     const handToggSong = () => {
         const state = currentSong.stateSong;
         dispatch(handChangeStateSong(!state));
@@ -24,9 +23,25 @@ const DetailSinger = () => {
 
     useEffect(() => {
         if (id) {
-            dispatch(handleGetOne(id))
+            dispatch(handleGetOne(id));
         }
-    }, [id])
+    }, [id]);
+    useEffect(() => {
+        const handlePopState = () => {
+          // Custom logic for handling the back arrow event
+          console.log('Back arrow pressed');
+          // Add your custom logic here
+        };
+    
+        // Add event listener for the popstate event
+        window.addEventListener('popstate', handlePopState);
+    
+        // Cleanup function to remove the event listener when the component unmounts
+        return () => {
+          window.removeEventListener('popstate', handlePopState);
+        };
+      }, []); 
+
 
     return (
         <div className="zm-section">
