@@ -17,7 +17,9 @@ const WantToListent = (props: Props) => {
     <>
       {
         genre.length > 0 && genre.map(item => {
-          const sliceItem = item.list_songs?.splice(0,5)
+          const sliceItem = item.list_songs?.splice(0,5);
+          console.log(sliceItem);
+          
           return <div className="playlist-section home-recent mt-12">
             <div className="home-recent-title flex justify-between mb-[20px]">
               <h3 className="text-xl font-semibold capitalize">

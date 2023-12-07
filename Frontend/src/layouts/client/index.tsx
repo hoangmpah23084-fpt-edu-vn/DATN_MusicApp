@@ -27,6 +27,7 @@ const LayoutClient = () => {
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong()).then(({payload}) => {
+        console.log(payload);
         if (payload.length > 0) {
           localStorage.setItem('song', JSON.stringify(payload[0]));
           dispatch(handGetCurrentSong(payload[0]))

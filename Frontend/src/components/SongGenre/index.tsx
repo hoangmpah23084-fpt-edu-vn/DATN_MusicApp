@@ -17,7 +17,7 @@ const SongGenre = ({item}: Props) => {
           <div className="card-image overflow-hidden rounded-[6px] relative">
             <Link to={`#`} className="overflow-hidden">
             <img
-                className="rounded-[6px] w-full aspect-square"
+                className="rounded-[6px] aspect-square w-[252px] h-[252px]"
                 src={`${item.song_image[0]}`}
               />
             </Link>
@@ -55,8 +55,7 @@ const SongGenre = ({item}: Props) => {
           <h4>
             <Link to={`#`}>
               <span className="text-[14px] font-semibold">
-              {/* {item?.album_name} */}
-              thangpham
+              {item?.song_name}
               </span>
             </Link>
           </h4>

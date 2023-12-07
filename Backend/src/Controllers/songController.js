@@ -132,10 +132,10 @@ export const update_Song = async (req, res) => {
     await Genre.findByIdAndUpdate(data.id_Genre, {
       $pull: { list_songs: data._id },
     });
-    const genreId = data.id_Genre;
-    await Artist.findByIdAndUpdate(genreId, {
-      $addToSet: { list_songs: data._id },
-    });
+    // const genreId = data.id_Genre;
+    // await Artist.findByIdAndUpdate(genreId, {
+    //   $addToSet: { list_songs: data._id },
+    // });
     return res.status(200).json({
       message: "Updated song successfully",
       data,
