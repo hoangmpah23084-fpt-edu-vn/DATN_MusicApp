@@ -5,7 +5,7 @@ import "./css.scss";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { activeSong } from "@/constane/song.const";
-import { handGetSongInGenre } from "@/store/Reducer/Song";
+// import { handGetSongInGenre } from "@/store/Reducer/Song";
 
 type Props = {
   section?: string;
@@ -17,7 +17,7 @@ const  ListSongItem = ({ section, item }: Props) => {
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
   const dispatch = useAppDispatch();
   const handToggle = () => {
-    dispatch(handGetSongInGenre(item.id_Genre))
+    // dispatch(handGetSongInGenre(item.id_Genre))
     stateSong &&
      dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start");
   }
@@ -64,7 +64,7 @@ const  ListSongItem = ({ section, item }: Props) => {
                         section === "chanel" && "border rounded-full"
                       } flex justify-center items-center`}
                     >
-                    { currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill clasName="text-[40px] p-4 pl-[6px]" /> }  
+                    { currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill className="text-[40px] p-4 pl-[6px]" /> }  
                     </div>
                   </div>
                 </div>
