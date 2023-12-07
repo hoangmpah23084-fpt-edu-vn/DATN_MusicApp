@@ -1,27 +1,73 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ifSong } from '../Admin/Interface/ValidateSong';
 import axios from 'axios';
-import * as cloudinary from 'cloudinary-core';
-
-const cl = new cloudinary.Cloudinary({  // Note: Use 'new' to create an instance
-    cloud_name: 'dsbiugddk',
-    api_key: '397545573884224',
-    api_secret: '2BPHK1CLP_Yc8mQMV4ylPyJFzkI',
-  });
+import { Howl } from 'howler';
+import SkeletonDs from './SkeletonDs';
+import { IoIosPlay } from "react-icons/io";
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { setCurrentSong, setStateSong } from '@/store/Reducer/currentSong';
+import { IoPause } from "react-icons/io5";
+import { activeSong } from '@/constane/song.const';
 
 type Props = {}
 
 const DSong = (props: Props) => {
-    const [song, setSong] = useState<ifSong[] | []>([]);
-    useEffect(() => {
-        // const cl = cloudinary.Cloudinary.new();
-        // const cl = cloudinary.Cloudinary.new();
-        axios.get('http://localhost:8080/api/Song/?_limit=20&_page=1').then(({ data }) => setSong(data.data))
-    }, []);
-    console.log(song);
+    const [song, setSong] = useState<any | []>([]);
+    const [loading , setLoading] = useState(false);
+    const {stateSong, currentSong} = useAppSelector(({currentSong}) => currentSong);
+    const dispatch = useAppDispatch();
     
+    const SeconToMinuste = (secs: number) => {
+        if (secs) {
+          const minutes = Math.floor(secs / 60);
+          const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+          const seconds = Math.floor(secs % 60);
+          const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+          return `${returnedMinutes}:${returnedSeconds}`;
+        } else {
+          return "00:00"
+        }
+    }
 
+    const fetchAndLogDurations = async (songs : ifSong[]) => {
+        const durations = await Promise.all(
+            songs.map(async (item) => {
+                const sound = new Howl({
+                    src: [`${item.song_link}`],
+                });
+                return new Promise((resolve) => {
+                    sound.once('load', () => {
+                        resolve({ ...item, duration: sound.duration() || 0 });
+                    });
+                });
+            })
+        );
+        return durations;
+    };
+    
+    useEffect(() => {
+        axios.get('http://localhost:8080/api/Song/?_limit=20&_page=1').then(async ({ data }) => {
+            const current = await fetchAndLogDurations(data.data);
+            const formattedSongs = current.map((item : any) => ({
+                ...item,
+                timing: SeconToMinuste(item.duration),
+            }));
+            setSong(formattedSongs);
+            setLoading(true);
+        });
+    }, []);
+
+    const handToggle = useCallback((item : ifSong) => {
+        const prevState = stateSong;
+        localStorage.setItem('song', JSON.stringify(item));
+        dispatch(setCurrentSong(item));;
+        if (prevState && currentSong?._id == item._id) {
+            dispatch(setStateSong(false));
+        }else{
+            dispatch(setStateSong(true));
+        }
+    },[stateSong, dispatch])
 
     return (
         <div className='container'>
@@ -30,70 +76,45 @@ const DSong = (props: Props) => {
                     BXH Nhạc mới
                 </h3>
             </div>
-            <section className='music_charts min-h-[300px] px-10 overflow-y-scroll'>
-                {
-                    song.length > 0 && song.map(item => {
-                        const publicId = item.song_link.split('/').pop();
-                        // console.log(publicId);
-                        const resourceUrl = cl.url(publicId as string, {resource_type: 'audio'});
-                        // const data = 
-                        axios.get(resourceUrl).then(response => {
-                            // Handle the response
-                            console.log(response);
-                          }).catch(error => {
-                            // Handle the error
-                            console.error(error);
-                          });
-                        // cl.api.resource(publicId, function (error : any, result : any) {
-                        //     if (error) {
-                        //       console.error(error);
-                        //     } else {
-                        //       // Lấy thời gian của bài nhạc từ kết quả
-                        //       const duration = result.duration;
-                      
-                        //       // Lưu thời gian vào state
-                        //     //   setDurationInSeconds(duration);
-                        //     }
-                        //   });
-                        return <div className='content hover:bg-stone-700 rounded-md px-5 py-21 hover:cursor-default'>
-                            <div className='item flex items-center space-x-5 border-b border-[#393243]'>
+            {/* overflow-y-scroll */}
+            <section className='music_charts min-h-[300px] px-10 overflow-y-hidden'>
+            {
+                // 26B7E7
+                    loading ? song.map((item : any, index : number) => {
+                        return <div className={`content rounded-md px-5 py-21 hover:cursor-default`} key={index} >
+                            <div className={`item flex items-center space-x-5 border-b border-[#393243] hover:bg-[#14182A] ${currentSong && item._id == currentSong._id ? 'bg-[#14182A]' : ''}`}>
                                 <div className='song group/play grid grid-cols-[35%50%5%] gap-x-5 py-2 w-full items-center hover:rounded-md'>
                                     <div className='image_song relative flex items-center space-x-3'>
-                                        <audio src={`${item.song_link}`} preload={"metadata"} autoPlay={false}></audio>
-                                        <Link to={''} className='relative group/play'>
-                                            <span className=''>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFF" className="bi bi-play-fill absolute top-[30%] left-[35%] invisible group-hover/play:visible" viewBox="0 0 16 16">
-                                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
-                                                </svg>
-                                            </span>
+                                        <span className='relative group/play hover:cursor-pointer' onClick={() => handToggle(item)}>
+                                            {stateSong && currentSong?._id == item._id ? <IoPause class="absolute top-[30%] left-[30%] text-2xl text-white invisible group-hover/play:visible" /> : <IoIosPlay class="absolute top-[30%] left-[30%] text-2xl text-white invisible group-hover/play:visible" />} 
                                             <img className='rounded-md w-[55px] h-[55px]' src={`${item.song_image[0]}`} alt="" />
-                                        </Link>
+                                        </span>
                                         <div className="name_song min-w-[300px] space-y-1">
-                                            <p className=' text-white  font-semibold'>
+                                            <p className=' text-[#3BC8E7]  font-semibold'>
                                                 {item.song_name}
                                             </p>
                                             <p className="text-gray-500 font-semibold text-xs pb-2">
-                                                Minh Vương, Đan Trường
+                                                {item.id_Singer.name}
                                             </p>
                                         </div>
                                     </div>
-                                    {/* End .name_song */}
                                     <div className='text-gray-500 font-semibold min-w-[300px] '>
                                         <p className='text-sm'>
-                                            Rất lâu rồi mới khóc (Single)
+                                            {item.id_Genre.name}
                                         </p>
                                     </div>
                                     <div className='time_song '>
                                         <span className='text-right text-gray-500 font-semibold text-sm'>
-                                            05:05
+                                            {
+                                                item.timing
+                                            }
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    })
+                    }) : <SkeletonDs />
                 }
-
             </section>
             {/* End .music_charts */}
 

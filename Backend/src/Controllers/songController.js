@@ -65,6 +65,7 @@ export const get_Songs = async (req, res) => {
     sort: {
       [_sort]: _order === "desc" ? -1 : 1,
     },
+    populate: ["id_Singer", "id_Genre"],
   };
   try {
     let query = {};
