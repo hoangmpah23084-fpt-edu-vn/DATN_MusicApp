@@ -19,7 +19,7 @@ const FavouritePage = () => {
         dispatch(getFavourite())
     }, [])
 
-    return (<div className="text-white w-full">
+    return (<div className="text-white w-full ">
         <h1 className="flex items-center text-[40px] font-bold mx-16 mt-20">Thư viện <span className="ml-2 mt-1 hover:opacity-70 cursor-pointer ease-in-out duration-300"><AiFillPlayCircle /></span></h1>
         <h2 className="mx-16 mt-10 font-bold text-2xl flex items-center">PLAYLIST
             <span className="text-3xl ml-2 relative group">

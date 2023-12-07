@@ -34,7 +34,7 @@ const ItemSong = ({ item, active }: props) => {
   return (
     <tr className={`item border-b-[#2c2436] border-b-[1px] flex-1 cursor-pointer ease-in-out duration-300 first-letter:
       ${dataLocal && dataLocal?._id == item._id
-        ? "bg-[#2f2739]"
+        ? "bg-[#14182A]"
         : "hover:bg-[#b4b4b32d]"
       } 
       `}>

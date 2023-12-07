@@ -76,7 +76,7 @@ const ModalCreatePlaylist = ({ onShowModal }: IProps) => {
                       type="text"
                       {...register("playlist_name")}
                       placeholder="Nhập tên playlist mới"
-                      className="bg-[#3a3244] mb-[32px] text-white text-sm rounded-[999px] block w-full p-2.5"
+                      className="bg-[#1B2039] mb-[32px] text-white text-sm rounded-[999px] block w-full p-2.5"
                     />
                    
                   </div>

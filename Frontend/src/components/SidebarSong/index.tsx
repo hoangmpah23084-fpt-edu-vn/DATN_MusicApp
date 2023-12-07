@@ -56,7 +56,7 @@ const SidebarSong = (props: Props) => {
   return (
     <div
       className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"
-        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#120822] bottom-[90px] fjc px-[8px]`}
+        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc px-[8px]`}
     >
       <div className="w-full h-full">
         <div className="w-full h-[70px] fjc">
@@ -123,7 +123,7 @@ const SidebarSong = (props: Props) => {
                   <div
                     key={index}
                     className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
-                      ? "bg-[#3BC8E7]"
+                      ? "bg-[#092635]"
                       : "hover:bg-[#b4b4b32d]"
                       } my-1 fjc  cursor-pointer rounded-lg wall`}
                   >

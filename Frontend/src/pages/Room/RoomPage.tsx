@@ -114,7 +114,7 @@ const RoomPage = (props: Props) => {
   return (
     <div>
       <div
-        className={`zm-room-wrapper bg-[#170f23] flex fixed 
+        className={`zm-room-wrapper bg-[#14182A] flex fixed 
         h-full
          left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
       >

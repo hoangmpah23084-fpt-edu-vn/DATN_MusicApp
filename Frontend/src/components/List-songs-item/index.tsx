@@ -29,7 +29,7 @@ const  ListSongItem = ({ section, item }: Props) => {
     <div className="list-items px-[15px]">
       <div
         className={`media flex items-center py-[10px] px-[15px] rounded-[5px] text-left hover:bg-[#2f2739] relative z-10 ${
-          section === "chanel" && "bg-[#2f2739]"
+          section === "chanel" && "bg-[#14182A]"
         }  ${
           section === "zingchart" && "bg-[#492761] mb-[10px] hover:bg-[#65487a]"
         }`}

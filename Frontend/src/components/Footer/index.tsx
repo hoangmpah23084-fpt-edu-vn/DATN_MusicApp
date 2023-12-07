@@ -176,9 +176,9 @@ const Footer = (props: Props) => {
       //   setLiveRoom((value) => !value);
       //   props.setLiveRoom((value) => !value);
       // }}
-      className="fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer">
-      <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
-        <div className="flex items-center justify-start w-[20%] h-[100%]">
+      className="fixed z-50 w-[100%] bottom-0 bg-[#1B2039] cursor-pointer">
+      <div className="level text-white h-[90px] px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex">
+        <div className="flex items-center rounded-r-lg  justify-start w-[20%] h-[100%] bg-[#1B2039]">
           <div className="flex items-center w-[100%]">
             <div className="flex w-[100%] ">
               <div className="">

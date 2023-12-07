@@ -375,7 +375,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
   }
   return (
     <div
-      className={`fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer `}>
+      className={`fixed z-50 w-[100%] bottom-0 bg-[#14182A] cursor-pointer `}>
       <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
           <div className="flex items-center w-[100%]">
