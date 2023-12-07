@@ -13,6 +13,7 @@ export const SongSchame = yup.object().shape({
 
 export interface ifSong {
   _id?: string;
+  id?: string;
   song_name: string;
   song_title: string;
   song_link: string;

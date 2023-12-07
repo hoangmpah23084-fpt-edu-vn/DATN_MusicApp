@@ -185,7 +185,7 @@ export const updateViewSong = async (req, res) => {
 
   const month = `${today.getFullYear()}-${Number(today.getMonth()) + 1}`;
   const songCurrent = await SongSchame.findOne({ _id: id_song });
-  if (songCurrent.month.includes(month)) {
+  if (songCurrent?.month.includes(month)) {
     const getMonth = JSON.parse(songCurrent.month);
     for (const item in getMonth) {
       if (item == month) {
