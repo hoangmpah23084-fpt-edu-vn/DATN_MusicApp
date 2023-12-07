@@ -5,6 +5,8 @@ import "./css.scss";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { activeSong } from "@/constane/song.const";
+import { setSingerSong } from "@/store/Reducer/Song";
+import axios from "axios";
 // import { handGetSongInGenre } from "@/store/Reducer/Song";
 
 type Props = {
@@ -16,10 +18,11 @@ const  ListSongItem = ({ section, item }: Props) => {
   const {stateSong, dataLocal} = useAppSelector(({currentSong}) => currentSong);
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
   const dispatch = useAppDispatch();
-  const handToggle = () => {
-    // dispatch(handGetSongInGenre(item.id_Genre))
+  const handToggle = async () => {
     stateSong &&
      dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start");
+    // const {data} = await axios.get(`http://localhost:8080/api/singer/${item.id_Singer}`).then(({data})=> data);
+    dispatch(setSingerSong(item.id_Singer));
   }
     
   return (
@@ -71,7 +74,6 @@ const  ListSongItem = ({ section, item }: Props) => {
               </div>
             </div>
           </div>
-
           <div
             className={`${
               (section === "chanel" && "justify-between") || "justify-center"

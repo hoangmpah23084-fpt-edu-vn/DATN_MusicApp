@@ -5,7 +5,7 @@ import SingerValidate from "../Schemas/singerSchema.js";
 
 export const getSingers = async (req, res) => {
   try {
-    const data = await Singer.find().populate("album").populate('songs');
+    const data = await Singer.find().populate("album").populate("songs");
 
     console.log(data);
     if (!data) {
@@ -75,16 +75,16 @@ export const getItem = async (req, res) => {
     const { id } = req.params;
     const data = await Singer.findById(id).populate("songs");
     const singerSongs = await SongSchame.populate(data.songs, {
-      path: 'id_Singer',
+      path: "id_Singer",
       model: Singer,
-      select: 'name',
+      select: "name",
     });
     const genreSongs = await SongSchame.populate(singerSongs, {
-      path: 'id_Genre',
+      path: "id_Genre",
       model: Genre,
-      select: 'name',
+      select: "name",
     });
-    data.songs=genreSongs;
+    data.songs = genreSongs;
 
     console.log(data);
     if (!data) {

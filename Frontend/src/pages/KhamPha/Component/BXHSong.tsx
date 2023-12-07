@@ -28,7 +28,7 @@ const BXHSong = (props: Props) => {
         </h3>
       </div>
       <div className="column">
-        <div className="list grid grid-cols-3 -mx-[15px]">
+        <div className="list grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 -mx-[15px]">
           <ListSongItem section="chanel" />
           <ListSongItem section="chanel" />
           <ListSongItem section="chanel" />

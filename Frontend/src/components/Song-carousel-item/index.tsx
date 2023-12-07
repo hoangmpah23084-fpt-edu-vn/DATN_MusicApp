@@ -5,19 +5,19 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import "./index.scss";
 import { ifAlbum } from "@/pages/Admin/Interface/validateAlbum";
 type Props = {
-  item : ifAlbum
+  item ?: ifAlbum
 };
 
 const SongCarouselItem = ({item}: Props) => {
   // console.log(item);
   return (
-    <div className="carousel-item flex flex-col px-[14px]">
+    <div className="carousel-item flex flex-col">
       <div className="card ">
         <div className="card-top relative">
           <div className="card-image overflow-hidden rounded-[6px] relative">
             <Link to={`#`} className="overflow-hidden">
             <img
-                className="rounded-[6px] aspect-square"
+                className="rounded-[6px] aspect-square w-[252px] h-[252px]"
                 src={"https://res.cloudinary.com/dsbiugddk/image/upload/v1698746181/DATN/vcn8wqdxusccmsox0t0b.jpg"}
               />
             </Link>
@@ -55,7 +55,7 @@ const SongCarouselItem = ({item}: Props) => {
           <h4>
             <Link to={`#`}>
               <span className="text-[14px] font-semibold">
-              {item.album_name}
+              {item?.album_name}
               </span>
             </Link>
           </h4>

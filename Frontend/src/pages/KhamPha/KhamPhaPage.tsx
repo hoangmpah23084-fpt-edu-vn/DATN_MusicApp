@@ -25,19 +25,27 @@ const KhamPhaPage = () => {
   return (
     <>
       <div className="zm-section">
-        <main className="px-[59px] text-white">
+        <main className="px-[15px] md:px-[59px] text-white">
           <div className="home-page-content mt-[70px]">
             <div className="container">
               <div className="gallery mx-[-15px] pt-[32px]">
                 <div className="gallery-container flex relative">
                   <Swiper
                     modules={[Autoplay, Navigation]}
-                    slidesPerView={3}
+                    slidesPerView={1}
                     navigation
                     loop={true}
                     className="mySwiper"
                     autoplay={{
                       delay: 5000,
+                    }}
+                    breakpoints={{
+                      768: {
+                        slidesPerView: 2,
+                      },
+                      1024: {
+                        slidesPerView: 3,
+                      },
                     }}
                   >
                     {img_slide.map((slide) => {

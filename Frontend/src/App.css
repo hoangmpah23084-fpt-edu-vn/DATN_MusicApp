@@ -41,7 +41,7 @@
   
   /* Track (the area on the sides of the scrollbar) */
   ::-webkit-scrollbar-track {
-    background: #ebebeb !important; /* Light grey */
+    background: #170f23 !important; /* Light grey */
 
   }
   
