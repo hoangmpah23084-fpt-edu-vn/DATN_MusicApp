@@ -96,7 +96,7 @@ export const router = createBrowserRouter([
       {
         path: "UpdateGenre/:id",
         element: <UpdateGenre />
-      }
+      },
     ],
   },
 ]);
