@@ -23,7 +23,7 @@ import { RootState } from "@/store/store";
 export const useStyles = makeStyles(() => createStyles({
   root: {
     color: "white",
-    "&:hover": { color: "#9B4DE0" }
+    "&:hover": { color: "#3BC8E7" }
   },
 }));
 type Props = {
@@ -244,7 +244,7 @@ const Footer = (props: Props) => {
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle onClick={handRandomSong} >
                     <ListItemIconStyle>
-                      <ShuffleIcon sx={{ color: randomSong ? "#c273ed" : "white" }} />
+                      <ShuffleIcon sx={{ color: randomSong ? "#3BC8E7" : "white" }} />
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
@@ -267,7 +267,7 @@ const Footer = (props: Props) => {
                   >
                     <ListItemIconStyle>
                       <RepeatIcon
-                        sx={{ color: repeat ? "#c273ed" : "white" }}
+                        sx={{ color: repeat ? "#3BC8E7" : "white" }}
                       />
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
@@ -357,9 +357,9 @@ const Footer = (props: Props) => {
               props.setSideBarRight(value => !value);
             }} >
               <ListItemIconStyle sx={{
-                backgroundColor: "#9B4DE0", borderRadius: "5px",
+                backgroundColor: "#3BC8E7", borderRadius: "5px",
                 ":hover": {
-                  backgroundColor: "#9b4de0a3"
+                  backgroundColor: "#3BC8E7a3"
                 }
               }} >
                 <LibraryMusicIcon sx={{ color: "white" }} />

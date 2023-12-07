@@ -83,7 +83,7 @@ const  ListSongItem = ({ section, item }: Props) => {
               <div className="capitalize text-[15px]">
                 <span>{item?.song_name}</span>
               </div>
-              <div className="text-[rgb(140,136,146)] text-[12px] hover:text-[#c273ed] hover:underline">
+              <div className="text-[rgb(140,136,146)] text-[12px] hover:text-[#3BC8E7] hover:underline">
                 <Link to={`#`}>Double2T, Hoà Minzy, DuongK</Link>
               </div>
             </div>

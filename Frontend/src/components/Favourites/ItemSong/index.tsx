@@ -85,7 +85,7 @@ const ItemSong = ({ item, active }: props) => {
           <p>{item.song_name}</p>
           <Link
             to={`#`}
-            className="text-xs text-[#86828c] hover:text-[#9b4de0] hover:border-b-[#9b4de0] hover:border-b-[1px]"
+            className="text-xs text-[#86828c] hover:text-[#3BC8E7] hover:border-b-[#3BC8E7] hover:border-b-[1px]"
           >
             {item.id_Singer?.name}
 
@@ -120,7 +120,7 @@ const ItemSong = ({ item, active }: props) => {
               </div>
             </button>
 
-            <button className="text-[#9b4de0] mx-2 group relative " onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}>
+            <button className="text-[#3BC8E7] mx-2 group relative " onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}>
               <ActiveFavourites item={item} />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <p className="text-white">Xoá khỏi thư viện</p>

@@ -109,7 +109,7 @@ const SidebarSong = (props: Props) => {
             <div className="w-full h-[50%]  flex justify-start items-center">
               <h3 className="text-[14px] text-[rgba(254,255,255,0.6)] flex">
                 Từ playlist
-                <span className="text-[#c273ed] pl-[5px]">Mới phát hành</span>
+                <span className="text-[#3BC8E7] pl-[5px]">Mới phát hành</span>
               </h3>
             </div>
           </div>
@@ -123,7 +123,7 @@ const SidebarSong = (props: Props) => {
                   <div
                     key={index}
                     className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
-                      ? "bg-[#9B4DE0]"
+                      ? "bg-[#3BC8E7]"
                       : "hover:bg-[#b4b4b32d]"
                       } my-1 fjc  cursor-pointer rounded-lg wall`}
                   >

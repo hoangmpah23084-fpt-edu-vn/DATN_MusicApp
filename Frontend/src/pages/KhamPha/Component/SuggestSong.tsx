@@ -28,7 +28,7 @@ const SuggestSong = (props: Props) => {
      <div> <h4 className="text-[rgb(140,136,146)] font-light flex">
         Bắt đầu nghe từ một bài hát
       </h4>
-      <h3 className="text-xl font-semibold capitalize">
+      <h3 className="text-xl font-semibold capitalize text-[#3BC8E7]">
        {/* Top bài nhạc thịnh hành */}
        Có Thể Bạn Muốn Nghe
       </h3></div>
