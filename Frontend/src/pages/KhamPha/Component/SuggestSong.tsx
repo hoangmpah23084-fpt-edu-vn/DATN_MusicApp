@@ -33,7 +33,7 @@ const SuggestSong = (props: Props) => {
        Có Thể Bạn Muốn Nghe
       </h3></div>
       <div className='flex justify-center items-center px-2 text-[#ffffff80] hover:text-[#3BC8E7] cursor-pointer'>
-        <Link to={'/'} className='flex' ><span className='pr-3 text-sm'>TẤT CẢ</span>
+        <Link to={'/dsong'} className='flex' ><span className='pr-3 text-sm'>TẤT CẢ</span>
         <MdArrowForwardIos className='text-sm' /></Link>
       </div>
     </div>
