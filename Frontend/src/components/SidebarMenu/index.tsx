@@ -30,7 +30,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
 
 
   return (
-    <aside className="fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e]">
+    <aside className="fixed text-[#dadada] text-[14px] top-0 left-0 z-40 w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#14182A]">
       <nav className="zm-navbar ">
         <div className="zm-navbar-brand w-[240px] h-[70px] fixed top-0 pt-0 pr-[25px] pl-[28px] flex items-center">
           <div className="zm-navbar-item">
@@ -42,7 +42,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
       </nav>
       <div className=" mb-[16px]">
         <ul className=" ">
-          <li className="bg-[#3a3244] border-l-2 border-l-[#9b4de0]">
+          <li className="bg-[#3a3244] border-l-2 border-l-[#3BC8E7]">
             <Link
               to={"/"}
               className="flex items-center leading-[20px] py-[6px] px-[21px]"
@@ -58,7 +58,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
               className="flex items-center leading-[20px] py-[6px] px-[24px]"
             >
               <BsBarChartLine className="w-[23px] text-[#ccc] h-[40px]" />
-              <span className="ml-3">#zingchart</span>
+              <span className="ml-3">#SongSync</span>
             </Link>
           </li>
 
@@ -141,14 +141,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
           </div> */}
 
           {/* Đã đăng nhập */}
-          <div className="py-[15px] px-[8px] mx-[20px] my-[10px] text-center text-[#fff] bg-gradient-to-r from-[#5a4be7] to-[#c86dd7] rounded-[8px]">
-            <div className="text-[12px] mb-[10px] font-semibold">
-              Nghe nhạc không quảng cáo cùng kho nhạc PREMIUM
-            </div>
-            <button className="rounded-[20px] flex justify-center items-center text-[#32323d] bg-[#ffdb01] py-[6px] px-3 text-[12px] font-bold uppercase mx-auto">
-              <Link to={"#"}>Nâng cấp tài khoản</Link>
-            </button>
-          </div>
+         
 
           <nav>
             <ul className="">
@@ -214,7 +207,7 @@ const SidebarMenu = ({handleShowModalCreateRoom}:props) => {
 
       <div className="add-playlist-sidebar text-[14px]">
         {" "}
-        <button onClick={() =>handleShowModalCreateRoom()} className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px] bg-[#170f23] border-t-[1px] border-[#32323d]">
+        <button onClick={() =>handleShowModalCreateRoom()} className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px] bg-[#14182A] border-t-[1px] border-[#32323d]">
           <Link to={"#"} className="flex items-center justify-start ">
             <AiOutlinePlus className="w-[20px] text-[#ccc] h-[40px] mr-4" />
             <span >Tạo playlist mới</span>

@@ -19,7 +19,7 @@ const FavouritePage = () => {
         dispatch(getFavourite())
     }, [])
 
-    return (<div className="text-white w-full">
+    return (<div className="text-white w-full ">
         <h1 className="flex items-center text-[40px] font-bold mx-16 mt-20">Thư viện <span className="ml-2 mt-1 hover:opacity-70 cursor-pointer ease-in-out duration-300"><AiFillPlayCircle /></span></h1>
         <h2 className="mx-16 mt-10 font-bold text-2xl flex items-center">PLAYLIST
             <span className="text-3xl ml-2 relative group">
@@ -32,7 +32,7 @@ const FavouritePage = () => {
         </h2>
         <div className="mt-10 mx-16">
             <ul className="flex items-center border-b-[1px] border-b-[#2c2436]">
-                <li className="mr-5 pb-3 border-b-[#9b4de0] border-b-2 hover:scale-95 ease-in-out duration-300"><Link to="#">BÀI HÁT</Link></li>
+                <li className="mr-5 pb-3 border-b-[#3BC8E7] border-b-2 hover:scale-95 ease-in-out duration-300"><Link to="#">BÀI HÁT</Link></li>
                 <li className="mx-5 pb-3 hover:scale-95 ease-in-out duration-300"><Link to="#">PODCAST</Link></li>
                 <li className="mx-5 pb-3 hover:scale-95 ease-in-out duration-300"><Link to="#">ALBUM</Link></li>
                 <li className="mx-5 pb-3 hover:scale-95 ease-in-out duration-300"><Link to="#">MV</Link></li>
@@ -41,8 +41,8 @@ const FavouritePage = () => {
 
         <div className="mx-16 mt-5">
             <ul className="flex items-center text-center text-xs">
-                <li><Link to="#" className="px-3 py-1 mr-4 border-2 rounded-3xl bg-[#9b4de0] border-[#9b4de0]">YÊU THÍCH</Link></li>
-                <li><Link to="#" className="px-3 py-1 border-2 rounded-3xl hover:text-[#9b4de0] hover:border-[#9b4de0]">ĐÃ TẢI LÊN</Link></li>
+                <li><Link to="#" className="px-3 py-1 mr-4 border-2 rounded-3xl bg-[#3BC8E7] border-[#3BC8E7]">YÊU THÍCH</Link></li>
+                <li><Link to="#" className="px-3 py-1 border-2 rounded-3xl hover:text-[#3BC8E7] hover:border-[#3BC8E7]">ĐÃ TẢI LÊN</Link></li>
             </ul>
         </div>
         <div className=" overflow-x-auto ml-16 py-10">

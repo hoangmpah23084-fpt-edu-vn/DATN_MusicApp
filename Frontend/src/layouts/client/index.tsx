@@ -57,7 +57,7 @@ const LayoutClient = () => {
   return (
     <>
 
-      <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
+      <div className="flex w-[100%] bg-[#14182A] overflow-hidden">
       {
               isShowModalCreatePlaylist && <ModalCreatePlaylist onShowModal={handleShowModalCreateRoom} />
             }
