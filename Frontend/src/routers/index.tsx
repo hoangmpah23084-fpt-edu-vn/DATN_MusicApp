@@ -19,6 +19,7 @@ import RoomPage from "@/pages/Room/RoomPage";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
 import Playlist from "@/pages/Playlist/Playlist";
+import AlbumAdmin from "@/pages/Admin/Album/Album";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -79,6 +80,10 @@ export const router = createBrowserRouter([
       {
         path: "addgenre",
         element: <Genre />
+      },
+      {
+        path: "album",
+        element: <AlbumAdmin />
       }
       ,
       {
