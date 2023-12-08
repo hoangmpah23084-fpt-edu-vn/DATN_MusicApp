@@ -24,20 +24,28 @@ const img_slide = [
 const KhamPhaPage = () => {
   return (
     <>
-      <div className="zm-section">
-        <main className="px-[59px] text-white">
+      <div className="zm-section bg-[#14182A]">
+        <main className="px-[15px] md:px-[59px] text-white">
           <div className="home-page-content mt-[70px]">
             <div className="container">
               <div className="gallery mx-[-15px] pt-[32px]">
                 <div className="gallery-container flex relative">
                   <Swiper
                     modules={[Autoplay, Navigation]}
-                    slidesPerView={3}
+                    slidesPerView={1}
                     navigation
                     loop={true}
                     className="mySwiper"
                     autoplay={{
                       delay: 5000,
+                    }}
+                    breakpoints={{
+                      768: {
+                        slidesPerView: 2,
+                      },
+                      1024: {
+                        slidesPerView: 3,
+                      },
                     }}
                   >
                     {img_slide.map((slide) => {
@@ -60,7 +68,7 @@ const KhamPhaPage = () => {
               </div>
               <div className="playlist-section home-recent mt-12">
                 <div className="home-recent-title flex justify-between mb-[20px]">
-                  <h3 className="text-xl font-semibold capitalize">Gần đây</h3>
+                  <h3 className="text-xl font-semibold capitalize ">Gần đây</h3>
                   <Link
                     to={`#`}
                     className="text-[#ccc] uppercase text-xs font-light flex"
@@ -83,12 +91,15 @@ const KhamPhaPage = () => {
               {/* End Component WantToListent */}
 
               {/* Start Component WantToListent */}
-              <BXHSong />
+              {/* <BXHSong /> */}
               {/* End Component WantToListent */}
              
               {/* Start Component WantToListent */}
               <Advertisement />
               {/* End Component WantToListent */}
+              <div className="">
+                Nhung
+              </div>
             </div>
           </div>
         </main>

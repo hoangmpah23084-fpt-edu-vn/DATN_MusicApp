@@ -31,7 +31,7 @@ export const updateAlbum = createAsyncThunk("album/updateAlbum", async (value : 
     return data.album;
 })
 export const getOneAlbum = async (id : string) => {
-    const {data} = await axios.get(`http://localhost:8080/api/album/${id}`);
+    const {data} = await axios.get<{data : ifAlbum}>(`http://localhost:8080/api/album/${id}`)
     return data
 }
 
@@ -60,16 +60,6 @@ const albumReducer = createSlice({
         .addCase(getAlbum.rejected, (state) => {
             state.loading = true;
         })
-        // .addCase(getOneAlbum.pending, (state) => {
-        //     state.loading = true
-        // })
-        // .addCase(getOneAlbum.fulfilled, (state, action) => {
-        //     state.loading = false;
-        //     state.album = action.payload;
-        // })
-        // .addCase(getOneAlbum.rejected, (state) => {
-        //     state.loading = true;
-        // })
         .addCase(deleteAlbum.pending, (state) => {
             state.loading = true
         })

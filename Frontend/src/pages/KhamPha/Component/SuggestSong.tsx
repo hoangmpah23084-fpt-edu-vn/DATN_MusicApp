@@ -28,7 +28,7 @@ const SuggestSong = (props: Props) => {
      <div> <h4 className="text-[rgb(140,136,146)] font-light flex">
         Bắt đầu nghe từ một bài hát
       </h4>
-      <h3 className="text-xl font-semibold capitalize">
+      <h3 className="text-xl font-semibold capitalize ">
        {/* Top bài nhạc thịnh hành */}
        Có Thể Bạn Muốn Nghe
       </h3></div>
@@ -38,7 +38,7 @@ const SuggestSong = (props: Props) => {
       </div>
     </div>
     <div className="column">
-      <div className="list grid grid-cols-3 -mx-[15px]">
+      <div className="list grid grid-cols-1 md:grid-cols-3 -mx-[15px]">
         {
           loading ? (songData.map((_, index) => <SuggSkeleton section="suggested" key={index} /> ))  : (songData.map((item , index) => <ListSongItem item={item} section="suggested" key={index} />)) 
         }

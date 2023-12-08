@@ -13,7 +13,6 @@ import { checkToken, setToken } from "@/store/Reducer/User";
 import { getFavourite } from "@/store/Reducer/favouriteReducer";
 import ModalCreatePlaylist from "@/components/Modals/createPlaylist";
 
-
 const LayoutClient = () => {
   const [widthBrowser, setWidthBrowser] = useState(window.innerWidth);
   const [width, setWidth] = useState(false);
@@ -21,55 +20,60 @@ const LayoutClient = () => {
   const current = useAppSelector(({ Song }) => Song);
   const dispatch = useAppDispatch();
   const { isToken } = useAppSelector((state: RootState) => state.user);
-  const [isShowModalCreatePlaylist,setIsShowModalCreatePlaylist] = useState<boolean>(false)
+  const [isShowModalCreatePlaylist, setIsShowModalCreatePlaylist] =
+    useState<boolean>(false);
 
-  const user = localStorage.getItem('user');
+  const [collapsed, setCollapsed] = React.useState<boolean>(false);
+
+  const user = localStorage.getItem("user");
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong()).then(({payload}) => {
         console.log(payload);
         if (payload.length > 0) {
-          localStorage.setItem('song', JSON.stringify(payload[0]));
-          dispatch(handGetCurrentSong(payload[0]))
+          localStorage.setItem("song", JSON.stringify(payload[0]));
+          dispatch(handGetCurrentSong(payload[0]));
         }
-      } );
+      });
     }
     void fetchData();
   }, []);
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   useEffect(() => {
     dispatch(setToken(token));
     if (token) {
-      dispatch(getFavourite())
+      dispatch(getFavourite());
     }
-
-  }, [token])
+  }, [token]);
 
   const handleShowModalCreateRoom = () => {
     if (token) {
       setIsShowModalCreatePlaylist(!isShowModalCreatePlaylist);
     } else {
-      dispatch(checkToken(true))
+      dispatch(checkToken(true));
     }
-
   };
-
 
   return (
     <>
-
-      <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
-      {
-              isShowModalCreatePlaylist && <ModalCreatePlaylist onShowModal={handleShowModalCreateRoom} />
-            }
+      <div className="flex w-[100%] bg-[#14182A] overflow-hidden">
+        {isShowModalCreatePlaylist && (
+          <ModalCreatePlaylist onShowModal={handleShowModalCreateRoom} />
+        )}
         {isToken && <ModalSignin />}
-        <SidebarMenu handleShowModalCreateRoom={handleShowModalCreateRoom} />
-        <Header />
-        <div className="ml-[240px] relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
+        <SidebarMenu
+          // collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          handleShowModalCreateRoom={handleShowModalCreateRoom}
+        />
+        <Header collapsed={collapsed} sideBarRight={sideBarRight} />
+        <div className="relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
         <SidebarSong sideBarRight={sideBarRight} />
         <Footer setSideBarRight={setSideBarRight} ListData={current.song} />
+        {/* responsive */}
+        <div className="fixed z-50 w-[100%] bottom-0 block md:hidden bg-[#1B2039] cursor-pointer">Nhung</div>
       </div>
     </>
   );
