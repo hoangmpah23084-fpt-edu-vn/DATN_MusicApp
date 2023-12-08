@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   AiOutlineMenuFold,
   AiOutlineMenuUnfold,
+  AiOutlineCustomerService,
 } from "react-icons/ai";
 import { Layout, Menu, Button } from "antd";
 import { Link, Outlet } from "react-router-dom";
@@ -36,7 +37,8 @@ const LayoutAdmin = () => {
 
   const items: MenuItem[] = [
     getItem(<Link to="/admin">Thống kê</Link>, '1', <PieChartOutlined />),
-    getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />)
+    getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />),
+    getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />)
 
   ];
   return (
