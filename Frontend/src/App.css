@@ -9,7 +9,9 @@
     align-items: center !important;
   
   }
+*{
 
+}
   /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -41,7 +43,7 @@
   
   /* Track (the area on the sides of the scrollbar) */
   ::-webkit-scrollbar-track {
-    background: #ebebeb !important; /* Light grey */
+    background: #14182a !important; /* Light grey */
 
   }
   
@@ -57,9 +59,35 @@
     cursor: pointer !important;
   }
   /* table */
-
-
   /* form */
   .ant-form-item .ant-form-item-control-input{
     min-width: 470px
+  }
+
+
+  .input-search input{
+    background-color: #fff !important;
+    color: white;
+  }
+
+  .input-search input::placeholder{
+    color: white !important;
+    opacity: 0.8;
+  }
+
+  .ant-dropdown{
+    height: 400px;
+    overflow-y: auto;
+  }
+
+  .ant-dropdown-menu{
+    background-color: #14182A !important;
+    width: 100% !important;
+  }
+
+  .ant-dropdown-menu .ant-dropdown-menu-item {
+    color: white !important;
+    width: 100% !important;
+    padding: 0 !important;
+    max-height: 300px;
   }

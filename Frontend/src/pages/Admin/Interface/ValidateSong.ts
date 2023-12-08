@@ -20,31 +20,51 @@ export interface ifSong {
   song_image: string[];
   view_song?: number,
   total_like?: number,
-  id_Genre: string;
-  id_Singer: string;
+  id_Genre: {
+    _id?: string;
+    name: string;
+  };
+  id_Singer: {
+    _id?: string;
+    name: string;
+  };
   song_lyric?: string
 }
 export interface ifCurrentSong {
   _id?: string;
   song_name: string;
+  song_title: string;
   song_link: string;
-  song_image: string[] | undefined;
-  song_singer: string;
-  song_lyric: string
-  id_Genre: string; // Make it required
-  id_Artists: string; // Make it required
+  song_image: string[];
+  view_song?: number,
+  total_like?: number,
+  id_Genre: {
+    _id?: string;
+    name: string;
+  };
+  id_Singer: {
+    _id?: string;
+    name: string;
+  };
+  song_lyric?: string
 }
 export type TypeSong = {
   _id?: string;
   song_name: string;
   song_title: string;
-  song_link: string[] | string | undefined;
-  song_image: string[] | undefined;
-  song_singer: string;
-  song_musian: string;
-  song_lyric: string;
-  id_Genre: string; // Make it required
-  id_Artists: string; // Make it required
+  song_link: string;
+  song_image: string[];
+  view_song?: number,
+  total_like?: number,
+  id_Genre: {
+    _id?: string;
+    name: string;
+  };
+  id_Singer: {
+    _id?: string;
+    name: string;
+  };
+  song_lyric?: string
 }
 
 export type IApiSong = {

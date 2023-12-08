@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import "./css.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FiRadio } from "react-icons/fi";
@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { getDetailRoom, leaveRoom } from "@/store/Reducer/roomReducer";
+import { leaveRoom } from "@/store/Reducer/roomReducer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Socket, io } from "socket.io-client";
 import axios from "axios";
@@ -17,10 +17,10 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { listMessages, memberGroup } from "../Admin/Interface/Room";
 import SideBarRoom from "./SideBarRoom";
 import { handGetSong } from "@/store/Reducer/Song";
-import { handGetCurrentSong } from "@/store/Reducer/currentSong";
-import SidebarRoom from "@/components/Footer/Room/SidebarRoom";
+import { setCurrentSong } from "@/store/Reducer/currentSong";
 import FooterRoom from "@/components/Footer/Room/FooterRoom";
 import { toast } from "react-toastify";
+import { ifSong } from "../Admin/Interface/ValidateSong";
 
 type Props = {
   roomLive?: boolean;
@@ -32,13 +32,14 @@ const RoomPage = (props: Props) => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const [listMess, setListMess] = useState<listMessages[] | []>([]);
-  const [currAdmin, setCurrAdmin] = useState('');
-  const [currMember, setCurrMember] = useState('');
   const [listMember, setlistMember] = useState<memberGroup[] | []>([]);
-  const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const [stateSideBar, setStateSideBar] = useState<string>("trochuyen")
+  const [listSong, setListSong] = useState<ifSong[] | []>([])
   const current = useAppSelector(({ Song }) => Song);
-  const navigate = useNavigate()
-  const roomDetail = useAppSelector((data) => data);
+  const {currentSong} = useAppSelector(({currentSong}) => currentSong)
+  const navigate = useNavigate();
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong());
@@ -46,17 +47,28 @@ const RoomPage = (props: Props) => {
     void fetchData();
   }, [dispatch]);
   useEffect(() => {
-    if (current.song.length > 0) {
-      localStorage.setItem('song', JSON.stringify(current.song[2]));
-      dispatch(handGetCurrentSong(current.song[2]))
+    const getSongLocal = localStorage.getItem('song');
+    if (getSongLocal) {
+      const convertSong = JSON.parse(getSongLocal);
+      console.log(convertSong);
+      if (convertSong) {
+        dispatch(setCurrentSong(convertSong))
+      }
+    }else{
+      if (current.song.length > 0) {
+        localStorage.setItem('song', JSON.stringify(current.song[0]));
+        dispatch(setCurrentSong(current.song[0]))
+      }
     }
-  }, [current.song]);
+
+  }, []);
+  // current.song
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
-      setListMess([...listMess, ...data.data.listMessages])
+      setListSong(data.data.listSong);
+      setListMess([...listMess, ...data.data.listMessages]);
       setlistMember(data.data.memberGroup);
-      setCurrAdmin(data.data.isAdminGroup._id)
-      socket.emit('joinRoom', data.data._id)
+      socket.emit('joinRoom', data.data._id);
     });
   }
   useEffect(() => {
@@ -64,16 +76,15 @@ const RoomPage = (props: Props) => {
     const user = localStorage.getItem('user');
     if (user) {
       const convert = JSON.parse(user);
-      setCurrMember(convert._id);
       socket.emit('setUser', convert._id)
     }
-    FetchMessage()
+    FetchMessage();
     return () => {
       if (confirm("Are you sure want to remove room ?")) {
         leaveRoom(id as string);
       }
     }
-  }, [])
+  }, [setListSong])
   useEffect(() => {
     socket.on("messRecived", (value) => {
       setListMess([...listMess, value])
@@ -103,7 +114,7 @@ const RoomPage = (props: Props) => {
   return (
     <div>
       <div
-        className={`zm-room-wrapper bg-[#170f23] flex fixed 
+        className={`zm-room-wrapper bg-[#14182A] flex fixed 
         h-full
          left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
       >
@@ -182,17 +193,17 @@ const RoomPage = (props: Props) => {
                     <div className="w-[40px] h-[40px]">
                       <img
                         className="rounded-[5px]"
-                        src="../../../public/Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
+                        src={`${currentSong?.song_image[0]}`}
                         alt=""
                       />
                     </div>
                   </div>
                   <div className="media-content grow shrink">
                     <div className="name text-[14px]">
-                      <span>Kill this love</span>
+                      <span>{currentSong?.song_name}</span>
                     </div>
                     <h3 className="subtitle text-[rgba(254,255,255,.6)]  text-[12px] uppercase">
-                      Blackpink
+                      {currentSong?.song_singer}
                     </h3>
                   </div>
                   <div className="media-right grow-0 shrink-0 flex items-center">
@@ -216,10 +227,9 @@ const RoomPage = (props: Props) => {
             </div>
           </div>
           {/* //todo SideBar Rooom */}
-          <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} />
+          <SideBarRoom listMess={listMess} setListMess={setListMess} audioRef={audioRef} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar}  />
         </div>
-        <SidebarRoom sideBarRight={sideBarRight} />
-        {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} />}
+        {listMember.length > 0 && listSong.length > 0 && <FooterRoom ListData={listSong} audioRef={audioRef}  idRoom={id} listMember={listMember} />}
       </div>
     </div>
   );

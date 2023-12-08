@@ -87,7 +87,7 @@ const ModalSongMenu = ({ song }: any) => {
       {isShowModalCreate && (
         <ModalCreatePlaylist onShowModal={handleShowModalCreatePlaylist} />
       )}
-      <div className="absolute z-[9999] bg-[#34224f] rounded-xl w-72 right-16 -mt-64">
+      <div className="absolute z-[9999] bg-[#34224f] rounded-xl w-72 right-16 mt-72">
         <header className="flex items-center py-3 ml-2 pr-10 ">
           <img
             src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg"
@@ -96,7 +96,7 @@ const ModalSongMenu = ({ song }: any) => {
           />
           <div className="mx-1">
             <p className="group relative ease-in-out duration-300">
-              <h3 className="hover:text-[#9b4de0]">Khó Vẽ Nụ cười</h3>
+              <h3 className="hover:text-[#3BC8E7]">Khó Vẽ Nụ cười</h3>
               <div className="absolute z-40 -top-20 -left-48 pl-10 py-5 text-sm w-60 bg-[#34224f] scale-50 rounded-xl group-hover:-top-5 group-hover:scale-100 opacity-0 group-hover:-left-72 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <div>
                   <p className="text-[#857a95]">Nghệ sĩ</p>

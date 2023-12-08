@@ -22,7 +22,6 @@ export const checkPermission = async (req, res, next) => {
     if (user.role !== "admin") {
       throw new Error("Bạn không có quyền để thực hiện hành động này ^^");
     }
-
     next();
   } catch (error) {
     return res.status(400).json({

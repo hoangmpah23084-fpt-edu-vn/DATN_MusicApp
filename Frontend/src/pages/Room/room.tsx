@@ -104,13 +104,13 @@ const Room = () => {
             </h1>
             <input
               type="text"
-              className="bg-[#3a3244] ouline-none text-white text-sm rounded-lg block w-96 p-2.5"
+              className="bg-[#1B2039] ouline-none text-white text-sm rounded-lg block w-96 p-2.5"
               placeholder="Tìm phòng"
               required
               onChange={(e) => { handleSerach(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) }}
             />
             <button
-              className="relative bg-[#b76cea] min-w-[130px] py-2 rounded-full hover:bg-white hover:text-[#654789] flex items-center text-md text-center justify-center ease-in-out duration-300"
+              className="relative bg-[#3BC8E7] min-w-[130px] py-2 rounded-full hover:bg-white hover:text-[#3BC8E7] flex items-center text-md text-center justify-center ease-in-out duration-300"
               onClick={() => handleShowModalCreateRoom()}
             >
               Tạo phòng{" "}

@@ -1,11 +1,26 @@
 import Favourites from "../Models/songFavourites.js";
 import SongSchame from "../Models/songModel.js";
-
+import Singer from "../Models/singer.js";
+import Genre from "../Models/genreModel.js";
 //========= getFavourites ================
 
 export const getFavourites = async (req, res) => {
   try {
     const list_songFavourites = await Favourites.findOne({id_user:req.user._id}).populate("list_songFavourites")
+         if(list_songFavourites){
+          const singerSongs = await SongSchame.populate(list_songFavourites.list_songFavourites, {
+            path: 'id_Singer',
+            model: Singer,
+            select: 'name',
+          });
+          const genreSongs = await SongSchame.populate(singerSongs, {
+            path: 'id_Genre',
+            model: Genre,
+            select: 'name',
+          });
+          list_songFavourites.list_songFavourites =genreSongs
+         }
+
     if (!list_songFavourites) {
       return res.status(201).json({
         message: "Danh sách không tồn tại",

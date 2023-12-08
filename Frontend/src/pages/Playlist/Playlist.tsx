@@ -54,11 +54,11 @@ const Playlist = () => {
             <div className="mt-[100px]">
                 <div className="px-16 grid grid-cols-4 gap-12 mt-5">
                     <div onClick={() => handleShowModal()} className="cursor-pointer  min-h-[300px] flex items-center justify-center  border-[1px] border-solid border-[hsla(0,0%,100%,0.1)] rounded">
-                        <div className="hover:text-[#9b4de0] ">
+                        <div className="hover:text-[#3BC8E7] ">
                             <span className="flex items-center justify-center">
-                                <CiCirclePlus className="text-white hover:text-[#9b4de0] text-[32px] text-center" />
+                                <CiCirclePlus className="text-white hover:text-[#3BC8E7] text-[32px] text-center" />
                             </span>
-                            <span className="pt-[8px] text-[14px] hover:text-[#9b4de0] text-white ">
+                            <span className="pt-[8px] text-[14px] hover:text-[#3BC8E7] text-white ">
                                 Tạo playlist mới
                             </span>
                         </div>
@@ -109,7 +109,7 @@ const Playlist = () => {
                                     </span>
                                 </div>
                                 <div>
-                                    <span className="pt-[8px] text-[14px] text-white hover:text-[#9b4de0]">
+                                    <span className="pt-[8px] text-[14px] text-white hover:text-[#3BC8E7]">
                                         {item.playlist_name}
                                     </span>
                                     <span className="text-[hsla(0,0%,100%,0.5)]">{item.id_user.fullName}</span>

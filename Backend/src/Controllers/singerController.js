@@ -1,9 +1,13 @@
+import SongSchame from "../Models/songModel.js";
 import Singer from "../Models/singer.js";
+import Genre from "../Models/genreModel.js";
 import SingerValidate from "../Schemas/singerSchema.js";
 
 export const getSingers = async (req, res) => {
   try {
-    const data = await Singer.find().populate("album");
+    const data = await Singer.find().populate("album").populate("songs");
+
+    console.log(data);
     if (!data) {
       return res.status(404).send({ message: "fail", error: "Loi" });
     }
@@ -70,6 +74,19 @@ export const getItem = async (req, res) => {
   try {
     const { id } = req.params;
     const data = await Singer.findById(id).populate("songs");
+    const singerSongs = await SongSchame.populate(data.songs, {
+      path: "id_Singer",
+      model: Singer,
+      select: "name",
+    });
+    const genreSongs = await SongSchame.populate(singerSongs, {
+      path: "id_Genre",
+      model: Genre,
+      select: "name",
+    });
+    data.songs = genreSongs;
+
+    console.log(data);
     if (!data) {
       return res
         .status(404)

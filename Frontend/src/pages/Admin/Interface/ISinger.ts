@@ -1,13 +1,14 @@
 import * as Yup from "yup"
+import { ifSong } from "./ValidateSong"
 
 export interface ISinger {
     _id: string,
     name: string,
     age: number,
-    images: string[] | undefined,
+    images: string[],
     description: string,
     album: string,
-    songs: string[]
+    songs: ifSong[]
 }
 
 

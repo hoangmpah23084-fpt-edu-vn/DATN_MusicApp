@@ -12,14 +12,21 @@ import { createBrowserRouter } from "react-router-dom";
 import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
-import Room from "@/pages/Room/room";
-import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import Album from "@/pages/Album/Album";
-import RoomPage from "@/pages/Room/RoomPage";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
 import Playlist from "@/pages/Playlist/Playlist";
 import AlbumAdmin from "@/pages/Admin/Album/Album";
+import MusicCharts from "@/pages/BXH/MusicCharts";
+import DetailAlbum from "@/pages/Album/DetailAlbum";
+import DetailSinger from "@/pages/Singer/DetailSinger";
+import DSong from "@/pages/DSong";
+import Room from "@/pages/Room/room";
+import RoomPage from "@/pages/Room/RoomPage";
+import PlaylistPage from "@/pages/Playlist/PlaylistPage";
+import AddAlbum from "@/pages/Admin/Album/AddAlbum";
+import ListAlbum from "@/pages/Admin/Album/ListAlbum";
+import UpdateAlbum from "@/pages/Admin/Album/UpdateAlbum";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -41,6 +48,10 @@ export const router = createBrowserRouter([
       { path: "playlist", element: <Playlist /> },
       { path: "playlist/:id", element: <PlaylistPage /> },
       { path: "album", element: <Album /> },
+      { path: "album/:id", element: <DetailAlbum /> },
+      { path: "singer/:id", element: <DetailSinger /> },
+      { path: "music_charts", element: <MusicCharts /> },
+      { path: "dsong", element: <DSong /> }
     ],
   },
   {

@@ -9,9 +9,18 @@ import { signup } from "../../store/Reducer/User"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
 import { useAppDispatch } from "@/store/hooks"
+import { useEffect, useState } from "react"
 
+// border border-red-500
 
 const Signup = () => {
+    const [type, setType] = useState('password');
+
+    const onHandleChangePassword = () => {
+        type == 'password'? setType('text') : setType('password');
+    }
+    
+
     const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>(
         {
             resolver: yupResolver(SignupSchema)
@@ -34,7 +43,7 @@ const Signup = () => {
 
 
     return <>
-        <section className="bg-[#170F23]">
+        <section className="bg-[#14182A]">
             <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                 <section
                     className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6"
@@ -106,11 +115,10 @@ const Signup = () => {
                             </p>
                         </div>
 
-
-                        <form className="mt-8 grid grid-cols-6 gap-6" onSubmit={handleSubmit(onSubmit)}>
-                            <div className="col-span-6 sm:col-span-3">
+                        <form className="mt-8 w-[500px] space-y-4 mx-auto" onSubmit={handleSubmit(onSubmit)}>
+                            <div className="">
                                 <label
-                                    htmlFor="FirstName"
+                                    htmlFor="firstName"
                                     className="block text-sm font-medium text-white"
                                 >
                                     Tên
@@ -119,11 +127,14 @@ const Signup = () => {
                                 <input
                                     {...register("fullName", { required: true })}
                                     placeholder="Full Name"
+                                    id="firstName"
                                     className="mt-1 w-full pl-2 h-[35px] rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
-                                <p className="text-red-600 text-[15px]">{errors.fullName && errors.fullName.message}</p>
+                                <p className="text-red-600 text-[15px]">
+                                    {errors.fullName && errors.fullName.message}
+                                </p>
                             </div>
-                            <div className="col-span-6 ">
+                            <div className="">
                                 <label htmlFor="Email" className="block text-sm font-medium text-white">
                                     Email
                                 </label>
@@ -135,41 +146,57 @@ const Signup = () => {
                                 />
                                 <p className="text-red-600 text-[15px]">{errors.email && errors.email.message}</p>
                             </div>
+                            <div className="grid grid-cols-2 gap-4 pb-2 ">
+                                <div className="flex items-center space-x-3">
+                                    <div>
+                                        <label
+                                            htmlFor="Password"
+                                            className=" text-sm font-medium text-white"
+                                        >
+                                            Mật Khẩu
+                                        </label>
 
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                    htmlFor="Password"
-                                    className="block text-sm font-medium text-white"
-                                >
-                                    Mật Khẩu
-                                </label>
+                                        <input
+                                            type={type}
+                                            id="Password"
+                                            {...register("password", { required: true })}
+                                            placeholder="********"
+                                            className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        />
+                                    <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>
 
-                                <input
-                                    type="password"
-                                    {...register("password", { required: true })}
-                                    placeholder="********"
-                                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                                />
-                                <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>
+                                    </div>
+                                    
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <div>
+
+                                        <label
+                                            htmlFor="PasswordConfirmation"
+                                            className=" text-sm font-medium text-white"
+                                        >
+                                            Nhập Lại Mật Khẩu
+                                        </label>
+
+                                        <input
+                                            type={type}
+                                            {...register("confirmPassword", { required: true })}
+                                            placeholder="********"
+                                            className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        />
+                                    <label className="text-red-600 text-[15px]">{errors.confirmPassword && errors.confirmPassword.message}</label>
+                                    </div>
+                                    
+                                </div>
                             </div>
+                            <div className=" flex items-center space-x-1 mt-5 text-white">
+                                <input type="checkbox" id="show_password" 
+                                onChange={onHandleChangePassword} 
 
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                    htmlFor="PasswordConfirmation"
-                                    className="block text-sm font-medium text-white"
-                                >
-                                    Nhập Lại Mật Khẩu
-                                </label>
-
-                                <input
-                                    type="password"
-                                    {...register("confirmPassword", { required: true })}
-                                    placeholder="********"
-                                    className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                 />
-                                <p className="text-red-600 text-[15px]">{errors.confirmPassword && errors.confirmPassword.message}</p>
+                                <label htmlFor="show_password">Hiển thị mật khẩu</label>
                             </div>
-                            <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
+                            <div className="col-span-6 flex sm:items-center sm:gap-4">
                                 <button
                                     className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
                                 >

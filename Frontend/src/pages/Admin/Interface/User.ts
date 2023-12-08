@@ -4,6 +4,7 @@ export interface ifUser {
     email: string,
     password: string,
     role: string,
+    image: string,
 }
 
 export interface ifSignup {

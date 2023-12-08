@@ -112,7 +112,7 @@ const ListSong = () => {
       id: chekcSubString(item._id as string, 5),
       ten: chekcSubString(item.song_name as string, 20),
       anh: <img src={item.song_image[0]} className="w-14 h-14 rounded-xl" />,
-      casi: item.id_Singer,
+      casi: item.id_Singer.name,
       luotnghe: item.view_song,
       yeuthich: item.total_like,
     };
@@ -626,6 +626,7 @@ const ListSong = () => {
       </Modal>
     );
   };
+
 
   return (
     <div className="relative">

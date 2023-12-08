@@ -5,6 +5,9 @@ import "./css.scss";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { activeSong } from "@/constane/song.const";
+import { setSingerSong } from "@/store/Reducer/Song";
+import axios from "axios";
+// import { handGetSongInGenre } from "@/store/Reducer/Song";
 
 type Props = {
   section?: string;
@@ -15,16 +18,18 @@ const  ListSongItem = ({ section, item }: Props) => {
   const {stateSong, dataLocal} = useAppSelector(({currentSong}) => currentSong);
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
   const dispatch = useAppDispatch();
-  const handToggle = () => {
-    const state = stateSong;
-    state &&
-     dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start")
+  const handToggle = async () => {
+    stateSong &&
+     dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start");
+    // const {data} = await axios.get(`http://localhost:8080/api/singer/${item.id_Singer}`).then(({data})=> data);
+    dispatch(setSingerSong(item.id_Singer));
   }
+    
   return (
     <div className="list-items px-[15px]">
       <div
         className={`media flex items-center py-[10px] px-[15px] rounded-[5px] text-left hover:bg-[#2f2739] relative z-10 ${
-          section === "chanel" && "bg-[#2f2739]"
+          section === "chanel" && "bg-[#14182A]"
         }  ${
           section === "zingchart" && "bg-[#492761] mb-[10px] hover:bg-[#65487a]"
         }`}
@@ -38,7 +43,7 @@ const  ListSongItem = ({ section, item }: Props) => {
             <span className="number is-top-1 mr-[15px]">1</span>
           </div>
 
-          <div className="song-thumb block relative shrink-0 overflow-hidden cursor-pointer mr-[10px]">
+          <div className="song-thumb block relative shrink-0 overflow-hidden cursor-pointer mr-[10px]" onClick={handToggle}>
             <div
               className={`${
                 section === "chanel" && "card-image"
@@ -55,21 +60,20 @@ const  ListSongItem = ({ section, item }: Props) => {
               />
               <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
               <div className="action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%]  hidden">
-                <div className="flex gap-[20px] h-full justify-center items-center" onClick={() => handToggle()}>
+                <div className="flex gap-[20px] h-full justify-center items-center" >
                   <div>
                     <div
                       className={`${
                         section === "chanel" && "border rounded-full"
                       } flex justify-center items-center`}
                     >
-                    { currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill clasName="text-[40px] p-4 pl-[6px]" /> }  
+                    { currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill className="text-[40px] p-4 pl-[6px]" /> }  
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           <div
             className={`${
               (section === "chanel" && "justify-between") || "justify-center"
@@ -79,7 +83,7 @@ const  ListSongItem = ({ section, item }: Props) => {
               <div className="capitalize text-[15px]">
                 <span>{item?.song_name}</span>
               </div>
-              <div className="text-[rgb(140,136,146)] text-[12px] hover:text-[#c273ed] hover:underline">
+              <div className="text-[rgb(140,136,146)] text-[12px] hover:text-[#3BC8E7] hover:underline">
                 <Link to={`#`}>Double2T, Hoà Minzy, DuongK</Link>
               </div>
             </div>
