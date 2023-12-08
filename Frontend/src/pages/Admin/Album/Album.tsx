@@ -24,6 +24,8 @@ import { RootState } from "@/store/store";
 import { Skeleton } from "antd";
 import { chekcSubString } from "@/constane/song.const";
 import { AiFillEye, AiOutlinePlus } from "react-icons/ai";
+import { toast } from "react-toastify";
+import instanceAxios from "@/utils/axios";
 const { Option } = Select;
 
 const AlbumAdmin = () => {
@@ -31,7 +33,7 @@ const AlbumAdmin = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [search, setSearch] = useState<string>("");
-  const [openDetail, setOpenDetail] = useState(false);
+  const [album,setAlbum] = useState([] as any)
   const [modalSetting, setModalSetting] = useState(0);
   const [albumSelected,setAlbumSelected] = useState({} as any)
   const {
@@ -49,6 +51,15 @@ const AlbumAdmin = () => {
   const formRef = useRef<any>();
 
 
+  const fetchData = async () => {
+    try {
+      const resp = await instanceAxios.get("http://localhost:8080/api/album")
+      setAlbum(resp.data.data)
+    } catch (error) {
+      toast.error(error as any)
+    }
+  }
+
 
 
   // get dữ liệu
@@ -60,6 +71,10 @@ const AlbumAdmin = () => {
     };
     dispatch(handGetSong(data));
   }, [page, pageSize, search]);
+
+  useEffect(() => {
+    fetchData()
+  },[])
 
   // tìm kiếm
   const onChange = (
@@ -342,7 +357,7 @@ const AlbumAdmin = () => {
     return (
       <Modal
         title={true ? "Cập nhật bài hát" : "Thêm bài hát"}
-        open={set}
+        open={false}
         onCancel={handleCancel}
         footer={null}
       >
@@ -351,62 +366,9 @@ const AlbumAdmin = () => {
     );
   };
 
-  const modalDetail = () => {
-    return (
-      <Modal
-        title="Chi tiết bài hát"
-        open={openDetail}
-        onOk={() => handleEdit(dataOne?._id as string)}
-        onCancel={handleCancel}
-        okText="Chỉnh sửa"
-        cancelText="Thoát"
-        okType="danger"
-        width={600}
-      >
-        {loadingGetone ? (
-          <Skeleton active />
-        ) : (
-          <div className="flex items-center justify-between pt-5 pb-5">
-            <div>
-              <p>
-                <strong>ID:</strong> {dataOne?._id}
-              </p>
-              <p>
-                <strong>Tên bài hát:</strong> {dataOne?.song_name}
-              </p>
-              <p>
-                <strong>Ca sĩ:</strong> {dataOne?.id_Singer}
-              </p>
-              <p>
-                <strong>Link:</strong>{" "}
-                <a href={dataOne?.song_link}>
-                  {chekcSubString(dataOne?.song_link as string, 50)}
-                </a>
-              </p>
-              <p>
-                <strong>Mô tả: </strong>
-                {chekcSubString(dataOne?.song_lyric as string, 20)}
-              </p>
-              <p>
-                <strong>Lượt nghe:</strong> {dataOne?.view_song}
-              </p>
-              <p>
-                <strong>Lượt yêu thích: </strong>
-                {dataOne?.total_like}
-              </p>
-            </div>
-            {dataOne?.song_image.map((item) => (
-              <img src={item} className="w-32 h-32 rounded-xl" />
-            ))}
-          </div>
-        )}
-      </Modal>
-    );
-  };
 
   return (
     <div className="relative">
-      {modalDetail()}
       {modalAdd()}
       <header className="fixed top-0 flex items-center justify-between z-40 bg-[#F4F5F7] pt-2 w-[100%] pb-2.5 ">
         <span className="font-bold text-xl ml-10">Danh sách Album</span>

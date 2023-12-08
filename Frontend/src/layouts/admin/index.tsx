@@ -36,7 +36,8 @@ const LayoutAdmin = () => {
 
   const items: MenuItem[] = [
     getItem(<Link to="/admin">Thống kê</Link>, '1', <PieChartOutlined />),
-    getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />)
+    getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />),
+    getItem(<Link to="/admin/album">Album</Link>, '3', <CiMusicNote1 />)
 
   ];
   return (
