@@ -49,7 +49,7 @@ const debounced = useDebouncedCallback(
   return (
     <div className='w-full flex flex-col'>
       <div className='w-full flex justify-center items-center'>
-        <CiSearch className="bg-[#2F2739] h-full w-[40px] p-2 rounded-l-full" />
+        <CiSearch className="bg-[#14182A] h-full w-[40px] p-2 rounded-l-full" />
         <input type="text" onChange={(e) => debounced(e.target.value)} className='w-full h-full bg-[#2F2739] text-white rounded-r-full outline-none focus:outline-none border-none px-[3px] OutlineSearch font-inter'
          autoComplete="off"
         placeholder='Search...' />

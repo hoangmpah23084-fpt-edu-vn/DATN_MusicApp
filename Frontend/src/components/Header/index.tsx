@@ -20,6 +20,7 @@ import { useLocalStorage } from "@/hooks";
 
 type Props = {
   sideBarRight: boolean;
+  collapsed: boolean;
 };
 const Header = (props: Props) => {
   const [userLocal, setUserLocal] = useState<ifUser | null>(null);
@@ -116,14 +117,21 @@ const Header = (props: Props) => {
       })
     );
   }, []);
-
   const token = localStorage.getItem("token");
-
   return (
     <>
       <div
-        className={`flex h-[70px] items-center fixed bg-[#170f23] left-0 z-20 px-[15px] w-full  sm:left-[240px] md:px-[59px] md:w-fit transition-all duration-700 ${
-          props.sideBarRight ? "md:w-[calc(100vw-570px)]" : "md:w-[calc(100vw-240px)] "
+        className={`flex h-[70px] items-center fixed bg-[#1b2039] left-0 z-20 px-[15px] w-full  md:left-[240px] md:px-[59px] transition-all duration-700
+        ${props.collapsed ? "md:left-[80px] md:w-[calc(100vw-80px)]" : ""}
+        ${
+          props.collapsed && props.sideBarRight
+            ? "md:w-[calc(100vw-450px)]"
+            : ""
+        }
+        ${
+          props.sideBarRight
+            ? "md:w-[calc(100vw-570px)]"
+            : "md:w-[calc(100vw-240px)] "
         }`}
       >
         <div className="flex items-center z-1 w-[100%] justify-between">
@@ -133,12 +141,13 @@ const Header = (props: Props) => {
             <div className="search w-full lg:flex items-center relative justify-center dropdown-search max-h-[400px]">
               <Dropdown menu={{ items }} trigger={["click"]}>
                 <Input
+                  addonBefore={<AiOutlineSearch className={`bg-[#3bc8e7] text-[#fff] p-0 text-[20px]`}/>}
                   onChange={(
                     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
                   ) => onHandleSearch(e)}
                   placeholder="Tìm kiếm bài hát ..."
                   allowClear
-                  className="input-search w-full bg-[#2f2739] h-[40px] text-[14px] rounded-3xl focus:outline-none border-none placeholder: pl-9 lg:mx-auto lg:w-[30rem]"
+                  className="input-search w-full bg-[#fff] h-[40px] text-[14px] rounded-3xl focus:outline-none border-none placeholder: lg:mx-auto lg:w-[30rem]"
                 />
               </Dropdown>
             </div>
@@ -150,7 +159,7 @@ const Header = (props: Props) => {
                 <span className="font-inter">Tải bản macOS</span>
               </div>
             </div> */}
-            <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#2f2739] rounded-full">
+            <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#3bc8e7] rounded-full">
               <AiOutlineSetting className=" w-10 h-[20px]" />
             </div>
             {userLocal && token ? (

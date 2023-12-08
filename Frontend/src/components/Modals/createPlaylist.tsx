@@ -76,12 +76,12 @@ const ModalCreatePlaylist = ({ onShowModal }: IProps) => {
                       type="text"
                       {...register("playlist_name")}
                       placeholder="Nhập tên playlist mới"
-                      className="bg-[#3a3244] mb-[32px] text-white text-sm rounded-[999px] block w-full p-2.5"
+                      className="bg-[#1B2039] mb-[32px] text-white text-sm rounded-[999px] block w-full p-2.5"
                     />
                    
                   </div>
               
-                  <button disabled={errors.playlist_name ? true : false} className={`${errors.playlist_name ? "opacity-[0.7]" : ""} w-full text-white bg-[#654789]  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center `}>
+                  <button disabled={errors.playlist_name ? true : false} className={`${errors.playlist_name ? "opacity-[0.7]" : ""} w-full text-white bg-[#3BC8E7]  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center `}>
                     Tạo mới
                   </button>
                 </form>

@@ -3,10 +3,22 @@
 }
 
 .ant-dropdown .ant-dropdown-menu{
-    background-color: #231b2e !important; 
+    background-color: #fff !important; 
     padding:5px 20px !important;
 }
 
 .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item{
 color: white !important;
+}
+
+.ant-input-affix-wrapper {
+    height: 40px;
+}
+
+.ant-input-affix-wrapper input {
+    color: #000 !important
+}
+
+.ant-input-group-addon {
+    background-color: #3bc8e7 !important;
 }

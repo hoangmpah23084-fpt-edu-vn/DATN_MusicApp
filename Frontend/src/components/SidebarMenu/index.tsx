@@ -11,20 +11,17 @@ import {
   AiOutlineStar,
   AiOutlinePlus,
   AiOutlineHeart,
-  AiOutlineCloudUpload,
-  AiFillHome,
 } from "react-icons/ai";
 import { MdLibraryMusic } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import "./index.scss";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
-import { useState } from "react";
-
-// type Props = {};
+import { useState, Dispatch, SetStateAction } from "react";
 
 interface props {
   handleShowModalCreateRoom: () => void;
+  setCollapsed: Dispatch<SetStateAction<boolean>>;
 }
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -116,13 +113,12 @@ const items: MenuItem[] = [
   // ),
 ];
 
-const SidebarMenu = ({ handleShowModalCreateRoom }: props) => {
-  const [collapsed, setCollapsed] = useState(false);
+const SidebarMenu = ({ handleShowModalCreateRoom, setCollapsed }: props) => {
+  const [isCollapsed, setIscollapsed] = useState(false);
   const navigate = useNavigate();
-  
 
   return (
-    <div className=" text-[#dadada] text-[14px] top-0 left-0 z-40 max-w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#231b2e] hidden sm:block">
+    <div className=" text-[#dadada] text-[14px] top-0 left-0 z-40 max-w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#1b2039] hidden sm:block">
       <nav className="zm-navbar ">
         <div className="zm-navbar-brand w-[240px] h-[70px] fixed top-0 pt-0 pr-[25px] pl-[28px] flex items-center">
           <div className="zm-navbar-item">
@@ -135,7 +131,7 @@ const SidebarMenu = ({ handleShowModalCreateRoom }: props) => {
 
       {/* <div className=" mb-[16px]">
         <ul className=" ">
-          <li className="bg-[#3a3244] border-l-2 border-l-[#9b4de0]">
+          <li className="bg-[#3a3244] border-l-2 border-l-[#3BC8E7]">
             <Link
               to={"/"}
               className="flex items-center leading-[20px] py-[6px] px-[21px]"
@@ -151,7 +147,7 @@ const SidebarMenu = ({ handleShowModalCreateRoom }: props) => {
               className="flex items-center leading-[20px] py-[6px] px-[24px]"
             >
               <BsBarChartLine className="w-[23px] text-[#ccc] h-[40px]" />
-              <span className="ml-3">#zingchart</span>
+              <span className="ml-3">#SongSync</span>
             </Link>
           </li>
 
@@ -295,11 +291,14 @@ const SidebarMenu = ({ handleShowModalCreateRoom }: props) => {
 
       <Sider
         collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
+        // collapsed={collapsed}
+        onCollapse={(value) => {
+          setCollapsed(value), 
+          setIscollapsed(value)
+        }}
         width={240}
         style={{
-          backgroundColor: "#2a213a",
+          backgroundColor: "#1b2039",
           color: "#dadada",
           fontSize: "14px",
           height: "100%",
@@ -312,7 +311,7 @@ const SidebarMenu = ({ handleShowModalCreateRoom }: props) => {
           items={items}
           defaultSelectedKeys={["/"]}
           style={{
-            backgroundColor: "#2a213a",
+            backgroundColor: "#1b2039",
             paddingLeft: "0",
           }}
         />
@@ -322,12 +321,14 @@ const SidebarMenu = ({ handleShowModalCreateRoom }: props) => {
         {" "}
         <button
           onClick={() => handleShowModalCreateRoom()}
-          className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px] bg-[#170f23] border-t-[1px] border-[#32323d]"
+          className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px] bg-[#14182A] border-t-[1px] border-[#32323d]"
         >
           <Link to={"#"} className="flex items-center justify-start ">
             <AiOutlinePlus className="w-[20px] text-[#ccc] h-[40px] mr-4" />
-            
-            <span className={`${collapsed == true ? 'hidden' : 'block'}`}>Tạo playlist mới</span>
+
+            <span className={`${isCollapsed == true ? "hidden" : "block"}`}>
+              Tạo playlist mới
+            </span>
           </Link>
         </button>
       </div>

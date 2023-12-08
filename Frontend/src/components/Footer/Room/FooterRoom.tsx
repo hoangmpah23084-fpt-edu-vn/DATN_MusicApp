@@ -24,7 +24,7 @@ import { useDebouncedCallback } from "use-debounce";
 export const useStyles = makeStyles(() => createStyles({
   root: {
     color: "white",
-    "&:hover": { color: "#9B4DE0" }
+    "&:hover": { color: "#3BC8E7" }
   },
 }));
 type Props = {
@@ -375,7 +375,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
   }
   return (
     <div
-      className={`fixed z-50 w-[100%] bottom-0 bg-[#170f23] cursor-pointer `}>
+      className={`fixed z-50 w-[100%] bottom-0 bg-[#14182A] cursor-pointer `}>
       <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
           <div className="flex items-center w-[100%]">
@@ -443,7 +443,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle onClick={handRandomSong} >
                     <ListItemIconStyle>
-                      <ShuffleIcon sx={{ color: randomSong ? "#c273ed" : "white" }} />
+                      <ShuffleIcon sx={{ color: randomSong ? "#3BC8E7" : "white" }} />
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
@@ -466,7 +466,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                   >
                     <ListItemIconStyle>
                       <RepeatIcon
-                        sx={{ color: repeat ? "#c273ed" : "white" }}
+                        sx={{ color: repeat ? "#3BC8E7" : "white" }}
                       />
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
@@ -554,9 +554,9 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
               }
             }} >
               <ListItemIconStyle sx={{
-                backgroundColor: "#9B4DE0", borderRadius: "5px",
+                backgroundColor: "#3BC8E7", borderRadius: "5px",
                 ":hover": {
-                  backgroundColor: "#9b4de0a3"
+                  backgroundColor: "#3BC8E7a3"
                 }
               }} >
                 <LibraryMusicIcon sx={{ color: "white" }} />

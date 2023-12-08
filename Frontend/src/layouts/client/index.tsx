@@ -23,6 +23,8 @@ const LayoutClient = () => {
   const [isShowModalCreatePlaylist, setIsShowModalCreatePlaylist] =
     useState<boolean>(false);
 
+  const [collapsed, setCollapsed] = React.useState<boolean>(false);
+
   const user = localStorage.getItem("user");
   useEffect(() => {
     async function fetchData() {
@@ -53,18 +55,24 @@ const LayoutClient = () => {
 
   return (
     <>
-      <div className="flex w-[100%] bg-[#170f23] overflow-hidden">
+      <div className="flex w-[100%] bg-[#14182A] overflow-hidden">
         {isShowModalCreatePlaylist && (
           <ModalCreatePlaylist onShowModal={handleShowModalCreateRoom} />
         )}
         {isToken && <ModalSignin />}
-        <SidebarMenu handleShowModalCreateRoom={handleShowModalCreateRoom} />
-        <Header sideBarRight={sideBarRight}/>
+        <SidebarMenu
+          // collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          handleShowModalCreateRoom={handleShowModalCreateRoom}
+        />
+        <Header collapsed={collapsed} sideBarRight={sideBarRight} />
         <div className="relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
         <SidebarSong sideBarRight={sideBarRight} />
         <Footer setSideBarRight={setSideBarRight} ListData={current.song} />
+        {/* responsive */}
+        <div className="fixed z-50 w-[100%] bottom-0 block md:hidden bg-[#1B2039] cursor-pointer">Nhung</div>
       </div>
     </>
   );
