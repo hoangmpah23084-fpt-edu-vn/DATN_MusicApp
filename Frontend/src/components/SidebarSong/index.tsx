@@ -25,7 +25,7 @@ type Props = {
 
 const SidebarSong = (props: Props) => {
   const [stateColor, setStateColor] = React.useState<boolean>(true);
-  const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
+  const { stateSong, dataLocal, currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { token } = useAppSelector((state: RootState) => state.user);
 
   const dispatch = useAppDispatch();
@@ -41,7 +41,7 @@ const SidebarSong = (props: Props) => {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
       dispatch(setDataLocal(currentlocal))
     }
-  }, [stateSong, song.length]);
+  }, [stateSong, song.length, currentSong]);
 
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;

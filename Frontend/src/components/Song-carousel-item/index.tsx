@@ -17,7 +17,7 @@ const SongCarouselItem = ({item}: Props) => {
           <div className="card-image overflow-hidden rounded-[6px] relative">
             <Link to={`#`} className="overflow-hidden">
             <img
-                className="rounded-[6px] w-full aspect-square"
+                className="rounded-[6px] aspect-square "
                 src={"https://res.cloudinary.com/dsbiugddk/image/upload/v1698746181/DATN/vcn8wqdxusccmsox0t0b.jpg"}
               />
             </Link>

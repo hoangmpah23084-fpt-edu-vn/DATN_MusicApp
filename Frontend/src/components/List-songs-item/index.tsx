@@ -67,7 +67,7 @@ const  ListSongItem = ({ section, item }: Props) => {
                         section === "chanel" && "border rounded-full"
                       } flex justify-center items-center`}
                     >
-                    { currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill clasName="text-[40px] p-4 pl-[6px]" /> }  
+                    { currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill className="text-[40px] p-4 pl-[6px]" /> }  
                     </div>
                   </div>
                 </div>

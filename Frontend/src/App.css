@@ -43,7 +43,7 @@
   
   /* Track (the area on the sides of the scrollbar) */
   ::-webkit-scrollbar-track {
-    background: #ebebeb !important; /* Light grey */
+    background: #14182a !important; /* Light grey */
 
   }
   
@@ -66,7 +66,7 @@
 
 
   .input-search input{
-    background-color: #1B2039 !important;
+    background-color: #fff !important;
     color: white;
   }
 
