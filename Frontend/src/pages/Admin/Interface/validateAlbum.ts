@@ -14,3 +14,6 @@ export interface ifGenre {
     name : string,
     list_songs ?: ifSong[],
 }
+export interface ifAddGenre {
+    name : string,
+}

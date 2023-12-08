@@ -9,9 +9,7 @@ import ListSong from "@/pages/Admin/Song/ListSong";
 import ListUser from "@/pages/Admin/User/ListUser";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter } from "react-router-dom";
-import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
-import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 import Room from "@/pages/Room/room";
 import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import Album from "@/pages/Album/Album";
@@ -85,17 +83,8 @@ export const router = createBrowserRouter([
       }
       ,
       {
-        path: "addgenre",
-        element: <Genre />
-      }
-      ,
-      {
-        path: "listgenre",
+        path: "genre",
         element: <ListGenre />
-      },
-      {
-        path: "UpdateGenre/:id",
-        element: <UpdateGenre />
       }
     ],
   },
