@@ -1,9 +1,7 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
 import FavouritePage from "@/pages/Favourite/FavouritePage";
-import Artist from "@/pages/Admin/Artist/listArtist";
-import AddArtist from "@/pages/Admin/Artist/addArtist";
-import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
+import ListSinger from "@/pages/Admin/Singer/ListSinger";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
 import ListSong from "@/pages/Admin/Song/ListSong";
 import ListUser from "@/pages/Admin/User/ListUser";
@@ -77,18 +75,9 @@ export const router = createBrowserRouter([
         element: <ListUser2 />,
       },
       {
-        path: "artist",
-        element: <Artist />,
+        path: "listSinger",
+        element: <ListSinger />,
       },
-      {
-        path: "add-artist",
-        element: <AddArtist />,
-      },
-      {
-        path: "update-artist/:id",
-        element: <UpdateArtist />,
-      }
-      ,
       {
         path: "addgenre",
         element: <Genre />
