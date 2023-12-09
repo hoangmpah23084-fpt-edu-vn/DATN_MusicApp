@@ -18,6 +18,8 @@ import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/current
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { chekcSubString } from "@/constane/song.const";
 import { RootState } from "@/store/store";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
@@ -123,6 +125,24 @@ const Footer = (props: Props) => {
   }, [audioRef, duration, repeat, randomSong, currentSong, dispatch, props.ListData]);
 
   useEffect(() => {
+    if (audioRef.current) {
+      setTotalTiming(audioRef.current.currentTime)
+      const percent = (30 / 100) * audioRef.current.duration;
+      console.log(percent);
+      console.log(Math.floor(totalTiming) == Math.floor(percent));
+
+      if (Math.floor(totalTiming) == Math.floor(percent)) {
+        axios.put(`http://localhost:8080/api/Song/updateView/${currentSong?._id}`).then(() => {
+          toast.success("Tăng view thành công")
+        }).catch(() => {
+          toast.error("Tăng view thất bại")
+        })
+      }
+    }
+
+  }, [currentTime])
+
+  useEffect(() => {
     stateSong ? audioRef.current?.play() : audioRef.current?.pause();
     if (stateSong) {
       const id = setInterval(() => {
@@ -171,6 +191,29 @@ const Footer = (props: Props) => {
   const handTurnVolume: any = () => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   }
+
+  const songLoca = localStorage.getItem('song')
+
+
+  useEffect(() => {
+    const history = localStorage.getItem('history')
+    if (!history) {
+      localStorage.setItem('history', JSON.stringify([songLoca]))
+    } else {
+      const historyArray = JSON.parse(history)
+      if (!historyArray.includes(songLoca)) {
+        historyArray.push(songLoca)
+        if (historyArray.length > 10) {
+          // Nếu vượt quá 10 bài, xóa bài cũ (ở đầu mảng)
+          historyArray.shift()
+        }
+        localStorage.setItem('history', JSON.stringify(historyArray))
+      }
+    }
+  }, [songLoca])
+
+
+
   return (
     <div
       // onClick={() => {
@@ -213,7 +256,7 @@ const Footer = (props: Props) => {
                   <Link to={"#"}>
                     <div className="title-wrapper">
                       <span className="item-title title text-[13px] font-thin text-[#dadada]">
-                        {currentSong?.song_singer}
+                        {currentSong?.id_Singer.name}
                       </span>
                     </div>
                   </Link>
