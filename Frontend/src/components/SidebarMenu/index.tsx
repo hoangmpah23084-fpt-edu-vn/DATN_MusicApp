@@ -88,7 +88,7 @@ const items: MenuItem[] = [
   ),
   getItem(
     "Nghe gần đây",
-    "ngheganday",
+    "/history",
     <PiClockCounterClockwiseBold className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#7d32ff] p-[2px] " />
   ),
   getItem(
@@ -293,8 +293,8 @@ const SidebarMenu = ({ handleShowModalCreateRoom, setCollapsed }: props) => {
         collapsible
         // collapsed={collapsed}
         onCollapse={(value) => {
-          setCollapsed(value), 
-          setIscollapsed(value)
+          setCollapsed(value),
+            setIscollapsed(value)
         }}
         width={240}
         style={{
