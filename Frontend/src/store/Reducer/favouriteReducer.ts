@@ -49,9 +49,8 @@ const favouriteReducer = createSlice({
         builder
             .addCase(addFavourite.fulfilled, () => {
             }).addCase(getFavourite.fulfilled, (state, action) => {
-                console.log("action.payload", action.payload);
                 state.loading = false
-                state.listFavourites = action.payload.list_songFavourites.list_songFavourites
+                state.listFavourites = action.payload?.list_songFavourites?.list_songFavourites
             })
             .addMatcher<PendingAction>(
                 (action) => action.type.endsWith('/pending'),

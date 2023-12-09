@@ -32,9 +32,10 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
   }) => {
     try {
       const resp: any = await dispatch(addRoom(data))
+      localStorage.removeItem('song');
       await dispatch(getRoom());
       toast.success(resp.payload.message);
-      // navigate(`/liveroom/${resp.payload.data._id}`)
+      navigate(`/liveroom/${resp.payload.data._id}`)
     } catch (error) {
       toast.error(error as string)
     } finally {
@@ -101,7 +102,7 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
                     )}
                   </div>
 
-                  <button className="w-full text-white bg-[#654789] hover:bg-white hover:text-[#654789] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                  <button className="w-full text-white bg-[#3BC8E7] hover:bg-white hover:text-[#3BC8E7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
                     Tạo phòng
                   </button>
                 </form>

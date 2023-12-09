@@ -14,6 +14,8 @@ interface initState {
     loadingGetone: boolean;
     dataOne: ifSong | null;
     loadingAdd: boolean;
+    loadingSearch: boolean;
+    songSearch: ifSong[]
 }
 
 const initialState: initState = {
@@ -24,36 +26,77 @@ const initialState: initState = {
     loadingRemove: false,
     loadingGetone: false,
     dataOne: null,
-    loadingAdd: false
-}
-export const handAddSong = createAsyncThunk("song/addSong", async (song: ifSong) => {
-    const { data } = await instanceAxios.post<{ message: string }>("http://localhost:8080/api/Song", song);
-    return data.message
-})
-export const handGetSong = createAsyncThunk("song/getSong", async (option?: IApiSong) => {
-    const { data } = await instanceAxios.get(`http://localhost:8080/api/Song/?_limit=${option?.pageSize ? option?.pageSize : 10}&_page=${option?.page ? option?.page : 1}&search=${option?.search ? option?.search : ""}`)
-    return data
-})
-export const handDeleteSong = createAsyncThunk("song/deleteSong", async (id: string) => {
-    await axios.delete("http://localhost:8080/api/Song/" + id)
-    return id
-})
-export const handUpdateSong = createAsyncThunk("song/updatesong", async (value: ifSong) => {
-    const { _id, ...datafake } = value;
-    if (_id) {
-        const { data } = await instanceAxios.put(`http://localhost:8080/api/Song/${_id}`, datafake)
-        return data.data
+    loadingAdd: false,
+    loadingSearch: false,
+    songSearch: []
+};
+export const handAddSong = createAsyncThunk(
+    "song/addSong",
+    async (song: ifSong) => {
+        const { data } = await instanceAxios.post<{ message: string }>(
+            "http://localhost:8080/api/Song",
+            song
+        );
+        return data.message;
     }
-});
-export const handGetSongInGenre = createAsyncThunk("genresong/get", async (id : string) => {
-    const {data} = await axios.get<{data : IGenre}>(`http://localhost:8080/api/genre/${id}`).then(({data}) => data);
+);
+export const handGetSong = createAsyncThunk(
+    "song/getSong",
+    async (option?: IApiSong) => {
+        const { data } = await instanceAxios.get(
+            `http://localhost:8080/api/Song/?_limit=${option?.pageSize ? option?.pageSize : 10
+            }&_page=${option?.page ? option?.page : 1}&search=${option?.search ? option?.search : ""
+            }&_sort=${option?.sort ? option?.sort : "createdAt"}&_order=${option?.order ? option?.order : "desc"}`
+        );
+        return data;
+    }
+);
+
+export const handGetSongSearch = createAsyncThunk(
+    "song/getSongSearch",
+    async (option?: IApiSong) => {
+        const { data } = await instanceAxios.get(
+            `http://localhost:8080/api/Song/?_limit=${option?.pageSize ? option?.pageSize : 10
+            }&_page=${option?.page ? option?.page : 1}&search=${option?.search ? option?.search : ""
+            }&_sort=${option?.sort ? option?.sort : "createdAt"}&_order=${option?.order ? option?.order : "desc"}`
+        );
+        return data;
+    }
+);
+
+export const handDeleteSong = createAsyncThunk(
+    "song/deleteSong",
+    async (id: string) => {
+        await axios.delete("http://localhost:8080/api/Song/" + id);
+        return id;
+    }
+);
+export const handUpdateSong = createAsyncThunk(
+    "song/updatesong",
+    async (value: ifSong) => {
+        const { _id, ...datafake } = value;
+        if (_id) {
+            const { data } = await instanceAxios.put(
+                `http://localhost:8080/api/Song/${_id}`,
+                datafake
+            );
+            return data.data;
+        }
+    }
+);
+export const handGetOne = createAsyncThunk(
+    "song/handGetOne",
+    async (id: string) => {
+        const { data } = await instanceAxios.get(
+            "http://localhost:8080/api/Song/" + id
+        );
+        return data.data;
+    }
+);
+export const setSingerSong = createAsyncThunk('setSingerSong/Get', async (id) => {
+    const {data} = await axios.get(`http://localhost:8080/api/singer/${id}`).then(({data})=> data);
     console.log(data);
-    
-    return data;
-})
-export const handGetOne = createAsyncThunk("song/handGetOne", async (id: string) => {
-    const { data } = await instanceAxios.get("http://localhost:8080/api/Song/" + id)
-    return data.data
+    return data.songs
 })
 
 const songReducer = createSlice({
@@ -114,7 +157,17 @@ const songReducer = createSlice({
             .addCase(handGetOne.fulfilled, (state, action) => {
                 state.loadingGetone = false;
                 state.dataOne = action.payload;
-            });
+            }).addCase(handGetSongSearch.pending, (state) => {
+                state.loadingSearch = true
+            }).addCase(handGetSongSearch.rejected, (state) => {
+                state.loadingSearch = false;
+            }).addCase(handGetSongSearch.fulfilled, (state, action) => {
+                state.songSearch = action.payload.data
+                state.loadingSearch = false;
+            })
+            .addCase(setSingerSong.fulfilled, (state, action) => {
+                state.song = action.payload;  
+            })
     },
 });
 export default songReducer.reducer;

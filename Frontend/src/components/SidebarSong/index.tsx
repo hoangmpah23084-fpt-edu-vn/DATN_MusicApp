@@ -25,11 +25,11 @@ type Props = {
 
 const SidebarSong = (props: Props) => {
   const [stateColor, setStateColor] = React.useState<boolean>(true);
-  const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
+  const { stateSong, dataLocal, currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { token } = useAppSelector((state: RootState) => state.user);
 
   const dispatch = useAppDispatch();
-  const renderListSong = useAppSelector(({ Song }) => Song);
+  const {song} = useAppSelector(({ Song }) => Song);
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
@@ -41,7 +41,7 @@ const SidebarSong = (props: Props) => {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
       dispatch(setDataLocal(currentlocal))
     }
-  }, [stateSong, renderListSong.song.length]);
+  }, [stateSong, song.length, currentSong]);
 
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;
@@ -56,7 +56,7 @@ const SidebarSong = (props: Props) => {
   return (
     <div
       className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"
-        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#120822] bottom-[90px] fjc px-[8px]`}
+        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc px-[8px]`}
     >
       <div className="w-full h-full">
         <div className="w-full h-[70px] fjc">
@@ -109,21 +109,21 @@ const SidebarSong = (props: Props) => {
             <div className="w-full h-[50%]  flex justify-start items-center">
               <h3 className="text-[14px] text-[rgba(254,255,255,0.6)] flex">
                 Từ playlist
-                <span className="text-[#c273ed] pl-[5px]">Mới phát hành</span>
+                <span className="text-[#3BC8E7] pl-[5px]">Mới phát hành</span>
               </h3>
             </div>
           </div>
         </div>
         <div className="w-full fjc h-[calc(100vh-200px)] overflow-y-auto">
           <div className="w-full h-[100%] overflow-y-scroll">
-            {renderListSong &&
-              renderListSong.song?.length > 0 &&
-              renderListSong.song.map((item: ifSong, index : number) => {
+            {song &&
+              song?.length > 0 &&
+              song.map((item: ifSong, index : number) => {
                 return (
                   <div
                     key={index}
                     className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
-                      ? "bg-[#9B4DE0]"
+                      ? "bg-[#092635]"
                       : "hover:bg-[#b4b4b32d]"
                       } my-1 fjc  cursor-pointer rounded-lg wall`}
                   >
@@ -172,7 +172,7 @@ const SidebarSong = (props: Props) => {
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">
-                            {item.song_singer}
+                            {item.id_Singer.name}
                           </p>
                         </div>
                       </div>

@@ -1,4 +1,4 @@
-import { AiFillHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineArrowRight } from "react-icons/ai";
 import { BsMusicNoteBeamed, BsThreeDots, BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { TfiVideoClapper } from "react-icons/tfi";
@@ -9,13 +9,15 @@ import ModalSongMenu from "../../Modals/modalSongMenu";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { activeSong } from "@/constane/song.const";
-import { onhandleFavourite } from "@/constane/favourites.const";
+import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
 type props = {
-  item: ifSong
+  item: ifSong,
+  active?: boolean
 }
-const ItemSong = ({ item }: props) => {
+
+const ItemSong = ({ item, active }: props) => {
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch()
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
@@ -30,74 +32,78 @@ const ItemSong = ({ item }: props) => {
   }, []);
 
   return (
-    <tbody>
-      <tr className={`item border-b-[#2c2436] border-b-[1px] cursor-pointer hover:bg-[#2f2739] ease-in-out duration-500 first-letter:
+    <tr className={`item border-b-[#2c2436] border-b-[1px] flex-1 cursor-pointer ease-in-out duration-300 first-letter:
       ${dataLocal && dataLocal?._id == item._id
-          ? "bg-[#2f2739]"
-          : "hover:bg-[#b4b4b32d]"
-        } 
+        ? "bg-[#14182A]"
+        : "hover:bg-[#b4b4b32d]"
+      } 
       `}>
-        <td scope="row" className=" py-2 font-medium flex items-center">
-          <span className="px-3">
-            <input
-              type="checkbox"
-              className="item_list hidden w-[14px] h-[14px]"
-            />
-            <BsMusicNoteBeamed className="item_list_time" />
-          </span>
-          <div
-            className={`card-image overflow-hidden relative rounded-[5px] mr-2`}
-          >
-            <img
-              className={`rounded-[5px] w-10 h-10
+      <td scope="row" className="py-2 font-medium flex items-center min-w-[320px]" >
+        <span className="px-3">
+          <input
+            type="checkbox"
+            className="item_list hidden w-[14px] h-[14px]"
+          />
+          <BsMusicNoteBeamed className="item_list_time" />
+        </span>
+        <div
+          className={`card-image overflow-hidden relative rounded-[5px] mr-2`}
+        >
+          <img
+            className={`rounded-[5px] w-10 h-10
                `}
-              src={item.song_image[0]}
-              alt=""
-            />
-            <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
-            <div className={`action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%] 
+            src={item.song_image[0]}
+            alt=""
+          />
+          <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
+          <div className={`action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%] 
             ${dataLocal &&
-                stateSong &&
-                dataLocal?._id == item._id ? "" : "hidden"}
+              stateSong &&
+              dataLocal?._id == item._id ? "" : "hidden"}
             `}>
-              <div className="flex gap-[20px] h-full justify-center">
-                <div>
-                  <div onClick={() =>
-                    stateSong && dataLocal?._id == item._id
-                      ? activeSong(dispatch, item, 'stopPause')
-                      : activeSong(dispatch, item, "start")
-                  }>
-                    {dataLocal &&
-                      stateSong &&
-                      dataLocal?._id == item._id ?
-                      <BsFillPauseFill className="text-[30px] mt-1 p-1 pl-[5px]" />
-                      :
-                      <BsFillPlayFill className="text-[30px] p-1 mt-1 pl-[5px]" />
-                    }
+            <div className="flex gap-[20px] h-full justify-center">
+              <div>
+                <div onClick={() =>
+                  stateSong && dataLocal?._id == item._id
+                    ? activeSong(dispatch, item, 'stopPause')
+                    : activeSong(dispatch, item, "start")
+                }>
+                  {dataLocal &&
+                    stateSong &&
+                    dataLocal?._id == item._id ?
+                    <BsFillPauseFill className="text-[30px] mt-1 p-1 pl-[5px]" />
+                    :
+                    <BsFillPlayFill className="text-[30px] p-1 mt-1 pl-[5px]" />
+                  }
 
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="mx-1">
-            <p>{item.song_name}</p>
-            <Link
-              to={`#`}
-              className="text-xs text-[#86828c] hover:text-[#9b4de0] hover:border-b-[#9b4de0] hover:border-b-[1px]"
-            >
-              {item.song_singer}
-            </Link>
-          </div>
-        </td>
-        <td className="py-2">
+        </div>
+        <div className="mx-1 ">
+          <p>{item.song_name}</p>
           <Link
             to={`#`}
-            className="text-sm text-[#86828c] hover:text-[#9b4de0] hover:border-b-[#9b4de0] hover:border-b-[1px]"
+            className="text-xs text-[#86828c] hover:text-[#3BC8E7] hover:border-b-[#3BC8E7] hover:border-b-[1px]"
           >
-            album Đạt G
+            {item.id_Singer?.name}
+
           </Link>
-        </td>
+        </div>
+      </td>
+      <td className="py-2 min-w-[150px]" >
+        <Link
+          to={`#`}
+          className="text-sm text-[#86828c] hover:text-[#9b4de0] hover:border-b-[#9b4de0] hover:border-b-[1px]"
+        >
+          {item.id_Genre?.name}
+        </Link>
+      </td>
+
+      {active ? <td className="w-[10%]">
+        <AiOutlineArrowRight />
+      </td> :
         <td>
           <div className="flex items-center justify-center mr-2">
             <button className="item_list mx-2 group relative">
@@ -114,8 +120,8 @@ const ItemSong = ({ item }: props) => {
               </div>
             </button>
 
-            <button className="text-[#9b4de0] mx-2 group relative " onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}>
-              <AiFillHeart className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
+            <button className="text-[#3BC8E7] mx-2 group relative " onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}>
+              <ActiveFavourites item={item} />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <p className="text-white">Xoá khỏi thư viện</p>
               </div>
@@ -131,7 +137,7 @@ const ItemSong = ({ item }: props) => {
             {modal && (
               <>
                 <div
-                  className="z-40 absolute w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                  className="z-40 absolute w-ful bg-slate-950/20 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[100vh]"
                   onClick={() => setModal(false)}
                 ></div>
                 <ModalSongMenu song={item} />
@@ -145,8 +151,8 @@ const ItemSong = ({ item }: props) => {
             </span>
           </div>
         </td>
-      </tr>
-    </tbody >
+      }
+    </tr>
   );
 };
 

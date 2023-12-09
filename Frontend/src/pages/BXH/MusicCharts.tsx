@@ -8,7 +8,7 @@ type Props = {}
 
 const MusicCharts = (props: Props) => {
   return (
-    <div className='container border'>
+    <div className='container'>
       <div className="chanel-section-title mt-[100px] px-20 py-10 flex justify-between mb-[20px]">
         <h3 className="font-semibold capitalize text-white text-[40px]">
           BXH Nhạc mới

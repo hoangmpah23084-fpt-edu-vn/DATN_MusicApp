@@ -11,7 +11,19 @@ export const statistical = async (req, res) => {
         const totalAlbum = listAlbum.length || 0
         const totalUser = listUser.length || 0
         const today = new Date();
-        const monthYear = `${today.getFullYear()}-${Number(today.getMonth()) + 1}`;
+        let monthYear = '';
+
+
+        if (today.getMonth() == 0) {
+            monthYear = `${today.getFullYear() - 1}-12`
+        }
+        else {
+            monthYear = `${today.getFullYear()}-${Number(today.getMonth())}`
+        }
+
+        console.log("monthYear", monthYear)
+
+
 
         const fomartListSong = listSong.map((item) => {
             const { month, ...rest } = item;
@@ -20,6 +32,10 @@ export const statistical = async (req, res) => {
                 view: JSON.parse(month)[monthYear] || 0,
             };
         });
+
+
+
+
 
 
         fomartListSong.sort(function (a, b) {

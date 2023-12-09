@@ -13,9 +13,9 @@ const SuggSkeleton = ({section} : Props) => {
     <div className="list-items px-[15px]">
     <div
       className={`media flex animate-pulse items-center py-[10px] px-[15px] rounded-[5px] text-left relative z-10 ${
-        section === "chanel" && "bg-[#2f2739]"
+        section === "chanel" && "bg-[#14182A]"
       }  ${
-        section === "zingchart" && "bg-[#492761] mb-[10px]"
+        section === "zingchart" && "bg-[#14182A] mb-[10px]"
       }`}
     >
       <div className="media-left flex flex-row grow shrink w-[50%] mr-[10px]">

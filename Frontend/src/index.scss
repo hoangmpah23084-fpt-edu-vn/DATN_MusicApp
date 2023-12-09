@@ -6,14 +6,32 @@
   font-family: Inter;
   src: url(../../../public/font/Inter-VariableFont_slnt\,wght.ttf);
 }
+@layer utilities {
+  @variants responsive {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+  }
+}
 
 * {
   font-family: Inter,sans-serif;
   image-rendering: -webkit-optimize-contrast;
 }
+body {
+  overflow: hidden !important; /* Hide scrollbars */
+}
+
 
 .zmp3-logo {
-  background: url('/logo-dark.svg') 50% / contain no-repeat;
+  // background: url('/logo-dark.svg') 50% / contain no-repeat;
 }
 
 .sidebar-divide::after {
