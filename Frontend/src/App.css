@@ -9,7 +9,9 @@
     align-items: center !important;
   
   }
+*{
 
+}
   /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -41,7 +43,7 @@
   
   /* Track (the area on the sides of the scrollbar) */
   ::-webkit-scrollbar-track {
-    background: #ebebeb !important; /* Light grey */
+    background: #14182a !important; /* Light grey */
 
   }
   
@@ -64,7 +66,7 @@
 
 
   .input-search input{
-    background-color: #2f2739 !important;
+    background-color: #fff !important;
     color: white;
   }
 
@@ -79,7 +81,7 @@
   }
 
   .ant-dropdown-menu{
-    background-color: #2f2739 !important;
+    background-color: #14182A !important;
     width: 100% !important;
   }
 

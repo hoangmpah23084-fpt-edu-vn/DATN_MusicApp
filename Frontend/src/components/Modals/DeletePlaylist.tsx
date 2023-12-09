@@ -63,7 +63,7 @@ const ModalDetelePlaylist = ({ onShowModal , playlist , refreshData }: IProps) =
               </div>
               <div className="flex items-center justify-end ml-[32px]">
                 <button   onClick={() => onShowModal()} className="px-[8px] py-[3px] rounded-[999px] bg-[#ffffff1a] min-w-[80px] ">Không </button>
-                <button onClick={() => handleClick()} className="px-[8px] py-[3px] rounded-[999px] bg-[#9b4de0] min-w-[80px] mx-[16px]">Có </button>
+                <button onClick={() => handleClick()} className="px-[8px] py-[3px] rounded-[999px] bg-[#3BC8E7] min-w-[80px] mx-[16px]">Có </button>
               </div>
             </div>
           </div>

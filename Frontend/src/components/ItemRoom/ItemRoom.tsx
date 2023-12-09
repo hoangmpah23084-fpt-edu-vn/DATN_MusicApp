@@ -20,7 +20,7 @@ const ItemRoom = ({ data, handleSelectedRoom, handleShowModalJoinRoom }: roomPro
                 </span>
             </div>
             <div>
-                <span className='pt-[6px] hover:text-[#9b4de0]'>
+                <span className='pt-[6px] hover:text-[#3BC8E7]'>
                     {data.nameGroup}
                 </span>
             </div>
