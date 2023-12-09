@@ -19,7 +19,6 @@ const WantToListent = (props: Props) => {
       .get("http://localhost:8080/api/genre")
       .then(({ data }) => setGenre(data.data));
   }, []);
-  // console.log(genre);
 
   return (
     <>
@@ -56,7 +55,7 @@ const WantToListent = (props: Props) => {
                         return (
                           <SwiperSlide key={slide._id}>
                               <div className="zm-card h-full">
-                                <Link to={`#`} className="">
+                                <Link to={`/`} className="">
                                   <div className="card-image overflow-hidden rounded-[5px]">
                                     <img
                                       className="rounded-[6px] aspect-square "
