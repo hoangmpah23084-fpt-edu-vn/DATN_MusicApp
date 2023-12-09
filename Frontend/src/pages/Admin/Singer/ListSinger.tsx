@@ -20,18 +20,15 @@ import {
 } from "antd";
 import { Input } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { IApiSinger, ISinger, formArtist } from "../Interface/ISinger";
+import { IApiSinger, ISinger } from "../Interface/ISinger";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Skeleton } from "antd";
 import { chekcSubString } from "@/constane/song.const";
 import { AiFillEye, AiOutlinePlus } from "react-icons/ai";
-import { handImage, handleFileUpload } from "@/Mui/Component/handUpload";
-import { getGenre } from "@/store/Reducer/genreReducer";
-import { IGenre } from "../Interface/genre";
+import { handImage } from "@/Mui/Component/handUpload";
 import { SongLink } from "../Interface/ValidateSong";
 import { getAlbum } from "@/store/Reducer/albumReducer";
-import { ifAlbum } from "../Interface/validateAlbum";
 
 const { Option } = Select;
 const ListSinger = () => {
