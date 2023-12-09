@@ -15,7 +15,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaUserSecret } from "react-icons/fa";
 
 
 const gridStyle: React.CSSProperties = {
@@ -87,6 +87,29 @@ const Dashboard = () => {
                        className="flex items-center text-[25px] text-[gray]"
                      >
                        <GiLoveSong  className='text-[20px] mr-[8px]' /> {statisticList.totalSong}
+                     </Title>
+                   </div>
+                 </Col>
+               </Row>
+             </Card.Grid>
+           </Card>
+         </Col>
+         <Col xs={24} sm={24} md={12} lg={6} xl={6}>
+           <Card bordered={false} className="criclebox">
+             <Card.Grid
+               style={{ ...gridStyle, borderBottom: `5px solid blue` }}
+             >
+               <Row>
+                 <Col xs={10}>
+                   <div className="min-w-[256px] text-left">
+                     <div className="mb-[10px] w-fit text-[16px] font-bold text-[gray]">
+                       Ca sĩ
+                     </div>
+                     <Title
+                       level={3}
+                       className="flex items-center text-[25px] text-[gray]"
+                     >
+                       <FaUserSecret className='text-[20px] mr-[8px]' /> {statisticList.totalSinger}
                      </Title>
                    </div>
                  </Col>

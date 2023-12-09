@@ -1,15 +1,18 @@
 import Song from "../Models/songModel.js";
 import Album from "../Models/albumModel.js";
 import User from "../Models/model_user.js";
+import Singer from '../Models/singer.js'
 
 export const statistical = async (req, res) => {
     try {
         const listSong = await Song.find();
         const listAlbum = await Album.find();
         const listUser = await User.find();
+        const listSinger = await Singer.find();
         const totalSong = listSong.length || 0
         const totalAlbum = listAlbum.length || 0
         const totalUser = listUser.length || 0
+        const totalSinger = listSinger.length || 0
         const today = new Date();
         let monthYear = '';
 
@@ -48,7 +51,8 @@ export const statistical = async (req, res) => {
                 ratingSong,
                 totalSong,
                 totalAlbum,
-                totalUser
+                totalUser,
+                totalSinger
             },
         });
     } catch (error) {

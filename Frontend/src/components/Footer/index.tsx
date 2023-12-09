@@ -18,7 +18,6 @@ import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/current
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { chekcSubString } from "@/constane/song.const";
 import { RootState } from "@/store/store";
-import { current } from "@reduxjs/toolkit";
 
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
@@ -46,6 +45,7 @@ const Footer = (props: Props) => {
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const { token } = useAppSelector((state: RootState) => state.user);
+  const [totalTiming, setTotalTiming] = useState<number>(0);
 
   const dispatch = useAppDispatch();
 
@@ -171,27 +171,6 @@ const Footer = (props: Props) => {
   const handTurnVolume: any = () => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   }
-
-  const songLoca = localStorage.getItem('song')
-
-
-  useEffect(() => {
-    const history = localStorage.getItem('history')
-    if (!history) {
-      localStorage.setItem('history', JSON.stringify([songLoca]))
-    } else {
-      const historyArray = JSON.parse(history)
-      if (!historyArray.includes(songLoca)) {
-        historyArray.push(songLoca)
-        if (historyArray.length > 10) {
-          historyArray.shift()
-        }
-        localStorage.setItem('history', JSON.stringify(historyArray))
-      }
-    }
-  }, [songLoca])
-
-
   return (
     <div
       // onClick={() => {
@@ -234,7 +213,7 @@ const Footer = (props: Props) => {
                   <Link to={"#"}>
                     <div className="title-wrapper">
                       <span className="item-title title text-[13px] font-thin text-[#dadada]">
-                        {currentSong?.id_Singer.name}
+                        {currentSong?.song_singer}
                       </span>
                     </div>
                   </Link>
