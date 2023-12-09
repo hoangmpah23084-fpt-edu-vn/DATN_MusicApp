@@ -20,6 +20,7 @@ import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
 import Playlist from "@/pages/Playlist/Playlist";
 import MusicCharts from "@/pages/BXH/MusicCharts";
+import ListUser2 from "@/pages/Admin/User/ListUser2";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -63,7 +64,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "listuser",
-        element: <ListUser />,
+        element: <ListUser2 />,
       },
       {
         path: "artist",

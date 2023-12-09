@@ -5,38 +5,142 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { getUsers } from '@/store/Reducer/User';
-const columns: GridColDef[] = [
+import {Image} from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+
+interface DataType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+  image: string;
+  tags: string[];
+}
+
+// const columns: ColumnsType<DataType> = [
+//   {
+//     title: 'Name',
+//     dataIndex: 'name',
+//     key: 'name',
+//     render: (text) => <a>{text}</a>,
+//   },
+//   {
+//     title: 'Age',
+//     dataIndex: 'age',
+//     key: 'age',
+//   },
+//   {
+//     title: 'Image',
+//     dataIndex: 'image',
+//     key: 'image',
+//     render: (_, record) => (
+//       <img width={200} src={record.image} />
+//     )
+//   },
+//   {
+//     title: 'Address',
+//     dataIndex: 'address',
+//     key: 'address',
+//   },
+//   {
+//     title: 'Tags',
+//     key: 'tags',
+//     dataIndex: 'tags',
+//     render: (_, { tags }) => (
+//       <>
+//         {tags.map((tag) => {
+//           let color = tag.length > 5 ? 'geekblue' : 'green';
+//           if (tag === 'loser') {
+//             color = 'volcano';
+//           }
+//           return (
+//             <Tag color={color} key={tag}>
+//               {tag.toUpperCase()}
+//             </Tag>
+//           );
+//         })}
+//       </>
+//     ),
+//   },
+//   {
+//     title: 'Action',
+//     key: 'action',
+//     render: (_, record) => (
+//       <Space size="middle">
+//         <a>Invite {record.name}</a>
+//         <a>Delete</a>
+//       </Space>
+//     ),
+//   },
+// ];
+
+const data: DataType[] = [
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+    image: 'https://picsum.photos/100/100',
+    tags: ['nice', 'developer'],
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+    image: 'https://picsum.photos/200/300',
+
+    tags: ['loser'],
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sydney No. 1 Lake Park',
+    image: 'https://picsum.photos/200/300',
+    tags: ['cool', 'teacher'],
+  },
+];
+
+const columns: any = [
     { field: 'id', headerName: 'ID', flex : 1 },
     {
-      field: 'firstName',
-      headerName: 'First name',
-      flex : 1,
-      editable: true,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Last name',
-      flex : 1,
-      editable: true,
-    },
-    {
-      field: 'age',
-      headerName: 'Age',
-      headerAlign: 'left',
-      align : "left",
-      flex : 1,
-      type: 'number',
-      editable: true,
-    },
-    {
       field: 'fullName',
-      headerName: 'Full name',
+      headerName: 'Full Name',
       flex : 1,
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-    //   valueGetter: (params: GridValueGetterParams) =>
-    //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+      editable: false,
     },
+    {
+      field: 'email',
+      headerName: 'Email',
+      flex : 1,
+      editable: true,
+    },
+    {
+      field: 'image',
+      headerName: 'Image',
+      flex : 1,
+      
+    },
+    // {
+    //   field: 'age',
+    //   headerName: 'Age',
+    //   headerAlign: 'left',
+    //   align : "left",
+    //   flex : 1,
+    //   type: 'number',
+    //   editable: true,
+    // },
+
+    // {
+    //   field: 'fullName',
+    //   headerName: 'Full name',
+    //   flex : 1,
+    //   description: 'This column has a value getter and is not sortable.',
+    //   sortable: false,
+    // //   valueGetter: (params: GridValueGetterParams) =>
+    // //     `${params.row.fullName || ''} ${params.row.email || ''}`,
+    // },
     {
         field: 'Action',
         headerName: 'Action',
@@ -58,18 +162,6 @@ const columns: GridColDef[] = [
       }
   ];
   
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
-
 
 const ListUser = () => {
     const dispatch = useAppDispatch();
@@ -85,7 +177,8 @@ const ListUser = () => {
     <Title Title='List User' />
     <Box sx={{ width : "100%", display : "grid" }} >
     <DataGrid
-        rows={rows}
+        rows={user}
+        getRowId={(user) => user._id}
         columns={columns}
         initialState={{
           pagination: {

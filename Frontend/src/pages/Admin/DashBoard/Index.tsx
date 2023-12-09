@@ -8,7 +8,7 @@ const DashBoard = () => {
     <>
       <Title Title="DashBoard" />
       <Box sx={{ width: "100%", minHeight: 800 }} >
-
+      <h2>Dashboard</h2>
       </Box>
     </>
   )

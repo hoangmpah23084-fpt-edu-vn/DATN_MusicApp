@@ -10,7 +10,7 @@ import {
   PieChartOutlined,
 } from '@ant-design/icons';
 const { Content } = Layout;
-import { CiMusicNote1 } from 'react-icons/ci'
+import { CiMusicNote1, CiUser } from 'react-icons/ci'
 
 const LayoutAdmin = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -36,7 +36,9 @@ const LayoutAdmin = () => {
 
   const items: MenuItem[] = [
     getItem(<Link to="/admin">Thống kê</Link>, '1', <PieChartOutlined />),
-    getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />)
+    getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />),
+    getItem(<Link to="/admin/listUser">User</Link>, '3', <CiUser />),
+
 
   ];
   return (
