@@ -79,12 +79,14 @@ const userReducer = createSlice({
         setToken: (state, action) => {
             state.token = action.payload
         },
+        resetUser: (state, action) => {
+            state.dataUserOne = action.payload
+        },
     },
     extraReducers: builder => {
         builder
             .addCase(getUsers.pending, (state) => {
                 state.loading = true
-
             })
             .addCase(getUsers.rejected, (state) => {
                 state.loading = false
@@ -119,6 +121,6 @@ const userReducer = createSlice({
     }
 })
 
-export const { checkToken, setToken } = userReducer.actions
+export const { checkToken, setToken, resetUser } = userReducer.actions
 
 export default userReducer.reducer;
