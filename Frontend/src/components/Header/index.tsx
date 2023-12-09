@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Avatar, Dropdown, Menu, message, Input } from "antd";
+import { Avatar, Dropdown, Menu, Input } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
-import { AiOutlineSearch, AiOutlineSetting } from "react-icons/ai";
-import { GoDesktopDownload } from "react-icons/go";
+import { AiOutlineSearch, AiOutlineSetting, AiOutlineUser, AiOutlineEye } from "react-icons/ai";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ifUser } from "@/pages/Admin/Interface/User";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -16,7 +15,8 @@ import ItemSong from "../Favourites/ItemSong";
 import { IApiSong } from "@/pages/Admin/Interface/ValidateSong";
 import { useAppDispatch } from "@/store/hooks";
 import { handGetSongSearch } from "@/store/Reducer/Song";
-import { useLocalStorage } from "@/hooks";
+import DetailUser from "../Modals/DetailUser";
+import ChangePassword from "../Modals/ChangePassword";
 
 type Props = {
   sideBarRight: boolean;
@@ -25,10 +25,10 @@ type Props = {
 const Header = (props: Props) => {
   const [userLocal, setUserLocal] = useState<ifUser | null>(null);
   // const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const navigate = useNavigate();
-
+  const [showUser, setShowUser] = useState<boolean>(false)
   const dispatch = useAppDispatch();
+  const [showPass, setShowPass] = useState<boolean>(false)
 
   useEffect(() => {
     const currentUser = localStorage.getItem("user");
@@ -48,37 +48,24 @@ const Header = (props: Props) => {
     }
   };
 
-  //change avt
-  const handleAvatarUpload = (info: any) => {
-    if (info.file.status === "done") {
-      // Lấy đường dẫn ảnh đã tải lên từ response
-      const imageUrl = info.file.response.imageUrl;
-      setAvatarUrl(imageUrl);
-
-      message.success("Tải ảnh lên thành công");
-    } else if (info.file.status === "error") {
-      message.error("Lỗi tải ảnh lên");
-    }
-  };
-
   //logout
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
   };
 
+
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="account">
-        <Avatar size={64} icon={<UserOutlined />} />
-        <b> dtv</b>
+        <Avatar size={42} icon={<UserOutlined />} />
+        <b className="ml-2"> dtv</b>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="personal">
-        <b>Cá nhân</b>
+      <Menu.Item key="personal" onClick={() => setShowUser(!showUser)}>
+        <b className="flex items-center"><AiOutlineUser className='mr-2' /> Chỉnh sửa cá nhân</b>
       </Menu.Item>
-      <Menu.Item key="avt">Đổi ảnh đại diện</Menu.Item>
-      <Menu.Item key="pw">Đổi mật khẩu</Menu.Item>
+      <Menu.Item key="pw" onClick={() => setShowPass(!showPass)}> <b className="flex items-center"><AiOutlineEye className='mr-2' /> Đổi mật khẩu</b></Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout">
         <LogoutOutlined /> Đăng xuất
@@ -120,19 +107,19 @@ const Header = (props: Props) => {
   const token = localStorage.getItem("token");
   return (
     <>
+      {showUser && <DetailUser onShowModal={() => setShowUser(!showUser)} />}
+      {showPass && <ChangePassword onShowModal={() => setShowPass(!showPass)} />}
       <div
         className={`flex h-[70px] items-center fixed bg-[#1b2039] left-0 z-20 px-[15px] w-full  md:left-[240px] md:px-[59px] transition-all duration-700
         ${props.collapsed ? "md:left-[80px] md:w-[calc(100vw-80px)]" : ""}
-        ${
-          props.collapsed && props.sideBarRight
+        ${props.collapsed && props.sideBarRight
             ? "md:w-[calc(100vw-450px)]"
             : ""
-        }
-        ${
-          props.sideBarRight
+          }
+        ${props.sideBarRight
             ? "md:w-[calc(100vw-570px)]"
             : "md:w-[calc(100vw-240px)] "
-        }`}
+          }`}
       >
         <div className="flex items-center z-1 w-[100%] justify-between">
           <div className="flex flex-1 md:flex-none">
@@ -141,7 +128,7 @@ const Header = (props: Props) => {
             <div className="search w-full lg:flex items-center relative justify-center dropdown-search max-h-[400px]">
               <Dropdown menu={{ items }} trigger={["click"]}>
                 <Input
-                  addonBefore={<AiOutlineSearch className={`bg-[#3bc8e7] text-[#fff] p-0 text-[20px]`}/>}
+                  addonBefore={<AiOutlineSearch className={`bg-[#3bc8e7] text-[#fff] p-0 text-[20px]`} />}
                   onChange={(
                     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
                   ) => onHandleSearch(e)}
