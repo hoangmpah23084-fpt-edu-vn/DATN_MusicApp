@@ -33,7 +33,7 @@ export const create_Album = async (req, res) => {
 
 export const getAll_Album = async (req, res) => {
   try {
-    const data = await Album.find().populate("id_artist");
+    const data = await Album.find().populate("id_singer");
     if (!data) {
       return res.status(400).json({ message: "Get All Album Failed" });
     }

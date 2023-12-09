@@ -33,34 +33,39 @@ const AlbumAdmin = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [search, setSearch] = useState<string>("");
-  const [album,setAlbum] = useState([] as any)
+  const [album, setAlbum] = useState([] as any);
   const [modalSetting, setModalSetting] = useState(0);
-  const [albumSelected,setAlbumSelected] = useState({} as any)
-  const {
-    song,
-    totalSong,
-    loading,
-    loadingRemove,
-    loadingGetone,
-    dataOne,
-    loadingAdd,
-  } = useSelector((state: RootState) => state.Song);
+  const [albumSelected, setAlbumSelected] = useState({} as any);
+  const [optionSinger, setOptionSinger] = useState([]);
 
+  const { song, totalSong, loading, loadingRemove, dataOne, loadingAdd } =
+    useSelector((state: RootState) => state.Song);
 
   const [form] = Form.useForm();
   const formRef = useRef<any>();
 
-
   const fetchData = async () => {
     try {
-      const resp = await instanceAxios.get("http://localhost:8080/api/album")
-      setAlbum(resp.data.data)
+      const resp = await instanceAxios.get("http://localhost:8080/api/album");
+      setAlbum(resp.data.data);
     } catch (error) {
-      toast.error(error as any)
+      toast.error(error as any);
     }
-  }
+  };
 
+  const fetchSinger = async () => {
+    try {
+      const resp = await instanceAxios.get("http://localhost:8080/api/singers");
+      const newOption = resp.data.data.map((item: any) => ({
+        value: item._id,
+        label: item.name,
+      }));
 
+      setOptionSinger(newOption);
+    } catch (error) {
+      toast.error(error as any);
+    }
+  };
 
   // get dữ liệu
   useEffect(() => {
@@ -73,8 +78,9 @@ const AlbumAdmin = () => {
   }, [page, pageSize, search]);
 
   useEffect(() => {
-    fetchData()
-  },[])
+    fetchData();
+    fetchSinger();
+  }, []);
 
   // tìm kiếm
   const onChange = (
@@ -91,17 +97,17 @@ const AlbumAdmin = () => {
 
   //xóa
   const confirm = async (id: string) => {
-    await dispatch(handDeleteSong(id));
-    message.success("Xóa bài hát thành công");
+    try {
+      const resp = await instanceAxios.delete(`http://localhost:8080/api/album/${id}`);
+      toast.success(resp.data.message)
+      fetchData()
+    } catch (error) {
+      toast.error(error as any)
+    }
   };
 
-  //cancel form
-  const handleCancel = () => {
-    formRef.current.resetFields();
-  };
 
   const handleGetDetail = (id: string) => {
-    setOpenDetail(true);
     dispatch(handGetOne(id));
   };
 
@@ -109,73 +115,52 @@ const AlbumAdmin = () => {
     key: string;
   }
 
-  const dataSource = song.map((item: ifSong) => {
+  const dataSource = album.map((item: ifSong, index:number) => {
     return {
-      key: item._id,
-      id: chekcSubString(item._id as string, 5),
-      ten: chekcSubString(item.song_name as string, 20),
-      anh: <img src={item.song_image[0]} className="w-14 h-14 rounded-xl" />,
-      casi: item.id_Singer,
-      luotnghe: item.view_song,
-      yeuthich: item.total_like,
+      key: index + 1,
+      ...item,
     };
   });
   const columns: any = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
+      title: "#",
+      dataIndex: "key",
+      key: "key",
       width: 100,
     },
     {
-      title: "Tên",
-      dataIndex: "ten",
-      key: "ten",
+      title: "Tên Album",
+      dataIndex: "album_name",
+      key: "album_name",
       width: 200,
-    },
-    {
-      title: "Ảnh",
-      dataIndex: "anh",
-      key: "anh",
-      width: 100,
     },
     {
       title: "Ca sĩ",
-      dataIndex: "casi",
-      key: "casi",
-      width: 150,
-    },
-    {
-      title: "Lượt nghe",
-      dataIndex: "luotnghe",
-      key: "luotnghe",
-      width: 150,
-    },
-    {
-      title: "Lượt yêu thích",
-      dataIndex: "yeuthich",
-      key: "yeuthich",
+      dataIndex: "id_singer",
+      key: "id_singer",
       width: 200,
+      render: (_ : any,record:any) => <p>{_.name}</p>
     },
+
     {
       title: "Chức năng",
       dataIndex: "chucnang",
       key: "chucnang",
       render: (_: any, record: columns) => (
         <div className="flex justify-center items-center">
-          <Button onClick={() => handleGetDetail(record?.key as string)}>
+          {/* <Button onClick={() => handleGetDetail(record?.key as string)}>
             <AiFillEye className="text-xl text-[#4a89ff] cursor-pointer" />
-          </Button>
+          </Button> */}
           <Button
             className="ml-2 text-[#699af4db]"
-            onClick={() => handleEdit(record?.key as string)}
+            onClick={() => handleEdit(record as string)}
           >
             Sửa
           </Button>
           <Popconfirm
             title="Xóa bài hát"
             description="Bạn chắc chắn muốn xóa chứ ?"
-            onConfirm={() => confirm(record?.key as string)}
+            onConfirm={() => confirm(record?._id as string)}
             okText="xóa"
             cancelText="Không"
             placement="topRight"
@@ -252,17 +237,27 @@ const AlbumAdmin = () => {
 
   // hàm show form
   const showAdd = () => {
-    setModalSetting(1)
+    setModalSetting(1);
+    setAlbumSelected({})
+    form.resetFields()
   };
 
   //call api khi sửa để đổ dữ liệu vào form
   //hàm sửa
-  const handleEdit = async (recode:any) => {
-    setModalSetting(2)
+  const handleEdit = async (recode: any) => {
+    setModalSetting(2);
+
+    const newValue = {
+      _id: recode._id,
+      album_name: recode.album_name,
+      id_singer: recode.id_singer._id
+    }
+    setAlbumSelected(newValue)
   };
   useEffect(() => {
-    form.setFieldsValue(dataOne);
-  }, [dataOne]);
+    console.log(albumSelected)
+    form.setFieldsValue(albumSelected);
+  }, [albumSelected]);
 
   // form dùng chung add và update
   const formItem = () => {
@@ -282,36 +277,24 @@ const AlbumAdmin = () => {
         ref={formRef as any}
       >
         <Form.Item
-          label="Tên bài hát"
-          name="song_name"
+          label="Tên Album"
+          name="album_name"
           rules={[{ required: true, message: "Vui lòng nhập tên bài hát" }]}
         >
-          <Input placeholder="A-z-0-9" allowClear className="" />
+          <Input size="large" placeholder="A-z-0-9" allowClear className="" />
         </Form.Item>
         <Form.Item
-          label="Tiêu đề bài hát"
-          name="song_title"
-          rules={[{ required: true, message: "Vui lòng nhập tiêu đề bài hát" }]}
-        >
-          <Input placeholder="A-z-0-9" allowClear className="" />
-        </Form.Item>
-
-
-        <Form.Item
-          name="id_Singer"
+          name="id_singer"
           label="Ca sĩ"
           rules={[{ required: true, message: "Vui lòng chọn ca sĩ" }]}
           className="w-full min-w-0"
         >
-          <Select defaultValue="Chọn ca sĩ" style={{ width: "48%" }}>
-
-
-          </Select>
+          <Select
+            defaultValue="Chọn ca sĩ"
+            options={optionSinger}
+            className="w-full"
+          ></Select>
         </Form.Item>
-
-
-
-
 
         <div className="flex justify-end mt-10">
           <Button onClick={cancel} danger>
@@ -336,36 +319,36 @@ const AlbumAdmin = () => {
 
   // hàm sử lý call api khi add
 
-
-
-
-
-  const handleSubmit = (data: ifSong) => {
-
-
-    if (true) {
-
+  const handleSubmit = async (data: ifSong) => {
+    if (albumSelected._id) {
     } else {
-      // hàm sử lý call api khi add
-
+      try {
+        const resp = await instanceAxios.post(
+          "http://localhost:8080/api/album",
+          data
+        );
+        toast.success(resp.data.message);
+      } catch (error) {
+        toast.error(error as any);
+      }
     }
+
+    setModalSetting(0)
+   fetchData()
   };
-
-
 
   const modalAdd = () => {
     return (
       <Modal
-        title={true ? "Cập nhật bài hát" : "Thêm bài hát"}
-        open={false}
-        onCancel={handleCancel}
+        title={modalSetting == 2 ? "Cập nhật bài hát" : "Thêm bài hát"}
+        open={modalSetting != 0}
+        onCancel={() => setModalSetting(0)}
         footer={null}
       >
         {formItem()}
       </Modal>
     );
   };
-
 
   return (
     <div className="relative">
