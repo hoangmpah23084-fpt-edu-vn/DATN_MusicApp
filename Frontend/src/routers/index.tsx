@@ -1,9 +1,7 @@
 import LayoutAdmin from "@/layouts/admin";
 import LayoutClient from "@/layouts/client";
 import FavouritePage from "@/pages/Favourite/FavouritePage";
-import Artist from "@/pages/Admin/Artist/listArtist";
-import AddArtist from "@/pages/Admin/Artist/addArtist";
-import UpdateArtist from "@/pages/Admin/Artist/updateArtist";
+import ListSinger from "@/pages/Admin/Singer/ListSinger";
 import DashBoard from "@/pages/Admin/DashBoard/Index";
 import ListSong from "@/pages/Admin/Song/ListSong";
 import ListUser from "@/pages/Admin/User/ListUser";
@@ -16,6 +14,7 @@ import Album from "@/pages/Album/Album";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
 import Playlist from "@/pages/Playlist/Playlist";
+import AlbumAdmin from "@/pages/Admin/Album/Album";
 import MusicCharts from "@/pages/BXH/MusicCharts";
 import DetailAlbum from "@/pages/Album/DetailAlbum";
 import DetailSinger from "@/pages/Singer/DetailSinger";
@@ -26,8 +25,6 @@ import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import AddAlbum from "@/pages/Admin/Album/AddAlbum";
 import ListAlbum from "@/pages/Admin/Album/ListAlbum";
 import UpdateAlbum from "@/pages/Admin/Album/UpdateAlbum";
-
-
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -77,21 +74,16 @@ export const router = createBrowserRouter([
         element: <ListUser />,
       },
       {
-        path: "artist",
-        element: <Artist />,
+        path: "listSinger",
+        element: <ListSinger />,
       },
-      {
-        path: "add-artist",
-        element: <AddArtist />,
-      },
-      {
-        path: "update-artist/:id",
-        element: <UpdateArtist />,
-      }
-      ,
       {
         path: "addgenre",
         element: <Genre />
+      },
+      {
+        path: "album",
+        element: <AlbumAdmin />
       }
       ,
       {
@@ -101,7 +93,7 @@ export const router = createBrowserRouter([
       {
         path: "UpdateGenre/:id",
         element: <UpdateGenre />
-      }
+      },
     ],
   },
 ]);
