@@ -217,7 +217,7 @@ const ChangePassword = ({ onShowModal }: IProps) => {
                     {errors.code && (
                         <p className="">{errors.code.message}</p>
                     )}
-                    {seconds === 0 ? <button className=" ml-4 mr-14 text-white bg-[#3BC8E7] hover:bg-white hover:text-[#3BC8E7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                    {seconds === 0 && !passNew ? <button className=" ml-4 mr-14 text-white bg-[#3BC8E7] hover:bg-white hover:text-[#3BC8E7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
                         Gửi lại mã
                     </button> : checkVery && !passNew ? <h4>{seconds}s</h4> : ""}
                 </div>
