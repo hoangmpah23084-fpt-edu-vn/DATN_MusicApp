@@ -234,6 +234,26 @@ const Footer = (props: Props) => {
   const handTurnVolume: any = () => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   };
+
+
+  const songLoca = localStorage.getItem('song')
+  useEffect(() => {
+    const history = localStorage.getItem('history')
+    if (!history) {
+      localStorage.setItem('history', JSON.stringify([songLoca]))
+    } else {
+      const historyArray = JSON.parse(history)
+      if (!historyArray.includes(songLoca)) {
+        historyArray.push(songLoca)
+        if (historyArray.length > 10) {
+          // Nếu vượt quá 10 bài, xóa bài cũ (ở đầu mảng)
+          historyArray.shift()
+        }
+        localStorage.setItem('history', JSON.stringify(historyArray))
+      }
+    }
+  }, [songLoca])
+
   return (
     <div
       // onClick={() => {
@@ -243,7 +263,7 @@ const Footer = (props: Props) => {
       className="fixed z-50 w-[100%] bottom-[60px] md:bottom-0 bg-[#1B2039] cursor-pointer"
     >
       <div className="level text-white h-[90px] px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex justify-between">
-        <div className="flex items-center rounded-r-lg  justify-start md:w-[20%] h-[100%] bg-[#1B2039]">
+        <div className="flex items-center rounded-r-lg flex-1  justify-start md:w-[20%] h-[100%] bg-[#1B2039]">
           <div className="flex items-center w-[100%]">
             <div className="flex w-[100%] ">
               <div className="">
@@ -316,7 +336,7 @@ const Footer = (props: Props) => {
           </div>
         </div>
         <div className="w-[60%] h-[100%] fjc hidden md:block">
-          <div className="w-[70%] h-[100%] ">
+          <div className=" h-[100%] ">
             <div className="w-[100%] h-[70%] fjc">
               <div className="w-[40%] min-w-[200px] h-[75%] flex">
                 <div className="w-[19%] h-[100%] ">

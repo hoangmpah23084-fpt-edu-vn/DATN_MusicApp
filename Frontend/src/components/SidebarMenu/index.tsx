@@ -87,11 +87,11 @@ const items: MenuItem[] = [
     "/history",
     <PiClockCounterClockwiseBold className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#7d32ff] p-[2px] " />
   ),
-  getItem(
-    "Bài hát yêu thích",
-    "/mymusic/song/favorite",
-    <AiOutlineHeart className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#10c4ff] p-[2px] text-[#fff]" />
-  ),
+  // getItem(
+  //   "Bài hát yêu thích",
+  //   "/mymusic/song/favorite",
+  //   <AiOutlineHeart className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#10c4ff] p-[2px] text-[#fff]" />
+  // ),
   getItem(
     "Playlist",
     "/playlist",

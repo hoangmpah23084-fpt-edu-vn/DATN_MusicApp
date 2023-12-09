@@ -110,7 +110,7 @@ const ListSinger = () => {
       tuoi: item.age,
       anh: <img src={item.images[0]} className="w-14 h-14 rounded-xl" />,
       mota: chekcSubString(item.description as string, 255),
-      album: item.album.name,
+      // album: item.album.name,
       song: item.songs.name
     };
   });
@@ -146,12 +146,12 @@ const ListSinger = () => {
       key: "mota",
       width: 150,
     },
-    {
-      title: "Album",
-      dataIndex: "album",
-      key: "album",
-      width: 150,
-    },
+    // {
+    //   title: "Album",
+    //   dataIndex: "album",
+    //   key: "album",
+    //   width: 150,
+    // },
     {
       title: "Bài hát",
       dataIndex: "songs",
@@ -304,7 +304,7 @@ const ListSinger = () => {
     age: number;
     images: string[];
     description: string;
-    album: string;
+    // album: string;
     // song: string;
   };
 
@@ -390,22 +390,16 @@ const ListSinger = () => {
           <Input placeholder="A-z-0-9" allowClear className="" />
         </Form.Item>
 
-        <div className="flex justify-center items-center w-full">
+        {/* <div className="flex justify-center items-center w-full">
           <Form.Item<FieldType>
             name="album"
             label="Album"
             rules={[{ required: true, message: "Vui lòng chọn album" }]}
             className="w-full min-w-0"
           >
-            {/* <Select defaultValue="Chọn album" style={{ width: "48%" }}>
-              {singer.map((item: ifAlbum) => (
-                <Option key={item._id} value={item._id}>
-                  {item.name}
-                </Option>
-              ))}
-            </Select> */}
+           
           </Form.Item>
-        </div>
+        </div> */}
 
         <div className="flex justify-end mt-10">
           <Button onClick={cancel} danger>
@@ -461,9 +455,11 @@ const ListSinger = () => {
   };
 
   const formEdit = (newData: ISinger) => {
+console.log(newData);
+    
     newData = {
       ...newData,
-      _id: dataOne?._id,
+      _id: dataOne?._id as string,
       images: (fileListImage?.map((item) => item.url) as string[]) || [],
     };
 
@@ -493,7 +489,7 @@ const ListSinger = () => {
   const handleSubmit = (data: ISinger) => {
     const newData = {
       ...data,
-      song_link: fileListFile[0].url,
+      // song_link: fileListFile[0].url,
       images: fileListImage,
     };
 
