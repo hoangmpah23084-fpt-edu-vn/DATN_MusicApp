@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 import SidebarSong from "@/components/SidebarSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handGetSong } from "@/store/Reducer/Song";
-import { handGetCurrentSong } from "@/store/Reducer/currentSong";
+import { handGetCurrentSong, setCurrentSong } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
 import ModalSignin from "@/components/Modals/modalSignin";
 import { checkToken, setToken } from "@/store/Reducer/User";
@@ -25,15 +25,20 @@ const LayoutClient = () => {
 
   const [collapsed, setCollapsed] = React.useState<boolean>(false);
 
-  const user = localStorage.getItem("user");
   useEffect(() => {
+    const song = localStorage.getItem("song");
     async function fetchData() {
       await dispatch(handGetSong()).then(({payload}) => {
-        console.log(payload);
-        if (payload.length > 0) {
-          localStorage.setItem("song", JSON.stringify(payload[0]));
-          dispatch(handGetCurrentSong(payload[0]));
+        if (song) {
+        const parseSong = JSON.parse(song);
+        dispatch(setCurrentSong(parseSong));
+        }else{
+          localStorage.setItem("song", JSON.stringify(payload.data[0]));
+          dispatch(setCurrentSong(payload.data[0]));
         }
+        // if (payload.data.length > 0) {
+
+        // }
       });
     }
     void fetchData();
