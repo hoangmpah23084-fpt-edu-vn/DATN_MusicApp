@@ -1,16 +1,15 @@
 import { AiOutlineHeart } from "react-icons/ai";
 import { BsThreeDots, BsFillPlayFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import "react-loading-skeleton/dist/skeleton.css";
+import 'react-loading-skeleton/dist/skeleton.css'
 import "./index.scss";
 import { ifAlbum } from "@/pages/Admin/Interface/validateAlbum";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
-
 type Props = {
-  item: ifSong;
+  item : ifSong
 };
 
-const SongGenre = ({ item }: Props) => {
+const SongGenre = ({item}: Props) => {
   return (
     <div>
       <div className=" carousel-item flex flex-col h-full">
@@ -52,17 +51,16 @@ const SongGenre = ({ item }: Props) => {
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="card-content mt-[12px]">
-            <h4>
-              <Link to={`#`}>
-                <span className="text-[14px] font-semibold">
-                  {/* {item?.album_name} */}
-                  thangpham
-                </span>
-              </Link>
-            </h4>
-          </div>
+        <div className="card-content mt-[12px]">
+          <h4>
+            <Link to={`#`}>
+              <span className="text-[14px] font-semibold">
+              {item?.song_name}
+              </span>
+            </Link>
+          </h4>
         </div>
       </div>
     </div>

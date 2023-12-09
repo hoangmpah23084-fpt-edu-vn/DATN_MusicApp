@@ -182,7 +182,6 @@ export const updateViewSong = async (req, res) => {
   const id_song = req.params.id;
   let setMonth = {};
   const today = new Date();
-
   const month = `${today.getFullYear()}-${Number(today.getMonth()) + 1}`;
   const songCurrent = await SongSchame.findOne({ _id: id_song });
   if (songCurrent?.month.includes(month)) {

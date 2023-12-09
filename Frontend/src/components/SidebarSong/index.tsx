@@ -29,7 +29,7 @@ const SidebarSong = (props: Props) => {
   const { token } = useAppSelector((state: RootState) => state.user);
 
   const dispatch = useAppDispatch();
-  const {song} = useAppSelector(({ Song }) => Song);
+  const { song } = useAppSelector(({ Song }) => Song);
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
@@ -118,7 +118,7 @@ const SidebarSong = (props: Props) => {
           <div className="w-full h-[100%] overflow-y-scroll">
             {song &&
               song?.length > 0 &&
-              song.map((item: ifSong, index : number) => {
+              song.map((item: ifSong, index: number) => {
                 return (
                   <div
                     key={index}
@@ -168,7 +168,7 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[48%] ml-[2%] h-full">
                         <div className="w-full h-[50%]">
-                          <h1 className="font-semibold">{chekcSubString(item.song_name as string, 15)}</h1>
+                          <h1 className="font-semibold">{chekcSubString(item.song_name as string, 13)}</h1>
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">

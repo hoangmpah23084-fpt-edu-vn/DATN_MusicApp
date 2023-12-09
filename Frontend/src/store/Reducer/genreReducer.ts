@@ -27,6 +27,7 @@ export const deleteGenre = createAsyncThunk("genre/deleteGenre", async (_id : st
 })
 export const updateGenre = createAsyncThunk("genre/updateGenre", async (value : ifGenre) => {
     const {_id , ...dataRest} = value;
+    console.log(value, dataRest);
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const {data} = await axios.put<{genre : ifGenre}>(`http://localhost:8080/api/genre/${_id}`, dataRest);
     return data.genre;

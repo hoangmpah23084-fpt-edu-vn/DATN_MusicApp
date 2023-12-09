@@ -1,90 +1,429 @@
-import { deleteGenre, getGenre } from '@/store/Reducer/genreReducer';
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import  { useEffect } from 'react'
-import Title from '../Title';
-import { Box, Button, Stack } from '@mui/material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  Pagination,
+  Table,
+  Button,
+  message,
+  Popconfirm,
+  Modal,
+  Form,
+  Select,
+} from "antd";
+import { Input } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { IApiSong, ifSong } from "../Interface/ValidateSong";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { Skeleton } from "antd";
+import { chekcSubString } from "@/constane/song.const";
+import { AiFillEye, AiOutlinePlus } from "react-icons/ai";
+import { handleGetSinger } from "@/store/Reducer/singerReducer";
+import { getGenre, updateGenre } from "@/store/Reducer/genreReducer";
+import { ifAddGenre, ifGenre } from "../Interface/validateAlbum";
+import axios from "axios";
+import { toast } from "react-toastify";
+const { Option } = Select;
+
+interface ifUpdateGenre {
+  key : string,
+  id : string,
+  name : string,
+  list_songs : ifSong[] | []
+}
 
 const ListGenre = () => {
-  const {genre} = useAppSelector(({genre}) => genre);
-  const disaptch = useAppDispatch();
-  useEffect(() => {
-    void disaptch(getGenre());
-  },[disaptch])
-  const handDeleteGenre = (_id :string) => {
-    if (confirm("Bạn có chắc chắn muốn xóa chứ !")) {
-       void disaptch(deleteGenre(_id))
-       alert("Xóa Genre Thành công")
-    }
-  }
-  const columns: GridColDef[] = [
-    { field: '_id', headerName: 'ID', flex : 1,  align : "center", headerAlign : "center" },
-    {
-      field: 'name',
-      headerName: 'First name',
-      headerAlign : "center",
-      editable: true,
-      align : "center",
-      flex : 1
-    },
-    {
-      field: 'list_songs',
-      headerName: 'List Songs',
-      headerAlign : "center",
-      editable: true,
-      align : "center",
-      renderCell : (params) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const data : string[] = params.row.list_songs.length;
-        return data;
-      },
-      flex : 1
-    },
-    {
-      field: 'Action',
-      headerName: 'Action',
-      type: 'number',
-      headerAlign : "center",
-      editable: true,
-      align : "center",
-      flex : 1,
-      renderCell : (params : GridRenderCellParams<{_id : string}> ) => {
-        const _id : string = params.row._id;
-
-        return <>
-        <Stack direction={"row"} spacing={1} >
-        <Button variant="outlined" color="warning" size="small" ><Link to={`/admin/UpdateGenre/${_id}`}  >Edit</Link></Button>
-        <Button variant="outlined" color="error" size="small" onClick={() => handDeleteGenre(_id)}  >Delete</Button>
-        </Stack>
-        </>
-      }
-    }
-  ];
+  const dispatch = useAppDispatch();
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [search, setSearch] = useState<string>("");
+  const [openDetail, setOpenDetail] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const { genre,loading } = useAppSelector((state: RootState) => state.genre);
   
+  const [form] = Form.useForm();
+  const formRef = useRef<any>();
+  const [checkUpdate, setCheckUpdate] = useState(false);
+  const [idGenre , setIdGenre] = useState<ifUpdateGenre | null>(null);
+  const [detailsGenre, setDetailsGenre] = useState<ifGenre>();
+
+  // get dữ liệu
+  useEffect(() => {
+    dispatch(getGenre());
+  }, [page, pageSize, search]);
+
+  // tìm kiếm
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setSearch(e.target.value);
+  };
+
+  //phân trang
+  const onChangePage = (page: number, pageSize: number) => {
+    setPage(page);
+    setPageSize(pageSize);
+  };
+
+  //xóa
+  const confirm = async (id: string) => {
+    axios.delete(`http://localhost:8080/api/genre/${id}`).then(() => {
+      message.success("Xóa thể loại thành công");
+      dispatch(getGenre());
+    }).catch(() => {
+      message.success("Lỗi xóa thể loại");
+    });
+  };
+
+  //cancel form
+  const handleCancel = () => {
+    setOpenDetail(false);
+    setOpenAdd(false);
+    setCheckUpdate(false);
+    formRef.current.resetFields();
+  };
+
+  const handleGetDetail = (id: string) => {
+    axios.get(`http://localhost:8080/api/genre/${id}`).then(({data}) => {
+      console.log(data.data);
+      setDetailsGenre(data.data);
+    })
+    setOpenDetail(true);
+    // dispatch(handGetOne(id));
+  };
+
+  interface columns {
+    key: string;
+  }
+
+  const dataSource = genre.map((item: ifGenre) => {
+    return {
+      key: item._id,
+      id: chekcSubString(item._id as string, 5),
+      name: chekcSubString(item.name as string, 20),
+      list_songs: item.list_songs?.length,
+    };
+  });
+  const columns: any = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      width: 100,
+    },
+    {
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
+      width: 200,
+    },
+    {
+      title: "Danh sách nhạc",
+      dataIndex: "list_songs",
+      key: "list_songs",
+      width: 100,
+    },
+    {
+      title: "Chức năng",
+      dataIndex: "chucnang",
+      key: "chucnang",
+      render: (_: any, record: columns) => (
+        <div className="flex justify-center items-center">
+          <Button onClick={() => handleGetDetail(record?.key as string)}>
+            <AiFillEye className="text-xl text-[#4a89ff] cursor-pointer" />
+          </Button>
+          <Button
+            className="ml-2 text-[#699af4db]"
+            onClick={() => handleEdit(record as any)}
+          >
+            Sửa
+          </Button>
+          <Popconfirm
+            title="Xóa bài hát"
+            description="Bạn chắc chắn muốn xóa chứ ?"
+            onConfirm={() => confirm(record?.key as string)}
+            okText="xóa"
+            cancelText="Không"
+            placement="topRight"
+            okType="danger"
+          >
+            <Button className="ml-2" danger loading={loading}>
+              Xóa
+            </Button>
+          </Popconfirm>
+        </div>
+      ),
+      fixed: "right",
+      width: 170,
+      align: "center",
+    },
+  ];
+  const skeletonItems = Array.from(
+    { length: genre.length === 0 || genre.length > 10 ? 10 : genre.length },
+    () => {
+      return (
+        <div className="mt-10 w-full">
+          <Skeleton.Input
+            active
+            className="ml-2 max-h-4"
+            size="large"
+            style={{ borderRadius: "40px" }}
+          />
+          <Skeleton.Input
+            active
+            className="ml-2 max-h-4"
+            size="small"
+            style={{ borderRadius: "40px" }}
+          />
+          <Skeleton.Input
+            active
+            className="ml-2 max-h-4"
+            size="large"
+            style={{ borderRadius: "40px" }}
+          />
+          <Skeleton.Input
+            active
+            className="ml-2 max-h-4"
+            size="small"
+            style={{ borderRadius: "40px" }}
+          />
+          <Skeleton.Input
+            active
+            className="ml-2 max-h-4"
+            size="large"
+            style={{ borderRadius: "40px" }}
+          />
+          <Skeleton.Input
+            active
+            className="ml-2 max-h-4"
+            size="small"
+            style={{ borderRadius: "40px" }}
+          />
+          <Skeleton.Input
+            active
+            className="ml-2 max-h-4"
+            size="small"
+            style={{ borderRadius: "40px" }}
+          />
+          <Skeleton.Input
+            active
+            className="ml-2 max-h-4"
+            size="small"
+            style={{ borderRadius: "40px" }}
+          />
+        </div>
+      );
+    }
+  );
+  // hàm show form
+  const showAdd = () => {
+    setOpenAdd(true);
+    dispatch(handleGetSinger());
+    dispatch(getGenre());
+  };
+
+  type FieldType = {
+    name: string;
+  };
+
+  //call api khi sửa để đổ dữ liệu vào form
+  //hàm sửa
+  const handleEdit = async (item: any) => {
+    console.log(item);
+    
+    setIdGenre(item);
+    form.setFieldsValue(item);
+    setOpenAdd(true);
+    setCheckUpdate(true);
+    dispatch(getGenre());
+    setOpenDetail(false);
+  };
+
+
+  // form dùng chung add và update
+  const formItem = () => {
+    return (
+      <Form
+        form={form}
+        name="basic"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        style={{ maxWidth: 600 }}
+        initialValues={{ remember: true }}
+        onFinish={handleSubmit}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+        layout="vertical"
+        requiredMark="optional"
+        className="w-full flex-1 relative"
+        ref={formRef as any}
+      >
+        <Form.Item<FieldType>
+          label="Tên thể loại"
+          name="name"
+          rules={[{ required: true, message: "Vui lòng nhập tên bài hát" }]}
+        >
+          <Input placeholder="A-z-0-9" allowClear className="" />
+        </Form.Item>
+        <div className="flex justify-end mt-10">
+          <Button onClick={cancel} danger>
+            Hủy
+          </Button>
+          <Button
+            htmlType="submit"
+            className="text-[#4a89ff] border-[#4a89ff] ml-4"
+            loading={loading}
+          >
+            {checkUpdate ? "Cập nhật" : "Thêm"}
+          </Button>
+        </div>
+      </Form>
+    );
+  };
+
+  // hủy form
+  const cancel = () => {
+    setOpenAdd(false);
+    setCheckUpdate(false);
+    formRef.current.resetFields();
+  };
+
+  // hàm sử lý call api khi add
+  const formAdd = (newData: ifAddGenre) => {
+    axios.post('http://localhost:8080/api/genre', newData).then(() => {
+      formRef.current.resetFields();
+      setOpenAdd(false);
+      toast.success("Thêm thể loại thành công")
+    }).catch(() => {
+      toast.error("Lỗi không thể thêm")
+    })
+  };
+
+  const formEdit = (newData: ifGenre) => {
+    dispatch(updateGenre({
+      _id : idGenre && idGenre.key,
+      name : newData.name
+    } as any))
+      .unwrap()
+      .then(() => {
+        message.success(`Cập nhập thể loại thành công`);
+        formRef.current.resetFields();
+        setOpenAdd(false);
+        dispatch(getGenre());
+      })
+      .catch((error) => {
+        console.error("`Cập nhập thể loại thất bại:", error);
+      });
+  };
+
+
+  const handleSubmit = (data: ifSong) => {
+    const newData = {
+      ...data,
+    };
+    if (checkUpdate) {
+      formEdit(newData as any);
+      
+    } else {
+      // hàm sử lý call api khi add
+      formAdd(newData as any);
+    }
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  const modalAdd = () => {
+    return (
+      <Modal
+        title={checkUpdate ? "Cập nhật bài thể loại" : "Thêm thể loại"}
+        open={openAdd}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        {formItem()}
+      </Modal>
+    );
+  };
+
+  const modalDetail = () => {
+    return (
+      <Modal
+        title="Chi tiết bài hát"
+        open={openDetail}
+        onOk={() => handleEdit()}
+        onCancel={handleCancel}
+        okText="Chỉnh sửa"
+        cancelText="Thoát"
+        okType="danger"
+        width={600}
+      >
+        {loading ? (
+          <Skeleton active />
+        ) : (
+          <div className="flex items-center justify-between pt-5 pb-5">
+            <div className="w-full">
+              <p className="flex">
+                <strong>ID : </strong> <span>{detailsGenre?._id}</span>
+              </p>
+              <p>
+                <strong>Tên thể loại : </strong> {detailsGenre?.name}
+              </p>
+              <p>
+                <strong>số lượng bài hát : </strong> {detailsGenre?.list_songs?.length}
+              </p>
+            </div>
+            {/* {dataOne?.song_image.map((item) => (
+              <img src={item} className="w-32 h-32 rounded-xl" />
+            ))} */}
+          </div>
+        )}
+      </Modal>
+    );
+  };
 
   return (
-    <>
-    <Title Title='Danh Sách Thể Loại' />
-    <Box sx={{ width : "100%" , height : "700px",  display : "grid" }} >
-        <DataGrid
-        rows={genre}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
-        getRowId={(row ) => row._id}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
-    </>
-  )
-}
-export default ListGenre
+    <div className="relative">
+      {modalDetail()}
+      {modalAdd()}
+      <header className="fixed top-0 flex items-center justify-between z-40 bg-[#F4F5F7] pt-2 w-[100%] pb-2.5 ">
+        <span className="font-bold text-xl ml-10">Danh sách nhạc</span>
+        <Input
+          placeholder="Tìm kiếm bài hát"
+          allowClear
+          onChange={onChange}
+          className="w-96 mr-40"
+        />
+        <Button
+          onClick={() => showAdd()}
+          className="flex items-center right-64 text-[#fff]  border-[#fff] bg-[#4a89ff] hover:bg-[#fff] hover:text-[#4a89ff]"
+        >
+          <AiOutlinePlus className="text-lg mr-1 " />
+          Thêm bài hát
+        </Button>
+      </header>
+      <main className="w">
+        {loading ? (
+          <div className="mt-32">{skeletonItems}</div>
+        ) : (
+          <Table
+            dataSource={dataSource}
+            columns={columns}
+            pagination={false}
+            className="mt-12"
+            scroll={{ y: 650 }}
+          />
+        )}
+      </main>
+      <footer className="w-[100%] h-10 bg-[#F4F5F7] fixed bottom-0 z-50">
+        <Pagination
+          defaultCurrent={page}
+          total={genre.length  || 1}
+          onChange={onChangePage}
+          className="absolute bottom-1 right-72   z-50"
+        />
+      </footer>
+    </div>
+  );
+};
+export default ListGenre;
