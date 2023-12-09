@@ -23,6 +23,7 @@ const  ListSongItem = ({ section, item }: Props) => {
      dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start");
     // const {data} = await axios.get(`http://localhost:8080/api/singer/${item.id_Singer}`).then(({data})=> data);
     dispatch(setSingerSong(item.id_Singer));
+    
   }
     
   return (
@@ -84,7 +85,7 @@ const  ListSongItem = ({ section, item }: Props) => {
                 <span>{item?.song_name}</span>
               </div>
               <div className="text-[rgb(140,136,146)] text-[12px] hover:text-[#3BC8E7] hover:underline">
-                <Link to={`#`}>Double2T, Hoà Minzy, DuongK</Link>
+                <Link to={`#`}>{item?.id_Singer.name}</Link>
               </div>
             </div>
             <div

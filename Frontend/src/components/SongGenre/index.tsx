@@ -19,7 +19,7 @@ const SongGenre = ({ item }: Props) => {
             <div className="card-image overflow-hidden rounded-[6px] relative">
               <Link to={`#`} className="overflow-hidden">
                 <img
-                  className="rounded-[6px] aspect-square w-[252px] h-[252px]"
+                  className="rounded-[6px] aspect-square"
                   src={`${item.song_image[0]}`}
                 />
               </Link>

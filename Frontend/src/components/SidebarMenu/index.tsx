@@ -7,11 +7,7 @@ import {
 } from "react-icons/bs";
 import { PiClockCounterClockwiseBold } from "react-icons/pi";
 import { BiCategory, BiSolidPlaylist } from "react-icons/bi";
-import {
-  AiOutlineStar,
-  AiOutlinePlus,
-  AiOutlineHeart,
-} from "react-icons/ai";
+import { AiOutlineStar, AiOutlinePlus, AiOutlineHeart } from "react-icons/ai";
 import { MdLibraryMusic } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import "./index.scss";
@@ -53,15 +49,20 @@ const items: MenuItem[] = [
   //   "zingchart",
   //   <BsBarChartLine className="w-[22px] text-[#ccc] h-[22px]" />
   // ),
-  getItem(
-    "Radio",
-    "",
-    <BsRadioactive className="w-[22px] text-[#ccc] h-[22px]" />
-  ),
+  // getItem(
+  //   "Radio",
+  //   "",
+  //   <BsRadioactive className="w-[22px] text-[#ccc] h-[22px]" />
+  // ),
   getItem(
     "Thư viện",
     "/mymusic/song/favorite",
     <MdLibraryMusic className="w-[22px] text-[#ccc] h-[22px]" />
+  ),
+  getItem(
+    "BXH Nhạc Mới",
+    "/music_charts",
+    <BsMusicNoteBeamed className="w-[22px] text-[#ccc] h-[22px]" />
   ),
   getItem(
     "Phòng nhạc",
@@ -71,21 +72,16 @@ const items: MenuItem[] = [
 
   { type: "divider" },
 
-  getItem(
-    "BXH Nhạc Mới",
-    "/music_charts",
-    <BsMusicNoteBeamed className="w-[22px] text-[#ccc] h-[22px]" />
-  ),
-  getItem(
-    "Chủ Đề & Thể Loại",
-    "",
-    <BiCategory className="w-[22px] text-[#ccc] h-[22px]" />
-  ),
-  getItem(
-    "Top 100",
-    "top100",
-    <AiOutlineStar className="w-[22px] text-[#ccc] h-[22px]" />
-  ),
+  // getItem(
+  //   "Chủ Đề & Thể Loại",
+  //   "",
+  //   <BiCategory className="w-[22px] text-[#ccc] h-[22px]" />
+  // ),
+  // getItem(
+  //   "Top 100",
+  //   "top100",
+  //   <AiOutlineStar className="w-[22px] text-[#ccc] h-[22px]" />
+  // ),
   getItem(
     "Nghe gần đây",
     "ngheganday",
@@ -120,10 +116,20 @@ const SidebarMenu = ({ handleShowModalCreateRoom, setCollapsed }: props) => {
   return (
     <div className=" text-[#dadada] text-[14px] top-0 left-0 z-40 max-w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#1b2039] hidden sm:block">
       <nav className="zm-navbar ">
-        <div className="zm-navbar-brand w-[240px] h-[70px] fixed top-0 pt-0 pr-[25px] pl-[28px] flex items-center">
+        <div
+          className={`zm-navbar-brand w-[240px] h-[70px] fixed top-0 pt-0  flex items-center  ${
+            isCollapsed ? "pl-0" : "justify-center"
+          }`}
+        >
           <div className="zm-navbar-item">
             <button className="zm-btn inline-block text-[14px] rounded-[999px] leading-normal border-0 font-[400] cursor-pointer text-center relative">
-              <div className="zmp3-logo w-[120px] h-[40px] inline-block"></div>
+              <div className="zmp3-logo inline-block">
+                {isCollapsed ? (
+                  <img src="/logo.png" alt="" />
+                ) : (
+                  <h1 className="logo">Music SongSync</h1>
+                )}
+              </div>
             </button>
           </div>
         </div>
@@ -293,8 +299,7 @@ const SidebarMenu = ({ handleShowModalCreateRoom, setCollapsed }: props) => {
         collapsible
         // collapsed={collapsed}
         onCollapse={(value) => {
-          setCollapsed(value), 
-          setIscollapsed(value)
+          setCollapsed(value), setIscollapsed(value);
         }}
         width={240}
         style={{
