@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Avatar, Dropdown, Menu, Input } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
+
 import { AiOutlineSearch, AiOutlineSetting, AiOutlineUser, AiOutlineEye } from "react-icons/ai";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -13,8 +14,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import ItemSong from "../Favourites/ItemSong";
 import { IApiSong } from "@/pages/Admin/Interface/ValidateSong";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handGetSongSearch } from "@/store/Reducer/Song";
+
 import DetailUser from "../Modals/DetailUser";
 import ChangePassword from "../Modals/ChangePassword";
 
@@ -23,13 +25,15 @@ type Props = {
   collapsed: boolean;
 };
 const Header = (props: Props) => {
+
   const [userLocal, setUserLocal] = useState<ifUser | null>(null);
+  const { dataUserOne } = useAppSelector((state: RootState) => state.user)
   // const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const navigate = useNavigate();
   const [showUser, setShowUser] = useState<boolean>(false)
   const dispatch = useAppDispatch();
   const [showPass, setShowPass] = useState<boolean>(false)
-
+  const token = localStorage.getItem('token');
   useEffect(() => {
     const currentUser = localStorage.getItem("user");
     if (currentUser) {
@@ -48,6 +52,7 @@ const Header = (props: Props) => {
     }
   };
 
+
   //logout
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -59,7 +64,7 @@ const Header = (props: Props) => {
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="account">
         <Avatar size={42} icon={<UserOutlined />} />
-        <b className="ml-2"> dtv</b>
+        <b className="ml-2">{dataUserOne?.fullName}</b>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="personal" onClick={() => setShowUser(!showUser)}>
@@ -85,6 +90,7 @@ const Header = (props: Props) => {
     };
   });
 
+
   const onHandleSearch = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -104,7 +110,7 @@ const Header = (props: Props) => {
       })
     );
   }, []);
-  const token = localStorage.getItem("token");
+
   return (
     <>
       {showUser && <DetailUser onShowModal={() => setShowUser(!showUser)} />}
@@ -140,12 +146,6 @@ const Header = (props: Props) => {
             </div>
           </div>
           <div className="flex text-[#fff]">
-            {/* <div className=" bg-[#2f2739] rounded-full">
-              <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee]">
-                <GoDesktopDownload className="mr-[5px]" />
-                <span className="font-inter">Tải bản macOS</span>
-              </div>
-            </div> */}
             <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#3bc8e7] rounded-full">
               <AiOutlineSetting className=" w-10 h-[20px]" />
             </div>

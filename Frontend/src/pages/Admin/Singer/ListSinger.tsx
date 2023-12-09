@@ -1,10 +1,10 @@
 import {
-  handAddSong,
-  handDeleteSong,
-  handGetOne,
-  handGetSong,
-  handUpdateSong,
-} from "@/store/Reducer/Song";
+  handleAddSinger,
+  handleDeletesinger,
+  handleGetOne,
+  handleGetSinger,
+  handleUpdateSinger
+} from "@/store/Reducer/singerReducer";
 import { useAppDispatch } from "@/store/hooks";
 import {
   Pagination,
@@ -20,20 +20,18 @@ import {
 } from "antd";
 import { Input } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { IApiSong, SongLink, ifSong } from "../Interface/ValidateSong";
+import { IApiSinger, ISinger } from "../Interface/ISinger";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Skeleton } from "antd";
 import { chekcSubString } from "@/constane/song.const";
 import { AiFillEye, AiOutlinePlus } from "react-icons/ai";
-import { handImage, handleFileUpload } from "@/Mui/Component/handUpload";
-import { handleGetSinger } from "@/store/Reducer/singerReducer";
-import { getGenre } from "@/store/Reducer/genreReducer";
-import { ISinger } from "../Interface/ISinger";
-import { IGenre } from "../Interface/genre";
-const { Option } = Select;
+import { handImage } from "@/Mui/Component/handUpload";
+import { SongLink } from "../Interface/ValidateSong";
+import { getAlbum } from "@/store/Reducer/albumReducer";
 
-const ListSong = () => {
+const { Option } = Select;
+const ListSinger = () => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -41,33 +39,31 @@ const ListSong = () => {
   const [openDetail, setOpenDetail] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const {
-    song,
-    totalSong,
+    singer,
+    totalSinger,
     loading,
     loadingRemove,
     loadingGetone,
     dataOne,
     loadingAdd,
-  } = useSelector((state: RootState) => state.Song);
-  const { genre } = useSelector((state: RootState) => state.genre);
-  const { singer } = useSelector((state: RootState) => state.singer);
+  } = useSelector((state: RootState) => state.singer);
+  const { album } = useSelector((state: RootState) => state.album);
   const [imageForm, setImageForm] = useState<SongLink[]>([]);
   const [songForm, setSongForm] = useState<SongLink>({ name: "", value: "" });
   const [form] = Form.useForm();
   const formRef = useRef<any>();
   const [checkUpdate, setCheckUpdate] = useState(false);
-
   const [fileListImage, setFileListImage] = useState<UploadFile[]>(null as any);
   const [fileListFile, setFileListFile] = useState<UploadFile[]>(null as any);
 
   // get dữ liệu
   useEffect(() => {
-    const data: IApiSong = {
+    const data: IApiSinger = {
       page: page,
       pageSize: pageSize,
       search: search,
     };
-    dispatch(handGetSong(data));
+    dispatch(handleGetSinger(data));
   }, [page, pageSize, search]);
 
   // tìm kiếm
@@ -85,8 +81,8 @@ const ListSong = () => {
 
   //xóa
   const confirm = async (id: string) => {
-    await dispatch(handDeleteSong(id));
-    message.success("Xóa bài hát thành công");
+    await dispatch(handleDeletesinger(id));
+    message.success("Xóa ca sĩ thành công");
   };
 
   //cancel form
@@ -99,24 +95,26 @@ const ListSong = () => {
 
   const handleGetDetail = (id: string) => {
     setOpenDetail(true);
-    dispatch(handGetOne(id));
+    dispatch(handleGetOne(id));
   };
 
   interface columns {
     key: string;
   }
 
-  const dataSource = song.map((item: ifSong) => {
+  const dataSource = singer.map((item: ISinger) => {
     return {
       key: item._id,
       id: chekcSubString(item._id as string, 5),
-      ten: chekcSubString(item.song_name as string, 20),
-      anh: <img src={item.song_image[0]} className="w-14 h-14 rounded-xl" />,
-      casi: item.id_Singer.name,
-      luotnghe: item.view_song,
-      yeuthich: item.total_like,
+      ten: chekcSubString(item.name as string, 20),
+      tuoi: item.age,
+      anh: <img src={item.images[0]} className="w-14 h-14 rounded-xl" />,
+      mota: chekcSubString(item.description as string, 255),
+      album: item.album.name,
+      song: item.songs.name
     };
   });
+
   const columns: any = [
     {
       title: "ID",
@@ -131,27 +129,33 @@ const ListSong = () => {
       width: 200,
     },
     {
+      title: "Tuổi",
+      dataIndex: "tuoi",
+      key: "tuoi",
+      width: 100,
+    },
+    {
       title: "Ảnh",
       dataIndex: "anh",
       key: "anh",
       width: 100,
     },
     {
-      title: "Ca sĩ",
-      dataIndex: "casi",
-      key: "casi",
+      title: "Mô tả",
+      dataIndex: "mota",
+      key: "mota",
       width: 150,
     },
     {
-      title: "Lượt nghe",
-      dataIndex: "luotnghe",
-      key: "luotnghe",
+      title: "Album",
+      dataIndex: "album",
+      key: "album",
       width: 150,
     },
     {
-      title: "Lượt yêu thích",
-      dataIndex: "yeuthich",
-      key: "yeuthich",
+      title: "Bài hát",
+      dataIndex: "songs",
+      key: "songs",
       width: 200,
     },
     {
@@ -170,7 +174,7 @@ const ListSong = () => {
             Sửa
           </Button>
           <Popconfirm
-            title="Xóa bài hát"
+            title="Xóa ca sĩ"
             description="Bạn chắc chắn muốn xóa chứ ?"
             onConfirm={() => confirm(record?.key as string)}
             okText="xóa"
@@ -190,7 +194,7 @@ const ListSong = () => {
     },
   ];
   const skeletonItems = Array.from(
-    { length: song.length === 0 || song.length > 10 ? 10 : song.length },
+    { length: singer.length === 0 || singer.length > 10 ? 10 : singer.length },
     () => {
       return (
         <div className="mt-10 w-full">
@@ -271,27 +275,6 @@ const ListSong = () => {
     }
   };
 
-  const uploadSong = async ({ file, onSuccess, onError }: any) => {
-    try {
-      const songURL = await handleFileUpload([file]);
-      console.log("songURL",songURL);
-      
-      const newData = {
-        uid: "-1",
-          name: songURL,
-          status: "done",
-          url: songURL,
-      };
-      message.success(`${file.name} file uploaded successfully`);
-      setSongForm(newData as any);
-      setFileListFile([newData] as any)
-      onSuccess();
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      onError(error);
-    }
-  };
-
   //xóa
   const onRemoveImg = (file: UploadFile<any>) => {
     console.log(file);
@@ -304,31 +287,25 @@ const ListSong = () => {
 
     if(filterItem.length == 0) {
       setFileListImage([])
-     // form.setFieldValue("song_image",undefined)
+     // form.setFieldValue("images",undefined)
     }
-  };
-
-  const onRemoveSong = () => {
-    setFileListFile([])
-    // form.setFieldValue("song_link",undefined)
   };
 
   // hàm show form
   const showAdd = () => {
     setFileListImage([]);
-    setFileListFile([]);
     setOpenAdd(true);
     dispatch(handleGetSinger());
-    dispatch(getGenre());
+    dispatch(getAlbum());
   };
 
   type FieldType = {
-    song_name: string;
-    song_title: string;
-    song_link: string[] | string | undefined;
-    song_image: string[];
-    id_Singer: string;
-    id_Genre: string;
+    name: string;
+    age: number;
+    images: string[];
+    description: string;
+    album: string;
+    // song: string;
   };
 
   //call api khi sửa để đổ dữ liệu vào form
@@ -336,13 +313,13 @@ const ListSong = () => {
   const handleEdit = async (id: string) => {
     setOpenAdd(true);
     setCheckUpdate(true);
-    await dispatch(handGetOne(id));
-    dispatch(handleGetSinger());
-    dispatch(getGenre());
+    await dispatch(handleGetOne(id));
+    // dispatch(handGetAlbum());
+    // dispatch(getGenre());
     setOpenDetail(false);
   };
   useEffect(() => {
-    const newFileImage = dataOne?.song_image.map((item) => ({
+    const newFileImage = dataOne?.images.map((item) => ({
       uid: "-1",
       name: item,
       status: "done",
@@ -352,16 +329,6 @@ const ListSong = () => {
     if (newFileImage) {
       setFileListImage(newFileImage as any);
     }
-
-    setFileListFile([
-      {
-        uid: "-1",
-        name: dataOne?.song_link,
-        status: "done",
-        url: dataOne?.song_link,
-      
-    }] as any)
-
     form.setFieldsValue(dataOne);
   }, [dataOne]);
 
@@ -384,52 +351,23 @@ const ListSong = () => {
         ref={formRef as any}
       >
         <Form.Item<FieldType>
-          label="Tên bài hát"
-          name="song_name"
-          rules={[{ required: true, message: "Vui lòng nhập tên bài hát" }]}
-        >
-          <Input placeholder="A-z-0-9" allowClear className="" />
-        </Form.Item>
-        <Form.Item<FieldType>
-          label="Tiêu đề bài hát"
-          name="song_title"
-          rules={[{ required: true, message: "Vui lòng nhập tiêu đề bài hát" }]}
+          label="Tên ca sĩ"
+          name="name"
+          rules={[{ required: true, message: "Vui lòng nhập tên ca sĩ" }]}
         >
           <Input placeholder="A-z-0-9" allowClear className="" />
         </Form.Item>
 
-        <div className="flex justify-center items-center w-full">
-          <Form.Item<FieldType>
-            name="id_Singer"
-            label="Ca sĩ"
-            rules={[{ required: true, message: "Vui lòng chọn ca sĩ" }]}
-            className="w-full min-w-0"
-          >
-            <Select defaultValue="Chọn ca sĩ" style={{ width: "48%" }}>
-              {singer.map((item: ISinger) => (
-                <Option key={item._id} value={item._id}>
-                  {item.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item<FieldType>
-            name="id_Genre"
-            label="Thể loại"
-            rules={[{ required: true, message: "Vui lòng chọn thể loại" }]}
-            className="w-full min-w-0"
-          >
-            <Select defaultValue="Chọn thể loại" style={{ width: "50%" }}>
-              {genre.map((item: IGenre) => (
-                <Option key={item._id} value={item._id}>
-                  {item.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </div>
+        <Form.Item<FieldType>
+          label="tuổi"
+          name="age"
+          rules={[{ required: true, message: "Vui lòng nhập tuổi" }]}
+        >
+          <Input placeholder="A-z-0-9" allowClear className="" />
+        </Form.Item>
+
         <Form.Item
-          name="song_image"
+          name="images"
           rules={[{ required: true, message: "Vui lòng chọn ảnh" }]}
         >
           <Upload
@@ -444,19 +382,30 @@ const ListSong = () => {
           </Upload>
         </Form.Item>
 
-        <Form.Item 
-        name="song_link"
-        rules={[{ required: true, message: "Vui lòng chọn nhạc" }]}>
-          <Upload
-            customRequest={uploadSong}
-            className="w-full min-w-0"
-            onRemove={onRemoveSong}
-            fileList={fileListFile}
-          >
-            <Button className="w-full">Tải lên Nhac</Button>
-          </Upload>
+        <Form.Item<FieldType>
+          label="Mô tả"
+          name="description"
+          rules={[{ required: true, message: "Vui lòng nhập phần mô tả" }]}
+        >
+          <Input placeholder="A-z-0-9" allowClear className="" />
         </Form.Item>
 
+        <div className="flex justify-center items-center w-full">
+          <Form.Item<FieldType>
+            name="album"
+            label="Album"
+            rules={[{ required: true, message: "Vui lòng chọn album" }]}
+            className="w-full min-w-0"
+          >
+            {/* <Select defaultValue="Chọn album" style={{ width: "48%" }}>
+              {singer.map((item: ifAlbum) => (
+                <Option key={item._id} value={item._id}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select> */}
+          </Form.Item>
+        </div>
 
         <div className="flex justify-end mt-10">
           <Button onClick={cancel} danger>
@@ -482,16 +431,16 @@ const ListSong = () => {
   };
 
   // hàm sử lý call api khi add
-  const formAdd = (newData: ifSong) => {
+  const formAdd = (newData: ISinger) => {
     newData = {
       ...newData,
-      song_image: (fileListImage?.map((item) => item.url) as string[]) || [],
+      images: (fileListImage?.map((item) => item.url) as string[]) || [],
     };
 
-    dispatch(handAddSong(newData as ifSong))
+    dispatch(handleAddSinger(newData as ISinger))
       .unwrap()
       .then(() => {
-        message.success(`Thêm bài hát thành công`);
+        message.success("Thêm ca sĩ thành công");
         formRef.current.resetFields();
         setImageForm([]);
         setSongForm({
@@ -499,29 +448,29 @@ const ListSong = () => {
           value: "",
         });
         setOpenAdd(false);
-        const dataGet: IApiSong = {
+        const dataGet: IApiSinger = {
           page: page,
           pageSize: pageSize,
           search: search,
         };
-        dispatch(handGetSong(dataGet));
+        dispatch(handleGetSinger(dataGet));
       })
       .catch((error) => {
-        console.error("Thêm bài hát thất bại:", error);
+        console.error("Thêm ca sĩ thất bại:", error);
       });
   };
 
-  const formEdit = (newData: ifSong) => {
+  const formEdit = (newData: ISinger) => {
     newData = {
       ...newData,
       _id: dataOne?._id,
-      song_image: (fileListImage?.map((item) => item.url) as string[]) || [],
+      images: (fileListImage?.map((item) => item.url) as string[]) || [],
     };
 
-    dispatch(handUpdateSong(newData as ifSong))
+    dispatch(handleUpdateSinger(newData as ISinger))
       .unwrap()
       .then(() => {
-        message.success(`Cập nhập bài hát thành công`);
+        message.success("Cập nhập ca sĩ thành công");
         formRef.current.resetFields();
         setImageForm([]);
         setSongForm({
@@ -529,24 +478,23 @@ const ListSong = () => {
           value: "",
         });
         setOpenAdd(false);
-        const dataGet: IApiSong = {
+        const dataGet: IApiSinger = {
           page: page,
           pageSize: pageSize,
           search: search,
         };
-        dispatch(handGetSong(dataGet));
+        dispatch(handleGetSinger(dataGet));
       })
       .catch((error) => {
-        console.error("`Cập nhập bài hát thất bại:", error);
+        console.error("Cập nhập ca sĩ thất bại:", error);
       });
   };
 
-
-  const handleSubmit = (data: ifSong) => {
+  const handleSubmit = (data: ISinger) => {
     const newData = {
       ...data,
       song_link: fileListFile[0].url,
-      song_image: fileListImage,
+      images: fileListImage,
     };
 
     if (checkUpdate) {
@@ -564,7 +512,7 @@ const ListSong = () => {
   const modalAdd = () => {
     return (
       <Modal
-        title={checkUpdate ? "Cập nhật bài hát" : "Thêm bài hát"}
+        title={checkUpdate ? "Cập nhật ca sĩ" : "Thêm ca sĩ"}
         open={openAdd}
         onCancel={handleCancel}
         footer={null}
@@ -577,7 +525,7 @@ const ListSong = () => {
   const modalDetail = () => {
     return (
       <Modal
-        title="Chi tiết bài hát"
+        title="Chi tiết ca sĩ"
         open={openDetail}
         onOk={() => handleEdit(dataOne?._id as string)}
         onCancel={handleCancel}
@@ -595,30 +543,18 @@ const ListSong = () => {
                 <strong>ID:</strong> {dataOne?._id}
               </p>
               <p>
-                <strong>Tên bài hát:</strong> {dataOne?.song_name}
+                <strong>Tên ca sĩ:</strong> {dataOne?.name}
+                {chekcSubString(dataOne?.name as string, 20)}
               </p>
               <p>
-                <strong>Ca sĩ:</strong> {dataOne?.id_Singer}
-              </p>
-              <p>
-                <strong>Link:</strong>{" "}
-                <a href={dataOne?.song_link}>
-                  {chekcSubString(dataOne?.song_link as string, 50)}
-                </a>
+                <strong>Tuổi:</strong> 
               </p>
               <p>
                 <strong>Mô tả: </strong>
-                {chekcSubString(dataOne?.song_lyric as string, 20)}
-              </p>
-              <p>
-                <strong>Lượt nghe:</strong> {dataOne?.view_song}
-              </p>
-              <p>
-                <strong>Lượt yêu thích: </strong>
-                {dataOne?.total_like}
+                {chekcSubString(dataOne?.description as string, 255)}
               </p>
             </div>
-            {dataOne?.song_image.map((item) => (
+            {dataOne?.images.map((item) => (
               <img src={item} className="w-32 h-32 rounded-xl" />
             ))}
           </div>
@@ -627,15 +563,14 @@ const ListSong = () => {
     );
   };
 
-
   return (
     <div className="relative">
       {modalDetail()}
       {modalAdd()}
       <header className="fixed top-0 flex items-center justify-between z-40 bg-[#F4F5F7] pt-2 w-[100%] pb-2.5 ">
-        <span className="font-bold text-xl ml-10">Danh sách nhạc</span>
+        <span className="font-bold text-xl ml-10">Danh sách ca sĩ</span>
         <Input
-          placeholder="Tìm kiếm bài hát"
+          placeholder="Tìm kiếm ca sĩ"
           allowClear
           onChange={onChange}
           className="w-96 mr-40"
@@ -644,8 +579,8 @@ const ListSong = () => {
           onClick={() => showAdd()}
           className="flex items-center right-64 text-[#fff]  border-[#fff] bg-[#4a89ff] hover:bg-[#fff] hover:text-[#4a89ff]"
         >
-          <AiOutlinePlus className="text-lg mr-1 " />
-          Thêm bài hát
+          <AiOutlinePlus className="text-lg mr-1" />
+          Thêm ca sĩ
         </Button>
       </header>
       <main className="w">
@@ -664,12 +599,13 @@ const ListSong = () => {
       <footer className="w-[100%] h-10 bg-[#F4F5F7] fixed bottom-0 z-50">
         <Pagination
           defaultCurrent={page}
-          total={totalSong || 1}
+          total={totalSinger || 1}
           onChange={onChangePage}
-          className="absolute bottom-1 right-72   z-50"
+          className="absolute bottom-1 right-72 z-50"
         />
       </footer>
     </div>
   );
 };
-export default ListSong;
+
+export default ListSinger;
