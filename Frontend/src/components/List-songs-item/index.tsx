@@ -1,4 +1,3 @@
-import { AiOutlineHeart } from "react-icons/ai";
 import { BsThreeDots, BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import "./css.scss";
@@ -6,6 +5,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { activeSong } from "@/constane/song.const";
 import { setSingerSong } from "@/store/Reducer/Song";
+import { ActiveFavourites, ActiveFavouritesTitle, onhandleFavourite } from "@/constane/favourites.const";
+import { RootState } from "@/store/store";
 // import { handGetSongInGenre } from "@/store/Reducer/Song";
 
 type Props = {
@@ -14,7 +15,7 @@ type Props = {
 };
 
 const ListSongItem = ({ section, item }: Props) => {
-
+  const { token } = useAppSelector((state: RootState) => state.user);
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
@@ -60,7 +61,7 @@ const ListSongItem = ({ section, item }: Props) => {
                       className={`${section === "chanel" && "border rounded-full"
                         } flex justify-center items-center`}
                     >
-                      {currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill className="text-[40px] p-4 pl-[6px]" />}
+                      {currentSong?._id == item?._id && stateSong ? <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " /> : <BsFillPlayFill className="text-[50px] p-4 pl-[6px]" />}
                     </div>
                   </div>
                 </div>
@@ -76,7 +77,7 @@ const ListSongItem = ({ section, item }: Props) => {
                 <span>{item?.song_name}</span>
               </div>
               <div className="text-[rgb(140,136,146)] text-[12px] hover:text-[#3BC8E7] hover:underline">
-                <Link to={`#`}>Double2T, Hoà Minzy, DuongK</Link>
+                <Link to={`/singer/${item.id_Singer._id}`}>{item.id_Singer.name}</Link>
               </div>
             </div>
             <div
@@ -97,10 +98,10 @@ const ListSongItem = ({ section, item }: Props) => {
         >
           <div className="hover-items hidden relative z-10">
             <div className="level flex">
-              <button className="group flex justify-center items-center rounded-full px-[5px] ">
-                <AiOutlineHeart className="px-3 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-80 " />
+              <button className="group flex justify-center items-center rounded-full px-[5px] " onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}>
+                <ActiveFavourites item={item} />
                 <div className="absolute -top-5 -left-9 text-xs w-32 px-[10px] py-[5px] bg-gray-600 text-center rounded-[5px] opacity-0 group-hover:-top-[35px] group-hover:opacity-100 ease-in-out duration-300">
-                  <p className="text-white">Xóa khỏi thư viện</p>
+                  <ActiveFavouritesTitle item={item} />
                 </div>
               </button>
               <button className="group relative flex justify-center items-center rounded-full px-[5px] ">

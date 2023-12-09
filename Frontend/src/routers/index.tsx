@@ -20,9 +20,7 @@ import DSong from "@/pages/DSong";
 import Room from "@/pages/Room/room";
 import RoomPage from "@/pages/Room/RoomPage";
 import PlaylistPage from "@/pages/Playlist/PlaylistPage";
-import AddAlbum from "@/pages/Admin/Album/AddAlbum";
-import ListAlbum from "@/pages/Admin/Album/ListAlbum";
-import UpdateAlbum from "@/pages/Admin/Album/UpdateAlbum";
+import HistorySong from "@/pages/HistorySong/history";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -47,7 +45,8 @@ export const router = createBrowserRouter([
       { path: "album/:id", element: <DetailAlbum /> },
       { path: "singer/:id", element: <DetailSinger /> },
       { path: "music_charts", element: <MusicCharts /> },
-      { path: "dsong", element: <DSong /> }
+      { path: "dsong", element: <DSong /> },
+      { path: "history", element: <HistorySong /> }
     ],
   },
   {
