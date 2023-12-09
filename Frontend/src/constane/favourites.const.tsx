@@ -19,8 +19,19 @@ export const ActiveFavourites = ({ item }: props) => {
   const active = listFavourites?.map((item) => item?._id).includes(item?._id)
   return (
     <>
-      {active ? <AiFillHeart className="text-[20px] text-[#3bc8e7] scale-90 ease-in-out duration-300" /> :
-        <AiOutlineHeart className="text-[20px] text-white ease-in-out duration-300" />}
+      {active ? <AiFillHeart className="text-[#3bc8e7] scale-90 ease-in-out duration-300 px-3 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-80 " /> :
+        <AiOutlineHeart className="text-[#fff] scale-90 ease-in-out duration-300 px-3 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-8" />}
+    </>
+  )
+}
+
+export const ActiveFavouritesTitle = ({ item }: props) => {
+  const { listFavourites } = useAppSelector((state: RootState) => state.favourites);
+  const active = listFavourites?.map((item) => item?._id).includes(item?._id)
+  return (
+    <>
+      {active ? <p className="text-white">Xoá khỏi thư viện</p> :
+        <p className="text-white">Thêm thư viện</p>}
     </>
   )
 }

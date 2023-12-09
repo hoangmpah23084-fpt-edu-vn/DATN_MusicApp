@@ -244,8 +244,8 @@ const Footer = (props: Props) => {
     >
       <div className="level text-white h-[90px] px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex justify-between">
         <div className="flex items-center rounded-r-lg  justify-start md:w-[20%] h-[100%] bg-[#1B2039]">
-          <div className="flex items-center md:w-[100%]">
-            <div className="flex md:w-[100%] ">
+          <div className="flex items-center w-[100%]">
+            <div className="flex w-[100%] ">
               <div className="">
                 <Link to={"#"}>
                   <div className="thumbnail-wrapper">
@@ -253,13 +253,13 @@ const Footer = (props: Props) => {
                       <img
                         src={currentSong?.song_image[0]}
                         alt=""
-                        className="rounded-[5px] w-[64px] h-[64px]"
+                        className="w-[100%] rounded-[5px]"
                       />
                     </div>
                   </div>
                 </Link>
               </div>
-              <div className="media-content flex justify-center items-start flex-col md:w-[40%] ">
+              <div className="media-content flex justify-center items-start flex-col w-[40%] ">
                 <div className="is-mark level-left">
                   <div className="song-info-wrapper">
                     <span className="song-title-item">
@@ -286,6 +286,7 @@ const Footer = (props: Props) => {
                   </Link>
                 </h3>
               </div>
+             
               <div className=" items-center justify-center hidden md:w-[40%] md:flex">
                 <div className="flex items-center justify-center ml-[20px] ">
                   <div className="level-item">
@@ -494,7 +495,6 @@ const Footer = (props: Props) => {
           </div>
 
           <NextSong ListData={props.ListData} />
-
         </div>
       </div>
     </div>

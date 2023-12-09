@@ -34,12 +34,6 @@ export const createSong = async (req, res) => {
       },
       { new: true }
     );
-
-    /* update genre */
-    await Genre.findByIdAndUpdate(body.id_Genre, {
-      $addToSet: { list_songs: data._id },
-    });
-
     return res.status(200).json({
       message: "Create Song successfully",
       data,

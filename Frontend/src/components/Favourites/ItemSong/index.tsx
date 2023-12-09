@@ -9,7 +9,7 @@ import ModalSongMenu from "../../Modals/modalSongMenu";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { activeSong } from "@/constane/song.const";
-import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
+import { ActiveFavourites, ActiveFavouritesTitle, onhandleFavourite } from "@/constane/favourites.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
 type props = {
@@ -123,7 +123,7 @@ const ItemSong = ({ item, active }: props) => {
             <button className="text-[#3BC8E7] mx-2 group relative " onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}>
               <ActiveFavourites item={item} />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
-                <p className="text-white">Xoá khỏi thư viện</p>
+                <ActiveFavouritesTitle item={item} />
               </div>
             </button>
 
