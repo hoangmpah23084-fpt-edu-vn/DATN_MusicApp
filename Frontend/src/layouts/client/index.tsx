@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import SidebarMenu from "@/components/SidebarMenu";
 import Footer from "@/components/Footer";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import SidebarSong from "@/components/SidebarSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handGetSong } from "@/store/Reducer/Song";
@@ -12,6 +12,10 @@ import ModalSignin from "@/components/Modals/modalSignin";
 import { checkToken, setToken } from "@/store/Reducer/User";
 import { getFavourite } from "@/store/Reducer/favouriteReducer";
 import ModalCreatePlaylist from "@/components/Modals/createPlaylist";
+import { FaRegDotCircle } from "react-icons/fa";
+import { BsBarChartLine, BsFileMusic, BsRadioactive } from "react-icons/bs";
+import { MdLibraryMusic } from "react-icons/md";
+import { AiFillHome } from "react-icons/ai";
 
 const LayoutClient = () => {
   const [widthBrowser, setWidthBrowser] = useState(window.innerWidth);
@@ -72,13 +76,68 @@ const LayoutClient = () => {
           handleShowModalCreateRoom={handleShowModalCreateRoom}
         />
         <Header collapsed={collapsed} sideBarRight={sideBarRight} />
-        <div className="relative w-[100%] h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
+        <div className="relative w-[100%] h-[calc(100vh-130px)] md:h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
         <SidebarSong sideBarRight={sideBarRight} />
         <Footer setSideBarRight={setSideBarRight} ListData={current.song} />
+
         {/* responsive */}
-        <div className="fixed z-50 w-[100%] bottom-0 block md:hidden bg-[#1B2039] cursor-pointer">Nhung</div>
+        <div className="fixed z-50 w-[100%] bottom-0 block md:hidden bg-[#1B2039] cursor-pointer text-[#fff]">
+          <div className="border border-t-1">
+            <ul className=" flex">
+              <li className="bg-[#3a3244] w-[25%] flex flex-col justify-center items-center">
+                <Link
+                  to={"/"}
+                  className="flex flex-col items-center leading-[20px] "
+                >
+                  <FaRegDotCircle className="w-[22px] text-[#ccc] h-[40px]" />
+                  <span className=" text-[12px] text-[12px]">Khám Phá</span>
+                </Link>
+              </li>
+
+              <li className="w-[25%] justify-center items-center">
+                <Link
+                  to={"/music_charts"}
+                  className="flex flex-col items-center leading-[20px] "
+                >
+                  <BsBarChartLine className="w-[23px] text-[#ccc] h-[40px]" />
+                  <span className=" text-[12px]">#BXH</span>
+                </Link>
+              </li>
+
+              <li className="w-[25%] justify-center items-center">
+                <Link
+                  to={"/rooms"}
+                  className="flex flex-col items-center leading-[20px] "
+                >
+                  <AiFillHome className="w-[22px] text-[#ccc] h-[40px]" />
+                  <span className=" text-[12px]">Phòng nhạc</span>
+                </Link>
+              </li>
+
+              <li className="w-[25%] justify-center items-center">
+                <Link
+                  to={"/mymusic/song/favorite"}
+                  className="flex flex-col items-center leading-[20px] "
+                >
+                  <MdLibraryMusic className="w-[22px] text-[#ccc] h-[40px]" />
+                  <span className="ml-3 text-[12px]">Thư Viện</span>
+                </Link>
+              </li>
+             
+              <li className="w-[25%] justify-center items-center">
+                <Link
+                  to={"/album"}
+                  className="flex flex-col items-center leading-[20px] "
+                >
+                  <BsFileMusic className="w-[22px] text-[#ccc] h-[40px]" />
+                  <span className=" text-[12px]">Album</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </>
   );
