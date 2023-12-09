@@ -18,6 +18,7 @@ import { handChangeStateSong, handGetCurrentSong } from "@/store/Reducer/current
 import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
 import { chekcSubString } from "@/constane/song.const";
 import { RootState } from "@/store/store";
+import { current } from "@reduxjs/toolkit";
 
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() => createStyles({
@@ -80,46 +81,46 @@ const Footer = (props: Props) => {
   }
   useEffect(() => {
     const handleAudioEnd = () => {
-        if (audioRef.current?.ended && duration > 0 && !repeat && !randomSong) {
-            const findIndexSong = props.ListData.findIndex((item) => item._id === currentSong?._id);
-            const findSong = props.ListData.filter((_item, index) => index === findIndexSong + 1);
+      if (audioRef.current?.ended && duration > 0 && !repeat && !randomSong) {
+        const findIndexSong = props.ListData.findIndex((item) => item._id === currentSong?._id);
+        const findSong = props.ListData.filter((_item, index) => index === findIndexSong + 1);
 
-            if (findSong.length > 0) {
-                dispatch(handGetCurrentSong(findSong[0]));
-                localStorage.setItem('song', JSON.stringify(findSong[0]));
-                console.log('Đây là lỗi Tự động chuyển');
-                dispatch(handChangeStateSong(false));
-                setTimeout(() => {
-                    dispatch(handChangeStateSong(true));
-                }, 500);
-            }
+        if (findSong.length > 0) {
+          dispatch(handGetCurrentSong(findSong[0]));
+          localStorage.setItem('song', JSON.stringify(findSong[0]));
+          console.log('Đây là lỗi Tự động chuyển');
+          dispatch(handChangeStateSong(false));
+          setTimeout(() => {
+            dispatch(handChangeStateSong(true));
+          }, 500);
         }
-        if (audioRef.current?.ended && duration > 0 && randomSong) {
-            const randomSong1 = props.ListData[Math.round(Math.random() * (props.ListData.length - 1))];
-            dispatch(handGetCurrentSong(randomSong1));
-            localStorage.setItem('song', JSON.stringify(randomSong1));
-            dispatch(handChangeStateSong(false));
-            setTimeout(() => {
-                dispatch(handChangeStateSong(true));
-            }, 500);
-        }
+      }
+      if (audioRef.current?.ended && duration > 0 && randomSong) {
+        const randomSong1 = props.ListData[Math.round(Math.random() * (props.ListData.length - 1))];
+        dispatch(handGetCurrentSong(randomSong1));
+        localStorage.setItem('song', JSON.stringify(randomSong1));
+        dispatch(handChangeStateSong(false));
+        setTimeout(() => {
+          dispatch(handChangeStateSong(true));
+        }, 500);
+      }
     };
 
     const handleLoadedMetadata = () => {
-        const audioDuration = audioRef.current?.duration;
-        if (!isNaN(audioDuration as number) && (audioDuration as number) > 0) {
-            setDuration(audioDuration as number);
-        }
+      const audioDuration = audioRef.current?.duration;
+      if (!isNaN(audioDuration as number) && (audioDuration as number) > 0) {
+        setDuration(audioDuration as number);
+      }
     };
 
     audioRef.current && audioRef.current.addEventListener("ended", handleAudioEnd);
     audioRef.current && audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
 
     return () => {
-        audioRef.current?.removeEventListener("ended", handleAudioEnd);
-        audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audioRef.current?.removeEventListener("ended", handleAudioEnd);
+      audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-}, [audioRef, duration, repeat, randomSong, currentSong, dispatch, props.ListData]);
+  }, [audioRef, duration, repeat, randomSong, currentSong, dispatch, props.ListData]);
 
   useEffect(() => {
     stateSong ? audioRef.current?.play() : audioRef.current?.pause();
@@ -170,6 +171,27 @@ const Footer = (props: Props) => {
   const handTurnVolume: any = () => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   }
+
+  const songLoca = localStorage.getItem('song')
+
+
+  useEffect(() => {
+    const history = localStorage.getItem('history')
+    if (!history) {
+      localStorage.setItem('history', JSON.stringify([songLoca]))
+    } else {
+      const historyArray = JSON.parse(history)
+      if (!historyArray.includes(songLoca)) {
+        historyArray.push(songLoca)
+        if (historyArray.length > 10) {
+          historyArray.shift()
+        }
+        localStorage.setItem('history', JSON.stringify(historyArray))
+      }
+    }
+  }, [songLoca])
+
+
   return (
     <div
       // onClick={() => {
@@ -212,7 +234,7 @@ const Footer = (props: Props) => {
                   <Link to={"#"}>
                     <div className="title-wrapper">
                       <span className="item-title title text-[13px] font-thin text-[#dadada]">
-                        {currentSong?.song_singer}
+                        {currentSong?.id_Singer.name}
                       </span>
                     </div>
                   </Link>

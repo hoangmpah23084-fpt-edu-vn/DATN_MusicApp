@@ -93,8 +93,8 @@ export const handGetOne = createAsyncThunk(
         return data.data;
     }
 );
-export const setSingerSong = createAsyncThunk('setSingerSong/Get', async (id) => {
-    const {data} = await axios.get(`http://localhost:8080/api/singer/${id}`).then(({data})=> data);
+export const setSingerSong = createAsyncThunk('setSingerSong/Get', async (id: string) => {
+    const { data } = await axios.get(`http://localhost:8080/api/singer/${id}`).then(({ data }) => data);
     console.log(data);
     return data.songs
 })
@@ -166,7 +166,7 @@ const songReducer = createSlice({
                 state.loadingSearch = false;
             })
             .addCase(setSingerSong.fulfilled, (state, action) => {
-                state.song = action.payload;  
+                state.song = action.payload;
             })
     },
 });
