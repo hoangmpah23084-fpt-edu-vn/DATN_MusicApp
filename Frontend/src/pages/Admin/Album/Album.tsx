@@ -321,6 +321,11 @@ const AlbumAdmin = () => {
 
   const handleSubmit = async (data: ifSong) => {
     if (albumSelected._id) {
+      const resp = await instanceAxios.put(
+        `http://localhost:8080/api/album/${albumSelected._id}`,
+        data
+      );
+      toast.success(resp.data.message);
     } else {
       try {
         const resp = await instanceAxios.post(
