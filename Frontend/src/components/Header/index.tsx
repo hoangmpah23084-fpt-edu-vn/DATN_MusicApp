@@ -156,7 +156,7 @@ const Header = (props: Props) => {
             {userLocal && token ? (
               <div className="dropdown-profile">
                 <Dropdown overlay={menu}>
-                  <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
+                  <div className="h-[40px] w-[40px] overflow-hidden flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
                     <img
                       src={dataUserOne?.image ? dataUserOne.image : "/user-default.3ff115bb.png"}
                       className="rounded-full"
