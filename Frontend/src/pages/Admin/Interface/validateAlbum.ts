@@ -18,5 +18,7 @@ export interface ifGenre {
     _id ?: string,
     name : string,
     list_songs ?: ifSong[],
-    id_artist ?: string
+}
+export interface ifAddGenre {
+    name : string,
 }

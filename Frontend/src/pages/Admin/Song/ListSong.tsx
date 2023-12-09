@@ -598,7 +598,7 @@ const ListSong = () => {
                 <strong>Tên bài hát:</strong> {dataOne?.song_name}
               </p>
               <p>
-                <strong>Ca sĩ:</strong> {dataOne?.id_Singer}
+                <strong>Ca sĩ:</strong> {dataOne?.id_Singer.name}
               </p>
               <p>
                 <strong>Link:</strong>{" "}

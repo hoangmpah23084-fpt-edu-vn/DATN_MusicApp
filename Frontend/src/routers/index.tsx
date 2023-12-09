@@ -7,9 +7,7 @@ import ListSong from "@/pages/Admin/Song/ListSong";
 import ListUser from "@/pages/Admin/User/ListUser";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter } from "react-router-dom";
-import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
-import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 import Album from "@/pages/Album/Album";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
@@ -78,22 +76,14 @@ export const router = createBrowserRouter([
         element: <ListSinger />,
       },
       {
-        path: "addgenre",
-        element: <Genre />
-      },
-      {
         path: "album",
         element: <AlbumAdmin />
       }
       ,
       {
-        path: "listgenre",
+        path: "genre",
         element: <ListGenre />
-      },
-      {
-        path: "UpdateGenre/:id",
-        element: <UpdateGenre />
-      },
+      }
     ],
   },
 ]);

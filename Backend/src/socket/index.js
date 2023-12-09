@@ -55,9 +55,14 @@ const ConnectSocket = (server) => {
     socket.on("autoNextSong", (value) => {
       socket.to(value.idroom).emit("serverAutoNextSong", value);
     });
-    // socket.on("setRandomSong", (value) => {
-    //   socket.to(value.idroom).emit("serverSetRandomSong", value);
-    // });
+    socket.on("leaveRoomAdmin", (value) => {
+      console.log("LeaveRoomAdmin event received:", value);
+      socket.in(value.idroom).emit("serverLeaveRoomAdmin", value);
+    });
+    socket.on("leaveRoomPerson", (value) => {
+      console.log("leaveRoomPerson event received:", value);
+      socket.in(value.idroom).emit("serverLeaveRoomPerson", value);
+    });
 
     socket.on("newMessage", async (value) => {
       const getOneRoom = await roomModel
