@@ -19,6 +19,7 @@ import { handGetSongSearch } from "@/store/Reducer/Song";
 
 import DetailUser from "../Modals/DetailUser";
 import ChangePassword from "../Modals/ChangePassword";
+import { GetUser, resetUser } from "@/store/Reducer/User";
 
 type Props = {
   sideBarRight: boolean;
@@ -40,7 +41,9 @@ const Header = (props: Props) => {
       const parseCurrentUser = JSON.parse(currentUser);
       setUserLocal(parseCurrentUser);
       console.log(parseCurrentUser);
+      dispatch(GetUser(parseCurrentUser._id))
     }
+
   }, []);
 
   const handleMenuClick = (e: any) => {
@@ -57,14 +60,15 @@ const Header = (props: Props) => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    dispatch(resetUser(null))
   };
 
 
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="account">
-        <Avatar size={42} icon={<UserOutlined />} />
-        <b className="ml-2">{dataUserOne?.fullName}</b>
+        <div className="flex items-center">  {dataUserOne?.image ? <img className='rounded-full w-12 h-12 object-cover' src={dataUserOne?.image} alt="" /> : <Avatar size={42} icon={<UserOutlined />} />}
+          <b className="ml-2">{dataUserOne?.fullName}</b></div>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="personal" onClick={() => setShowUser(!showUser)}>
@@ -154,7 +158,7 @@ const Header = (props: Props) => {
                 <Dropdown overlay={menu}>
                   <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
                     <img
-                      src="/user-default.3ff115bb.png"
+                      src={dataUserOne?.image ? dataUserOne.image : "/user-default.3ff115bb.png"}
                       className="rounded-full"
                       onClick={(e) => e.preventDefault()}
                     />
