@@ -10,7 +10,7 @@ import { BiCategory, BiSolidPlaylist } from "react-icons/bi";
 import { AiOutlineStar, AiOutlinePlus, AiOutlineHeart } from "react-icons/ai";
 import { MdLibraryMusic } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import "./index.scss";
+import "./index.css";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
 import { useState, Dispatch, SetStateAction } from "react";

@@ -15,6 +15,7 @@ const FavouritePage = () => {
     const token = localStorage.getItem('token')
 
     const { listFavourites } = useAppSelector((state: RootState) => state.favourites)
+    // console.log('listFavourites', listFavourites);
 
     const dispatch = useAppDispatch()
     useEffect(() => {

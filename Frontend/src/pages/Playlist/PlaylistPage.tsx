@@ -8,12 +8,13 @@ import { getOneAlbum } from "@/store/Reducer/albumReducer";
 import { ifAlbum } from "../Admin/Interface/validateAlbum";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  handChangeStateSong,
-  handGetCurrentSong,
+  setCurrentSong,
+  setStateSong,
 } from "@/store/Reducer/currentSong";
 import { toast } from "react-toastify";
 import { getPlaylist } from "@/store/Reducer/playlistReducer";
 import moment from "moment";
+import { setSongFavourite } from "@/store/Reducer/Song";
 
 const PlaylistPage = () => {
   const { id } = useParams<{ id?: string }>();
@@ -26,16 +27,17 @@ const PlaylistPage = () => {
       getOneAlbum(id as string)
         .then(({ data }) => {
           setAlbum(data);
-          dispatch(handChangeStateSong(false));
-          dispatch(handGetCurrentSong(data.list_song[0]));
-          setTimeout(() => dispatch(handChangeStateSong(true)), 500);
+          dispatch(setStateSong(false));
+          dispatch(setCurrentSong(data.list_song[0]));
+          setTimeout(() => dispatch(setStateSong(true)), 500);
         })
         .catch((error) => console.error(error));
   }, [id]);
 
   const handToggSong = () => {
     const state = currentSong.stateSong;
-    dispatch(handChangeStateSong(!state));
+    dispatch(setStateSong(!state));
+    dispatch(setSongFavourite(playlistDetail.playlistDetail?.list_song))
   };
 
   const fetchData = async () => {

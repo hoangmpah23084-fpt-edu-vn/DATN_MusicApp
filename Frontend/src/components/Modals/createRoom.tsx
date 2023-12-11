@@ -35,6 +35,7 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
       localStorage.removeItem('song');
       await dispatch(getRoom());
       toast.success(resp.payload.message);
+      localStorage.removeItem("song")
       navigate(`/liveroom/${resp.payload.data._id}`)
     } catch (error) {
       toast.error(error as string)

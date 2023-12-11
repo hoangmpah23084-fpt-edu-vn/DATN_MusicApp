@@ -1,0 +1,41 @@
+.list-items .card-image img {
+  transition: all 0.7s;
+}
+
+.list-items .card-image:hover img {
+  transform: scale(1.1);
+}
+
+.media:hover .hover-items {
+  display: block;
+}
+
+.media:hover .overlay {
+  display: block;
+}
+
+.media:hover .action-container {
+  display: block;
+}
+
+.order {
+  opacity: 0.4;
+  -webkit-text-stroke: 1px #fff;
+  font-size: 40px;
+  font-weight: 900;
+  color: transparent;
+  line-height: 1;
+  font-family: "Roboto", sans-serif;
+}
+
+.song-prefix .number {
+  font-size: 30px;
+  font-weight: 900;
+  color: transparent;
+  line-height: 1;
+  font-family: "Roboto", sans-serif;
+}
+
+.is-top-1 {
+  -webkit-text-stroke: 1px #4a90e2;
+}/*# sourceMappingURL=css.css.map */
