@@ -126,6 +126,8 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
   const debouncedClick = useDebouncedCallback(
     () => {
       audioRef.current && audioRef.current.play();
+      console.log("HELLO");
+      
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
         audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));

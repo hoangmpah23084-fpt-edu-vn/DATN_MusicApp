@@ -5,7 +5,7 @@ import SingerValidate from "../Schemas/singerSchema.js";
 
 export const getSingers = async (req, res) => {
   try {
-    const data = await Singer.find().populate("album").populate("songs");
+    const data = await Singer.find().populate("songs");
 
     console.log(data);
     if (!data) {

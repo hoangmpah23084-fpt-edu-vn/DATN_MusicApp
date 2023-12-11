@@ -19,7 +19,6 @@ const WantToListent = (props: Props) => {
       .get("http://localhost:8080/api/genre")
       .then(({ data }) => setGenre(data.data));
   }, []);
-  // console.log(genre);
 
   return (
     <>
@@ -35,13 +34,13 @@ const WantToListent = (props: Props) => {
               </div>
               <div className="carousel-wrapper relative ">
                 <div className="carousel flex -mx-[15px] overflow-hidden px-[15px]">
-                  <div className="hidden carousel-container w-full md:grid grid-rows-1 grid-flow-col gap-4 px-[15px]">
+                  <div className="carousel-container w-full grid grid-rows-1 grid-flow-col gap-4 px-[15px]">
                     {sliceItem?.map((itemList) => (
                       <SongGenre item={itemList} />
                     ))}
                   </div>
 
-                  <div className="block md:hidden">
+                  {/* <div className="block md:hidden">
                     <Swiper
                       modules={[Autoplay, Navigation]}
                       slidesPerView={2}
@@ -56,7 +55,7 @@ const WantToListent = (props: Props) => {
                         return (
                           <SwiperSlide key={slide._id}>
                               <div className="zm-card h-full">
-                                <Link to={`#`} className="">
+                                <Link to={`/`} className="">
                                   <div className="card-image overflow-hidden rounded-[5px]">
                                     <img
                                       className="rounded-[6px] aspect-square "
@@ -70,7 +69,7 @@ const WantToListent = (props: Props) => {
                         );
                       })}
                     </Swiper>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

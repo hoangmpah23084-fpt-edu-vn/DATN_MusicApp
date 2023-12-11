@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
-import { Avatar, Dropdown, Menu, message, Input } from "antd";
+import { Avatar, Dropdown, Menu, Input } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
-import { AiOutlineSearch, AiOutlineSetting } from "react-icons/ai";
+// import { AiOutlineSetting, AiOutlineSearch } from "react-icons/ai";
 import { GoDesktopDownload } from "react-icons/go";
+
+import {
+  AiOutlineSearch,
+  AiOutlineSetting,
+  AiOutlineUser,
+  AiOutlineEye,
+} from "react-icons/ai";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { ifUser } from "@/pages/Admin/Interface/User";
@@ -14,29 +21,35 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import ItemSong from "../Favourites/ItemSong";
 import { IApiSong } from "@/pages/Admin/Interface/ValidateSong";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { handGetSongSearch } from "@/store/Reducer/Song";
+
+import DetailUser from "../Modals/DetailUser";
+import ChangePassword from "../Modals/ChangePassword";
+import { GetUser, resetUser } from "@/store/Reducer/User";
 
 type Props = {
   sideBarRight: boolean;
   collapsed: boolean;
 };
 const Header = (props: Props) => {
-const [userLocal, setUserLocal] = useState<ifUser | null>(null);
-const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-const navigate = useNavigate();
-const dispatch = useAppDispatch()
-const token = localStorage.getItem('token')
-
-//check-signin
-useEffect(() => {
-  const currentUser = localStorage.getItem("user");
-  if (currentUser) {
-    const parseCurrentUser = JSON.parse(currentUser);
-    setUserLocal(parseCurrentUser);
-    console.log(parseCurrentUser);
-  }
-},[]);
+  const [userLocal, setUserLocal] = useState<ifUser | null>(null);
+  const { dataUserOne } = useAppSelector((state: RootState) => state.user);
+  // const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const [showUser, setShowUser] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const [showPass, setShowPass] = useState<boolean>(false);
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const currentUser = localStorage.getItem("user");
+    if (currentUser) {
+      const parseCurrentUser = JSON.parse(currentUser);
+      setUserLocal(parseCurrentUser);
+      console.log(parseCurrentUser);
+      dispatch(GetUser(parseCurrentUser._id));
+    }
+  }, []);
 
   const handleMenuClick = (e: any) => {
     if (e.key === "logout") {
@@ -47,48 +60,60 @@ useEffect(() => {
     }
   };
 
-  //change avt
-  const handleAvatarUpload = (info: any) => {
-    if (info.file.status === "done") {
-      // Lấy đường dẫn ảnh đã tải lên từ response
-      const imageUrl = info.file.response.imageUrl;
-      setAvatarUrl(imageUrl);
-
-      message.success("Tải ảnh lên thành công");
-    } else if (info.file.status === "error") {
-      message.error("Lỗi tải ảnh lên");
-    }
+  //logout
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    dispatch(resetUser(null));
   };
 
-//logout
-const handleLogout = () => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("token");
-};
-
-//dropdown-user
-const menu = (
-  <Menu onClick={handleMenuClick}>
-    <Menu.Item key="account">
-      <Avatar size={50} icon={<UserOutlined/>}/>
-      <b> dtv</b>
-    </Menu.Item>
-    <Menu.Divider style={{'background-color':'#3a2d4d' }}/>
-    <Menu.Item key="personal"><b>Cá nhân</b></Menu.Item>
-    <Menu.Item key="avt">Đổi ảnh đại diện</Menu.Item>
-    <Menu.Item key="pw">Đổi mật khẩu</Menu.Item>
-    <Menu.Divider style={{'background-color':'#3a2d4d' }}/>
-    <Menu.Item key="logout"><LogoutOutlined /> Đăng xuất</Menu.Item>
-  </Menu>
-);
-
-const { songSearch, } = useSelector((state: RootState) => state.Song)
-const items: MenuProps['items'] = songSearch.map((item: any) => {
-  return {
-    label: <Link to={`/singer/${item.id_Singer?._id}`}> <ItemSong item={item} active={true} /></ Link>,
-    key: item.id,
-  }
-})
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="account">
+        <div className="flex items-center">
+          {" "}
+          {dataUserOne?.image ? (
+            <img
+              className="rounded-full w-12 h-12 object-cover"
+              src={dataUserOne?.image}
+              alt=""
+            />
+          ) : (
+            <Avatar size={42} icon={<UserOutlined />} />
+          )}
+          <b className="ml-2">{dataUserOne?.fullName}</b>
+        </div>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="personal" onClick={() => setShowUser(!showUser)}>
+        <b className="flex items-center">
+          <AiOutlineUser className="mr-2" /> Chỉnh sửa cá nhân
+        </b>
+      </Menu.Item>
+      <Menu.Item key="pw" onClick={() => setShowPass(!showPass)}>
+        {" "}
+        <b className="flex items-center">
+          <AiOutlineEye className="mr-2" /> Đổi mật khẩu
+        </b>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="logout">
+        <LogoutOutlined /> Đăng xuất
+      </Menu.Item>
+    </Menu>
+  );
+  const { songSearch } = useSelector((state: RootState) => state.Song);
+  const items: MenuProps["items"] = songSearch.map((item: any) => {
+    return {
+      label: (
+        <Link to={`/singer/${item.id_Singer?._id}`}>
+          {" "}
+          <ItemSong item={item} active={true} />
+        </Link>
+      ),
+      key: item.id,
+    };
+  });
 
   const onHandleSearch = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -112,6 +137,10 @@ const items: MenuProps['items'] = songSearch.map((item: any) => {
 
   return (
     <>
+      {showUser && <DetailUser onShowModal={() => setShowUser(!showUser)} />}
+      {showPass && (
+        <ChangePassword onShowModal={() => setShowPass(!showPass)} />
+      )}
       <div
         className={`flex h-[70px] items-center fixed bg-[#1b2039] left-0 z-20 px-[15px] w-full  md:left-[240px] md:px-[59px] transition-all duration-700
         ${props.collapsed ? "md:left-[80px] md:w-[calc(100vw-80px)]" : ""}
@@ -133,7 +162,11 @@ const items: MenuProps['items'] = songSearch.map((item: any) => {
             <div className="search w-full lg:flex items-center relative justify-center dropdown-search max-h-[400px]">
               <Dropdown menu={{ items }} trigger={["click"]}>
                 <Input
-                  addonBefore={<AiOutlineSearch className={`bg-[#3bc8e7] text-[#fff] p-0 text-[20px]`}/>}
+                  addonBefore={
+                    <AiOutlineSearch
+                      className={`bg-[#3bc8e7] text-[#fff] p-0 text-[20px]`}
+                    />
+                  }
                   onChange={(
                     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
                   ) => onHandleSearch(e)}
@@ -145,15 +178,23 @@ const items: MenuProps['items'] = songSearch.map((item: any) => {
             </div>
           </div>
           <div className="flex text-[#fff]">
-            <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#3bc8e7] rounded-full">
+            <div className="block md:hidden h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
+              <img src="/logo.png" alt="" />
+            </div>
+
+            <div className="hidden md:flex h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
               <AiOutlineSetting className=" w-10 h-[20px]" />
             </div>
             {userLocal && token ? (
               <div className="dropdown-profile">
                 <Dropdown overlay={menu}>
-                  <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
+                  <div className="h-[40px] w-[40px] overflow-hidden flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
                     <img
-                      src="/user-default.3ff115bb.png"
+                      src={
+                        dataUserOne?.image
+                          ? dataUserOne.image
+                          : "/user-default.3ff115bb.png"
+                      }
                       className="rounded-full"
                       onClick={(e) => e.preventDefault()}
                     />
@@ -161,7 +202,7 @@ const items: MenuProps['items'] = songSearch.map((item: any) => {
                 </Dropdown>
               </div>
             ) : (
-              <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee] bg-[#2f2739] rounded-full ml-5">
+              <div className="flex px-[24px] py-[8px] items-center justify-center text-[#fff] bg-[#3bc8e7] rounded-full ml-2 md:ml-5">
                 <Link to="http://localhost:5173/signin">Đăng nhập</Link>
               </div>
             )}

@@ -15,7 +15,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaUserSecret } from "react-icons/fa";
 
 
 const gridStyle: React.CSSProperties = {
@@ -68,8 +68,11 @@ const Dashboard = () => {
 
   return (
    <div className="h-[1000px] mt-[32px]">
+ <header className="fixed top-0  flex items-center justify-between z-40 bg-[#F4F5F7] pt-2 w-[100%] pb-2.5 ">
+        <span className="font-bold text-xl ml-10 py-[12px]">Thống kê</span>
 
-<Row className="rowgap-vbox" gutter={[16, 0]}>
+      </header>
+<Row className="rowgap-vbox mt-[60px]" gutter={[16, 0]}>
       
            <Col xs={24} sm={24} md={12} lg={6} xl={6}>
            <Card bordered={false} className="criclebox">
@@ -87,6 +90,29 @@ const Dashboard = () => {
                        className="flex items-center text-[25px] text-[gray]"
                      >
                        <GiLoveSong  className='text-[20px] mr-[8px]' /> {statisticList.totalSong}
+                     </Title>
+                   </div>
+                 </Col>
+               </Row>
+             </Card.Grid>
+           </Card>
+         </Col>
+         <Col xs={24} sm={24} md={12} lg={6} xl={6}>
+           <Card bordered={false} className="criclebox">
+             <Card.Grid
+               style={{ ...gridStyle, borderBottom: `5px solid blue` }}
+             >
+               <Row>
+                 <Col xs={10}>
+                   <div className="min-w-[256px] text-left">
+                     <div className="mb-[10px] w-fit text-[16px] font-bold text-[gray]">
+                       Ca sĩ
+                     </div>
+                     <Title
+                       level={3}
+                       className="flex items-center text-[25px] text-[gray]"
+                     >
+                       <FaUserSecret className='text-[20px] mr-[8px]' /> {statisticList.totalSinger}
                      </Title>
                    </div>
                  </Col>

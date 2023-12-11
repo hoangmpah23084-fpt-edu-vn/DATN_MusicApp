@@ -7,6 +7,7 @@ import {
 import { Layout, Menu, Button } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import type { MenuProps } from 'antd';
+import { AiOutlineBars } from "react-icons/ai";
 import {
   PieChartOutlined,
 } from '@ant-design/icons';
@@ -38,9 +39,15 @@ const LayoutAdmin = () => {
   const items: MenuItem[] = [
     getItem(<Link to="/admin">Thống kê</Link>, '1', <PieChartOutlined />),
     getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />),
+<<<<<<< HEAD
     getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />),
     getItem(<Link to="/admin/listUser">User</Link>, '4', <CiUser />),
 
+=======
+    getItem(<Link to="/admin/album">Album</Link>, '99', <CiMusicNote1 />),
+    getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />),
+    getItem(<Link to="/admin/genre">Thể Loại</Link>, '1', <AiOutlineBars />)
+>>>>>>> f99a067b73d618930be0f1ef0919f50b12709d18
 
   ];
   return (

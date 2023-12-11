@@ -11,7 +11,7 @@ const SingerValidate = new joi.object({
     "string.empty": "image is not allowed to be empty",
   }),
   description: joi.string(),
-  album: joi.array().items(joi.string()),
+  // album: joi.array().items(joi.string()),
   songs: joi.array().items(joi.string()),
 });
 

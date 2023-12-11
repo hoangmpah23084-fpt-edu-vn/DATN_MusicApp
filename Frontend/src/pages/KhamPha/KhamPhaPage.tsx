@@ -1,8 +1,3 @@
-import ClientSidebar from "@/components/SidebarMenu";
-import type { FC } from "react";
-import { Outlet } from "react-router-dom";
-import { GrPrevious, GrNext } from "react-icons/gr";
-import { BsFillPlayCircleFill } from "react-icons/bs";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 import "./css.scss";
@@ -10,7 +5,11 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
-import { Advertisement, BXHSong, HeardRecently, SuggestSong, WantToListent } from "./Component";
+import { Advertisement, SuggestSong, WantToListent } from "./Component";
+import { useEffect, useState } from "react";
+import ListSongItem from "@/components/List-songs-item";
+import { ifSong } from "../Admin/Interface/ValidateSong";
+import SuggSkeleton from "./Skeleton/Sugg.skeleton";
 
 const img_slide = [
   { id: 0, img: "/Image/b0fa9fbfce103d1dce15d73aaceb68be.jpg" },
@@ -22,6 +21,23 @@ const img_slide = [
 ];
 
 const KhamPhaPage = () => {
+  const [historySongState, setHistorySongState] = useState<ifSong[]>()
+  const historySong = localStorage.getItem('history')
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(true)
+    if (historySong) {
+      const parsedHistory = JSON.parse(historySong) as ifSong[];
+      if (parsedHistory) {
+        const newData = parsedHistory.map((item: any) => (JSON.parse(item)))
+        setHistorySongState([...newData])
+        setTimeout(() => {
+          setLoading(false)
+        }, 2000);
+      }
+    }
+  }, [historySong]);
+
   return (
     <>
       <div className="zm-section bg-[#14182A]">
@@ -68,24 +84,22 @@ const KhamPhaPage = () => {
               </div>
               <div className="playlist-section home-recent mt-12">
                 <div className="home-recent-title flex justify-between mb-[20px]">
-                  <h3 className="text-xl font-semibold capitalize ">Gần đây</h3>
-                  <Link
-                    to={`#`}
-                    className="text-[#ccc] uppercase text-xs font-light flex"
-                  >
-                    Tất cả
-                    <GrNext />
-                  </Link>
+                  {historySongState && <h3 className="text-xl font-semibold capitalize ">Gần đây</h3>}
                 </div>
-                
-              {/* Start Component HeardRecently */}
-              <HeardRecently />
-              {/* End Component HeardRecently */}
+                {/* Start Component HeardRecently */}
+                <div className="column">
+                  <div className="list grid grid-cols-1 md:grid-cols-3 -mx-[15px]">
+                    {
+                      loading ? (historySongState?.map((_, index) => <SuggSkeleton section="suggested" key={index} />)) : (historySongState?.map((item, index) => <ListSongItem item={item} section="suggested" key={index} />))
+                    }
+                  </div>
+                </div>
+                {/* End Component HeardRecently */}
               </div>
               {/* Start Component SuggestSong */}
               <SuggestSong />
               {/* End Component SuggestSong */}
-              
+
               {/* Start Component WantToListent */}
               <WantToListent />
               {/* End Component WantToListent */}
@@ -93,13 +107,11 @@ const KhamPhaPage = () => {
               {/* Start Component WantToListent */}
               {/* <BXHSong /> */}
               {/* End Component WantToListent */}
-             
+
               {/* Start Component WantToListent */}
               <Advertisement />
               {/* End Component WantToListent */}
-              <div className="">
-                Nhung
-              </div>
+              
             </div>
           </div>
         </main>

@@ -6,10 +6,10 @@ export interface ISinger {
     age: number,
     images: string[],
     description: string,
-    album: {
-        _id?: string;
-        name: string;
-    },
+    // album: {
+    //     _id?: string;
+    //     name: string;
+    // },
     songs:  {
         _id?: string;
         name: string;

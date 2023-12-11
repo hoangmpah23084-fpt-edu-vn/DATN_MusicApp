@@ -21,11 +21,7 @@ const Signup = () => {
     }
     
 
-    const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>(
-        {
-            resolver: yupResolver(SignupSchema)
-        }
-    )
+    const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>()
     
     const navigate = useNavigate()
     const dispatch = useAppDispatch()

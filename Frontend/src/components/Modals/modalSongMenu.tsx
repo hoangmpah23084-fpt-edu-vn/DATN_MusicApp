@@ -87,7 +87,7 @@ const ModalSongMenu = ({ song }: any) => {
       {isShowModalCreate && (
         <ModalCreatePlaylist onShowModal={handleShowModalCreatePlaylist} />
       )}
-      <div className="absolute z-[9999] bg-[#34224f] rounded-xl w-72 right-16 mt-72">
+      <div className="absolute z-[9999] bg-[#161b32] rounded-xl w-72 right-16 mt-72">
         <header className="flex items-center py-3 ml-2 pr-10 ">
           <img
             src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg"

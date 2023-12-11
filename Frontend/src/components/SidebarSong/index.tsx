@@ -29,7 +29,7 @@ const SidebarSong = (props: Props) => {
   const { token } = useAppSelector((state: RootState) => state.user);
 
   const dispatch = useAppDispatch();
-  const {song} = useAppSelector(({ Song }) => Song);
+  const { song } = useAppSelector(({ Song }) => Song);
   const classes = useStyles();
   useEffect(() => {
     dispatch(handGetSong());
@@ -55,8 +55,8 @@ const SidebarSong = (props: Props) => {
 
   return (
     <div
-      className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"
-        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc px-[8px]`}
+      className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px] px-[8px]" : "fixed translate-x-[400px] w-0"
+        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc `}
     >
       <div className="w-full h-full">
         <div className="w-full h-[70px] fjc">
@@ -118,7 +118,7 @@ const SidebarSong = (props: Props) => {
           <div className="w-full h-[100%] overflow-y-scroll">
             {song &&
               song?.length > 0 &&
-              song.map((item: ifSong, index : number) => {
+              song.map((item: ifSong, index: number) => {
                 return (
                   <div
                     key={index}
@@ -168,11 +168,11 @@ const SidebarSong = (props: Props) => {
                       </div>
                       <div className="w-[48%] ml-[2%] h-full">
                         <div className="w-full h-[50%]">
-                          <h1 className="font-semibold">{chekcSubString(item.song_name as string, 15)}</h1>
+                          <h1 className="font-semibold">{chekcSubString(item.song_name as string, 13)}</h1>
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">
-                            {item.id_Singer.name}
+                            {item.id_Singer?.name}
                           </p>
                         </div>
                       </div>

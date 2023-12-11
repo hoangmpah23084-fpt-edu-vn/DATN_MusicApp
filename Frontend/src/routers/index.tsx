@@ -7,9 +7,7 @@ import ListSong from "@/pages/Admin/Song/ListSong";
 import ListUser from "@/pages/Admin/User/ListUser";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
 import { createBrowserRouter } from "react-router-dom";
-import Genre from "@/pages/Admin/genre/Genre";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
-import UpdateGenre from "@/pages/Admin/genre/UpdateGenre";
 import Album from "@/pages/Album/Album";
 import Signnup from "@/pages/Register/Signup";
 import Signin from "@/pages/Register/Login";
@@ -22,9 +20,7 @@ import DSong from "@/pages/DSong";
 import Room from "@/pages/Room/room";
 import RoomPage from "@/pages/Room/RoomPage";
 import PlaylistPage from "@/pages/Playlist/PlaylistPage";
-import AddAlbum from "@/pages/Admin/Album/AddAlbum";
-import ListAlbum from "@/pages/Admin/Album/ListAlbum";
-import UpdateAlbum from "@/pages/Admin/Album/UpdateAlbum";
+import HistorySong from "@/pages/HistorySong/history";
 import ListUser2 from "@/pages/Admin/User/ListUser2";
 export const router = createBrowserRouter([
   //todo FE
@@ -50,7 +46,8 @@ export const router = createBrowserRouter([
       { path: "album/:id", element: <DetailAlbum /> },
       { path: "singer/:id", element: <DetailSinger /> },
       { path: "music_charts", element: <MusicCharts /> },
-      { path: "dsong", element: <DSong /> }
+      { path: "dsong", element: <DSong /> },
+      { path: "history", element: <HistorySong /> }
     ],
   },
   {
@@ -79,22 +76,14 @@ export const router = createBrowserRouter([
         element: <ListSinger />,
       },
       {
-        path: "addgenre",
-        element: <Genre />
-      },
-      {
         path: "album",
         element: <AlbumAdmin />
       }
       ,
       {
-        path: "listgenre",
+        path: "genre",
         element: <ListGenre />
-      },
-      {
-        path: "UpdateGenre/:id",
-        element: <UpdateGenre />
-      },
+      }
     ],
   },
 ]);
