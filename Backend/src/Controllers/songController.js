@@ -67,7 +67,6 @@ export const get_Songs = async (req, res) => {
       query = {
         $or: [
           { song_name: { $regex: search, $options: "i" } },
-          { song_singer: { $regex: search, $options: "i" } },
         ],
       };
     }
