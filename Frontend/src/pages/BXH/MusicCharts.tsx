@@ -56,7 +56,7 @@ const MusicCharts = (props: Props) => {
                 {/* End .name_song */}
                 <div className='text-gray-500 font-semibold min-w-[300px] '>
                   <p>
-                  {song.song_name}
+                  {song?.song_name}
                   </p>
                 </div>
                 <div className='time_song '>
