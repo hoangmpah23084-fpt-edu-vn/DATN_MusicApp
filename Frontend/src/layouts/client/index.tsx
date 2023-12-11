@@ -36,9 +36,6 @@ const LayoutClient = () => {
           localStorage.setItem("song", JSON.stringify(payload.data[0]));
           dispatch(setCurrentSong(payload.data[0]));
         }
-        // if (payload.data.length > 0) {
-
-        // }
       });
     }
     void fetchData();
