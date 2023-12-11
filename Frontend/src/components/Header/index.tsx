@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Avatar, Dropdown, Menu, message, Input } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
-import { AiOutlineSetting } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineSetting } from "react-icons/ai";
 import { GoDesktopDownload } from "react-icons/go";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -73,11 +73,11 @@ const menu = (
       <Avatar size={50} icon={<UserOutlined/>}/>
       <b> dtv</b>
     </Menu.Item>
-    <Menu.Divider style={{ 'background-color':'#3a2d4d' }}/>
+    <Menu.Divider style={{'background-color':'#3a2d4d' }}/>
     <Menu.Item key="personal"><b>Cá nhân</b></Menu.Item>
     <Menu.Item key="avt">Đổi ảnh đại diện</Menu.Item>
     <Menu.Item key="pw">Đổi mật khẩu</Menu.Item>
-    <Menu.Divider style={{ 'background-color':'#3a2d4d' }}/>
+    <Menu.Divider style={{'background-color':'#3a2d4d' }}/>
     <Menu.Item key="logout"><LogoutOutlined /> Đăng xuất</Menu.Item>
   </Menu>
 );
