@@ -7,7 +7,7 @@ import Skeletontable from "../Skeleton";
 
 const ListSong = ({ listSong }: any) => {
   const { loading } = useAppSelector((state: RootState) => state.favourites)
-  const { token } = useAppSelector((state: RootState) => state.user);
+  const token = localStorage.getItem('token')
   return (
     <>
 

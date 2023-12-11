@@ -38,7 +38,7 @@ const ItemSong = ({ item, active }: props) => {
         : "hover:bg-[#b4b4b32d]"
       } 
       `}>
-      <td scope="row" className="py-2 font-medium flex items-center min-w-[320px]" >
+      <td scope="row" className="py-2 font-medium flex items-center min-w-[300px]" >
         <span className="px-3">
           <input
             type="checkbox"
@@ -92,7 +92,7 @@ const ItemSong = ({ item, active }: props) => {
           </Link>
         </div>
       </td>
-      <td className="py-2 min-w-[150px]" >
+      <td className="py-2 min-w-[120px]" >
         <Link
           to={`#`}
           className="text-sm text-[#86828c] hover:text-[#9b4de0] hover:border-b-[#9b4de0] hover:border-b-[1px]"

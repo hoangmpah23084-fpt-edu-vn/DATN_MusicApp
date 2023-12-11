@@ -1,4 +1,5 @@
 import * as Yup from "yup"
+import { ifSong } from "./ValidateSong"
 
 export interface ISinger {
     _id: string,
@@ -6,14 +7,7 @@ export interface ISinger {
     age: number,
     images: string[],
     description: string,
-    // album: {
-    //     _id?: string;
-    //     name: string;
-    // },
-    songs:  {
-        _id?: string;
-        name: string;
-    }
+    songs: ifSong[]
 }
 
 export const formArtist = Yup.object({

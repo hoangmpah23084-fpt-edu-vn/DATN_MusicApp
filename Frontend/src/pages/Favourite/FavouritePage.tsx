@@ -11,13 +11,17 @@ import { RootState } from "@/store/store"
 
 
 const FavouritePage = () => {
+
+    const token = localStorage.getItem('token')
+
     const { listFavourites } = useAppSelector((state: RootState) => state.favourites)
-    console.log('listFavourites', listFavourites);
 
     const dispatch = useAppDispatch()
     useEffect(() => {
-        dispatch(getFavourite())
-    }, [])
+        if (token) {
+            dispatch(getFavourite())
+        }
+    }, [token])
 
     return (<div className="text-white w-full ">
         <h1 className="flex items-center text-[40px] font-bold mx-16 mt-20">Thư viện <span className="ml-2 mt-1 hover:opacity-70 cursor-pointer ease-in-out duration-300"><AiFillPlayCircle /></span></h1>
