@@ -3,10 +3,11 @@ import { Link, useParams } from "react-router-dom";
 import { AiOutlineHeart, AiOutlinePause } from "react-icons/ai";
 import { BsThreeDots, BsFillPlayFill } from "react-icons/bs";
 import { handChangeStateSong } from "@/store/Reducer/currentSong";
-import ListSong from "@/components/Favourites/ListSong";
 import { useEffect } from "react";
 import { handleGetOne } from "@/store/Reducer/singerReducer";
 import { RootState } from "@/store/store";
+import { ifSong } from "../Admin/Interface/ValidateSong";
+import ItemSong from "@/components/Favourites/ItemSong";
 
 
 const DetailSinger = () => {
@@ -25,22 +26,25 @@ const DetailSinger = () => {
         if (id) {
             dispatch(handleGetOne(id));
         }
+
+        console.log("dataOne", dataOne);
+
     }, [id]);
     useEffect(() => {
         const handlePopState = () => {
-          // Custom logic for handling the back arrow event
-          console.log('Back arrow pressed');
-          // Add your custom logic here
+            // Custom logic for handling the back arrow event
+            console.log('Back arrow pressed');
+            // Add your custom logic here
         };
-    
+
         // Add event listener for the popstate event
         window.addEventListener('popstate', handlePopState);
-    
+
         // Cleanup function to remove the event listener when the component unmounts
         return () => {
-          window.removeEventListener('popstate', handlePopState);
+            window.removeEventListener('popstate', handlePopState);
         };
-      }, []); 
+    }, []);
 
 
     return (
@@ -140,7 +144,22 @@ const DetailSinger = () => {
                                 </div>
                             </div>
                             <div className="playlist-content ml-[330px]">
-                                <ListSong listSong={dataOne?.songs} />
+                                <table className="w-full text-sm text-left">
+                                    <thead className="text-xs text-[#86828c] uppercase ">
+                                        <tr className="border-b-[#2c2436] border-b-[1px] ">
+                                            <th scope="col" className="pl-[40px] py-[15px]">
+                                                BÀI HÁT
+                                            </th>
+                                            <th scope="col" className="py-[15px]">
+                                                Thể loại
+                                            </th>
+                                            <th className="w-56 text-right pr-10 py-[15px]">THỜI GIAN</th>
+                                        </tr>
+                                    </thead>
+                                    {dataOne?.songs.map((item: ifSong) => {
+                                        return <ItemSong item={item} />
+                                    })}
+                                </table>
                             </div>
                         </div>
                     </div>

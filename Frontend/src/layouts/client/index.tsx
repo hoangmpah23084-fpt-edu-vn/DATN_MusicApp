@@ -32,11 +32,11 @@ const LayoutClient = () => {
   useEffect(() => {
     const song = localStorage.getItem("song");
     async function fetchData() {
-      await dispatch(handGetSong()).then(({payload}) => {
+      await dispatch(handGetSong()).then(({ payload }) => {
         if (song) {
-        const parseSong = JSON.parse(song);
-        dispatch(setCurrentSong(parseSong));
-        }else{
+          const parseSong = JSON.parse(song);
+          dispatch(setCurrentSong(parseSong));
+        } else {
           localStorage.setItem("song", JSON.stringify(payload.data[0]));
           dispatch(setCurrentSong(payload.data[0]));
         }
@@ -47,6 +47,8 @@ const LayoutClient = () => {
     }
     void fetchData();
   }, []);
+
+
   const token = localStorage.getItem("token");
   useEffect(() => {
     dispatch(setToken(token));
@@ -125,7 +127,7 @@ const LayoutClient = () => {
                   <span className="ml-3 text-[12px]">Thư Viện</span>
                 </Link>
               </li>
-             
+
               <li className="w-[25%] justify-center items-center">
                 <Link
                   to={"/album"}
