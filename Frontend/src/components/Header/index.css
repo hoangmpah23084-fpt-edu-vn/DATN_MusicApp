@@ -22,3 +22,7 @@
 .ant-input-group-addon {
     background-color: #3bc8e7 !important;
 }
+
+.ant-dropdown .ant-dropdown-menu {
+    background-color: rgb(41, 52, 103) !important;
+}

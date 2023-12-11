@@ -111,9 +111,7 @@ const KhamPhaPage = () => {
               {/* Start Component WantToListent */}
               <Advertisement />
               {/* End Component WantToListent */}
-              <div className="">
-                Nhung
-              </div>
+              
             </div>
           </div>
         </main>

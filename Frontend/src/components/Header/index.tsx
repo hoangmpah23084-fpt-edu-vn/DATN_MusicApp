@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import { Avatar, Dropdown, Menu, Input } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
+// import { AiOutlineSetting, AiOutlineSearch } from "react-icons/ai";
+import { GoDesktopDownload } from "react-icons/go";
 
-import { AiOutlineSearch, AiOutlineSetting, AiOutlineUser, AiOutlineEye } from "react-icons/ai";
+import {
+  AiOutlineSearch,
+  AiOutlineSetting,
+  AiOutlineUser,
+  AiOutlineEye,
+} from "react-icons/ai";
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { ifUser } from "@/pages/Admin/Interface/User";
@@ -26,24 +33,22 @@ type Props = {
   collapsed: boolean;
 };
 const Header = (props: Props) => {
-
   const [userLocal, setUserLocal] = useState<ifUser | null>(null);
-  const { dataUserOne } = useAppSelector((state: RootState) => state.user)
+  const { dataUserOne } = useAppSelector((state: RootState) => state.user);
   // const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [showUser, setShowUser] = useState<boolean>(false)
+  const [showUser, setShowUser] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const [showPass, setShowPass] = useState<boolean>(false)
-  const token = localStorage.getItem('token');
+  const [showPass, setShowPass] = useState<boolean>(false);
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const currentUser = localStorage.getItem("user");
     if (currentUser) {
       const parseCurrentUser = JSON.parse(currentUser);
       setUserLocal(parseCurrentUser);
       console.log(parseCurrentUser);
-      dispatch(GetUser(parseCurrentUser._id))
+      dispatch(GetUser(parseCurrentUser._id));
     }
-
   }, []);
 
   const handleMenuClick = (e: any) => {
@@ -55,26 +60,42 @@ const Header = (props: Props) => {
     }
   };
 
-
   //logout
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    dispatch(resetUser(null))
+    dispatch(resetUser(null));
   };
-
 
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="account">
-        <div className="flex items-center">  {dataUserOne?.image ? <img className='rounded-full w-12 h-12 object-cover' src={dataUserOne?.image} alt="" /> : <Avatar size={42} icon={<UserOutlined />} />}
-          <b className="ml-2">{dataUserOne?.fullName}</b></div>
+        <div className="flex items-center">
+          {" "}
+          {dataUserOne?.image ? (
+            <img
+              className="rounded-full w-12 h-12 object-cover"
+              src={dataUserOne?.image}
+              alt=""
+            />
+          ) : (
+            <Avatar size={42} icon={<UserOutlined />} />
+          )}
+          <b className="ml-2">{dataUserOne?.fullName}</b>
+        </div>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="personal" onClick={() => setShowUser(!showUser)}>
-        <b className="flex items-center"><AiOutlineUser className='mr-2' /> Chỉnh sửa cá nhân</b>
+        <b className="flex items-center">
+          <AiOutlineUser className="mr-2" /> Chỉnh sửa cá nhân
+        </b>
       </Menu.Item>
-      <Menu.Item key="pw" onClick={() => setShowPass(!showPass)}> <b className="flex items-center"><AiOutlineEye className='mr-2' /> Đổi mật khẩu</b></Menu.Item>
+      <Menu.Item key="pw" onClick={() => setShowPass(!showPass)}>
+        {" "}
+        <b className="flex items-center">
+          <AiOutlineEye className="mr-2" /> Đổi mật khẩu
+        </b>
+      </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout">
         <LogoutOutlined /> Đăng xuất
@@ -93,7 +114,6 @@ const Header = (props: Props) => {
       key: item.id,
     };
   });
-
 
   const onHandleSearch = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -118,18 +138,22 @@ const Header = (props: Props) => {
   return (
     <>
       {showUser && <DetailUser onShowModal={() => setShowUser(!showUser)} />}
-      {showPass && <ChangePassword onShowModal={() => setShowPass(!showPass)} />}
+      {showPass && (
+        <ChangePassword onShowModal={() => setShowPass(!showPass)} />
+      )}
       <div
         className={`flex h-[70px] items-center fixed bg-[#1b2039] left-0 z-20 px-[15px] w-full  md:left-[240px] md:px-[59px] transition-all duration-700
         ${props.collapsed ? "md:left-[80px] md:w-[calc(100vw-80px)]" : ""}
-        ${props.collapsed && props.sideBarRight
+        ${
+          props.collapsed && props.sideBarRight
             ? "md:w-[calc(100vw-450px)]"
             : ""
-          }
-        ${props.sideBarRight
+        }
+        ${
+          props.sideBarRight
             ? "md:w-[calc(100vw-570px)]"
             : "md:w-[calc(100vw-240px)] "
-          }`}
+        }`}
       >
         <div className="flex items-center z-1 w-[100%] justify-between">
           <div className="flex flex-1 md:flex-none">
@@ -138,7 +162,11 @@ const Header = (props: Props) => {
             <div className="search w-full lg:flex items-center relative justify-center dropdown-search max-h-[400px]">
               <Dropdown menu={{ items }} trigger={["click"]}>
                 <Input
-                  addonBefore={<AiOutlineSearch className={`bg-[#3bc8e7] text-[#fff] p-0 text-[20px]`} />}
+                  addonBefore={
+                    <AiOutlineSearch
+                      className={`bg-[#3bc8e7] text-[#fff] p-0 text-[20px]`}
+                    />
+                  }
                   onChange={(
                     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
                   ) => onHandleSearch(e)}
@@ -150,15 +178,23 @@ const Header = (props: Props) => {
             </div>
           </div>
           <div className="flex text-[#fff]">
-            <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#3bc8e7] rounded-full">
+            <div className="block md:hidden h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
+              <img src="/logo.png" alt="" />
+            </div>
+
+            <div className="hidden md:flex h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
               <AiOutlineSetting className=" w-10 h-[20px]" />
             </div>
             {userLocal && token ? (
               <div className="dropdown-profile">
                 <Dropdown overlay={menu}>
-                  <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
+                  <div className="h-[40px] w-[40px] overflow-hidden flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
                     <img
-                      src={dataUserOne?.image ? dataUserOne.image : "/user-default.3ff115bb.png"}
+                      src={
+                        dataUserOne?.image
+                          ? dataUserOne.image
+                          : "/user-default.3ff115bb.png"
+                      }
                       className="rounded-full"
                       onClick={(e) => e.preventDefault()}
                     />
@@ -166,7 +202,7 @@ const Header = (props: Props) => {
                 </Dropdown>
               </div>
             ) : (
-              <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee] bg-[#2f2739] rounded-full ml-5">
+              <div className="flex px-[24px] py-[8px] items-center justify-center text-[#fff] bg-[#3bc8e7] rounded-full ml-2 md:ml-5">
                 <Link to="http://localhost:5173/signin">Đăng nhập</Link>
               </div>
             )}

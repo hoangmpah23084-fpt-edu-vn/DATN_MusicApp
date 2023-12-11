@@ -68,8 +68,11 @@ const Dashboard = () => {
 
   return (
    <div className="h-[1000px] mt-[32px]">
+ <header className="fixed top-0  flex items-center justify-between z-40 bg-[#F4F5F7] pt-2 w-[100%] pb-2.5 ">
+        <span className="font-bold text-xl ml-10 py-[12px]">Thống kê</span>
 
-<Row className="rowgap-vbox" gutter={[16, 0]}>
+      </header>
+<Row className="rowgap-vbox mt-[60px]" gutter={[16, 0]}>
       
            <Col xs={24} sm={24} md={12} lg={6} xl={6}>
            <Card bordered={false} className="criclebox">

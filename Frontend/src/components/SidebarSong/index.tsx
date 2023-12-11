@@ -55,8 +55,8 @@ const SidebarSong = (props: Props) => {
 
   return (
     <div
-      className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px]" : "fixed translate-x-[400px] w-0"
-        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc px-[8px]`}
+      className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px] px-[8px]" : "fixed translate-x-[400px] w-0"
+        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc `}
     >
       <div className="w-full h-full">
         <div className="w-full h-[70px] fjc">
@@ -172,7 +172,7 @@ const SidebarSong = (props: Props) => {
                         </div>
                         <div className="w-full h-[50%]">
                           <p className="text-gray-500 text-[12px]">
-                            {item.id_Singer.name}
+                            {item.id_Singer?.name}
                           </p>
                         </div>
                       </div>
