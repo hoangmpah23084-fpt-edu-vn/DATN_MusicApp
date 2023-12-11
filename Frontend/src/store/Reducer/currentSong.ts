@@ -28,11 +28,11 @@ const currentSong = createSlice({
         },
         setCurrentSong:(state, action: PayloadAction<any>) => {
             state.currentSong = action.payload; 
-            console.log('NewPayload : ', action.payload);
+            // console.log('NewPayload : ', action.payload);
         },
         setStateSong:(state, action: PayloadAction<boolean>) => {
             state.stateSong = action.payload; 
-            console.log('NewPayload : ', action.payload);
+            // console.log('NewPayload : ', action.payload);
         },
     },
     extraReducers: builder => {
@@ -52,5 +52,5 @@ const currentSong = createSlice({
             })
     }
 })
-export const { setDataLocal,setCurrentSong, setStateSong } = currentSong.actions
+export const { setDataLocal,setCurrentSong, setStateSong } = currentSong.actions;
 export default currentSong.reducer

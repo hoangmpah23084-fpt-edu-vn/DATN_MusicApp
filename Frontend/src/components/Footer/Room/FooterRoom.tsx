@@ -352,6 +352,14 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
     })
   }
   useEffect(() => {
+    socket.on("serverSetRandomSong", value => {
+      if (value) {
+        setRandomSong(!value.stateRandom);
+        value.stateRandom == false && setRepeat(false);
+      }
+    })
+  },[])
+  useEffect(() => {
     if (idRoom) {
       socket.on('serverSetRandomSong', value => {
         if (value) {

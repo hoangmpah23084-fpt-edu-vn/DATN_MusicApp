@@ -10,9 +10,7 @@ const ListSong = ({ listSong }: any) => {
   const { token } = useAppSelector((state: RootState) => state.user);
   return (
     <>
-
       {
-
         token ?
           loading ? <Skeletontable /> :
             listSong?.length !== 0 ? <table className="w-full text-sm text-left">
@@ -28,7 +26,7 @@ const ListSong = ({ listSong }: any) => {
                 </tr>
               </thead>
               {listSong?.map((item: ifSong) => {
-                return <ItemSong item={item} />
+                return <ItemSong item={item} listSong={listSong} />
               })}
             </table> : <h1 className="flex items-center justify-center"><span className="mx-4 text-3xl"><BsMusicNoteList /></span>Chưa có bài hát nào</h1>
           : <h1 className="flex items-center justify-center"><span className="mx-4 text-3xl"><BsMusicNoteList /></span>Chưa đăng nhập</h1>

@@ -102,7 +102,12 @@ export const setSingerSong = createAsyncThunk('setSingerSong/Get', async (id: st
 const songReducer = createSlice({
     name: "Song",
     initialState,
-    reducers: {},
+    reducers: {
+        setSongFavourite : (state, action) => {
+           console.log(action.payload);
+           state.song = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(handAddSong.pending, (state) => {
@@ -170,4 +175,6 @@ const songReducer = createSlice({
             })
     },
 });
+
+export const { setSongFavourite } = songReducer.actions;
 export default songReducer.reducer;

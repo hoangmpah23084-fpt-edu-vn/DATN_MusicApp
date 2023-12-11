@@ -63,6 +63,10 @@ const ConnectSocket = (server) => {
       console.log("leaveRoomPerson event received:", value);
       socket.in(value.idroom).emit("serverLeaveRoomPerson", value);
     });
+    socket.on("setRandomSong", (value) => {
+      console.log("leaveRoomPerson event received:", value);
+      socket.in(value.idroom).emit("serverSetRandomSong", value);
+    });
 
     socket.on("newMessage", async (value) => {
       const getOneRoom = await roomModel
