@@ -8,6 +8,7 @@ import '../css.scss'
 import { toast } from 'react-toastify';
 import { Socket } from 'socket.io-client';
 import { useDebouncedCallback } from 'use-debounce';
+import currentSong from '@/store/Reducer/currentSong';
 
 type Props = {
   listSong: ifSong[],
@@ -16,6 +17,7 @@ type Props = {
 }
 const SearchSongInRoom = ({listSong, setListSong, socket}: Props) => {
 const [listDataSearch , setListDataSearch] = useState<ifSong[] | []>([]);
+const {id} = useParams();
   
 const debounced = useDebouncedCallback(
   async (value) => {
@@ -28,7 +30,6 @@ const debounced = useDebouncedCallback(
   500,
   { maxWait: 2000 }
 );
-  const {id} = useParams();
   const handAddSong = async (item : ifSong) => {
     if (listSong.find((element : ifSong) => element._id == item._id)) {
       toast.warning("Bài hát Đã Tồn tại")
@@ -39,7 +40,7 @@ const debounced = useDebouncedCallback(
         toast.success(data.message);
       });
     }
-    socket.emit('addSongInListRoom', {
+    socket.emit('addSongInListRoom', { 
       idroom: id,
       song: item,
       listSong: listSong,

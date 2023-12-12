@@ -16,7 +16,8 @@ const ConnectSocket = (server) => {
     console.log("connected socket io success");
     socket.on("joinRoom", (value) => {
       //todo value => idRoom
-      socket.join(value);
+      socket.join(value.idroom);
+      socket.in(value.idroom).emit("joinRoomServer", value);
     });
     socket.on("setUser", (value) => {
       //todo value => User
@@ -42,11 +43,11 @@ const ConnectSocket = (server) => {
       socket.to(value.idroom).emit("repeatServer", value);
     });
     socket.on("clientStartSongSideBar", (value) => {
-      console.log(value);
+      // console.log(value);
       socket.to(value.idroom).emit("serverStartSongSideBar", value);
     });
     socket.on("deleteSongInRoom", (value) => {
-      console.log(value);
+      // console.log(value);
       socket.to(value.idroom).emit("serverDeleteSongInRoom", value);
     });
     socket.on("addSongInListRoom", (value) => {
@@ -56,16 +57,20 @@ const ConnectSocket = (server) => {
       socket.to(value.idroom).emit("serverAutoNextSong", value);
     });
     socket.on("leaveRoomAdmin", (value) => {
-      console.log("LeaveRoomAdmin event received:", value);
+      // console.log("LeaveRoomAdmin event received:", value);
       socket.in(value.idroom).emit("serverLeaveRoomAdmin", value);
     });
     socket.on("leaveRoomPerson", (value) => {
-      console.log("leaveRoomPerson event received:", value);
+      // console.log("leaveRoomPerson event received:", value);
       socket.in(value.idroom).emit("serverLeaveRoomPerson", value);
     });
     socket.on("setRandomSong", (value) => {
-      console.log("leaveRoomPerson event received:", value);
+      // console.log("leaveRoomPerson event received:", value);
       socket.in(value.idroom).emit("serverSetRandomSong", value);
+    });
+    socket.on("takeSongWhenJoin", (value) => {
+      // console.log("leaveRoomPerson event received:", value);
+      socket.in(value.idroom).emit("setverTakeSongWhenJoin", value);
     });
 
     socket.on("newMessage", async (value) => {

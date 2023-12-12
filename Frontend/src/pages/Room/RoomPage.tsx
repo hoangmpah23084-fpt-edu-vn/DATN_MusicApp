@@ -50,6 +50,8 @@ const RoomPage = (props: Props) => {
     }
     void fetchData();
   }, [dispatch]);
+  console.log(currentSong);
+  
   useEffect(() => {
     const getSongLocal = localStorage.getItem('song');
     if (getSongLocal) {
@@ -65,7 +67,15 @@ const RoomPage = (props: Props) => {
       }
     }
   }, []);
-  // current.song
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const convert = JSON.parse(user); 
+      if (convert._id != admin._id  && admin._id) {
+      socket.emit("takeSongWhenJoin", {idroom : id, song : currentSong})  
+      } 
+    }
+  },[])
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
       setListSong(data.data.listSong);
@@ -236,7 +246,7 @@ const RoomPage = (props: Props) => {
                   <div className="media-left mr-[10px] grow-0 shrink-0">
                     <div className="w-[40px] h-[40px]">
                       <img
-                        className="rounded-[5px]"
+                        className="rounded-[5px] h-full"
                         src={`${currentSong?.song_image[0]}`}
                         alt=""
                       />

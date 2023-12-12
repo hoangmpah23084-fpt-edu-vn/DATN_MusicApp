@@ -41,7 +41,7 @@ const Message = ({listMess, socket, setListMess}: Props) => {
       <form className="comment-input mt-[16px] flex items-center" >
         <div className="avatar w-[40px] h-[40px]">
           <img
-            className="rounded-full"
+            className="rounded-full h-full"
             src="https://res.cloudinary.com/dsbiugddk/image/upload/v1699500124/DATN/lqlyeilscdksm54zgzsj.jpg"
             alt=""
           />

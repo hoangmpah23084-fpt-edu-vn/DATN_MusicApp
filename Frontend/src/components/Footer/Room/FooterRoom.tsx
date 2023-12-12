@@ -407,7 +407,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                       <img
                         src={currentSong?.song_image[0]}
                         alt=""
-                        className="w-[100%] rounded-[5px]"
+                        className="w-[100%] rounded-[5px] h-full"
                       />
                     </div>
                   </div>
