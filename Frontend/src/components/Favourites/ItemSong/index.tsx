@@ -14,7 +14,7 @@ import { setSongFavourite } from "@/store/Reducer/Song";
 type props = {
   item: ifSong,
   active?: boolean,
-  listSong: ifSong[]
+  listSong?: ifSong[]
 }
 
 const ItemSong = ({ item, active, listSong }: props) => {
@@ -31,11 +31,11 @@ const ItemSong = ({ item, active, listSong }: props) => {
     }
   }, []);
 
-  const handTakeFavourite = (id : string | undefined) => {
+  const handTakeFavourite = (id: string | undefined) => {
     dispatch(setSongFavourite(listSong));
     stateSong && dataLocal?._id == id
-    ? activeSong(dispatch, item, 'stopPause')
-    : activeSong(dispatch, item, "start")
+      ? activeSong(dispatch, item, 'stopPause')
+      : activeSong(dispatch, item, "start")
   }
 
   return (
