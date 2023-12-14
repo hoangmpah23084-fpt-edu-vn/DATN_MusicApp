@@ -126,8 +126,8 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
   const debouncedClick = useDebouncedCallback(
     () => {
       audioRef.current && audioRef.current.play();
-      console.log("HELLO");
-      
+      console.log("Play Server");
+
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
         audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
@@ -144,7 +144,6 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
           const preValue = value.stateSong;
           dispatch(setStateSong(!value.stateSong))
           if (!preValue) {
-            console.log("Play Server");
             debouncedClick();
             localStorage.setItem('song', JSON.stringify(currentSong));
           }else{
@@ -275,15 +274,26 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
       audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, [audioRef, duration, repeat, currentSong, dispatch, ListData, randomSong, idRoom]);
+
+  const debouncedRandomSong = useDebouncedCallback(
+    // function
+    () => {
+      audioRef.current?.play();
+    },
+    // delay in ms
+    1000
+  );
+
   useEffect(() => {
     if (idRoom) {
       socket.on("randomSongServer", value => {
-        dispatch(setCurrentSong(value.song))
         const handAutoRandom = () => {
           localStorage.setItem('song', JSON.stringify(value.song));
-          setTimeout(() => {
-            audioRef.current?.play();
-          }, 500);
+          // setTimeout(() => {
+          //   audioRef.current?.play();
+          // }, 500);
+          dispatch(setCurrentSong(value.song))
+          debouncedRandomSong();
         }
         audioRef.current && audioRef.current?.addEventListener("ended", handAutoRandom);
         audioRef.current && audioRef.current?.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -351,6 +361,14 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
       stateRandom : preRandom
     })
   }
+  useEffect(() => {
+    socket.on("serverSetRandomSong", value => {
+      if (value) {
+        setRandomSong(!value.stateRandom);
+        value.stateRandom == false && setRepeat(false);
+      }
+    })
+  },[])
   useEffect(() => {
     if (idRoom) {
       socket.on('serverSetRandomSong', value => {

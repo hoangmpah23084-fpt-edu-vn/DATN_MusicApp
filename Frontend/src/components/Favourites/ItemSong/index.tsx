@@ -1,8 +1,6 @@
-import { AiFillHeart, AiOutlineArrowRight } from "react-icons/ai";
+import { AiOutlineArrowRight } from "react-icons/ai";
 import { BsMusicNoteBeamed, BsThreeDots, BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { TfiVideoClapper } from "react-icons/tfi";
-import { PiMicrophoneStageDuotone } from "react-icons/pi";
 import "./index.css";
 import { useEffect, useState } from "react";
 import ModalSongMenu from "../../Modals/modalSongMenu";
@@ -10,14 +8,16 @@ import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { activeSong } from "@/constane/song.const";
 import { ActiveFavourites, ActiveFavouritesTitle, onhandleFavourite } from "@/constane/favourites.const";
-import { setDataLocal } from "@/store/Reducer/currentSong";
+import { setCurrentSong } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
+import { setSongFavourite } from "@/store/Reducer/Song";
 type props = {
   item: ifSong,
-  active?: boolean
+  active?: boolean,
+  listSong: ifSong[]
 }
 
-const ItemSong = ({ item, active }: props) => {
+const ItemSong = ({ item, active, listSong }: props) => {
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch()
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
@@ -27,9 +27,16 @@ const ItemSong = ({ item, active }: props) => {
     const getSongLocal = localStorage?.getItem("song") || "";
     if (getSongLocal) {
       const currentlocal: ifSong = JSON?.parse(getSongLocal);
-      dispatch(setDataLocal(currentlocal))
+      dispatch(setCurrentSong(currentlocal))
     }
   }, []);
+
+  const handTakeFavourite = (id : string | undefined) => {
+    dispatch(setSongFavourite(listSong));
+    stateSong && dataLocal?._id == id
+    ? activeSong(dispatch, item, 'stopPause')
+    : activeSong(dispatch, item, "start")
+  }
 
   return (
     <tr className={`item border-b-[#2c2436] border-b-[1px] flex-1 cursor-pointer ease-in-out duration-300 first-letter:
@@ -38,7 +45,7 @@ const ItemSong = ({ item, active }: props) => {
         : "hover:bg-[#b4b4b32d]"
       } 
       `}>
-      <td scope="row" className="py-2 font-medium flex items-center min-w-[320px]" >
+      <td scope="row" className="py-2 font-medium flex items-center min-w-[300px]" >
         <span className="px-3">
           <input
             type="checkbox"
@@ -63,11 +70,7 @@ const ItemSong = ({ item, active }: props) => {
             `}>
             <div className="flex gap-[20px] h-full justify-center">
               <div>
-                <div onClick={() =>
-                  stateSong && dataLocal?._id == item._id
-                    ? activeSong(dispatch, item, 'stopPause')
-                    : activeSong(dispatch, item, "start")
-                }>
+                <div onClick={() => handTakeFavourite(item._id)}>
                   {dataLocal &&
                     stateSong &&
                     dataLocal?._id == item._id ?
@@ -92,7 +95,7 @@ const ItemSong = ({ item, active }: props) => {
           </Link>
         </div>
       </td>
-      <td className="py-2 min-w-[150px]" >
+      <td className="py-2 min-w-[120px]" >
         <Link
           to={`#`}
           className="text-sm text-[#86828c] hover:text-[#9b4de0] hover:border-b-[#9b4de0] hover:border-b-[1px]"

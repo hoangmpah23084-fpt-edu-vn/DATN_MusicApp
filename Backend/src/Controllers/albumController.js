@@ -48,22 +48,12 @@ export const getAll_Album = async (req, res) => {
 
 export const get_AlbumById = async (req, res) => {
   try {
-    const data = await Album.findById(req.params.id).populate("id_singer");
-    const dataListSong = [];
-    if(data){
-      for (const item of data.id_singer.songs) {
-        const findData = await SongSchame.findById(item);
-        dataListSong.push(findData);
-      }
-      data.list_song = [...dataListSong];
-      if (!data) {
-        return res.status(400).json({ message: "Get Album By Id Failed" });
-      }
+    const data = await Album.findById(req.params.id).populate("id_singer").populate("list_song");
+    
       return res.status(200).json({
         message: "Get Album By Id Success",
         data,
       });
-    }
    
   } catch (error) {
     console.log(error);
@@ -107,6 +97,80 @@ export const delete_Album = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       message: error,
+    });
+  }
+};
+
+
+export const addSongToAlbum = async (req, res) => {
+  try {
+    const { id_song } = req.body;
+    if (!id_song) {
+      return res.status(400).json({
+        message: "Bài hát không hợp lệ",
+      });
+    }
+
+    const isMatch = await Album.findOne({
+      _id: req.params.id,
+      list_song: { $in: id_song },
+    });
+
+    if (isMatch) {
+      return res.json({
+        message: "Bài hát đã có trong album",
+      });
+    }
+    const data = await Album.findByIdAndUpdate(req.params.id, {
+      $addToSet: {
+        list_song: id_song,
+      },
+    });
+
+    return res.status(200).json({
+      message: "Thêm bài hát thành công",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const removeSongToAlbum = async (req, res) => {
+  try {
+    const { id_song } = req.body;
+    if (!id_song) {
+      return res.json({
+        message: "Bài hát không hợp lệ",
+      });
+    }
+
+    const isMatch = await Album.findOne({
+      _id: req.params.id,
+      list_song: { $in: id_song },
+    });
+
+    if (!isMatch) {
+      return res.json({
+        message: "Bài hát không trong playlist",
+      });
+    }
+
+    const data = await Album.findByIdAndUpdate(req.params.id, {
+      $pull: {
+        list_song: id_song,
+      },
+    });
+
+    return res.status(200).json({
+      message: "Xóa bài hát thành công",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
     });
   }
 };

@@ -17,7 +17,7 @@ const Playlist = () => {
     const [isShowModalCreate, setIsShowModalCreate] = useState<boolean>(false)
     const [isShowModalDelete, setIsShowModalDelete] = useState<boolean>(false)
     const [playlistSelected, setPlaylistSelected] = useState<any>({})
-
+    const token = localStorage.getItem('token')
 
     const getPlaylist = useAppSelector(({ playlist }) => playlist);
     const dispatch = useAppDispatch();
@@ -34,9 +34,11 @@ const Playlist = () => {
     }
 
     useEffect(() => {
-        dispatch(getPlaylists())
-        fetchData()
-    }, [])
+        if (token) {
+            dispatch(getPlaylists())
+            fetchData()
+        }
+    }, [token])
 
     const handleShowModal = () => {
         setIsShowModalCreate(!isShowModalCreate)
@@ -45,7 +47,7 @@ const Playlist = () => {
         setPlaylistSelected(item)
         setIsShowModalDelete(!isShowModalDelete)
     }
-    
+
 
     return (
         <div>
@@ -70,33 +72,33 @@ const Playlist = () => {
                                 <div className="rounded-[5px]  overflow-hidden room-item--img relative">
                                     {
                                         item.list_song.length > 3 ? <div className="grid grid-cols-2">
-                                            <div><img 
+                                            <div><img
 
                                                 src={item?.list_song[0]?.song_image[0]}
                                                 alt=""
                                             /></div>
-                                            <div><img 
+                                            <div><img
                                                 src={item?.list_song[1]?.song_image[0]}
                                                 alt=""
                                             /></div>
-                                            <div ><img 
+                                            <div ><img
                                                 src={item?.list_song[2]?.song_image[0]}
                                                 alt=""
                                             /></div>
-                                            <div><img 
+                                            <div><img
                                                 src={item?.list_song[3]?.song_image[0]}
                                                 alt=""
                                             /></div>
-                                        </div>  :  item.list_song?.length >= 1 ?  <div>
-                                            <img 
-                                            className="w-full"
-                                               src={item?.list_song[0].song_image[0]}
+                                        </div> : item.list_song?.length >= 1 ? <div>
+                                            <img
+                                                className="w-full"
+                                                src={item?.list_song[0].song_image[0]}
                                                 alt=""
                                             />
                                         </div> : <div>
-                                            <img 
-                                            className="w-full opacity-[0.7]"
-                                               src="https://media.istockphoto.com/id/1175435360/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-ghi-ch%C3%BA-nh%E1%BA%A1c-minh-h%E1%BB%8Da-vect%C6%A1.jpg?s=612x612&w=0&k=20&c=3w_KqtRKtiQ_Dgwy0pqGrx8ys4WkktOSSfjS36VI10A="
+                                            <img
+                                                className="w-full opacity-[0.7]"
+                                                src="https://media.istockphoto.com/id/1175435360/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-ghi-ch%C3%BA-nh%E1%BA%A1c-minh-h%E1%BB%8Da-vect%C6%A1.jpg?s=612x612&w=0&k=20&c=3w_KqtRKtiQ_Dgwy0pqGrx8ys4WkktOSSfjS36VI10A="
                                                 alt=""
                                             />
                                         </div>

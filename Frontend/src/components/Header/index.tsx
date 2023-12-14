@@ -98,22 +98,34 @@ const Header = (props: Props) => {
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout">
-        <LogoutOutlined /> Đăng xuất
+        <LogoutOutlined className="mr-2" /> Đăng xuất
       </Menu.Item>
     </Menu>
   );
   const { songSearch } = useSelector((state: RootState) => state.Song);
-  const items: MenuProps["items"] = songSearch.map((item: any) => {
-    return {
-      label: (
-        <Link to={`/singer/${item.id_Singer?._id}`}>
-          {" "}
-          <ItemSong item={item} active={true} />
-        </Link>
-      ),
-      key: item.id,
-    };
-  });
+  const items = songSearch.map((item: any) => ({
+    label: (
+      <Link to={`/singer/${item.id_Singer?._id}`}>
+        {" "}
+        <ItemSong item={item} active={true} />
+      </Link>
+    ),
+    key: item.id,
+  }));
+
+  const dropdownMenu = (
+    <Menu>
+      {items.length > 0 ? (
+        items.map((menuItem) => (
+          <Menu.Item key={menuItem.key}>{menuItem.label}</Menu.Item>
+        ))
+      ) : (
+        <Menu.Item disabled>
+          <span style={{ color: 'white' }}>Không tìm thấy bài hát</span>
+        </Menu.Item>
+      )}
+    </Menu>
+  );
 
   const onHandleSearch = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -144,23 +156,21 @@ const Header = (props: Props) => {
       <div
         className={`flex h-[70px] items-center fixed bg-[#1b2039] left-0 z-20 px-[15px] w-full  md:left-[240px] md:px-[59px] transition-all duration-700
         ${props.collapsed ? "md:left-[80px] md:w-[calc(100vw-80px)]" : ""}
-        ${
-          props.collapsed && props.sideBarRight
+        ${props.collapsed && props.sideBarRight
             ? "md:w-[calc(100vw-450px)]"
             : ""
-        }
-        ${
-          props.sideBarRight
+          }
+        ${props.sideBarRight
             ? "md:w-[calc(100vw-570px)]"
             : "md:w-[calc(100vw-240px)] "
-        }`}
+          }`}
       >
         <div className="flex items-center z-1 w-[100%] justify-between">
           <div className="flex flex-1 md:flex-none">
             <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] hidden items-center h-[40px] md:flex" />
             <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px] hidden md:block" />
             <div className="search w-full lg:flex items-center relative justify-center dropdown-search max-h-[400px]">
-              <Dropdown menu={{ items }} trigger={["click"]}>
+              <Dropdown overlay={dropdownMenu} trigger={['click']}>
                 <Input
                   addonBefore={
                     <AiOutlineSearch

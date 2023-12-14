@@ -1,7 +1,3 @@
-.ant-dropdown{
-    min-width: 250px !important;
-}
-
 .ant-dropdown .ant-dropdown-menu{
     background-color: #fff !important; 
     padding:5px 20px !important;

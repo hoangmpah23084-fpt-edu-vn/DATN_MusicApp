@@ -26,8 +26,6 @@
   border-radius: 0;
   margin: 0;
   width: 100%;
-  // border-left: 3px solid #2b213a;
-
   margin-inline: 0;
   margin-block: 0;
   height: 50px;
@@ -40,7 +38,6 @@
 :where(.css-dev-only-do-not-override-1ck3jst).ant-menu-light .ant-menu-item-selected {
   background-color: #3bc8e7;
   color: #fff;
-  // border-left: 3px solid #9b4de0;
 }
 
 :where(.css-dev-only-do-not-override-1ck3jst).ant-menu .ant-menu-item-divider {
@@ -71,5 +68,4 @@
   margin: 0 auto;
   border-radius: 50%;
   margin-top: 50px;
-}
-
+}/*# sourceMappingURL=index.css.map */
