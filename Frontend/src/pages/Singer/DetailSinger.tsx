@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Link, useParams } from "react-router-dom";
 import { AiOutlineHeart, AiOutlinePause } from "react-icons/ai";
 import { BsThreeDots, BsFillPlayFill } from "react-icons/bs";
-import { handChangeStateSong } from "@/store/Reducer/currentSong";
+import { handChangeStateSong, setStateSong } from "@/store/Reducer/currentSong";
 import { useEffect } from "react";
 import { handleGetOne } from "@/store/Reducer/singerReducer";
 import { RootState } from "@/store/store";
@@ -16,7 +16,7 @@ const DetailSinger = () => {
     const { dataOne } = useAppSelector((state: RootState) => state.singer)
     const handToggSong = () => {
         const state = currentSong.stateSong;
-        dispatch(handChangeStateSong(!state));
+        dispatch(setStateSong(!state));
     };
 
     const param = useParams()

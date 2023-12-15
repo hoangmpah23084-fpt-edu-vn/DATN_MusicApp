@@ -57,6 +57,8 @@ const DSong = (props: Props) => {
             setLoading(true);
         });
     }, []);
+    console.log(song);
+    
 
     const handToggle = useCallback((item : ifSong) => {
         const prevState = stateSong;
@@ -79,8 +81,7 @@ const DSong = (props: Props) => {
             {/* overflow-y-scroll */}
             <section className='music_charts min-h-[300px] px-10 overflow-y-hidden'>
             {
-                // 26B7E7
-                    loading ? song.map((item : any, index : number) => {
+                    loading && song.length > 0 ? song.map((item : any, index : number) => {
                         return <div className={`content rounded-md px-5 py-21 hover:cursor-default`} key={index} >
                             <div className={`item flex items-center space-x-5 border-b border-[#393243] hover:bg-[#14182A] ${currentSong && item._id == currentSong._id ? 'bg-[#14182A]' : ''}`}>
                                 <div className='song group/play grid grid-cols-[35%50%5%] gap-x-5 py-2 w-full items-center hover:rounded-md'>
@@ -94,13 +95,13 @@ const DSong = (props: Props) => {
                                                 {item.song_name}
                                             </p>
                                             <p className="text-gray-500 font-semibold text-xs pb-2">
-                                                {item.id_Singer.name}
+                                                {item.id_Singer?.name}
                                             </p>
                                         </div>
                                     </div>
                                     <div className='text-gray-500 font-semibold min-w-[300px] '>
                                         <p className='text-sm'>
-                                            {item.id_Genre.name}
+                                            {item.id_Genre?.name}
                                         </p>
                                     </div>
                                     <div className='time_song '>

@@ -353,7 +353,7 @@ export const handUpdateCurrentSongInRoom = async (req, res) => {
     await roomModel.findByIdAndUpdate(
       { _id: id },
       {
-        $addToSet: { currentSongInRoom: req.body.id_song },
+        $addToSet: { currentSongInRoom: req.body._id },
       }
     );
     return res.status(200).json({

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./css.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FiRadio } from "react-icons/fi";
@@ -42,31 +42,12 @@ const RoomPage = (props: Props) => {
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
   const { id } = useParams();
-
-
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong());
     }
     void fetchData();
   }, [dispatch]);
-  console.log(currentSong);
-  
-  useEffect(() => {
-    const getSongLocal = localStorage.getItem('song');
-    if (getSongLocal) {
-      const convertSong = JSON.parse(getSongLocal);
-      console.log(convertSong);
-      if (convertSong) {
-        dispatch(setCurrentSong(convertSong))
-      }
-    } else {
-      if (current.song.length > 0) {
-        localStorage.setItem('song', JSON.stringify(current.song[0]));
-        dispatch(setCurrentSong(current.song[0]))
-      }
-    }
-  }, []);
   useEffect(() => {
     const user = localStorage.getItem('user');
     if (user) {
@@ -78,6 +59,10 @@ const RoomPage = (props: Props) => {
   },[])
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
+      console.log(data.data.currentSongInRoom[0]);
+      dispatch(setCurrentSong(data.data.currentSongInRoom[0]))
+      localStorage.setItem('song', JSON.stringify(data.data.currentSongInRoom[0]));
+      console.log(currentSong);
       setListSong(data.data.listSong);
       setAdmin(data.data.isAdminGroup);
       setListMess([...listMess, ...data.data.listMessages]);
@@ -115,7 +100,7 @@ const RoomPage = (props: Props) => {
       try {
         const resp = await axios.get(`http://localhost:8080/api/room/${id}`)
         if (!JSON.stringify(resp.data.data.memberGroup).includes(user?._id)) {
-          toast.success("Bạn không đủ tư cách để ngồi đây.")
+          toast.success("Xin vui lòng rời khỏi phòng.")
           // navigate("/")
         }
       } catch (error) {
@@ -124,50 +109,79 @@ const RoomPage = (props: Props) => {
       }
     }
   }
-  const handLeaveRoom = () => {
+  
+  // console.log(user._id == admin._id,user, admin);
+
+  const handLeaveRoom = useCallback(() => {
     const user = JSON.parse(localStorage.getItem("user") as string)
-    if (user._id == admin._id) {
-      console.log("Sending leaveRoomAdmin event");
-      socket.emit('leaveRoomAdmin', {
-        user : user._id,
-        admin : admin._id,
-        idroom : id,
-      })
-      toast.success("Chủ phòng đã rời phòng thành công")
-      leaveRoom(id as string);
-      navigate('/')
-    }else{
-      socket.emit('leaveRoomPerson', {
-        user : user._id,
-        admin : admin._id,
-        idroom : id,
-      })
-      leaveRoom(id as string);
-      toast.success("Thành viên đã rời phòng thành công")
-      navigate('/');
+    if (admin) {
+      if (user._id == admin._id) {
+        console.log("Sending leaveRoomAdmin event");
+        socket.emit('leaveRoomAdmin', {
+          user : user._id,
+          admin : admin._id,
+          idroom : id,
+        })
+        socket.emit("disconnectClient");
+        toast.success("Chủ phòng đã rời phòng thành công");
+        leaveRoom(id as string);
+        navigate('/')
+      }else{
+        socket.emit('leaveRoomPerson', {
+          user : user._id,
+          admin : admin._id,
+          idroom : id,
+        })
+        socket.emit("disconnectClient")
+        leaveRoom(id as string);
+        navigate('/');
+      }
+      sessionStorage.removeItem("playbackState")
     }
-  }
+    sessionStorage.removeItem("playbackState");
+    // axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
+    //   setlistMember(data.data.memberGroup);
+    // });
+  },[navigate, admin])
+  
+  useEffect(() => {
+    if (id) {
+      socket.on("resetUser", value => {
+        if (value) {
+          axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
+            setlistMember(data.data.memberGroup);
+          })
+        }
+      })
+    }
+  },[]);
   useEffect(() => {
     const handleLeaveRoomAdmin = (value : any) => {
       if (value) {
+        // axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
+        //   setlistMember(data.data.memberGroup);
+        // })
         toast.success("Phòng không còn tồn tại vì chủ phòng đã rời");
-        navigate('/')
       }
+      navigate('/')
     };
+    // sessionStorage.removeItem("playbackState");
     socket.on("serverLeaveRoomAdmin", handleLeaveRoomAdmin);
   },[]);
   // , [socket]
   useEffect(() => {
-    const handleLeaveRoomPerson = (value : any) => {
-      console.log("LeaveRoomPerson event received:", value);
+    socket.on("serverLeaveRoomPerson", (value) => {
       if (value) {
-        // const user = JSON.parse(localStorage.getItem("user") as string);
-        toast.success("Thành viên trong phòng đã rời")
+        console.log("Set lại datas");
+        axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
+          const sliceData = data.data.memberGroup.slice(0, 1);
+          setlistMember(sliceData)
+        })
+      toast.success("Thành viên đã rời phòng thành công")
       }
-    };
-    socket.on("serverLeaveRoomPerson", handleLeaveRoomPerson);
+    });
   },[]);
-  // , [socket]
+  // console.log("out useffect : " + listMember.length);
 
   return (
     <div>
@@ -232,7 +246,7 @@ const RoomPage = (props: Props) => {
               <div className="stats flex ml-[32px] gap-[20px] text-[18px]">
                 <div className="view flex justify-center items-center gap-[10px]">
                   <MdPerson />
-                  <span>2</span>
+                  <span>{listMember.length}</span>
                 </div>
               </div>
             </div>
