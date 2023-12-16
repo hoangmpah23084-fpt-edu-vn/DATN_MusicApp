@@ -32,7 +32,7 @@ const ModalCreatePlaylist = ({ onShowModal }: IProps) => {
 
   }) => {
     try {
-      const resp: any = await instanceAxios.post('/playlist',data)
+      const resp: any = await instanceAxios.post('/playlist', data)
       toast.success(resp.data.message);
       navigate(`/playlist/${resp.data.data._id}`)
     } catch (error) {
@@ -47,12 +47,12 @@ const ModalCreatePlaylist = ({ onShowModal }: IProps) => {
 
   return (
     <>
-      <div className="bg-slate-950/80 absolute w-full h-full text-white z-50">
+      <div className=" absolute w-full h-full text-white z-[99999]">
         <div className="fixed flex justify-center items-center z-[9999] w-full p-4 overflow-x-hidden overflow-y-auto  md:inset-0  max-h-full">
           <div className="relative w-[320px] max-w-md max-h-full">
             <div
               ref={ref}
-              className="relative bg-[#34224f] rounded-lg shadow dark:bg-gray-700 "
+              className="relative  bg-[#34224f] rounded-lg shadow dark:bg-gray-700 "
             >
               <button
                 onClick={() => onShowModal()}
@@ -78,9 +78,9 @@ const ModalCreatePlaylist = ({ onShowModal }: IProps) => {
                       placeholder="Nhập tên playlist mới"
                       className="bg-[#1B2039] mb-[32px] text-white text-sm rounded-[999px] block w-full p-2.5"
                     />
-                   
+
                   </div>
-              
+
                   <button disabled={errors.playlist_name ? true : false} className={`${errors.playlist_name ? "opacity-[0.7]" : ""} w-full text-white bg-[#3BC8E7]  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center `}>
                     Tạo mới
                   </button>
