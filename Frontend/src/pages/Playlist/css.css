@@ -1,0 +1,12 @@
+.playlist-content .card-image img {
+  transition: all 0.7s;
+}
+
+.playlist-content .media-left:hover img {
+  transform: scale(1.1);
+}
+
+.playlist-content .media-left:hover .overlay,
+.playlist-content .media-left:hover .action-container {
+  display: block;
+}/*# sourceMappingURL=css.css.map */

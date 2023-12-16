@@ -1,6 +1,6 @@
 import { Validate_Song } from "../Schemas/songSchemas.js";
 import SongSchame from "../Models/songModel.js";
-import Artist from "../Models/artistModel.js";
+import Singer from "../Models/singer.js";
 import Genre from "../Models/genreModel.js";
 
 export const createSong = async (req, res) => {
@@ -19,8 +19,8 @@ export const createSong = async (req, res) => {
       });
     }
     /* update artist */
-    await Artist.findByIdAndUpdate(
-      data.id_Artists,
+    await Singer.findByIdAndUpdate(
+      data.id_Singer,
       {
         $addToSet: { songs: data._id },
       },
@@ -34,12 +34,6 @@ export const createSong = async (req, res) => {
       },
       { new: true }
     );
-
-    /* update genre */
-    await Genre.findByIdAndUpdate(body.id_Genre, {
-      $addToSet: { list_songs: data._id },
-    });
-
     return res.status(200).json({
       message: "Create Song successfully",
       data,
@@ -52,11 +46,36 @@ export const createSong = async (req, res) => {
 };
 
 export const get_Songs = async (req, res) => {
+  const {
+    _limit = 10,
+    _page = 1,
+    search,
+    _sort = "total_like",
+    _order = "asc",
+  } = req.query;
+  const options = {
+    limit: _limit,
+    page: _page,
+    sort: {
+      [_sort]: _order === "desc" ? -1 : 1,
+    },
+    populate: ["id_Singer", "id_Genre"],
+  };
   try {
-    const data = await SongSchame.find();
+    let query = {};
+    if (search) {
+      query = {
+        $or: [
+          { song_name: { $regex: search, $options: "i" } },
+        ],
+      };
+    }
+    const data = await SongSchame.paginate(query, options);
+    const total = await SongSchame.find();
     return res.status(200).json({
       message: "Get song list Successfully",
-      data,
+      totalSongList: total.length,
+      data: data.docs,
     });
   } catch (error) {
     return res.status(500).json({
@@ -95,21 +114,21 @@ export const update_Song = async (req, res) => {
     );
     /* update artist */
     //todo loai bỏ id song khỏi Artist
-    await Artist.findByIdAndUpdate(data.id_Artists, {
+    await Singer.findByIdAndUpdate(data.id_Singer, {
       $pull: { songs: data._id },
     });
-    const artistId = data.id_Artists;
-    await Artist.findByIdAndUpdate(artistId, {
+    const SingerId = data.id_Singer;
+    await Singer.findByIdAndUpdate(SingerId, {
       $addToSet: { songs: data._id },
     });
     //todo loai bỏ id song khỏi genre
     await Genre.findByIdAndUpdate(data.id_Genre, {
       $pull: { list_songs: data._id },
     });
-    const genreId = data.id_Genre;
-    await Artist.findByIdAndUpdate(genreId, {
-      $addToSet: { list_songs: data._id },
-    });
+    // const genreId = data.id_Genre;
+    // await Artist.findByIdAndUpdate(genreId, {
+    //   $addToSet: { list_songs: data._id },
+    // });
     return res.status(200).json({
       message: "Updated song successfully",
       data,
@@ -132,7 +151,7 @@ export const deleteSong = async (req, res) => {
     }
 
     /* delete song in artist */
-    await Artist.findByIdAndUpdate(data.id_Artists, {
+    await Singer.findByIdAndUpdate(data.id_Singer, {
       $pull: { songs: data._id },
     });
 
@@ -152,24 +171,44 @@ export const deleteSong = async (req, res) => {
   }
 };
 
-
-export const updateViewSong = async(req, res)=>{
-  const id_song = req.params.id
-  const data_song = await SongSchame.findOne({_id: id_song});
-  if (!data_song){
+export const updateViewSong = async (req, res) => {
+  const id_song = req.params.id;
+  let setMonth = {};
+  const today = new Date();
+  const month = `${today.getFullYear()}-${Number(today.getMonth()) + 1}`;
+  const songCurrent = await SongSchame.findOne({ _id: id_song });
+  if (songCurrent?.month.includes(month)) {
+    const getMonth = JSON.parse(songCurrent.month);
+    for (const item in getMonth) {
+      if (item == month) {
+        setMonth = {
+          ...getMonth,
+          [item]: getMonth[item] + 1,
+        };
+      }
+    }
+  } else {
+    const getMonth = JSON.parse(songCurrent.month);
+    setMonth = {
+      ...getMonth,
+      [month]: 1,
+    };
+  }
+  if (!songCurrent) {
     return res.status(401).json({
       message: "Không thành công",
     });
-  }else{
+  } else {
     await SongSchame.findOneAndUpdate(
-      {_id: id_song }, 
-       { 
-        view_song: data_song.view_song + 1,
-       },
-      { upsert: true, new: true } 
+      { _id: id_song },
+      {
+        month: JSON.stringify(setMonth),
+      },
+      { upsert: true, new: true }
     );
     return res.status(201).json({
       message: "Thành công",
+      data: songCurrent,
     });
   }
-}
+};

@@ -64,9 +64,9 @@ const PauseListItemIconStyle = styled(ListItemIcon)({
     alignItems: "center",
     border: "2px solid white",
     ":hover": {
-        border: "2px solid #9B4DE0",
+        border: "2px solid #3BC8E7",
         "& .MuiSvgIcon-root": {
-            color: "#9B4DE0"
+            color: "#3BC8E7"
         }
     }
 });

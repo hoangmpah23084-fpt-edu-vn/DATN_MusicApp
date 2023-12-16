@@ -5,8 +5,8 @@ export const playlistSchema = joi.object({
     "string.empty": "Trường này không được để trống",
     "any.required": "Trường này là bắt buộc",
   }),
-  id_user: joi.string().required().messages({
-    "string.empty": "Trường này không được để trống",
-    "any.required": "Trường này là bắt buộc",
-  }),
+  // id_user: joi.string().required().messages({
+  //   "string.empty": "Trường này không được để trống",
+  //   "any.required": "Trường này là bắt buộc",
+  // }),
 });

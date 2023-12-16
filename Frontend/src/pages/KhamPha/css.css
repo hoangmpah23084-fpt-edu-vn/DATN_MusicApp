@@ -1,0 +1,84 @@
+.gallery-item {
+  padding: 0 15px;
+}
+.gallery-item img {
+  width: 100%;
+  border-radius: 8px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 100%;
+}
+
+.container {
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+}
+
+.gallery-container .swiper-button-prev,
+.gallery-container .swiper-button-next {
+  width: 55px !important;
+  height: 55px !important;
+  border-radius: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #fff !important;
+  margin-top: 0 !important;
+  background-color: hsla(0, 0%, 100%, 0.15) !important;
+  box-shadow: 0 2px 4px 0 rgba(226, 102, 102, 0.15) !important;
+}
+
+.gallery-container .swiper-button-prev {
+  left: 25px !important;
+}
+
+.gallery-container .swiper-button-next {
+  right: 25px !important;
+}
+
+.gallery-container .swiper-button-prev::after,
+.gallery-container .swiper-button-next::after {
+  font-size: 20px !important;
+  color: #fff;
+}
+
+.suggested-list-songs span,
+.suggested-list-songs .card-title a {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.chart-home .header a {
+  background: radial-gradient(50% 124.93% at 95.86% -10%, #3efad9 0, hsla(0, 0%, 100%, 0) 100%), linear-gradient(91.56deg, #ff9357 1.54%, #9100ff 98.71%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-blur {
+  background-color: #2b273f;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.bg-alpha {
+  background-color: rgba(51, 16, 76, 0.95);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.week-chart .card-image img {
+  transition: all 0.7s;
+}
+
+.week-chart .card-image:hover img {
+  transform: scale(1.1);
+}/*# sourceMappingURL=css.css.map */

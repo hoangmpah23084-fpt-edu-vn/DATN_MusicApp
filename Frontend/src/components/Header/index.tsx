@@ -1,51 +1,236 @@
-import React from "react";
-import { HiOutlineArrowRight, HiOutlineArrowLeft } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import { Avatar, Dropdown, Menu, Input } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
+// import { AiOutlineSetting, AiOutlineSearch } from "react-icons/ai";
+
 import {
   AiOutlineSearch,
   AiOutlineSetting,
   AiOutlineUser,
+  AiOutlineEye,
 } from "react-icons/ai";
-import { GoDesktopDownload } from "react-icons/go";
-import Input from "../Input";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-type Props = {};
+import { ifUser } from "@/pages/Admin/Interface/User";
+import { toast } from "react-toastify";
+import "./index.css";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import ItemSong from "../Favourites/ItemSong";
+import { IApiSong } from "@/pages/Admin/Interface/ValidateSong";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { handGetSongSearch } from "@/store/Reducer/Song";
 
+import DetailUser from "../Modals/DetailUser";
+import ChangePassword from "../Modals/ChangePassword";
+import { GetUser, resetUser } from "@/store/Reducer/User";
+
+type Props = {
+  sideBarRight: boolean;
+  collapsed: boolean;
+};
 const Header = (props: Props) => {
-  return (
-    <div className="flex h-[70px] items-center fixed bg-[#170f23] ml-[240px] z-50 w-full" >
-      <div className="flex items-center z-1 w-[100%] px-[59px]">
-        <div className="flex">
-          <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] flex items-center h-[40px]" />
-          <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px]" />
-          <div className="search w-full lg:flex items-center justify-center text-[#fff]">
-            <Input
-              prefix={
-                <AiOutlineSearch className="text-2xl ml-2 text-[#d9d9d9] absolute" />
-              }
-              type="search"
-              placeholder="Tìm kiếm bài hát, nghệ sĩ, lời bài hát..."
+  const [userLocal, setUserLocal] = useState<ifUser | null>(null);
+  const { dataUserOne } = useAppSelector((state: RootState) => state.user);
+  // const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [showUser, setShowUser] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const [showPass, setShowPass] = useState<boolean>(false);
+  const [checkAdmin, setCheckAdmin] = useState<boolean>(false);
+
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const currentUser = localStorage.getItem("user");
+    if (currentUser) {
+      const parseCurrentUser = JSON.parse(currentUser);
+      setUserLocal(parseCurrentUser);
+      dispatch(GetUser(parseCurrentUser._id));
+      if (parseCurrentUser.role === 'admin') {
+        setCheckAdmin(true)
+      }
+    }
+
+
+
+  }, []);
+
+  const handleMenuClick = (e: any) => {
+    if (e.key === "logout") {
+      handleLogout();
+      toast.success("Đăng xuất thành công!");
+      location.reload();
+    }
+  };
+
+  //logout
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    dispatch(resetUser(null));
+  };
+
+
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="account">
+        <div className="flex items-center">
+          {" "}
+          {dataUserOne?.image ? (
+            <img
+              className="rounded-full w-12 h-12 object-cover"
+              src={dataUserOne?.image}
+              alt=""
             />
-          </div>
+          ) : (
+            <Avatar size={42} icon={<UserOutlined />} />
+          )}
+          <b className="ml-2">{dataUserOne?.fullName}</b>
         </div>
-        <div className="flex text-[#fff] justify-around ml-56">
-          <div className=" bg-[#2f2739] rounded-full">
-            <div className="flex px-[24px] py-[8px] items-center justify-center text-[#c273ee]">
-              <GoDesktopDownload className="mr-[5px]" />
-              <span className="font-inter">Tải bản macOS</span>
+      </Menu.Item>
+      <Menu.Divider />
+
+      {checkAdmin && <Menu.Item key="admin" >
+        <Link to='/admin' className="flex items-center">
+          <strong className="flex items-center"> <AiOutlineUser className="mr-2" />Quản trị viên</strong>
+        </Link>
+      </Menu.Item>}
+
+      <Menu.Item key="personal" onClick={() => setShowUser(!showUser)}>
+        <b className="flex items-center">
+          <AiOutlineUser className="mr-2" /> Chỉnh sửa cá nhân
+        </b>
+      </Menu.Item>
+      <Menu.Item key="pw" onClick={() => setShowPass(!showPass)}>
+        {" "}
+        <b className="flex items-center">
+          <AiOutlineEye className="mr-2" /> Đổi mật khẩu
+        </b>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="logout">
+        <LogoutOutlined className="mr-2" /> Đăng xuất
+      </Menu.Item>
+    </Menu>
+  );
+  const { songSearch } = useSelector((state: RootState) => state.Song);
+  const items = songSearch.map((item: any) => ({
+    label: (
+      <Link to={`/singer/${item.id_Singer?._id}`}>
+        {" "}
+        <ItemSong item={item} active={true} />
+      </Link>
+    ),
+    key: item.id,
+  }));
+
+  const dropdownMenu = (
+    <Menu>
+      {items.length > 0 ? (
+        items.map((menuItem: any) => (
+          <Menu.Item key={menuItem.key}>{menuItem.label}</Menu.Item>
+        ))
+      ) : (
+        <Menu.Item disabled>
+          <span style={{ color: 'white' }}>Không tìm thấy bài hát</span>
+        </Menu.Item>
+      )}
+    </Menu>
+  );
+
+  const onHandleSearch = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e) {
+      const data: IApiSong = {
+        pageSize: e.target.value !== "" ? 1000 : 5,
+        search: e.target.value,
+      };
+      dispatch(handGetSongSearch(data));
+    }
+  };
+
+  useEffect(() => {
+    dispatch(
+      handGetSongSearch({
+        pageSize: 5,
+      })
+    );
+  }, []);
+
+  return (
+    <>
+      {showUser && <DetailUser onShowModal={() => setShowUser(!showUser)} />}
+      {showPass && (
+        <ChangePassword onShowModal={() => setShowPass(!showPass)} />
+      )}
+      <div
+        className={`flex h-[70px] items-center fixed bg-[#1b2039] left-0 z-20 px-[15px] w-full  md:left-[240px] md:px-[59px] transition-all duration-700
+        ${props.collapsed ? "md:left-[80px] md:w-[calc(100vw-80px)]" : ""}
+        ${props.collapsed && props.sideBarRight
+            ? "md:w-[calc(100vw-450px)]"
+            : ""
+          }
+        ${props.sideBarRight
+            ? "md:w-[calc(100vw-570px)]"
+            : "md:w-[calc(100vw-240px)] "
+          }`}
+      >
+        <div className="flex items-center z-1 w-[100%] justify-between">
+          <div className="flex flex-1 md:flex-none">
+            <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] hidden items-center h-[40px] md:flex" />
+            <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px] hidden md:block" />
+            <div className="search w-full lg:flex items-center relative justify-center dropdown-search max-h-[400px]">
+              <Dropdown overlay={dropdownMenu} trigger={['click']}>
+                <Input
+                  addonBefore={
+                    <AiOutlineSearch
+                      className={`bg-[#3bc8e7] text-[#fff] p-0 text-[20px]`}
+                    />
+                  }
+                  onChange={(
+                    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                  ) => onHandleSearch(e)}
+                  placeholder="Tìm kiếm bài hát ..."
+                  allowClear
+                  className="input-search w-full bg-[#fff] h-[40px] text-[14px] rounded-3xl focus:outline-none border-none placeholder: lg:mx-auto lg:w-[30rem]"
+                />
+              </Dropdown>
             </div>
           </div>
-          <div className="h-[40px] w-[40px] ml-5 flex items-center justify-center bg-[#2f2739] rounded-full">
-            <AiOutlineSetting className=" w-10 h-[20px]" />
+          <div className="flex text-[#fff]">
+            <div className="block md:hidden h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
+              <img src="/logo.png" alt="" />
+            </div>
+
+            <div className="hidden md:flex h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
+              <AiOutlineSetting className=" w-10 h-[20px]" />
+            </div>
+            {userLocal && token ? (
+              <div className="dropdown-profile">
+                <Dropdown overlay={menu}>
+                  <div className="h-[40px] w-[40px] overflow-hidden flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
+                    <img
+                      src={
+                        dataUserOne?.image
+                          ? dataUserOne.image
+                          : "/user-default.3ff115bb.png"
+                      }
+                      className="rounded-full"
+                      onClick={(e) => e.preventDefault()}
+                    />
+                  </div>
+                </Dropdown>
+              </div>
+            ) : (
+              <div className="flex px-[24px] py-[8px] items-center justify-center text-[#fff] bg-[#3bc8e7] rounded-full ml-2 md:ml-5">
+                <Link to="http://localhost:5173/signin">Đăng nhập</Link>
+              </div>
+            )}
           </div>
-          <Link to = "http://localhost:5173/signup">
-          <div className="h-[40px] w-[40px] flex items-center justify-center bg-[#2f2739] rounded-full ml-5">
-            <img src="/user-default.3ff115bb.png" className="rounded-full" />
-          </div>
-          </Link>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

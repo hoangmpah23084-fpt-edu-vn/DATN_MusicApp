@@ -41,7 +41,7 @@
 }
 
 .zm-room-content .box-media-play a:hover .media-right {
-  color: #c273ed;
+  color: #3BC8E7;
 }
 
 .zm-room-wrapper .swiper {
@@ -107,4 +107,33 @@
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
   border-bottom: 7px solid #000;
+}
+.item-hover1::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top:-7px;
+  right: 30px;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #000;
+}
+
+.tabSidebarSoom {
+  font-weight: 500;
+  padding: 3px 14px;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+.OutlineSearch{
+  border: none;
+  color: #eeeeee7c;
+  font-size: 13px;
+  &:focus {
+    outline: none !important;;
+    box-shadow: none;
+  }
 }

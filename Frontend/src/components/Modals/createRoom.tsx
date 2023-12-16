@@ -32,8 +32,10 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
   }) => {
     try {
       const resp: any = await dispatch(addRoom(data))
+      localStorage.removeItem('song');
       await dispatch(getRoom());
       toast.success(resp.payload.message);
+      localStorage.removeItem("song")
       navigate(`/liveroom/${resp.payload.data._id}`)
     } catch (error) {
       toast.error(error as string)
@@ -47,7 +49,7 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
 
   return (
     <>
-      <div className="bg-slate-950/80 absolute w-full h-full text-white z-50">
+      <div className="bg-slate-950/10 absolute w-full h-full text-white z-50">
         <div className="fixed flex justify-center items-center z-50 w-full p-4 overflow-x-hidden overflow-y-auto  md:inset-0 h-[calc(100%-1rem)] max-h-full">
           <div className="relative w-full max-w-md max-h-full">
             <div
@@ -101,7 +103,7 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
                     )}
                   </div>
 
-                  <button className="w-full text-white bg-[#654789] hover:bg-white hover:text-[#654789] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+                  <button className="w-full text-white bg-[#3BC8E7] hover:bg-white hover:text-[#3BC8E7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
                     Tạo phòng
                   </button>
                 </form>

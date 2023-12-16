@@ -1,0 +1,71 @@
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+  -webkit-box-shadow: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: gray;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu-vertical .ant-menu-item {
+  color: #dadada;
+  border-radius: 0;
+  margin: 0;
+  width: 100%;
+  margin-inline: 0;
+  margin-block: 0;
+  height: 50px;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu-light .ant-menu-item:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected):hover {
+  color: #fff;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu-light .ant-menu-item-selected {
+  background-color: #3bc8e7;
+  color: #fff;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu .ant-menu-item-divider {
+  position: relative;
+  overflow: unset;
+  margin: 18px 0;
+}
+
+:where(.css-dev-only-do-not-override-1ck3jst).ant-menu .ant-menu-item-divider::after {
+  content: "";
+  border-top: 1px solid #32323d;
+  position: absolute;
+  left: 25px;
+  right: 25px;
+  top: 0;
+}
+
+.ant-layout-sider-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px !important;
+  height: 40px;
+  background-color: hsla(0, 0%, 100%, 0.1);
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  border-radius: 50%;
+  margin-top: 50px;
+}/*# sourceMappingURL=index.css.map */

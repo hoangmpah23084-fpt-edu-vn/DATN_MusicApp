@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import mongoosePaginate from "mongoose-paginate-v2";
 const roomModel = new mongoose.Schema({
   nameGroup: String,
   password: String,
@@ -31,5 +31,5 @@ const roomModel = new mongoose.Schema({
     },
   ],
 });
-
+roomModel.plugin(mongoosePaginate);
 export default mongoose.model("room", roomModel);

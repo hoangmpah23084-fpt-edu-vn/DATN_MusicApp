@@ -1,0 +1,130 @@
+.zm-room {
+  background-position: 50%;
+  width: 100%;
+}
+
+.zm-room-content {
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0, transparent 33%, transparent 66%, rgba(0, 0, 0, 0.4));
+}
+
+.zm-room-opacity {
+  background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0, transparent 33%, transparent 66%, rgba(0, 0, 0, 0.7));
+}
+
+.zm-room-comment .media-right {
+  background-color: hsla(0, 0%, 100%, 0.1);
+}
+
+::-moz-placeholder {
+  font-size: 14px;
+  color: #fff;
+  opacity: 1;
+}
+
+::placeholder {
+  font-size: 14px;
+  color: #fff;
+  opacity: 1;
+}
+
+.comment-input .control input {
+  background-color: unset;
+}
+
+.zm-room-content .box-media-play a:hover .media-right {
+  color: #3BC8E7;
+}
+
+.zm-room-wrapper .swiper {
+  position: unset;
+  overflow: unset;
+}
+
+.zm-room-wrapper .swiper-slide {
+  height: unset !important;
+}
+
+.zm-room-wrapper .swiper-button-prev:after,
+.zm-room-wrapper .swiper-button-next:after {
+  transform: rotate(90deg);
+}
+
+.zm-room-wrapper .swiper-button-prev,
+.zm-room-wrapper .swiper-button-next {
+  margin-top: unset !important;
+}
+
+.zm-room-wrapper .swiper-button-prev {
+  top: 0 !important;
+}
+
+.zm-room-wrapper .swiper-button-next {
+  bottom: 0 !important;
+  top: unset !important;
+  height: unset !important;
+}
+
+.zm-room-wrapper .swiper-button-next,
+.zm-room-wrapper .swiper-button-prev {
+  width: 100% !important;
+  height: 55px !important;
+  left: 50%;
+  transform: translateX(-50%) !important;
+  color: #fff !important;
+}
+
+.zm-room-wrapper .swiper-button-prev::after,
+.zm-room-wrapper .swiper-button-next::after {
+  font-size: 20px !important;
+  color: #fff;
+}
+
+.zm-room-wrapper .swiper-button-next {
+  background: linear-gradient(180deg, transparent, #000);
+}
+
+.zm-room-wrapper .swiper-button-prev {
+  background: linear-gradient(0deg, transparent, #000);
+}
+
+.item-hover::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: -7px;
+  right: 13px;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #000;
+}
+
+.item-hover1::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: -7px;
+  right: 30px;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #000;
+}
+
+.tabSidebarSoom {
+  font-weight: 500;
+  padding: 3px 14px;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+.OutlineSearch {
+  border: none;
+  color: rgba(238, 238, 238, 0.4862745098);
+  font-size: 13px;
+}
+.OutlineSearch:focus {
+  outline: none !important;
+  box-shadow: none;
+}/*# sourceMappingURL=css.css.map */

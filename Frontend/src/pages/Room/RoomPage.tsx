@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./css.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FiRadio } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
+import { FaDoorOpen } from "react-icons/fa";
 import RoomLeftItem from "@/components/Room-left-item";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { getDetailRoom, leaveRoom } from "@/store/Reducer/roomReducer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Socket, io } from "socket.io-client";
 import axios from "axios";
@@ -17,10 +17,12 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { listMessages, memberGroup } from "../Admin/Interface/Room";
 import SideBarRoom from "./SideBarRoom";
 import { handGetSong } from "@/store/Reducer/Song";
-import { handGetCurrentSong } from "@/store/Reducer/currentSong";
-import SidebarRoom from "@/components/Footer/Room/SidebarRoom";
+import { setCurrentSong } from "@/store/Reducer/currentSong";
 import FooterRoom from "@/components/Footer/Room/FooterRoom";
 import { toast } from "react-toastify";
+import { ifSong } from "../Admin/Interface/ValidateSong";
+import { MdPerson } from "react-icons/md";
+import { leaveRoom } from "@/store/Reducer/roomReducer";
 
 type Props = {
   roomLive?: boolean;
@@ -29,16 +31,19 @@ type Props = {
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 const RoomPage = (props: Props) => {
-  const { id } = useParams();
   const dispatch = useAppDispatch();
   const [listMess, setListMess] = useState<listMessages[] | []>([]);
-  const [currAdmin, setCurrAdmin] = useState('');
-  const [currMember, setCurrMember] = useState('');
   const [listMember, setlistMember] = useState<memberGroup[] | []>([]);
-  const [sideBarRight, setSideBarRight] = React.useState<boolean>(false);
+  const [stateSideBar, setStateSideBar] = useState<string>("trochuyen")
+  const [listSong, setListSong] = useState<ifSong[] | []>([])
   const current = useAppSelector(({ Song }) => Song);
-  const navigate = useNavigate()
-  const roomDetail = useAppSelector((data) => data);
+  const { currentSong } = useAppSelector(({ currentSong }) => currentSong)
+  const [admin, setAdmin] = useState<any | {}>({});
+  const navigate = useNavigate();
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const { id } = useParams();
+
+
   useEffect(() => {
     async function fetchData() {
       await dispatch(handGetSong());
@@ -46,17 +51,28 @@ const RoomPage = (props: Props) => {
     void fetchData();
   }, [dispatch]);
   useEffect(() => {
-    if (current.song.length > 0) {
-      localStorage.setItem('song', JSON.stringify(current.song[2]));
-      dispatch(handGetCurrentSong(current.song[2]))
+    const getSongLocal = localStorage.getItem('song');
+    if (getSongLocal) {
+      const convertSong = JSON.parse(getSongLocal);
+      console.log(convertSong);
+      if (convertSong) {
+        dispatch(setCurrentSong(convertSong))
+      }
+    } else {
+      if (current.song.length > 0) {
+        localStorage.setItem('song', JSON.stringify(current.song[0]));
+        dispatch(setCurrentSong(current.song[0]))
+      }
     }
-  }, [current.song]);
+  }, []);
+  // current.song
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
-      setListMess([...listMess, ...data.data.listMessages])
+      setListSong(data.data.listSong);
+      setAdmin(data.data.isAdminGroup);
+      setListMess([...listMess, ...data.data.listMessages]);
       setlistMember(data.data.memberGroup);
-      setCurrAdmin(data.data.isAdminGroup._id)
-      socket.emit('joinRoom', data.data._id)
+      socket.emit('joinRoom', data.data._id);
     });
   }
   useEffect(() => {
@@ -64,21 +80,20 @@ const RoomPage = (props: Props) => {
     const user = localStorage.getItem('user');
     if (user) {
       const convert = JSON.parse(user);
-      setCurrMember(convert._id);
       socket.emit('setUser', convert._id)
     }
-    FetchMessage()
+    FetchMessage();
     return () => {
-      if (confirm("Are you sure want to remove room ?")) {
-        leaveRoom(id as string);
-      }
+      // leaveRoom(id as string);
+      // alert("Bạn đã rời khỏi phòng");
     }
-  }, [])
+  }, [setListSong])
   useEffect(() => {
     socket.on("messRecived", (value) => {
       setListMess([...listMess, value])
     })
   }, [listMess])
+
   useEffect(() => {
     handleRouter()
   }, [id])
@@ -87,23 +102,67 @@ const RoomPage = (props: Props) => {
     const user = JSON.parse(localStorage.getItem("user") as string)
     console.log(user?._id);
     if (id) {
-     try {
-      const resp = await axios.get(`http://localhost:8080/api/room/${id}`)
-
-      if(!JSON.stringify(resp.data.data.memberGroup).includes(user?._id)) {
-        toast.success("Bạn không đủ tư cách để ngồi đây.")
-        navigate("/")
+      try {
+        const resp = await axios.get(`http://localhost:8080/api/room/${id}`)
+        if (!JSON.stringify(resp.data.data.memberGroup).includes(user?._id)) {
+          toast.success("Bạn không đủ tư cách để ngồi đây.")
+          // navigate("/")
+        }
+      } catch (error) {
+        toast.error("Lỗi hệ thống")
+        // navigate("/")
       }
-     } catch (error) {
-      toast.error("Lỗi hệ thống")
-      navigate("/")
-     }
     }
   }
+  const handLeaveRoom = () => {
+    const user = JSON.parse(localStorage.getItem("user") as string)
+    if (user._id == admin._id) {
+      console.log("Sending leaveRoomAdmin event");
+      socket.emit('leaveRoomAdmin', {
+        user: user._id,
+        admin: admin._id,
+        idroom: id,
+      })
+      toast.success("Chủ phòng đã rời phòng thành công")
+      leaveRoom(id as string);
+      navigate('/')
+    } else {
+      socket.emit('leaveRoomPerson', {
+        user: user._id,
+        admin: admin._id,
+        idroom: id,
+      })
+      leaveRoom(id as string);
+      toast.success("Thành viên đã rời phòng thành công")
+      navigate('/');
+    }
+  }
+  useEffect(() => {
+    const handleLeaveRoomAdmin = (value: any) => {
+      if (value) {
+        toast.success("Phòng không còn tồn tại vì chủ phòng đã rời");
+        navigate('/')
+      }
+    };
+    socket.on("serverLeaveRoomAdmin", handleLeaveRoomAdmin);
+  }, []);
+  // , [socket]
+  useEffect(() => {
+    const handleLeaveRoomPerson = (value: any) => {
+      console.log("LeaveRoomPerson event received:", value);
+      if (value) {
+        // const user = JSON.parse(localStorage.getItem("user") as string);
+        toast.success("Thành viên trong phòng đã rời")
+      }
+    };
+    socket.on("serverLeaveRoomPerson", handleLeaveRoomPerson);
+  }, []);
+  // , [socket]
+
   return (
     <div>
       <div
-        className={`zm-room-wrapper bg-[#170f23] flex fixed 
+        className={`zm-room-wrapper bg-[#14182A] flex fixed 
         h-full
          left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
       >
@@ -162,12 +221,8 @@ const RoomPage = (props: Props) => {
               </div>
               <div className="stats flex ml-[32px] gap-[20px] text-[18px]">
                 <div className="view flex justify-center items-center gap-[10px]">
-                  <AiOutlineEye />
-                  <span>35</span>
-                </div>
-                <div className="like flex justify-center items-center gap-[10px]">
-                  <AiOutlineHeart />
-                  <span>23.349.437</span>
+                  <MdPerson />
+                  <span>2</span>
                 </div>
               </div>
             </div>
@@ -182,17 +237,17 @@ const RoomPage = (props: Props) => {
                     <div className="w-[40px] h-[40px]">
                       <img
                         className="rounded-[5px]"
-                        src="../../../public/Image/f8456a22c05f9b96e0e832ae0b643bf0.jpg"
+                        src={`${currentSong?.song_image[0]}`}
                         alt=""
                       />
                     </div>
                   </div>
                   <div className="media-content grow shrink">
                     <div className="name text-[14px]">
-                      <span>Kill this love</span>
+                      <span>{currentSong?.song_name}</span>
                     </div>
                     <h3 className="subtitle text-[rgba(254,255,255,.6)]  text-[12px] uppercase">
-                      Blackpink
+                      {currentSong?.id_Singer.name}
                     </h3>
                   </div>
                   <div className="media-right grow-0 shrink-0 flex items-center">
@@ -205,7 +260,13 @@ const RoomPage = (props: Props) => {
             </div>
 
             <div className="action-group absolute right-[30px] top-[30px] z-30">
-              <div className="item ">
+              <div className="item0 flex gap-2">
+                <button className="group relative flex flex-col items-center justify-center" onClick={() => handLeaveRoom()}>
+                  <FaDoorOpen className="bg-[rgba(255,255,255,.2)] px-3 py-2 rounded-full text-[40px] hover:brightness-90 cursor-pointer" />
+                  <div className="item-hover1 relative  text-xs rounded-[5px] bg-[#000] text-center py-1 opacity-0 group-hover:opacity-100 ease-in-out duration-500 mt-[10px]">
+                    <p className="text-white px-2 ">Rời phòng</p>
+                  </div>
+                </button>
                 <button className="group relative ">
                   <BsChevronDown className="bg-[rgba(255,255,255,.2)] px-3 py-2 rounded-full text-[40px] hover:brightness-90 cursor-pointer" />
                   <div className="item-hover relative text-xs rounded-[5px] bg-[#000] text-center py-1 opacity-0 group-hover:opacity-100 ease-in-out duration-500 mt-[10px]">
@@ -216,10 +277,9 @@ const RoomPage = (props: Props) => {
             </div>
           </div>
           {/* //todo SideBar Rooom */}
-          <SideBarRoom listMess={listMess} setListMess={setListMess} socket={socket} />
+          <SideBarRoom listMess={listMess} setListMess={setListMess} audioRef={audioRef} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar} />
         </div>
-        <SidebarRoom sideBarRight={sideBarRight} />
-        {listMember.length > 0 && <FooterRoom setSideBarRight={setSideBarRight} ListData={current.song} idRoom={id} listMember={listMember} />}
+        {listMember.length > 0 && listSong.length > 0 && <FooterRoom ListData={listSong} audioRef={audioRef} idRoom={id} listMember={listMember} />}
       </div>
     </div>
   );
