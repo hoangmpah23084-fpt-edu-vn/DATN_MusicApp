@@ -7,6 +7,8 @@ import { activeSong } from "@/constane/song.const";
 import { setSingerSong } from "@/store/Reducer/Song";
 import { ActiveFavourites, ActiveFavouritesTitle, onhandleFavourite } from "@/constane/favourites.const";
 import { RootState } from "@/store/store";
+import ModalSongMenu from "../Modals/modalSongMenu";
+import { useState } from "react";
 // import { handGetSongInGenre } from "@/store/Reducer/Song";
 
 type Props = {
@@ -16,6 +18,7 @@ type Props = {
 
 const ListSongItem = ({ section, item }: Props) => {
   const { token } = useAppSelector((state: RootState) => state.user);
+  const [modal, setModal] = useState<boolean>(false);
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
@@ -26,14 +29,25 @@ const ListSongItem = ({ section, item }: Props) => {
     dispatch(setSingerSong(item?.id_Singer?._id as string));
   }
 
+
+  const handleShowModalCreateRoom = () => {
+    setModal(!modal)
+  }
+
   return (
-    <div className="list-items px-[15px]">
+    <div className="relative list-items px-[15px] w-full h-full">
+      {modal && (
+        <>
+          <ModalSongMenu song={item} onShowModal={handleShowModalCreateRoom} />
+        </>
+      )}
       <div
         className={`media flex items-center py-[10px] px-[15px] rounded-[5px] text-left hover:bg-[#2f2739] relative z-10 ${section === "chanel" && "bg-[#14182A]"
           }  ${section === "zingchart" && "bg-[#492761] mb-[10px] hover:bg-[#65487a]"
           }`}
       >
-        <div className="media-left flex flex-row grow shrink w-[50%] mr-[10px]">
+
+        <div className=" media-left flex flex-row grow shrink w-[50%] mr-[10px]">
           <div
             className={`song-prefix ${(section === "zingchart" && "block") || "hidden"
               } flex items-center`}
@@ -41,7 +55,7 @@ const ListSongItem = ({ section, item }: Props) => {
             <span className="number is-top-1 mr-[15px]">1</span>
           </div>
 
-          <div className="song-thumb block relative shrink-0 overflow-hidden cursor-pointer mr-[10px]" onClick={handToggle}>
+          <div className=" song-thumb block relative shrink-0 overflow-hidden cursor-pointer mr-[10px]" onClick={handToggle}>
             <div
               className={`${section === "chanel" && "card-image"
                 } overflow-hidden relative rounded-[5px]`}
@@ -104,14 +118,16 @@ const ListSongItem = ({ section, item }: Props) => {
                   <ActiveFavouritesTitle item={item} />
                 </div>
               </button>
-              <button className="group relative flex justify-center items-center rounded-full px-[5px] ">
+              <button className="group relative flex justify-center items-center rounded-full px-[5px] " onClick={() => setModal(true)}>
                 <BsThreeDots className="px-3 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-80 " />
                 <div className="absolute -top-5 right-[ưpx] text-xs px-[10px] py-[5px] bg-gray-600 text-center opacity-0 rounded-[5px] group-hover:opacity-100 group-hover:-top-[35px] ease-in-out duration-300">
                   <p className="text-white">Khác</p>
                 </div>
               </button>
+
             </div>
           </div>
+
         </div>
 
         <div
@@ -120,7 +136,9 @@ const ListSongItem = ({ section, item }: Props) => {
         >
           <span className="font-bold">26%</span>
         </div>
+
       </div>
+
     </div>
   );
 };

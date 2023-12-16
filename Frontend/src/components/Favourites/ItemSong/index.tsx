@@ -14,10 +14,11 @@ import { setSongFavourite } from "@/store/Reducer/Song";
 type props = {
   item: ifSong,
   active?: boolean,
-  listSong?: ifSong[]
+  listSong?: ifSong[],
+  activeSideBarSong?: boolean
 }
 
-const ItemSong = ({ item, active, listSong }: props) => {
+const ItemSong = ({ item, active, listSong, activeSideBarSong }: props) => {
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch()
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
@@ -38,6 +39,10 @@ const ItemSong = ({ item, active, listSong }: props) => {
       : activeSong(dispatch, item, "start")
   }
 
+  const handleShowModalCreateRoom = () => {
+    setModal(!modal)
+  }
+
   return (
     <tr className={`item border-b-[#2c2436] border-b-[1px] flex-1 cursor-pointer ease-in-out duration-300 first-letter:
       ${dataLocal && dataLocal?._id == item._id
@@ -47,11 +52,15 @@ const ItemSong = ({ item, active, listSong }: props) => {
       `}>
       <td scope="row" className="py-2 font-medium flex items-center min-w-[300px]" >
         <span className="px-3">
-          <input
-            type="checkbox"
-            className="item_list hidden w-[14px] h-[14px]"
-          />
-          <BsMusicNoteBeamed className="item_list_time" />
+          {activeSideBarSong ? <></> :
+            <>
+              <input
+                type="checkbox"
+                className="item_list hidden w-[14px] h-[14px]"
+              />
+              <BsMusicNoteBeamed className="item_list_time" />
+            </>
+          }
         </span>
         <div
           className={`card-image overflow-hidden relative rounded-[5px] mr-2`}
@@ -91,38 +100,25 @@ const ItemSong = ({ item, active, listSong }: props) => {
             className="text-xs text-[#86828c] hover:text-[#3BC8E7] hover:border-b-[#3BC8E7] hover:border-b-[1px]"
           >
             {item.id_Singer?.name}
-
           </Link>
         </div>
       </td>
-      <td className="py-2 min-w-[120px]" >
+
+      {activeSideBarSong ? <></> : <td className="py-2 min-w-[120px]" >
         <Link
           to={`#`}
           className="text-sm text-[#86828c] hover:text-[#9b4de0] hover:border-b-[#9b4de0] hover:border-b-[1px]"
         >
           {item.id_Genre?.name}
         </Link>
-      </td>
+      </td>}
 
-      {active ? <td className="w-[10%]">
+
+      {active ? <td className="w-[10%] ">
         <AiOutlineArrowRight />
       </td> :
-        <td>
-          <div className="flex items-center justify-center mr-2">
-            {/* <button className="item_list mx-2 group relative">
-              <TfiVideoClapper className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
-              <div className="absolute -top-5 -left-9 text-xs w-28 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
-                <p>Xem MV</p>
-              </div>
-            </button> */}
-
-            {/* <button className="item_list mx-2 group relative ">
-              <PiMicrophoneStageDuotone className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
-              <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
-                <p className="text-white">Phát cùng lời bài hát</p>
-              </div>
-            </button> */}
-
+        <td className="h-full">
+          <div className={`${activeSideBarSong ? "flex" : "flex items-center justify-center mr-2"}`}>
             <button className="text-[#3BC8E7] mx-2 group relative " onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}>
               <ActiveFavourites item={item} />
               <div className="absolute -top-5 -left-11 text-xs w-32 bg-gray-600 text-center rounded-3xl py-1 opacity-0 group-hover:-top-8 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
@@ -139,11 +135,7 @@ const ItemSong = ({ item, active, listSong }: props) => {
 
             {modal && (
               <>
-                <div
-                  className="z-40 absolute w-ful bg-slate-950/20 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[100vh]"
-                  onClick={() => setModal(false)}
-                ></div>
-                <ModalSongMenu song={item} />
+                <ModalSongMenu song={item} onShowModal={handleShowModalCreateRoom} />
               </>
             )}
 
