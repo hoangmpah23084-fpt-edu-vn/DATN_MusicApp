@@ -124,7 +124,7 @@ const Footer = (props: Props) => {
       if (audioRef.current?.ended && duration > 0 && randomSong) {
         const randomSong1 =
           props.ListData[
-            Math.round(Math.random() * (props.ListData.length - 1))
+          Math.round(Math.random() * (props.ListData.length - 1))
           ];
         dispatch(handGetCurrentSong(randomSong1));
         localStorage.setItem("song", JSON.stringify(randomSong1));
@@ -245,7 +245,7 @@ const Footer = (props: Props) => {
       const historyArray = JSON.parse(history)
       if (!historyArray.includes(songLoca)) {
         historyArray.push(songLoca)
-        if (historyArray.length > 10) {
+        if (historyArray.length > 9) {
           // Nếu vượt quá 10 bài, xóa bài cũ (ở đầu mảng)
           historyArray.shift()
         }
@@ -306,7 +306,7 @@ const Footer = (props: Props) => {
                   </Link>
                 </h3>
               </div>
-             
+
               <div className=" items-center justify-center hidden md:w-[40%] md:flex">
                 <div className="flex items-center justify-center ml-[20px] ">
                   <div className="level-item">

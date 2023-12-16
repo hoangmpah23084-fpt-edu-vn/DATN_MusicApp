@@ -49,7 +49,7 @@ const ModalCreateRoom = ({ onShowModal }: IProps) => {
 
   return (
     <>
-      <div className="bg-slate-950/80 absolute w-full h-full text-white z-50">
+      <div className="bg-slate-950/10 absolute w-full h-full text-white z-50">
         <div className="fixed flex justify-center items-center z-50 w-full p-4 overflow-x-hidden overflow-y-auto  md:inset-0 h-[calc(100%-1rem)] max-h-full">
           <div className="relative w-full max-w-md max-h-full">
             <div

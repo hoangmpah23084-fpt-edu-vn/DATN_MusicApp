@@ -6,7 +6,7 @@ import DashBoard from "@/pages/Admin/DashBoard/Index";
 import ListSong from "@/pages/Admin/Song/ListSong";
 import ListUser from "@/pages/Admin/User/ListUser";
 import KhamPhaPage from "@/pages/KhamPha/KhamPhaPage";
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import ListGenre from "@/pages/Admin/genre/ListGenre";
 import Album from "@/pages/Album/Album";
 import Signnup from "@/pages/Register/Signup";
@@ -21,7 +21,32 @@ import Room from "@/pages/Room/room";
 import RoomPage from "@/pages/Room/RoomPage";
 import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import HistorySong from "@/pages/HistorySong/history";
-import ListUser2 from "@/pages/Admin/User/ListUser2";
+import React, { ReactElement } from "react";
+
+interface PrivateRouteProps {
+  element: ReactElement;
+}
+
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ element, ...rest }) => {
+  let isAuthenticated = false;
+  const user = localStorage.getItem('user')
+  if (user) {
+    const data = JSON.parse(user)
+    if (data.role === 'admin') {
+      isAuthenticated = true
+
+    } else {
+      isAuthenticated = false
+    }
+  }
+  return isAuthenticated ? (
+    React.cloneElement(element, rest)
+  ) : (
+    <Navigate to="/" />
+  );
+};
+
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -56,7 +81,7 @@ export const router = createBrowserRouter([
   //todo BE
   {
     path: "/admin",
-    element: <LayoutAdmin />,
+    element: <PrivateRoute element={<LayoutAdmin />} />,
     children: [
       {
         index: true,
