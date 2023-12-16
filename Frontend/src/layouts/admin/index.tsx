@@ -8,14 +8,25 @@ import { Layout, Menu, Button } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import type { MenuProps } from 'antd';
 import { AiOutlineBars } from "react-icons/ai";
-import {
-  PieChartOutlined,
-} from '@ant-design/icons';
-const { Content } = Layout;
+import { PieChartOutlined, LogoutOutlined } from '@ant-design/icons';
 import { CiMusicNote1 } from 'react-icons/ci'
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { toast } from "react-toastify";
+import { resetUser } from "@/store/Reducer/User";
+const { Content } = Layout;
 
 const LayoutAdmin = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const dispatch = useAppDispatch();
+  
+  //logout
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    dispatch(resetUser(null));
+    location.reload();
+    toast.success("Đăng xuất thành công!");
+  };
 
   type MenuItem = Required<MenuProps>['items'][number];
 
@@ -41,7 +52,8 @@ const LayoutAdmin = () => {
     getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />),
     getItem(<Link to="/admin/album">Album</Link>, '99', <CiMusicNote1 />),
     getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />),
-    getItem(<Link to="/admin/genre">Thể Loại</Link>, '1', <AiOutlineBars />)
+    getItem(<Link to="/admin/genre">Thể Loại</Link>, '1', <AiOutlineBars />),
+    getItem(<div onClick={handleLogout}>Đăng xuất</div>, '5', <LogoutOutlined />)
 
   ];
   return (

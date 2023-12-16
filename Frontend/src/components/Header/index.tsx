@@ -59,7 +59,6 @@ const Header = (props: Props) => {
       handleLogout();
       toast.success("Đăng xuất thành công!");
       location.reload();
-    } else if (e.key === "avt") {
     }
   };
 
