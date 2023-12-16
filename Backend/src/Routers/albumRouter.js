@@ -8,6 +8,6 @@ AlbumRouter.post("/album", create_Album);
 AlbumRouter.put("/album/:id", update_Album);
 AlbumRouter.delete("/album/:id", delete_Album);
 AlbumRouter.put("/album/song/:id", addSongToAlbum);
-AlbumRouter.delete("/album/song/:id", removeSongToAlbum);
+AlbumRouter.put("/album/delete/song/:id", removeSongToAlbum);
 
 export default AlbumRouter;

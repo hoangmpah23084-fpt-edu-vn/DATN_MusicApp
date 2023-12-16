@@ -26,6 +26,8 @@ import { chekcSubString } from "@/constane/song.const";
 import { AiFillEye, AiOutlinePlus } from "react-icons/ai";
 import { toast } from "react-toastify";
 import instanceAxios from "@/utils/axios";
+import { FaEye } from "react-icons/fa";
+import AlbumDetail from "./ModalDetail";
 const { Option } = Select;
 
 const AlbumAdmin = () => {
@@ -37,6 +39,8 @@ const AlbumAdmin = () => {
   const [modalSetting, setModalSetting] = useState(0);
   const [albumSelected, setAlbumSelected] = useState({} as any);
   const [optionSinger, setOptionSinger] = useState([]);
+  const [optionSong, setOptionSong] = useState([]);
+  const [listSong, setListSong] = useState([])
 
   const { song, totalSong, loading, loadingRemove, dataOne, loadingAdd } =
     useSelector((state: RootState) => state.Song);
@@ -75,6 +79,7 @@ const AlbumAdmin = () => {
       search: search,
     };
     dispatch(handGetSong(data));
+    fetchDataSong();
   }, [page, pageSize, search]);
 
   useEffect(() => {
@@ -98,24 +103,34 @@ const AlbumAdmin = () => {
   //xóa
   const confirm = async (id: string) => {
     try {
-      const resp = await instanceAxios.delete(`http://localhost:8080/api/album/${id}`);
-      toast.success(resp.data.message)
-      fetchData()
+      const resp = await instanceAxios.delete(
+        `http://localhost:8080/api/album/${id}`
+      );
+      toast.success(resp.data.message);
+      fetchData();
     } catch (error) {
-      toast.error(error as any)
+      toast.error(error as any);
     }
   };
 
+  const onDetail = (record: any) => {
+    setAlbumSelected(record);
+    setModalSetting(3);
+  };
 
-  const handleGetDetail = (id: string) => {
-    dispatch(handGetOne(id));
+  const handleOk = () => {
+    setModalSetting(0);
+  };
+
+  const handleCancel = () => {
+    setModalSetting(0);
   };
 
   interface columns {
     key: string;
   }
 
-  const dataSource = album.map((item: ifSong, index:number) => {
+  const dataSource = album.map((item: ifSong, index: number) => {
     return {
       key: index + 1,
       ...item,
@@ -139,7 +154,7 @@ const AlbumAdmin = () => {
       dataIndex: "id_singer",
       key: "id_singer",
       width: 200,
-      render: (_ : any,record:any) => <p>{_.name}</p>
+      render: (_: any, record: any) => <p>{_.name}</p>,
     },
 
     {
@@ -151,6 +166,14 @@ const AlbumAdmin = () => {
           {/* <Button onClick={() => handleGetDetail(record?.key as string)}>
             <AiFillEye className="text-xl text-[#4a89ff] cursor-pointer" />
           </Button> */}
+
+          <Button
+            className="ml-2 text-[#699af4db]"
+            onClick={() => onDetail(record as string)}
+          >
+            <FaEye />
+          </Button>
+
           <Button
             className="ml-2 text-[#699af4db]"
             onClick={() => handleEdit(record as string)}
@@ -238,8 +261,8 @@ const AlbumAdmin = () => {
   // hàm show form
   const showAdd = () => {
     setModalSetting(1);
-    setAlbumSelected({})
-    form.resetFields()
+    setAlbumSelected({});
+    form.resetFields();
   };
 
   //call api khi sửa để đổ dữ liệu vào form
@@ -250,12 +273,12 @@ const AlbumAdmin = () => {
     const newValue = {
       _id: recode._id,
       album_name: recode.album_name,
-      id_singer: recode.id_singer._id
-    }
-    setAlbumSelected(newValue)
+      id_singer: recode.id_singer._id,
+    };
+    setAlbumSelected(newValue);
   };
   useEffect(() => {
-    console.log(albumSelected)
+    console.log(albumSelected);
     form.setFieldsValue(albumSelected);
   }, [albumSelected]);
 
@@ -338,8 +361,24 @@ const AlbumAdmin = () => {
       }
     }
 
-    setModalSetting(0)
-   fetchData()
+    setModalSetting(0);
+    fetchData();
+  };
+
+  const fetchDataSong = async () => {
+    try {
+      const resp = await instanceAxios.get("http://localhost:8080/api/song");
+      if (resp?.data?.data) {
+        const newData = resp.data.data.map((item: any) => ({
+          value: item._id,
+          label: item.song_name,
+        }));
+
+        setOptionSong(newData);
+      }
+    } catch (error) {
+      toast.error(error as any);
+    }
   };
 
   const modalAdd = () => {
@@ -354,6 +393,24 @@ const AlbumAdmin = () => {
       </Modal>
     );
   };
+
+  const handleAddSong = async () => {
+    for (const item of listSong) {
+      try {
+        const resp = await instanceAxios.put(`http://localhost:8080/api/album/song/${albumSelected._id}`, {
+          id_song: item
+        })
+
+        toast.success(resp.data.message)
+
+      } catch (error) {
+        toast.error(error as any)
+      }
+    }
+    fetchData()
+    setListSong([])
+    setModalSetting(0)
+  }
 
   return (
     <div className="relative">
@@ -395,6 +452,30 @@ const AlbumAdmin = () => {
           className="absolute bottom-1 right-72   z-50"
         />
       </footer>
+
+      <Modal
+        title="Basic Modal"
+        open={modalSetting == 3}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <AlbumDetail fetchData={fetchData} albumSelected={albumSelected} />
+        <div>
+          <Button onClick={() => handleAddSong()} className="mb-[12px]">Thêm bài hát</Button>
+
+          <Select
+            mode="multiple"
+            size={"large"}
+            placeholder="Please select"
+            onChange={(e) => setListSong(e)}
+            style={{ width: "100%" }}
+            value={listSong}
+            options={optionSong}
+          />
+
+
+        </div>
+      </Modal>
     </div>
   );
 };

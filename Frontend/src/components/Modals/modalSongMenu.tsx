@@ -60,8 +60,11 @@ const ModalSongMenu = ({ song }: any) => {
       });
 
       dispatch(
-        deleteSongToPlaylist(id as string, {
-          id_song: song._id,
+        deleteSongToPlaylist({
+          id,
+          params: {
+            id_song: song._id,
+          },
         })
       );
       dispatch(getPlaylist(id as string));
