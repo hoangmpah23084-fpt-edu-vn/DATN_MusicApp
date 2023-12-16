@@ -124,7 +124,7 @@ const Footer = (props: Props) => {
       if (audioRef.current?.ended && duration > 0 && randomSong) {
         const randomSong1 =
           props.ListData[
-            Math.round(Math.random() * (props.ListData.length - 1))
+          Math.round(Math.random() * (props.ListData.length - 1))
           ];
         dispatch(handGetCurrentSong(randomSong1));
         localStorage.setItem("song", JSON.stringify(randomSong1));
@@ -237,20 +237,23 @@ const Footer = (props: Props) => {
 
   const songLoca = localStorage.getItem("song");
   useEffect(() => {
-    const history = localStorage.getItem("history");
-    if (!history) {
-      localStorage.setItem("history", JSON.stringify([songLoca]));
-    } else {
-      const historyArray = JSON.parse(history);
-      if (!historyArray.includes(songLoca)) {
-        historyArray.push(songLoca);
-        if (historyArray.length > 10) {
-          // Nếu vượt quá 10 bài, xóa bài cũ (ở đầu mảng)
-          historyArray.shift();
+    if(songLoca){
+      const history = localStorage.getItem("history");
+      if (!history) {
+        localStorage.setItem("history", JSON.stringify([songLoca]));
+      } else {
+        const historyArray = JSON.parse(history);
+        if (!historyArray.includes(songLoca)) {
+          historyArray.push(songLoca)
+          if (historyArray.length > 9) {
+            // Nếu vượt quá 10 bài, xóa bài cũ (ở đầu mảng)
+            historyArray.shift();
+          }
+          localStorage.setItem("history", JSON.stringify(historyArray));
         }
-        localStorage.setItem("history", JSON.stringify(historyArray));
       }
     }
+  
   }, [songLoca]);
 
   const maxlength = 14;
@@ -275,7 +278,7 @@ const Footer = (props: Props) => {
                         <img
                           src={currentSong?.song_image[0]}
                           alt=""
-                          className="w-[100%] rounded-[5px]"
+                          className="w-[100%] rounded-[5px] w-[60px] h-[60px] sm:w-[64px] sm:h-[64px]"
                         />
                       </div>
                     </div>

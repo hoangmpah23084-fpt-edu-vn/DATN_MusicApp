@@ -5,7 +5,7 @@ import {
   PauseListItemIconStyle,
   ListItemIconBgStyle,
 } from "@/Mui/style/Footer/StyleAction";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -18,6 +18,7 @@ import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const
 import { activeSong, chekcSubString } from "@/constane/song.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
+import ModalSongMenu from "../Modals/modalSongMenu";
 
 type Props = {
   sideBarRight: boolean;
@@ -52,6 +53,19 @@ const SidebarSong = (props: Props) => {
       setStateColor(false);
     }
   };
+  const [modal, setModal] = useState<boolean>(false);
+  const [songItem, setSongItem] = useState<any>();
+
+
+  const handleShowModalCreateRoom = () => {
+    setModal(!modal)
+  }
+
+  const handleAction = (item: any) => {
+    setModal(true)
+    setSongItem(item)
+  }
+
 
   return (
     <div
@@ -114,8 +128,15 @@ const SidebarSong = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="w-full fjc h-[calc(100vh-200px)] overflow-y-auto">
+        {modal && (
+          <>
+            <ModalSongMenu song={songItem} onShowModal={handleShowModalCreateRoom} />
+          </>
+        )}
+        <div className="w-full relative fjc h-[calc(100vh-200px)] overflow-y-auto">
+
           <div className="w-full h-[100%] overflow-y-scroll">
+
             {song &&
               song?.length > 0 &&
               song.map((item: ifSong, index: number) => {
@@ -128,6 +149,7 @@ const SidebarSong = (props: Props) => {
                       } my-1 fjc  cursor-pointer rounded-lg wall`}
                   >
                     <div className="w-[95%] h-[80%] flex justify-between ">
+
                       <div className="w-[17%] h-full">
                         <div className="w-full h-full flex justify-start items-center relative wallSong">
                           <img
@@ -184,7 +206,7 @@ const SidebarSong = (props: Props) => {
                             </ListItemIconStyle>
                           </ListItemButtonStyle >
                         </div>
-                        <div className="w-1/2">
+                        <div className="w-1/2" onClick={() => handleAction(item)}>
                           <ListItemButtonStyle>
                             <ListItemIconStyle>
                               <MoreHorizIcon

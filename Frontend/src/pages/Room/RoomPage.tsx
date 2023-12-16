@@ -93,7 +93,7 @@ const RoomPage = (props: Props) => {
       setListMess([...listMess, value])
     })
   }, [listMess])
-  
+
   useEffect(() => {
     handleRouter()
   }, [id])
@@ -119,18 +119,18 @@ const RoomPage = (props: Props) => {
     if (user._id == admin._id) {
       console.log("Sending leaveRoomAdmin event");
       socket.emit('leaveRoomAdmin', {
-        user : user._id,
-        admin : admin._id,
-        idroom : id,
+        user: user._id,
+        admin: admin._id,
+        idroom: id,
       })
       toast.success("Chủ phòng đã rời phòng thành công")
       leaveRoom(id as string);
       navigate('/')
-    }else{
+    } else {
       socket.emit('leaveRoomPerson', {
-        user : user._id,
-        admin : admin._id,
-        idroom : id,
+        user: user._id,
+        admin: admin._id,
+        idroom: id,
       })
       leaveRoom(id as string);
       toast.success("Thành viên đã rời phòng thành công")
@@ -138,17 +138,17 @@ const RoomPage = (props: Props) => {
     }
   }
   useEffect(() => {
-    const handleLeaveRoomAdmin = (value : any) => {
+    const handleLeaveRoomAdmin = (value: any) => {
       if (value) {
         toast.success("Phòng không còn tồn tại vì chủ phòng đã rời");
         navigate('/')
       }
     };
     socket.on("serverLeaveRoomAdmin", handleLeaveRoomAdmin);
-  },[]);
+  }, []);
   // , [socket]
   useEffect(() => {
-    const handleLeaveRoomPerson = (value : any) => {
+    const handleLeaveRoomPerson = (value: any) => {
       console.log("LeaveRoomPerson event received:", value);
       if (value) {
         // const user = JSON.parse(localStorage.getItem("user") as string);
@@ -156,7 +156,7 @@ const RoomPage = (props: Props) => {
       }
     };
     socket.on("serverLeaveRoomPerson", handleLeaveRoomPerson);
-  },[]);
+  }, []);
   // , [socket]
 
   return (
@@ -247,7 +247,7 @@ const RoomPage = (props: Props) => {
                       <span>{currentSong?.song_name}</span>
                     </div>
                     <h3 className="subtitle text-[rgba(254,255,255,.6)]  text-[12px] uppercase">
-                      {currentSong?.song_singer}
+                      {currentSong?.id_Singer.name}
                     </h3>
                   </div>
                   <div className="media-right grow-0 shrink-0 flex items-center">

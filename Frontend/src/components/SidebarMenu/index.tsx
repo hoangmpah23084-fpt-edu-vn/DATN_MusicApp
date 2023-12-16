@@ -73,11 +73,11 @@ const items: MenuItem[] = [
     "/playlist",
     <BiSolidPlaylist className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#fa702e] p-[2px] text-[#fff]" />
   ),
-  getItem(
-    "Album",
-    "/album",
-    <BsFileMusic className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#ff4eb0] p-[2px] text-[#fff]" />
-  ),
+  // getItem(
+  //   "Album",
+  //   "/album",
+  //   <BsFileMusic className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#ff4eb0] p-[2px] text-[#fff]" />
+  // ),
 ];
 
 const SidebarMenu = ({ handleShowModalCreateRoom, setCollapsed }: props) => {

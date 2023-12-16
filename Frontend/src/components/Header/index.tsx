@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Avatar, Dropdown, Menu, Input } from "antd";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 // import { AiOutlineSetting, AiOutlineSearch } from "react-icons/ai";
-import { GoDesktopDownload } from "react-icons/go";
 
 import {
   AiOutlineSearch,
@@ -13,10 +12,8 @@ import {
 import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { ifUser } from "@/pages/Admin/Interface/User";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./index.css";
-import type { MenuProps } from "antd";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import ItemSong from "../Favourites/ItemSong";
@@ -36,27 +33,32 @@ const Header = (props: Props) => {
   const [userLocal, setUserLocal] = useState<ifUser | null>(null);
   const { dataUserOne } = useAppSelector((state: RootState) => state.user);
   // const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const navigate = useNavigate();
   const [showUser, setShowUser] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const [showPass, setShowPass] = useState<boolean>(false);
+  const [checkAdmin, setCheckAdmin] = useState<boolean>(false);
+
   const token = localStorage.getItem("token");
   useEffect(() => {
     const currentUser = localStorage.getItem("user");
     if (currentUser) {
       const parseCurrentUser = JSON.parse(currentUser);
       setUserLocal(parseCurrentUser);
-      console.log(parseCurrentUser);
       dispatch(GetUser(parseCurrentUser._id));
+      if (parseCurrentUser.role === 'admin') {
+        setCheckAdmin(true)
+      }
     }
+
+
+
   }, []);
 
   const handleMenuClick = (e: any) => {
     if (e.key === "logout") {
       handleLogout();
-      navigate("/");
       toast.success("Đăng xuất thành công!");
-    } else if (e.key === "avt") {
+      location.reload();
     }
   };
 
@@ -66,6 +68,8 @@ const Header = (props: Props) => {
     localStorage.removeItem("token");
     dispatch(resetUser(null));
   };
+
+
 
   const menu = (
     <Menu onClick={handleMenuClick}>
@@ -85,6 +89,13 @@ const Header = (props: Props) => {
         </div>
       </Menu.Item>
       <Menu.Divider />
+
+      {checkAdmin && <Menu.Item key="admin" >
+        <Link to='/admin' className="flex items-center">
+          <strong className="flex items-center"> <AiOutlineUser className="mr-2" />Quản trị viên</strong>
+        </Link>
+      </Menu.Item>}
+
       <Menu.Item key="personal" onClick={() => setShowUser(!showUser)}>
         <b className="flex items-center">
           <AiOutlineUser className="mr-2" /> Chỉnh sửa cá nhân
@@ -116,7 +127,7 @@ const Header = (props: Props) => {
   const dropdownMenu = (
     <Menu>
       {items.length > 0 ? (
-        items.map((menuItem) => (
+        items.map((menuItem: any) => (
           <Menu.Item key={menuItem.key}>{menuItem.label}</Menu.Item>
         ))
       ) : (
