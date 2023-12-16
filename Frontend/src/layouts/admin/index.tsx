@@ -50,10 +50,8 @@ const LayoutAdmin = () => {
   const items: MenuItem[] = [
     getItem(<Link to="/admin">Thống kê</Link>, '1', <PieChartOutlined />),
     getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />),
-    getItem(<Link to="/admin/album">Album</Link>, '99', <CiMusicNote1 />),
     getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />),
-    getItem(<Link to="/admin/genre">Thể Loại</Link>, '1', <AiOutlineBars />),
-    getItem(<div onClick={handleLogout}>Đăng xuất</div>, '5', <LogoutOutlined />)
+    getItem(<Link to="/admin/genre">Thể Loại</Link>, '1', <AiOutlineBars />)
 
   ];
   return (
