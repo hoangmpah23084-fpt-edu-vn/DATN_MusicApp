@@ -21,6 +21,7 @@ import Room from "@/pages/Room/room";
 import RoomPage from "@/pages/Room/RoomPage";
 import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import HistorySong from "@/pages/HistorySong/history";
+import DetailGenre from "@/pages/Genre";
 export const router = createBrowserRouter([
   //todo FE
   {
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
       { path: "album", element: <Album /> },
       { path: "album/:id", element: <DetailAlbum /> },
       { path: "singer/:id", element: <DetailSinger /> },
+      { path: "genre/:id", element: <DetailGenre /> },
       { path: "music_charts", element: <MusicCharts /> },
       { path: "dsong", element: <DSong /> },
       { path: "history", element: <HistorySong /> }

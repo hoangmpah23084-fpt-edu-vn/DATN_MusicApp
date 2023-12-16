@@ -19,6 +19,8 @@ const ListSongItem = ({ section, item }: Props) => {
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
+  // console.log(item);
+  
   const handToggle = async () => {
     stateSong &&
       dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start");
@@ -27,7 +29,7 @@ const ListSongItem = ({ section, item }: Props) => {
   }
 
   return (
-    <div className="list-items px-[15px]">
+    <div className="list-items px-[15px] z-10">
       <div
         className={`media flex items-center py-[10px] px-[15px] rounded-[5px] text-left hover:bg-[#2f2739] relative z-10 ${section === "chanel" && "bg-[#14182A]"
           }  ${section === "zingchart" && "bg-[#492761] mb-[10px] hover:bg-[#65487a]"

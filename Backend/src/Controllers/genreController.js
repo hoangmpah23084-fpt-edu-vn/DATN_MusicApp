@@ -34,13 +34,13 @@ export const getAll_Genre = async (req, res) => {
     const filData = data.filter((item) => item.name != "un_genre");
     // const findData = filData.filter((item) => item.name == "TẤT CẢ");
     console.log(filData);
-    filData.forEach((item) => {
-      filData[0].list_songs = [...filData[0].list_songs, ...item.list_songs];
-    });
+    // filData.forEach((item) => {
+    //   filData[0].list_songs = [...filData[0].list_songs, ...item.list_songs];
+    // });
     filData.forEach((_, index) => {
       filData[index].list_songs = filData[index].list_songs
         .sort((a, b) => b.view_song - a.view_song)
-        .slice(0, 9);
+        // .slice(0, 9);
     });
     return res.status(200).json({
       message: "Get All Genre Success",
@@ -61,7 +61,7 @@ export const get_GenreById = async (req, res) => {
     }
     data.list_songs = data.list_songs
       .sort((a, b) => b.view_song - a.view_song)
-      .slice(0, 9);
+      // .slice(0, 9);
     return res.status(200).json({
       message: "Get Genre By Id Success",
       data,
