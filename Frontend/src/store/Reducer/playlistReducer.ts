@@ -40,7 +40,8 @@ export const addSongToPlaylist = createAsyncThunk("/playlist/create/song/:id", a
     return data;
 })
 
-export const deleteSongToPlaylist = createAsyncThunk("/playlist/delete/song/:id", async (id: string,params:any) => {
+export const deleteSongToPlaylist = createAsyncThunk("/playlist/delete/song/:id", async (param:any) => {
+    const {id , ...params} = param
     const { data } = await instanceAxios.put(`/playlist/song/${id}`, params)
     return data;
 })
