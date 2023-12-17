@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { joinRoom } from "@/store/Reducer/roomReducer";
 import { toast } from "react-toastify";
+import instanceAxios from "@/utils/axios";
 
 type roomProps = {
   onShowModal: () => void;
@@ -20,13 +21,18 @@ const ModalRoom = ({ onShowModal, data }: roomProps) => {
 
   const onHandleSubmit: SubmitHandler<any> = async ({ password }) => {
     try {
-      const resq = await dispatch(joinRoom({
+      // const resq = await dispatch(joinRoom({
+      //   idChat: data._id,
+      //   password: password
+      // }));
+
+      const resp = await instanceAxios.post("http://localhost:8080/api/joinroom",{
         idChat: data._id,
         password: password
-      }));
+      })
       localStorage.removeItem('song');
-      navigate(`/liveroom/${resq.payload.data._id}`);
-      toast.success(resq.payload.message)
+      navigate(`/liveroom/${resp.data.data._id}`);
+      toast.success(resp.data.message)
     } catch (error) {
       toast.error(error as string)
     } finally {

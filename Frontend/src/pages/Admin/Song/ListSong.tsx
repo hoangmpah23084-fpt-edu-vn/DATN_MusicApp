@@ -112,7 +112,7 @@ const ListSong = () => {
       id: chekcSubString(item._id as string, 5),
       ten: chekcSubString(item.song_name as string, 20),
       anh: <img src={item.song_image[0]} className="w-14 h-14 rounded-xl" />,
-      casi: item.id_Singer.name,
+      casi: item.id_Singer?.name,
       luotnghe: item.view_song,
       yeuthich: item.total_like,
     };
@@ -408,7 +408,7 @@ const ListSong = () => {
             <Select defaultValue="Chọn ca sĩ" style={{ width: "48%" }}>
               {singer.map((item: ISinger) => (
                 <Option key={item._id} value={item._id}>
-                  {item.name}
+                  {item?.name}
                 </Option>
               ))}
             </Select>
@@ -422,7 +422,7 @@ const ListSong = () => {
             <Select defaultValue="Chọn thể loại" style={{ width: "50%" }}>
               {genre.map((item: IGenre) => (
                 <Option key={item._id} value={item._id}>
-                  {item.name}
+                  {item?.name}
                 </Option>
               ))}
             </Select>
@@ -598,7 +598,7 @@ const ListSong = () => {
                 <strong>Tên bài hát:</strong> {dataOne?.song_name}
               </p>
               <p>
-                <strong>Ca sĩ:</strong> {dataOne?.id_Singer.name}
+                <strong>Ca sĩ:</strong> {dataOne?.id_Singer?.name}
               </p>
               <p>
                 <strong>Link:</strong>{" "}

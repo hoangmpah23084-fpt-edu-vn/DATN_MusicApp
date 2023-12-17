@@ -6,12 +6,12 @@ import songModel from "../Models/songModel.js";
 export const createRoom = async (req, res) => {
   try {
     const { nameGroup, password } = req.body;
-    const { error } = roomSchame.validate(req.body, { abortEarly: false });
-    if (error) {
-      return res.status(400).json({
-        message: error.details[0].message,
-      });
-    }
+    // const { error } = roomSchame.validate(req.body, { abortEarly: false });
+    // if (error) {
+    //   return res.status(400).json({
+    //     message: error.details[0].message,
+    //   });
+    // }
     const exitRoom = await roomModel.findOne({ nameGroup });
     if (exitRoom) {
       return res.status(400).json({
@@ -19,12 +19,15 @@ export const createRoom = async (req, res) => {
       });
     }
     // memberGroup.push(req.user);
+
+
     const createRoom = await roomModel.create({
       nameGroup,
       password,
       memberGroup: [req.user._id],
       isAdminGroup: req.user._id,
     });
+
     const roomChat = await roomModel
       .findOne({ _id: createRoom._id })
       .populate("memberGroup", "-password")
