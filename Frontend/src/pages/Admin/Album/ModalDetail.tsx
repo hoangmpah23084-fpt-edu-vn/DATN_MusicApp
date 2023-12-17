@@ -22,11 +22,7 @@ const AlbumDetail = (props: Props) => {
 
 
     const onLoadMore = async () => {
-        // setLoading(true);
-        // setList(
-        //     data.concat([...new Array(count)].map(() => ({ loading: true, name: {}, picture: {} }))),
-        // );
-
+        setLoading(true);
         try {
             const resp = await instanceAxios.get(`http://localhost:8080/api/album/${albumSelected._id}`)
             console.log(resp.data.data)
@@ -89,7 +85,7 @@ const AlbumDetail = (props: Props) => {
             className="demo-loadmore-list"
             loading={initLoading}
             itemLayout="horizontal"
-            loadMore={loadMore}
+            // loadMore={loadMore}
             dataSource={list}
             renderItem={(item) => (
                 <List.Item
