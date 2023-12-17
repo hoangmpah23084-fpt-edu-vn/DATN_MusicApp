@@ -50,7 +50,7 @@ export const get_Songs = async (req, res) => {
     _limit = 10,
     _page = 1,
     search,
-    _sort = "createdAt",
+    _sort = "total_like",
     _order = "asc",
   } = req.query;
   const options = {

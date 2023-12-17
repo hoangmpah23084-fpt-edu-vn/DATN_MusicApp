@@ -79,7 +79,6 @@ const AlbumAdmin = () => {
       search: search,
     };
     dispatch(handGetSong(data));
-    fetchDataSong();
   }, [page, pageSize, search]);
 
   useEffect(() => {
@@ -313,7 +312,9 @@ const AlbumAdmin = () => {
           className="w-full min-w-0"
         >
           <Select
-            defaultValue="Chọn ca sĩ"
+          allowClear
+          showSearch
+            placeholder="Chọn ca sĩ"
             options={optionSinger}
             className="w-full"
           ></Select>
@@ -369,7 +370,9 @@ const AlbumAdmin = () => {
     try {
       const resp = await instanceAxios.get("http://localhost:8080/api/song");
       if (resp?.data?.data) {
-        const newData = resp.data.data.map((item: any) => ({
+        const newData = resp.data.data.filter((item:any) => 
+          item.id_Singer._id == albumSelected.id_singer._id
+        ).map((item: any) => ({
           value: item._id,
           label: item.song_name,
         }));
@@ -380,6 +383,10 @@ const AlbumAdmin = () => {
       toast.error(error as any);
     }
   };
+
+  useEffect(() => {
+    fetchDataSong()
+  },[albumSelected])
 
   const modalAdd = () => {
     return (
@@ -464,6 +471,8 @@ const AlbumAdmin = () => {
           <Button onClick={() => handleAddSong()} className="mb-[12px]">Thêm bài hát</Button>
 
           <Select
+          allowClear
+          showSearch
             mode="multiple"
             size={"large"}
             placeholder="Please select"

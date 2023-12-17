@@ -93,7 +93,7 @@ const AlbumDetail = (props: Props) => {
             dataSource={list}
             renderItem={(item) => (
                 <List.Item
-                    actions={[<span onClick={() => handleRemoveSong(item)} key="list-loadmore-edit">Xóa</span>]}
+                    actions={[<span className='cursor-pointer' onClick={() => handleRemoveSong(item)} key="list-loadmore-edit">Xóa</span>]}
                 >
                     <Skeleton avatar title={false} loading={item.loading} active>
                         <List.Item.Meta
