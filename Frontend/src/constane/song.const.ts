@@ -32,6 +32,17 @@ export const chekcSubString = (text: string, size?: number) => {
     return "";
 }
 
+export const checkLengthNameSong = (text: string) => {
+    if (text) {
+        const lengthText = text.length;
+        const maxLength = 17;
+        if (lengthText > maxLength) {
+            return true;
+        }
+        return false
+    }
+}
+
 
 
 

@@ -51,7 +51,8 @@ const LayoutAdmin = () => {
     getItem(<Link to="/admin">Thống kê</Link>, '1', <PieChartOutlined />),
     getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />),
     getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />),
-    getItem(<Link to="/admin/genre">Thể Loại</Link>, '1', <AiOutlineBars />)
+    getItem(<Link to="/admin/genre">Thể Loại</Link>, '4', <AiOutlineBars />),
+    getItem(<Link to="/admin/album">Album</Link>, '5', <AiOutlineBars />)
 
   ];
   return (

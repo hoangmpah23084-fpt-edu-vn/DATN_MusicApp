@@ -109,7 +109,7 @@ const KhamPhaPage = () => {
               {/* End Component WantToListent */}
 
               {/* Start Component WantToListent */}
-              <Advertisement />
+              {/* <Advertisement /> */}
               {/* End Component WantToListent */}
               
             </div>
