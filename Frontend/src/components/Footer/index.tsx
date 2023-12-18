@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   handChangeStateSong,
   handGetCurrentSong,
+  setStateSong,
 } from "@/store/Reducer/currentSong";
 import {
   ActiveFavourites,
@@ -64,7 +65,6 @@ const Footer = (props: Props) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
-  const [intervalId, setIntervalId] = useState<number | null>(null);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
 
@@ -73,26 +73,23 @@ const Footer = (props: Props) => {
 
   const dispatch = useAppDispatch();
 
-  const togglePlayPause = useCallback(() => {
+  const handUpdateCurrentTime = () => {
+    audioRef.current && audioRef.current.addEventListener("timeupdate", (value) => {
+      setRewindAudio((value.target as HTMLAudioElement)?.currentTime);
+      setCurrentTime(SeconToMinuste((value.target as HTMLAudioElement)?.currentTime));
+    })
+  }
 
+  const togglePlayPause = useCallback(async () => {
     const preValue = stateSong;
-    dispatch(handChangeStateSong(!preValue));
+    dispatch(setStateSong(!preValue));
     if (!preValue) {
-      void audioRef.current?.play();
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current &&
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      await audioRef.current?.play();
+      handUpdateCurrentTime();
     } else {
-      audioRef.current?.pause();
-      if (intervalId !== null) {
-        clearInterval(intervalId);
-        setIntervalId(null);
-      }
+      await audioRef.current?.pause();
     }
-  }, [dispatch, intervalId, stateSong]);
+  }, [dispatch, stateSong]);
   const SeconToMinuste = (secs: number) => {
     if (secs) {
       const minutes = Math.floor(secs / 60);
@@ -118,9 +115,9 @@ const Footer = (props: Props) => {
           dispatch(handGetCurrentSong(findSong[0]));
           localStorage.setItem("song", JSON.stringify(findSong[0]));
           console.log("Đây là lỗi Tự động chuyển");
-          dispatch(handChangeStateSong(false));
+          dispatch(setStateSong(false));
           setTimeout(() => {
-            dispatch(handChangeStateSong(true));
+            dispatch(setStateSong(true));
           }, 500);
         }
       }
@@ -131,9 +128,9 @@ const Footer = (props: Props) => {
           ];
         dispatch(handGetCurrentSong(randomSong1));
         localStorage.setItem("song", JSON.stringify(randomSong1));
-        dispatch(handChangeStateSong(false));
+        dispatch(setStateSong(false));
         setTimeout(() => {
-          dispatch(handChangeStateSong(true));
+          dispatch(setStateSong(true));
         }, 500);
       }
     };
@@ -166,6 +163,8 @@ const Footer = (props: Props) => {
     dispatch,
     props.ListData,
   ]);
+  // console.log(currentSong);
+  
 
   useEffect(() => {
     if (audioRef.current) {
@@ -190,12 +189,7 @@ const Footer = (props: Props) => {
   useEffect(() => {
     stateSong ? audioRef.current?.play() : audioRef.current?.pause();
     if (stateSong) {
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current &&
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      handUpdateCurrentTime();
     }
     audioRef.current && (audioRef.current.loop = repeat);
     audioRef.current && (audioRef.current.volume = volume / 100);

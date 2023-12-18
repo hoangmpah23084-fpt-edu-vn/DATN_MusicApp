@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Link, useParams } from "react-router-dom";
 import { AiOutlineHeart, AiOutlinePause } from "react-icons/ai";
 import { BsThreeDots, BsFillPlayFill } from "react-icons/bs";
-import { handChangeStateSong } from "@/store/Reducer/currentSong";
+import { handChangeStateSong, setStateSong } from "@/store/Reducer/currentSong";
 import { useEffect } from "react";
 import { handleGetOne } from "@/store/Reducer/singerReducer";
 import { RootState } from "@/store/store";
@@ -34,7 +34,6 @@ const DetailSinger = () => {
       console.log("Back arrow pressed");
       // Add your custom logic here
     };
-
     // Add event listener for the popstate event
     window.addEventListener("popstate", handlePopState);
 
