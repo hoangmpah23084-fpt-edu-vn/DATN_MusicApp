@@ -29,6 +29,7 @@ export const createRoom = async (req, res) => {
       .findOne({ _id: createRoom._id })
       .populate("memberGroup", "-password")
       .populate("isAdminGroup", "-password");
+    console.log("tạo phòng nhạc", roomChat);
 
     return res.status(200).json({
       message: "Tạo phòng thành công",
@@ -125,7 +126,8 @@ export const getRoom = async (req, res) => {
       .populate("memberGroup", "-password")
       .populate("isAdminGroup", "-password")
       .populate("listMessages", "-password -id_room")
-      .populate("listSong");
+      .populate("listSong")
+      .populate("currentSongInRoom");
 
     if (result) {
       await model_user.populate(result, {
@@ -144,6 +146,17 @@ export const getRoom = async (req, res) => {
           .populate("listSong");
         result.listSong = [...result.listSong, ...song];
       }
+      console.log(Object.keys(result.currentSongInRoom).length);
+      if (Object.keys(result.currentSongInRoom).length === 0) {
+        await roomModel.findByIdAndUpdate(
+          result._id,
+          {
+            $addToSet: { currentSongInRoom: result.listSong[0]._id },
+          },
+          { new: true }
+        );
+      }
+      roomModel.currentSongInRoom = result.listSong[0]._id;
       res.status(200).json({
         message: "Lấy phòng thành công",
         data: result,
@@ -161,15 +174,12 @@ export const getRoom = async (req, res) => {
 };
 
 export const getRooms = async (req, res) => {
-  const {search } = req.query;
+  const { search } = req.query;
   try {
-
     let query = {};
     if (search) {
       query = {
-        $or: [
-          { nameGroup: { $regex: search, $options: 'i' } },
-        ],
+        $or: [{ nameGroup: { $regex: search, $options: "i" } }],
       };
     }
     const getRooms = await roomModel.paginate(query);
@@ -322,7 +332,36 @@ export const leaveRoom = async (req, res) => {
       message: "Rời phòng thành công.",
     });
   } catch (error) {
-    return res.status(400).json({
+    return res.status(500).json({
+      message: error,
+    });
+  }
+};
+
+export const handUpdateCurrentSongInRoom = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id, req.body);
+    const room = await roomModel.findOne({ _id: id });
+    // room.currentSongInRoom = req.body.id_song;
+    await roomModel.findByIdAndUpdate(
+      { _id: id },
+      {
+        $pull: { currentSongInRoom: room.currentSongInRoom[0] },
+      }
+    );
+    await roomModel.findByIdAndUpdate(
+      { _id: id },
+      {
+        $addToSet: { currentSongInRoom: req.body._id },
+      }
+    );
+    return res.status(200).json({
+      message: "cập nhật current Song thành công",
+      data: room,
+    });
+  } catch (error) {
+    return res.status(500).json({
       message: error,
     });
   }

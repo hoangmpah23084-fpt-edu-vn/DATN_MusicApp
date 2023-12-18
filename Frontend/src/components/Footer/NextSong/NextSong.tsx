@@ -1,6 +1,6 @@
 import { ListItemButtonStyle, ListItemIconStyle } from '@/Mui/style/Footer/StyleAction';
 import {  ifSong } from '@/pages/Admin/Interface/ValidateSong';
-import { handChangeStateSong, handGetCurrentSong } from '@/store/Reducer/currentSong';
+import { handChangeStateSong, handGetCurrentSong, setStateSong } from '@/store/Reducer/currentSong';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 
@@ -17,9 +17,9 @@ const NextSong = (props : Props) => {
       const findSong = ListData.filter((_item, index) => index == findIndexSong + 1);
       dispatch(handGetCurrentSong(findSong[0]))
       localStorage.setItem("song",JSON.stringify(findSong[0]));
-      dispatch(handChangeStateSong(false)) 
+      dispatch(setStateSong(false)) 
       setTimeout(() => {
-        dispatch(handChangeStateSong(true)) 
+        dispatch(setStateSong(true)) 
       },500);
     }
   return (

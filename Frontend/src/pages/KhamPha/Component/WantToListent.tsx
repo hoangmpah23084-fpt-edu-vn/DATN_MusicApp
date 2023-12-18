@@ -35,8 +35,8 @@ const WantToListent = (props: Props) => {
               <div className="carousel-wrapper relative ">
                 <div className="carousel flex -mx-[15px] overflow-hidden px-[15px]">
                   <div className="carousel-container w-full grid grid-rows-1 grid-flow-col gap-4 px-[15px]">
-                    {sliceItem?.map((itemList) => (
-                      <SongGenre item={itemList} />
+                    {sliceItem?.map((itemList, index) => (
+                      <SongGenre item={itemList} key={index} />
                     ))}
                   </div>
 

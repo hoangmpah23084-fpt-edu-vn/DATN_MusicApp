@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   handChangeStateSong,
   handGetCurrentSong,
+  setStateSong,
 } from "@/store/Reducer/currentSong";
 import {
   ActiveFavourites,
@@ -71,11 +72,11 @@ const Footer = (props: Props) => {
 
   const dispatch = useAppDispatch();
 
-  const togglePlayPause = useCallback(() => {
+  const togglePlayPause = useCallback(async () => {
     const preValue = stateSong;
-    dispatch(handChangeStateSong(!preValue));
+    dispatch(setStateSong(!preValue));
     if (!preValue) {
-      void audioRef.current?.play();
+      await audioRef.current?.play();
       const id = setInterval(() => {
         audioRef.current && setRewindAudio(audioRef.current?.currentTime);
         audioRef.current &&
@@ -83,7 +84,7 @@ const Footer = (props: Props) => {
       }, 1000);
       setIntervalId(id);
     } else {
-      audioRef.current?.pause();
+      await audioRef.current?.pause();
       if (intervalId !== null) {
         clearInterval(intervalId);
         setIntervalId(null);
@@ -115,9 +116,9 @@ const Footer = (props: Props) => {
           dispatch(handGetCurrentSong(findSong[0]));
           localStorage.setItem("song", JSON.stringify(findSong[0]));
           console.log("Đây là lỗi Tự động chuyển");
-          dispatch(handChangeStateSong(false));
+          dispatch(setStateSong(false));
           setTimeout(() => {
-            dispatch(handChangeStateSong(true));
+            dispatch(setStateSong(true));
           }, 500);
         }
       }
@@ -128,9 +129,9 @@ const Footer = (props: Props) => {
           ];
         dispatch(handGetCurrentSong(randomSong1));
         localStorage.setItem("song", JSON.stringify(randomSong1));
-        dispatch(handChangeStateSong(false));
+        dispatch(setStateSong(false));
         setTimeout(() => {
-          dispatch(handChangeStateSong(true));
+          dispatch(setStateSong(true));
         }, 500);
       }
     };
@@ -163,6 +164,8 @@ const Footer = (props: Props) => {
     dispatch,
     props.ListData,
   ]);
+  // console.log(currentSong);
+  
 
   useEffect(() => {
     if (audioRef.current) {
@@ -273,7 +276,7 @@ const Footer = (props: Props) => {
                       <img
                         src={currentSong?.song_image[0]}
                         alt=""
-                        className="w-[100%] rounded-[5px]"
+                        className="w-[100%] rounded-[5px] h-full"
                       />
                     </div>
                   </div>
@@ -300,7 +303,7 @@ const Footer = (props: Props) => {
                   <Link to={"#"}>
                     <div className="title-wrapper">
                       <span className="item-title title text-[13px] font-thin text-[#dadada]">
-                        {currentSong?.id_Singer.name}
+                        {/* {currentSong?.id_Singer?.name} */}
                       </span>
                     </div>
                   </Link>

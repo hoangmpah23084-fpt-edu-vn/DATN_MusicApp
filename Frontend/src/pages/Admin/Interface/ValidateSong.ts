@@ -12,6 +12,7 @@ export const SongSchame = yup.object().shape({
 })
 
 export interface ifSong {
+  song_singer: ReactNode;
   _id?: string;
   id?: string;
   song_name: string;
