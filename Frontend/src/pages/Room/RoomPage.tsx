@@ -37,15 +37,11 @@ const RoomPage = (props: Props) => {
   const [stateSideBar, setStateSideBar] = useState<string>("trochuyen")
   const [listSong, setListSong] = useState<ifSong[] | []>([])
   const { currentSong, stateSong } = useAppSelector(({ currentSong }) => currentSong);
+
   const [admin, setAdmin] = useState<any | {}>({});
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
   const { id } = useParams();
-
-  // useEffect(() => {
-  //   dispatch(handGetSong())
-  // }, [dispatch, listSong]);
-  console.log(listSong);
   
 
   useEffect(() => {

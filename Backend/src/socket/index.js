@@ -14,9 +14,10 @@ const ConnectSocket = (server) => {
   });
   io.on("connection", (socket) => {
     console.log("connected socket io success");
-    socket.on("joinRoom", (value) => {
+    socket.on("joinRoom", async (value) => {
       socket.join(value);
-
+      const dataRoom = await roomModel.findById(value).populate("listSong");
+      console.log(dataRoom);
       // Lấy danh sách các phòng mà socket đang tham gia
       const rooms = Object.keys(socket.rooms);
 

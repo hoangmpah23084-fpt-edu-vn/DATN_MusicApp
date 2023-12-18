@@ -35,7 +35,7 @@ type Props = {
 }
 
 var socket: Socket<DefaultEventsMap, DefaultEventsMap>;
-const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
+const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState('');
   const [rewindAudio, setRewindAudio] = useState<number>(0);
@@ -48,6 +48,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
   const { currentSong, stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
   const { id } = useParams();
+  const { listSong : ListData  } = useAppSelector(({ room }) => room);
 
   const handUpdateCurrentTime = () => {
     audioRef.current && audioRef.current.addEventListener("timeupdate", (value) => {
@@ -561,7 +562,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
-                <PrevSongRoom ListData={ListData} audioRef={audioRef} socket={socket} idRoom={idRoom} />
+                <PrevSongRoom audioRef={audioRef} socket={socket} idRoom={idRoom} />
                 <div className="w-[24%] h-[100%] ">
                   <PauseListItemButtonStyle id="buttonToggle" onClick={async () => togglePlayPause()} >
                     {/* // togglePlayPause();
@@ -580,7 +581,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>
-                <NextSongRoom ListData={ListData} audioRef={audioRef} socket={socket} idRoom={idRoom} />
+                <NextSongRoom audioRef={audioRef} socket={socket} idRoom={idRoom} />
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle
                     onClick={handchangeRepeat}

@@ -9,18 +9,18 @@ import { useParams } from 'react-router-dom';
 import { Socket } from 'socket.io-client';
 
 type Props = {
-  ListData : ifSong[],
   socket: Socket,
   idRoom ?: string,
   audioRef: RefObject<HTMLAudioElement>
 }
-const PrevSongRoom = ({ListData, socket, idRoom, audioRef} : Props) => {
+const PrevSongRoom = ({socket, idRoom, audioRef} : Props) => {
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
+  const { listSong  } = useAppSelector(({ room }) => room);
   const dispatch = useAppDispatch();
   const {id} = useParams();
     const handPrevSong = async () => {
-      const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id);
-      const findSong = ListData.filter((_item, index) => findIndexSong - 1 < 0 ? index === ListData.length - 1 : index == findIndexSong - 1);
+      const findIndexSong = listSong.findIndex((item) => item._id == currentSong?._id);
+      const findSong = listSong.filter((_item, index) => findIndexSong - 1 < 0 ? index === listSong.length - 1 : index == findIndexSong - 1);
       dispatch(setCurrentSong(findSong[0]))
       axios.put(`http://localhost:8080/api/currentSongRoom/${idRoom}`, findSong[0]);
       localStorage.setItem("song",JSON.stringify(findSong[0]));

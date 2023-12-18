@@ -18,19 +18,19 @@ import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { handChangeStateSong, handGetCurrentSong, setCurrentSong, setStateSong } from "@/store/Reducer/currentSong";
 import { useDebouncedCallback } from "use-debounce";
+import { AddSongInRoom, DeleteSongInRoom } from "@/store/Reducer/roomReducer";
 
 type Props = {
   stateSong: boolean,
   currentSong: ifSong | null,
-  listSong: ifSong[],
   socket : Socket,
-  setListSong: Dispatch<SetStateAction<ifSong[]>>,
   audioRef: React.RefObject<HTMLAudioElement>;
 }
-const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, audioRef}: Props) => {
+const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const {id} = useParams();
+    const { listSong  } = useAppSelector(({ room }) => room);
     const handDeleteSongInRoom = (item : ifSong) => {
       if (item._id == currentSong?._id) {
         toast.warning('Không thẻ xóa bài hát được chọn')
@@ -41,7 +41,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
             toast.warning(data.message)
             return;
           }else{
-            setListSong(data.data.listSong);
+            dispatch(DeleteSongInRoom(item))
             toast.success(data.message)
           }
         })
@@ -110,7 +110,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
     useEffect(() => {
       if (id) {
         socket.on('serverAddSongInListRoom', (value) => {
-          setListSong(prevList => [...prevList, value.song]);
+          dispatch(AddSongInRoom(value.song))
         });
       }
     }, []);
@@ -119,11 +119,12 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
     useEffect(() => {
       socket.on('serverDeleteSongInRoom', (value) => {
         if (value) {
-          const filterData = value.listSong.filter((item : ifSong) => item._id != value.songItem._id);
-          setListSong(filterData)
+          dispatch(DeleteSongInRoom(value.songItem))
+          // const filterData = value.listSong.filter((item : ifSong) => item._id != value.songItem._id);
+          // setListSong(filterData)
         }
       })
-    },[setListSong])
+    },[])
     
   return (
     <div className='w-full h-full overflow-y-scroll bg-[#130C1C] rounded-md p-2'>

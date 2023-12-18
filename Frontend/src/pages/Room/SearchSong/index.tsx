@@ -9,14 +9,16 @@ import { toast } from 'react-toastify';
 import { Socket } from 'socket.io-client';
 import { useDebouncedCallback } from 'use-debounce';
 import currentSong from '@/store/Reducer/currentSong';
+import { useAppDispatch } from '@/store/hooks';
+import { AddSongInRoom } from '@/store/Reducer/roomReducer';
 
 type Props = {
   listSong: ifSong[],
   socket : Socket,
-  setListSong: Dispatch<SetStateAction<ifSong[]>>
 }
-const SearchSongInRoom = ({listSong, setListSong, socket}: Props) => {
+const SearchSongInRoom = ({listSong, socket}: Props) => {
 const [listDataSearch , setListDataSearch] = useState<ifSong[] | []>([]);
+const dispatch = useAppDispatch();
 const {id} = useParams();
   
 const debounced = useDebouncedCallback(
@@ -34,7 +36,8 @@ const debounced = useDebouncedCallback(
     if (listSong.find((element : ifSong) => element._id == item._id)) {
       toast.warning("Bài hát Đã Tồn tại")
     }else{
-      setListSong(prevList => [...prevList, item]);
+      dispatch(AddSongInRoom(item))
+      // setListSong(prevList => [...prevList, item]);
       await axios.put(`http://localhost:8080/api/addSongInRoom/${id}`,item).then(({data}) => {
         console.log(data);
         toast.success(data.message);
