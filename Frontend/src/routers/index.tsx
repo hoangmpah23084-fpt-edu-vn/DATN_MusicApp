@@ -23,6 +23,7 @@ import PlaylistPage from "@/pages/Playlist/PlaylistPage";
 import HistorySong from "@/pages/HistorySong/history";
 import DetailGenre from "@/pages/Genre";
 import React, { ReactElement } from "react";
+import ForgotPass from "@/pages/ForgotPass/ForgotPass";
 
 interface PrivateRouteProps {
   element: ReactElement;
@@ -58,6 +59,8 @@ export const router = createBrowserRouter([
     path: "/signin",
     element: <Signin />
   },
+  { path: "auth/veryPass", element: <ForgotPass /> },
+
   {
 
     path: "/",
@@ -74,7 +77,8 @@ export const router = createBrowserRouter([
       { path: "genre/:id", element: <DetailGenre /> },
       { path: "music_charts", element: <MusicCharts /> },
       { path: "dsong", element: <DSong /> },
-      { path: "history", element: <HistorySong /> }
+      { path: "history", element: <HistorySong /> },
+
     ],
   },
   {

@@ -22,7 +22,7 @@ const SidebarSong = (props: Props) => {
   const { song } = useAppSelector(({ Song }) => Song);
   useEffect(() => {
     if (stateColor) {
-    dispatch(handGetSong());
+      dispatch(handGetSong());
     }
   }, [stateColor]);
 
@@ -134,7 +134,7 @@ const SidebarSong = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="w-full relative fjc h-[calc(100vh-200px)] overflow-y-auto">
+        <div className="w-full relative fjc h-[calc(100vh-200px)]">
           <div className="w-full h-[100%] overflow-y-scroll">
             {stateColor ? song &&
               song?.length > 0 &&
