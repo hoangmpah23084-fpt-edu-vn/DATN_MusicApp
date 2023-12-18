@@ -3,12 +3,6 @@ import { ifSong } from "../Admin/Interface/ValidateSong";
 import SuggSkeleton from "../KhamPha/Skeleton/Sugg.skeleton";
 import ItemSong from "@/components/Favourites/ItemSong";
 
-
-
-
-
-
-
 const HistorySong = () => {
     const [historySongState, setHistorySongState] = useState<ifSong[]>()
     const historySong = localStorage.getItem('history')
@@ -22,7 +16,7 @@ const HistorySong = () => {
                 setHistorySongState([...newData])
                 setTimeout(() => {
                     setLoading(false)
-                }, 2000);
+                }, 100);
             }
         }
     }, [historySong]);

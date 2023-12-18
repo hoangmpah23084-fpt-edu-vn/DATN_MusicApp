@@ -39,6 +39,7 @@ import { RootState } from "@/store/store";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "./css.scss";
+import { setSongHistory } from "@/store/Reducer/Song";
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() =>
   createStyles({
@@ -66,12 +67,14 @@ const Footer = (props: Props) => {
   const [intervalId, setIntervalId] = useState<number | null>(null);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
-  const { token } = useAppSelector((state: RootState) => state.user);
+
   const [totalTiming, setTotalTiming] = useState<number>(0);
+  const token = localStorage.getItem('token')
 
   const dispatch = useAppDispatch();
 
   const togglePlayPause = useCallback(() => {
+
     const preValue = stateSong;
     dispatch(handChangeStateSong(!preValue));
     if (!preValue) {
@@ -237,23 +240,22 @@ const Footer = (props: Props) => {
 
   const songLoca = localStorage.getItem("song");
   useEffect(() => {
-    if(songLoca){
+    if (songLoca) {
       const history = localStorage.getItem("history");
       if (!history) {
         localStorage.setItem("history", JSON.stringify([songLoca]));
       } else {
         const historyArray = JSON.parse(history);
         if (!historyArray.includes(songLoca)) {
-          historyArray.push(songLoca)
-          if (historyArray.length > 9) {
-            // Nếu vượt quá 10 bài, xóa bài cũ (ở đầu mảng)
-            historyArray.shift();
+          historyArray.unshift(songLoca);
+          if (historyArray.length > 20) {
+            historyArray.pop();
           }
           localStorage.setItem("history", JSON.stringify(historyArray));
         }
       }
     }
-  
+    dispatch(setSongHistory())
   }, [songLoca]);
 
   const maxlength = 14;
