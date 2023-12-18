@@ -111,6 +111,9 @@ const songReducer = createSlice({
         },
         setSongHistory: (state) => {
             state.isSongHistory = !state.isSongHistory;
+        },
+        setListSongSongHistory: (state, action) => {
+            state.song = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -181,5 +184,5 @@ const songReducer = createSlice({
     },
 });
 
-export const { setSongFavourite, setSongHistory } = songReducer.actions;
+export const { setSongFavourite, setSongHistory, setListSongSongHistory } = songReducer.actions;
 export default songReducer.reducer;

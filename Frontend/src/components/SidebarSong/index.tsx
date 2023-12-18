@@ -5,7 +5,7 @@ import {
 import React, { useEffect, useState } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { handGetSong } from "@/store/Reducer/Song";
+import { handGetSong, setListSongSongHistory } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { setDataLocal } from "@/store/Reducer/currentSong";
@@ -18,13 +18,13 @@ type Props = {
 const SidebarSong = (props: Props) => {
   const [stateColor, setStateColor] = React.useState<boolean>(true);
   const { stateSong, currentSong } = useAppSelector(({ currentSong }) => currentSong);
-
-
   const dispatch = useAppDispatch();
   const { song } = useAppSelector(({ Song }) => Song);
   useEffect(() => {
+    if (stateColor) {
     dispatch(handGetSong());
-  }, []);
+    }
+  }, [stateColor]);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
@@ -38,11 +38,10 @@ const SidebarSong = (props: Props) => {
   const historySong = localStorage.getItem('history')
 
   useEffect(() => {
-
     if (historySong) {
       const parsedHistory = JSON.parse(historySong) as ifSong[];
       if (parsedHistory) {
-        const newData = parsedHistory.map((item: any) => (JSON.parse(item)))
+        const newData = parsedHistory.map((item: any) => (JSON.parse(item)));
         setHistorySongState(newData)
       }
     }
@@ -51,13 +50,25 @@ const SidebarSong = (props: Props) => {
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;
     setStateColor(!preStateColor);
-
     if (!preStateColor) {
+      // const getSongLocal = localStorage?.getItem("song") || "";
+      // if (getSongLocal) {
+      //   const currentlocal: ifSong = JSON?.parse(getSongLocal);
+      //   dispatch(setListSongSongHistory(currentlocal));
+      // }
       setStateColor(true);
 
     } else {
+      if (historySong) {
+        const parsedHistory = JSON.parse(historySong) as ifSong[];
+        if (parsedHistory) {
+          const newData = parsedHistory.map((item: any) => (JSON.parse(item)));
+          console.log(newData);
+          dispatch(setListSongSongHistory(newData));
+          setHistorySongState(newData)
+        }
+      }
       setStateColor(false);
-
     }
   };
 
