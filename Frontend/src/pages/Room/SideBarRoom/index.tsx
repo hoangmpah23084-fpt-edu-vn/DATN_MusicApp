@@ -30,7 +30,6 @@ const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSide
       axios.get(`http://localhost:8080/api/room/${id}`).then(({data}) => dispatch(setSongInRoom(data.data.listSong)))
       }
   },[dispatch])
-  console.log(listSongInroom);
   
   
   return (
