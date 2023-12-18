@@ -74,14 +74,14 @@ const LayoutClient = () => {
           handleShowModalCreateRoom={handleShowModalCreateRoom}
         />
         <Header collapsed={collapsed} sideBarRight={sideBarRight} />
-        <div className="relative w-[100%] h-[calc(100vh-130px)] md:h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
+        <div className=" relative w-[100%] h-[calc(100vh-130px)] md:h-[calc(100vh-90px)] overscroll-y-auto overflow-x-hidden">
           <Outlet />
         </div>
         <SidebarSong sideBarRight={sideBarRight} />
         <Footer setSideBarRight={setSideBarRight} ListData={current.song} />
 
         {/* responsive */}
-        <FooterMobile/>
+        <FooterMobile />
       </div>
     </>
   );
