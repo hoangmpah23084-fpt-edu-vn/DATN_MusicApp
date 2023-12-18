@@ -8,10 +8,11 @@ type Props = {
   ListData : ifSong[],
 }
 
-const NextSong = (props : Props) => {
-  const {ListData} = props;
+const NextSong = ({ListData} : Props) => {
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
   const dispatch = useAppDispatch();
+  console.log(ListData);
+  
     const handNextSong = () => {
       const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
       const findSong = ListData.filter((_item, index) => index == findIndexSong + 1);

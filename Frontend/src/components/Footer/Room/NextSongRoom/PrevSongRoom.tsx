@@ -25,9 +25,10 @@ const PrevSongRoom = ({ListData, socket, idRoom, audioRef} : Props) => {
       axios.put(`http://localhost:8080/api/currentSongRoom/${idRoom}`, findSong[0]);
       localStorage.setItem("song",JSON.stringify(findSong[0]));
       dispatch(setStateSong(false)) 
-      setTimeout( async () => {
+      setTimeout(() => {
         dispatch(setStateSong(true));
-        audioRef.current && await audioRef.current?.play();
+         audioRef.current?.play();
+        //  audioRef.current && await
       },500);
       idRoom && socket.emit("emitPrevClient", id);
     }

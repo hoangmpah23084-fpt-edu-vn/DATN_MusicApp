@@ -28,7 +28,8 @@ const NextSongRoom = ({ListData, socket, idRoom, audioRef} : Props) => {
       dispatch(setStateSong(false))
       setTimeout(async () => {
         dispatch(setStateSong(true)) 
-        audioRef.current && await audioRef.current?.play();
+        audioRef.current?.play();
+        // audioRef.current && await 
       },500);
       idRoom && socket.emit("emitNextClient", id);
     }

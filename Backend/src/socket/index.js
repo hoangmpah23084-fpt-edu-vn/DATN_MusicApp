@@ -22,7 +22,7 @@ const ConnectSocket = (server) => {
 
       // Kiểm tra số người trong phòng
       const roomName = value;
-      console.log(roomName);
+      // console.log(roomName);
       const numberOfClients = io.sockets.adapter.rooms.get(roomName)?.size || 0;
       console.log(numberOfClients >= 2, numberOfClients);
       //todo if length person >= 2 send request to own room
@@ -43,7 +43,7 @@ const ConnectSocket = (server) => {
     });
     //? toggPlayPause
     socket.on("toggPlayPause", (value) => {
-      socket.in(value.idroom).emit("recivedHandTogg", value);
+      socket.to(value.idroom).emit("recivedHandTogg", value);
     });
     socket.on("emitNextClient", (value) => {
       socket.to(value).emit("emitNextServer", value);

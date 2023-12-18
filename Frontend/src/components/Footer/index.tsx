@@ -64,7 +64,6 @@ const Footer = (props: Props) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
-  const [intervalId, setIntervalId] = useState<number | null>(null);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const { token } = useAppSelector((state: RootState) => state.user);
@@ -72,25 +71,23 @@ const Footer = (props: Props) => {
 
   const dispatch = useAppDispatch();
 
+  const handUpdateCurrentTime = () => {
+    audioRef.current && audioRef.current.addEventListener("timeupdate", (value) => {
+      setRewindAudio((value.target as HTMLAudioElement)?.currentTime);
+      setCurrentTime(SeconToMinuste((value.target as HTMLAudioElement)?.currentTime));
+    })
+  }
+
   const togglePlayPause = useCallback(async () => {
     const preValue = stateSong;
     dispatch(setStateSong(!preValue));
     if (!preValue) {
       await audioRef.current?.play();
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current &&
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      handUpdateCurrentTime();
     } else {
       await audioRef.current?.pause();
-      if (intervalId !== null) {
-        clearInterval(intervalId);
-        setIntervalId(null);
-      }
     }
-  }, [dispatch, intervalId, stateSong]);
+  }, [dispatch, stateSong]);
   const SeconToMinuste = (secs: number) => {
     if (secs) {
       const minutes = Math.floor(secs / 60);
@@ -190,12 +187,7 @@ const Footer = (props: Props) => {
   useEffect(() => {
     stateSong ? audioRef.current?.play() : audioRef.current?.pause();
     if (stateSong) {
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current &&
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      handUpdateCurrentTime();
     }
     audioRef.current && (audioRef.current.loop = repeat);
     audioRef.current && (audioRef.current.volume = volume / 100);

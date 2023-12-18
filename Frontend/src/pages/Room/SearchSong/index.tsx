@@ -34,9 +34,9 @@ const debounced = useDebouncedCallback(
     if (listSong.find((element : ifSong) => element._id == item._id)) {
       toast.warning("Bài hát Đã Tồn tại")
     }else{
+      setListSong(prevList => [...prevList, item]);
       await axios.put(`http://localhost:8080/api/addSongInRoom/${id}`,item).then(({data}) => {
         console.log(data);
-        setListSong(data.data.listSong);
         toast.success(data.message);
       });
     }
