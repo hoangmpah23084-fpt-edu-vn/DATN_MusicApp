@@ -14,15 +14,16 @@ const ConnectSocket = (server) => {
   });
   io.on("connection", (socket) => {
     console.log("connected socket io success");
-    socket.on("joinRoom", (value) => {
+    socket.on("joinRoom", async (value) => {
       socket.join(value);
-
+      const dataRoom = await roomModel.findById(value).populate("listSong");
+      console.log(dataRoom);
       // Lấy danh sách các phòng mà socket đang tham gia
       const rooms = Object.keys(socket.rooms);
 
       // Kiểm tra số người trong phòng
       const roomName = value;
-      console.log(roomName);
+      // console.log(roomName);
       const numberOfClients = io.sockets.adapter.rooms.get(roomName)?.size || 0;
       console.log(numberOfClients >= 2, numberOfClients);
       //todo if length person >= 2 send request to own room
@@ -43,7 +44,7 @@ const ConnectSocket = (server) => {
     });
     //? toggPlayPause
     socket.on("toggPlayPause", (value) => {
-      socket.in(value.idroom).emit("recivedHandTogg", value);
+      socket.to(value.idroom).emit("recivedHandTogg", value);
     });
     socket.on("emitNextClient", (value) => {
       socket.to(value).emit("emitNextServer", value);

@@ -17,7 +17,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { listMessages, memberGroup } from "../Admin/Interface/Room";
 import SideBarRoom from "./SideBarRoom";
 import { handGetSong } from "@/store/Reducer/Song";
-import { setCurrentSong } from "@/store/Reducer/currentSong";
+import { setCurrentSong, setStateSong } from "@/store/Reducer/currentSong";
 import FooterRoom from "@/components/Footer/Room/FooterRoom";
 import { toast } from "react-toastify";
 import { ifSong } from "../Admin/Interface/ValidateSong";
@@ -36,27 +36,24 @@ const RoomPage = (props: Props) => {
   const [listMember, setlistMember] = useState<memberGroup[] | []>([]);
   const [stateSideBar, setStateSideBar] = useState<string>("trochuyen")
   const [listSong, setListSong] = useState<ifSong[] | []>([])
-  const current = useAppSelector(({ Song }) => Song);
-  const { currentSong } = useAppSelector(({ currentSong }) => currentSong)
+  const { currentSong, stateSong } = useAppSelector(({ currentSong }) => currentSong);
+
   const [admin, setAdmin] = useState<any | {}>({});
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
   const { id } = useParams();
-  useEffect(() => {
-    async function fetchData() {
-      await dispatch(handGetSong());
-    }
-    void fetchData();
-  }, [dispatch]);
+  
+
   useEffect(() => {
     const user = localStorage.getItem('user');
     if (user) {
-      const convert = JSON.parse(user); 
-      if (convert._id != admin._id  && admin._id) {
-      socket.emit("takeSongWhenJoin", {idroom : id, song : currentSong})  
-      } 
+      const convert = JSON.parse(user);
+      if (convert._id != admin._id && admin._id) {
+        socket.emit("takeSongWhenJoin", { idroom: id, song: currentSong })
+      }
     }
-  },[])
+  }, [])
+
   const FetchMessage = () => {
     axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
       console.log(data.data.currentSongInRoom[0]);
@@ -70,6 +67,7 @@ const RoomPage = (props: Props) => {
       socket.emit('joinRoom', data.data._id);
     });
   }
+
   useEffect(() => {
     socket = io("http://localhost:8080");
     const user = localStorage.getItem('user');
@@ -78,17 +76,17 @@ const RoomPage = (props: Props) => {
       socket.emit('setUser', convert._id)
     }
     FetchMessage();
-    return () => {
-      // leaveRoom(id as string);
-      // alert("Bạn đã rời khỏi phòng");
-    }
-  }, [setListSong])
+  }, [])
+  useEffect(() => {
+    console.log("UPDATE SONG");
+    
+  },[listSong])
   useEffect(() => {
     socket.on("messRecived", (value) => {
       setListMess([...listMess, value])
     })
   }, [listMess])
-  
+
   useEffect(() => {
     handleRouter()
   }, [id])
@@ -109,41 +107,39 @@ const RoomPage = (props: Props) => {
       }
     }
   }
-  
+
   // console.log(user._id == admin._id,user, admin);
 
-  const handLeaveRoom = useCallback(() => {
+  const handLeaveRoom = () => {
     const user = JSON.parse(localStorage.getItem("user") as string)
     if (admin) {
       if (user._id == admin._id) {
         console.log("Sending leaveRoomAdmin event");
         socket.emit('leaveRoomAdmin', {
-          user : user._id,
-          admin : admin._id,
-          idroom : id,
+          user: user._id,
+          admin: admin._id,
+          idroom: id,
         })
         socket.emit("disconnectClient");
         toast.success("Chủ phòng đã rời phòng thành công");
         leaveRoom(id as string);
         navigate('/')
-      }else{
+      } else {
         socket.emit('leaveRoomPerson', {
-          user : user._id,
-          admin : admin._id,
-          idroom : id,
+          user: user._id,
+          admin: admin._id,
+          idroom: id,
         })
         socket.emit("disconnectClient")
         leaveRoom(id as string);
         navigate('/');
       }
-      sessionStorage.removeItem("playbackState")
     }
-    sessionStorage.removeItem("playbackState");
     // axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
     //   setlistMember(data.data.memberGroup);
     // });
-  },[navigate, admin])
-  
+  }
+
   useEffect(() => {
     if (id) {
       socket.on("resetUser", value => {
@@ -154,9 +150,9 @@ const RoomPage = (props: Props) => {
         }
       })
     }
-  },[]);
+  }, []);
   useEffect(() => {
-    const handleLeaveRoomAdmin = (value : any) => {
+    const handleLeaveRoomAdmin = (value: any) => {
       if (value) {
         // axios.get(`http://localhost:8080/api/room/${id}`).then(({ data }) => {
         //   setlistMember(data.data.memberGroup);
@@ -167,7 +163,7 @@ const RoomPage = (props: Props) => {
     };
     // sessionStorage.removeItem("playbackState");
     socket.on("serverLeaveRoomAdmin", handleLeaveRoomAdmin);
-  },[]);
+  }, []);
   // , [socket]
   useEffect(() => {
     socket.on("serverLeaveRoomPerson", (value) => {
@@ -177,11 +173,133 @@ const RoomPage = (props: Props) => {
           const sliceData = data.data.memberGroup.slice(0, 1);
           setlistMember(sliceData)
         })
-      toast.success("Thành viên đã rời phòng thành công")
+        toast.success("Thành viên đã rời phòng thành công")
       }
     });
-  },[]);
-  // console.log("out useffect : " + listMember.length);
+  }, []);
+  //! Event F5 reload Page Start
+
+  // const handleBeforeUnload = () => {
+  //   const user = JSON.parse(localStorage.getItem("user") as string)
+  //   if (admin) {
+  //     if (user._id == admin._id) {
+  //       console.log("Sending leaveRoomAdmin event");
+  //       socket.emit('leaveRoomAdmin', {
+  //         user: user._id,
+  //         admin: admin._id,
+  //         idroom: id,
+  //       })
+  //       socket.emit("disconnectClient");
+  //       toast.success("Chủ phòng đã rời phòng thành công");
+  //       leaveRoom(id as string);
+  //       navigate('/')
+  //     } else {
+  //       socket.emit('leaveRoomPerson', {
+  //         user: user._id,
+  //         admin: admin._id,
+  //         idroom: id,
+  //       })
+  //       socket.emit("disconnectClient")
+  //       leaveRoom(id as string);
+  //       navigate('/');
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   // Attach event listeners for beforeunload and unload events
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   // window.addEventListener("unload", handleBeforeUnload);
+
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //     // window.removeEventListener("unload", handleBeforeUnload);
+  //   };
+  // }, [stateSong]);
+  // useEffect(() => {
+  //   if (audioRef.current) {
+  //     const getplaybackState = localStorage.getItem("playbackState");
+  //     if (!getplaybackState) return;
+  //     const pausePlaybackState = JSON.parse(getplaybackState);
+  //     console.log("NẾU khi F5 page thì chạy và đây");
+  //     dispatch(setCurrentSong(pausePlaybackState.currentSong));
+  //     // sliderFooter
+  //     audioRef.current && (audioRef.current.currentTime = pausePlaybackState.currentTime);
+  //     localStorage.removeItem("playbackState");
+  //   }
+  // },[])
+  
+  // const handleBeforeUnload = () => {
+  //   const playBackState = {
+  //     currentTime: audioRef.current?.currentTime || 0,
+  //     stateSong: stateSong,
+  //     currentSong: currentSong
+  //   };
+  //   localStorage.setItem("playbackState", JSON.stringify(playBackState));
+  // };
+  // useEffect(() => {
+  //   if (id) {
+  //     socket.on("setverPauseSongReload", value => {
+  //       if (value) {
+  //         dispatch(setStateSong(false));
+  //         audioRef.current?.pause();
+  //       }
+  //     })
+  //   }
+  // },[])
+
+  // useEffect(() => {
+  //   // Attach event listeners for beforeunload and unload events
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   window.addEventListener("unload", handleBeforeUnload);
+
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //     window.removeEventListener("unload", handleBeforeUnload);
+  //   };
+  // }, [stateSong]);
+
+
+  // }, [stateSong]);
+
+// const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+//   event.preventDefault();
+//   const user = JSON.parse(localStorage.getItem("user") as string);
+//   if (admin) {
+//     if (user._id === admin._id) {
+//       console.log("Sending leaveRoomAdmin event");
+//        socket.emit('leaveRoomAdmin', {
+//         user: user._id,
+//         admin: admin._id,
+//         idroom: id,
+//       });
+//        socket.emit("disconnectClient");
+//       toast.success("Chủ phòng đã rời phòng thành công");
+//       // await leaveRoom(id as string);
+//     } else {
+//        socket.emit('leaveRoomPerson', {
+//         user: user._id,
+//         admin: admin._id,
+//         idroom: id,
+//       });
+//        socket.emit("disconnectClient");
+//       // await leaveRoom(id as string);
+//     }
+//   }
+//   // window.location.href = "/";
+//   navigate("/")
+// };
+
+
+// useEffect(() => {
+//   window.addEventListener("beforeunload", handleBeforeUnload);
+
+//   return () => {
+//     window.removeEventListener("beforeunload", handleBeforeUnload);
+//   };
+// }, []);
+
+
+  //! Event F5 reload Page end
 
   return (
     <div>

@@ -23,10 +23,10 @@ const WantToListent = (props: Props) => {
   return (
     <>
       {genre.length > 0 &&
-        genre.map((item) => {
+        genre.map((item, index) => {
           const sliceItem = item.list_songs?.splice(0, 5);
           return (
-            <div className="playlist-section home-recent mt-12">
+            <div className="playlist-section home-recent mt-12" key={index}>
               <div className="home-recent-title flex justify-between mb-[20px]">
                 <h3 className="text-xl font-semibold capitalize">
                   {item.name}
@@ -39,7 +39,6 @@ const WantToListent = (props: Props) => {
                       <SongGenre item={itemList} key={index} />
                     ))}
                   </div>
-
                   {/* <div className="block md:hidden">
                     <Swiper
                       modules={[Autoplay, Navigation]}

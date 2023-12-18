@@ -18,20 +18,19 @@ import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { handChangeStateSong, handGetCurrentSong, setCurrentSong, setStateSong } from "@/store/Reducer/currentSong";
 import { useDebouncedCallback } from "use-debounce";
+import { AddSongInRoom, DeleteSongInRoom } from "@/store/Reducer/roomReducer";
 
 type Props = {
   stateSong: boolean,
   currentSong: ifSong | null,
-  listSong: ifSong[],
   socket : Socket,
-  setListSong: Dispatch<SetStateAction<ifSong[]>>,
   audioRef: React.RefObject<HTMLAudioElement>;
 }
-const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, audioRef}: Props) => {
+const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const {id} = useParams();
-
+    const { listSong  } = useAppSelector(({ room }) => room);
     const handDeleteSongInRoom = (item : ifSong) => {
       if (item._id == currentSong?._id) {
         toast.warning('Không thẻ xóa bài hát được chọn')
@@ -42,7 +41,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
             toast.warning(data.message)
             return;
           }else{
-            setListSong(data.data.listSong);
+            dispatch(DeleteSongInRoom(item))
             toast.success(data.message)
           }
         })
@@ -53,93 +52,79 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
         listSong: listSong,
       })
     }
-    
-    const handToggSong = useCallback(async (item : ifSong) => {
+    const handToggSong = async (item : ifSong) => {
       const preValue = stateSong;
       const formData = {
         idroom : id,
         song : item,
-        stateSong : preValue
+        stateSong : preValue,
+        currentSong : currentSong
       }
       dispatch(setCurrentSong(item));
       axios.put(`http://localhost:8080/api/currentSongRoom/${id}`, item)
       localStorage.setItem('song', JSON.stringify(item));
-      await dispatch(setStateSong(!preValue));
       if (preValue && currentSong?._id == item._id) {
         console.log("stop");
         dispatch(setStateSong(false))
-        await audioRef.current?.pause();
+        audioRef.current?.pause();
       }else{
         console.log("start");
         dispatch(setStateSong(true))
-        await audioRef.current?.play();
+        audioRef.current && audioRef.current.play();
+        setTimeout(() => {
+         audioRef.current && audioRef.current.play();
+       },500)
       }
       socket.emit('clientStartSongSideBar', formData)
-    },[dispatch, stateSong]);
-    const handToggSongServer = useCallback(async (item : ifSong) => {
-      const preValue = stateSong;
-      dispatch(setCurrentSong(item));
-      // axios.put(`http://localhost:8080/api/currentSongRoom/${id}`, item)
-      localStorage.setItem('song', JSON.stringify(item));
-      await dispatch(setStateSong(!preValue));
-      if (preValue && currentSong?._id == item._id) {
-        console.log("stop");
-        dispatch(setStateSong(false))
-        await audioRef.current?.pause();
-      }else{
-        console.log("start");
-        dispatch(setStateSong(true))
-        await audioRef.current?.play();
-      }
-    },[dispatch, stateSong]);
-
-    const handDelayPlay = useDebouncedCallback(async () => {
-      await audioRef.current?.play();
-    },500);
+    }
+    
     useEffect(() => {
       if (id) {
         socket.on('serverStartSongSideBar', async (value) => {
           if (value) {
-            handToggSongServer(value.song);
-            // const preValue = value.stateSong;
-            // dispatch(setCurrentSong(value.song));
-            // // axios.put(`http://localhost:8080/api/currentSongRoom/${id}`, item)
-            // // localStorage.setItem('song', JSON.stringify(item));
-            // //  dispatch(setStateSong(!preValue));
-            // if (preValue && currentSong?._id == value.song._id) {
-            //   console.log("stop");
-            //   dispatch(setStateSong(false))
-            //    audioRef.current?.pause();
-            // }else{
-            //   console.log("start");
-            //   // await handDelayPlay();
-            //   dispatch(setStateSong(true))
-            //  window.addEventListener("auxclick", async () => {
-            //   await audioRef.current?.play();
-            //  })
-            // }
+            console.log(value);
+            // await handToggSongServer(value.song);
+            const preValue = value.stateSong;
+            dispatch(setCurrentSong(value.song));
+            localStorage.setItem('song', JSON.stringify(value.song));
+            //  dispatch(setStateSong(!preValue));
+            if (preValue && value.currentSong?._id == value.song._id) {
+              console.log("stop side bar Song server");
+              dispatch(setStateSong(false))
+               audioRef.current?.pause();
+            }else{
+              console.log("start side bar Song server");
+              dispatch(setStateSong(true))
+              console.log(audioRef.current, "xxxxxxxxxx");
+              audioRef.current && audioRef.current.play();
+               setTimeout(() => {
+                audioRef.current && audioRef.current.play();
+              },500)
+            }
           }
         })
       }
     },[]);
-    // handDelayPlay(); dispatch,stateSong, setStateSong
+    // ,[dispatch, stateSong]
+
     useEffect(() => {
       if (id) {
         socket.on('serverAddSongInListRoom', (value) => {
-          setListSong((prev) => [value.song, ...prev]);
+          dispatch(AddSongInRoom(value.song))
         });
       }
-    }, [socket, id, setListSong]);
+    }, []);
 
 
     useEffect(() => {
       socket.on('serverDeleteSongInRoom', (value) => {
         if (value) {
-          const filterData = value.listSong.filter((item : ifSong) => item._id != value.songItem._id);
-          setListSong(filterData)
+          dispatch(DeleteSongInRoom(value.songItem))
+          // const filterData = value.listSong.filter((item : ifSong) => item._id != value.songItem._id);
+          // setListSong(filterData)
         }
       })
-    },[setListSong])
+    },[])
     
   return (
     <div className='w-full h-full overflow-y-scroll bg-[#130C1C] rounded-md p-2'>
@@ -159,6 +144,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, listSong, setListSong, 
                             src={`${item.song_image[0]}`}
                           />
                     <div className="absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause">
+                    {/* handToggSong(item) */}
                             <PauseListItemButtonStyle
                               onClick={() => handToggSong(item)}
                             >
