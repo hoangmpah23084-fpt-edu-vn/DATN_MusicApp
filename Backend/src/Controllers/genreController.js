@@ -46,7 +46,7 @@ export const getAll_Genre = async (req, res) => {
     filData.forEach((_, index) => {
       filData[index].list_songs = filData[index].list_songs
         .sort((a, b) => b.view_song - a.view_song)
-        .slice(0, 9);
+
     });
     return res.status(200).json({
       message: "Get All Genre Success",
@@ -156,5 +156,5 @@ export const delete_Genre = async (req, res) => {
     });
   }
 };
-const deleteSongInGenre = () => {};
+const deleteSongInGenre = () => { };
 // const genre = await Genre.findByIdAndDelete(req.params.id);
