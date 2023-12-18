@@ -13,7 +13,7 @@ const Login = () => {
     const [type, setType] = useState('password');
 
     const onHandleChangePassword = () => {
-        type == 'password'? setType('text') : setType('password');
+        type == 'password' ? setType('text') : setType('password');
     }
 
     const { register, handleSubmit, formState: { errors } } = useForm<SigninForm>(
@@ -27,7 +27,7 @@ const Login = () => {
     const onSubmit = async (dataSignin: SigninForm) => {
         const res: any = await dispatch(signin(dataSignin))
         console.log(res);
-        
+
         toast.success(res.payload?.message)
         const { accessToken, user } = res?.payload
         if (accessToken && user) {
@@ -43,9 +43,12 @@ const Login = () => {
         }
 
     }
+
+
     return (
         <div>
             <section className="bg-[#170F23]">
+
                 <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                     <section
                         className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6"
@@ -117,6 +120,7 @@ const Login = () => {
                                 </p>
                             </div>
 
+
                             <form action="#" className="mt-8 grid grid-cols-6 gap-6" onSubmit={handleSubmit(onSubmit)}>
 
 
@@ -133,28 +137,28 @@ const Login = () => {
                                     <p className="text-red-600 text-[15px]">{errors.email && errors.email.message}</p>
                                 </div>
 
-                                <div className="col-span-6 flex space-x-5 items-center">
-                                    <div>
-                                        <label
-                                            htmlFor="Password"
-                                            className="block text-sm font-medium text-white"
-                                        >
-                                            Mật Khẩu
-                                        </label>
+                                <div className="col-span-6">
+                                    <label
+                                        htmlFor="Password"
+                                        className="block text-sm font-medium text-white"
+                                    >
+                                        Mật Khẩu
+                                    </label>
 
-                                        <input
-                                            type={type}
-                                            {...register("password", { required: true })}
-                                            placeholder="********"
-                                            className="mt-2 h-[35px]  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                                        />
-                                    </div>
-                                    <div className=" flex items-center space-x-1 mt-5 text-white">
-                                        <input type="checkbox" id="show_password" 
-                                        onChange={onHandleChangePassword} 
-
-                                        />
-                                        <label htmlFor="show_password">Hiển thị mật khẩu</label>
+                                    <input
+                                        type={type}
+                                        {...register("password", { required: true })}
+                                        placeholder="********"
+                                        className="mt-2 w-full h-[35px]  rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                    />
+                                    <div className=" flex items-center justify-between space-x-1 mt-5 text-white">
+                                        <a href="auth/veryPass" className="ml-2 text-[#3f8aff] cursor-pointer" >Quên mật khẩu</a>
+                                        <div className="flex items-center">
+                                            <input type="checkbox" id="show_password"
+                                                onChange={onHandleChangePassword}
+                                            />
+                                            <label htmlFor="show_password ml-2">Hiển thị mật khẩu</label>
+                                        </div>
                                     </div>
                                     <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>
                                 </div>

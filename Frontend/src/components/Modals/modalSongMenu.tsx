@@ -96,7 +96,7 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
   return (
     <>
 
-      <div ref={ref} className="absolute z-[50] bg-[#161b32] rounded-xl w-72 right-8">
+      <div ref={ref} className="absolute z-[9999] bg-[#161b32] rounded-xl w-72 right-8">
         {isShowModalCreate && (
           <ModalCreatePlaylist onShowModal={handleShowModalCreatePlaylist} />
         )}
