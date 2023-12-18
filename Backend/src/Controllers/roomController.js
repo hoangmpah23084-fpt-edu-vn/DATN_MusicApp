@@ -2,6 +2,9 @@ import model_user from "../Models/model_user.js";
 import roomModel from "../Models/roomChatModel.js";
 import { roomSchame } from "../Schemas/roomSchame.js";
 import songModel from "../Models/songModel.js";
+import Singer from "../Models/singer.js";
+import Genre from "../Models/genreModel.js";
+import SongSchame from "../Models/songModel.js";
 
 export const createRoom = async (req, res) => {
   try {
@@ -19,7 +22,6 @@ export const createRoom = async (req, res) => {
       });
     }
     // memberGroup.push(req.user);
-
 
     const createRoom = await roomModel.create({
       nameGroup,
@@ -141,13 +143,21 @@ export const getRoom = async (req, res) => {
         const song = (await songModel.find())
           .sort((a, b) => b.view_song - a.view_song)
           .slice(0, 6);
-
-        await roomModel
-          .findByIdAndUpdate(result._id, {
-            $addToSet: { listSong: [...result.listSong, ...song] },
-          })
-          .populate("listSong");
-        result.listSong = [...result.listSong, ...song];
+        const singerSongs = await SongSchame.populate(song, {
+          path: "id_Singer",
+          model: Singer,
+          select: "name",
+        });
+        const genreSongs = await SongSchame.populate(singerSongs, {
+          path: "id_Genre",
+          model: Genre,
+          select: "name",
+        });
+        await roomModel.findByIdAndUpdate(result._id, {
+          $addToSet: { listSong: [...result.listSong, ...genreSongs] },
+        });
+        // .populate("listSong");
+        result.listSong = [...result.listSong, ...genreSongs];
       }
       console.log(Object.keys(result.currentSongInRoom).length);
       if (Object.keys(result.currentSongInRoom).length === 0) {
