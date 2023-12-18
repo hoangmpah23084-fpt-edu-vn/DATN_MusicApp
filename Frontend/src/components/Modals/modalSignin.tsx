@@ -99,7 +99,7 @@ const ModalSignin = () => {
                                     Đăng nhập
                                 </button>
 
-                                <p className='text-center text-white'>Bạn chưa có tài khoản <a href="/signup" className='text-[#3BC8E7]'>Tạo tìa khoản</a></p>
+                                <p className='text-center text-white'>Bạn chưa có tài khoản <a href="/signup" className='text-[#3BC8E7]'>Tạo tài khoản</a></p>
                             </form>
                         </div>
                     </div>
