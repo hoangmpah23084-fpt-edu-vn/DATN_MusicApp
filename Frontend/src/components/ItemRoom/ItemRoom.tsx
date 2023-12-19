@@ -34,7 +34,6 @@ const ItemRoom = ({
             }
         }
     };
-    console.log("data", data);
 
     return (
         <div
