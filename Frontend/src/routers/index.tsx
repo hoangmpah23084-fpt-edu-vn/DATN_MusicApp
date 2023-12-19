@@ -94,7 +94,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "listuser",
-        element: <ListUser2 />,
+        element: <ListUser />,
       },
       {
         path: "listSinger",
