@@ -5,11 +5,14 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
-import { Advertisement, SuggestSong, WantToListent } from "./Component";
+import { SuggestSong, WantToListent } from "./Component";
 import { useEffect, useState } from "react";
 import ListSongItem from "@/components/List-songs-item";
 import { ifSong } from "../Admin/Interface/ValidateSong";
 import SuggSkeleton from "./Skeleton/Sugg.skeleton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+
 
 const img_slide = [
   { id: 0, img: "/Image/b0fa9fbfce103d1dce15d73aaceb68be.jpg" },
@@ -22,21 +25,23 @@ const img_slide = [
 
 const KhamPhaPage = () => {
   const [historySongState, setHistorySongState] = useState<ifSong[]>()
-  const historySong = localStorage.getItem('history')
   const [loading, setLoading] = useState(true)
+  const { isSongHistory } = useSelector((state: RootState) => state.Song)
   useEffect(() => {
+    const historySong = localStorage.getItem('history')
     setLoading(true)
     if (historySong) {
       const parsedHistory = JSON.parse(historySong) as ifSong[];
       if (parsedHistory) {
         const newData = parsedHistory.map((item: any) => (JSON.parse(item)))
-        setHistorySongState([...newData])
+        setHistorySongState(newData.slice(0, 9))
         setTimeout(() => {
           setLoading(false)
-        }, 2000);
+        }, 100);
       }
     }
-  }, [historySong]);
+  }, [isSongHistory]);
+
 
   return (
     <>
@@ -109,9 +114,9 @@ const KhamPhaPage = () => {
               {/* End Component WantToListent */}
 
               {/* Start Component WantToListent */}
-              <Advertisement />
+              {/* <Advertisement /> */}
               {/* End Component WantToListent */}
-              
+
             </div>
           </div>
         </main>

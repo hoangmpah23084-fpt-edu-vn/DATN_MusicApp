@@ -1,13 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./css.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { FiRadio } from "react-icons/fi";
-import { AiOutlineEye, AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import { FaDoorOpen } from "react-icons/fa";
-import RoomLeftItem from "@/components/Room-left-item";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Slider } from "@mui/material";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -16,13 +13,15 @@ import axios from "axios";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { listMessages, memberGroup } from "../Admin/Interface/Room";
 import SideBarRoom from "./SideBarRoom";
-import { handGetSong } from "@/store/Reducer/Song";
-import { setCurrentSong, setStateSong } from "@/store/Reducer/currentSong";
+import { setCurrentSong } from "@/store/Reducer/currentSong";
 import FooterRoom from "@/components/Footer/Room/FooterRoom";
 import { toast } from "react-toastify";
 import { ifSong } from "../Admin/Interface/ValidateSong";
 import { MdPerson } from "react-icons/md";
 import { leaveRoom } from "@/store/Reducer/roomReducer";
+import { ListItemButtonStyle, ListItemIconStyle } from "@/Mui/style/Footer/StyleAction";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 
 type Props = {
   roomLive?: boolean;
@@ -37,17 +36,19 @@ const RoomPage = (props: Props) => {
   const [stateSideBar, setStateSideBar] = useState<string>("trochuyen")
   const [listSong, setListSong] = useState<ifSong[] | []>([])
   const { currentSong, stateSong } = useAppSelector(({ currentSong }) => currentSong);
+  const [userRoom, setUserRoom] = useState<any | {}>({});
 
   const [admin, setAdmin] = useState<any | {}>({});
   const navigate = useNavigate();
   const audioRef = useRef<HTMLAudioElement>(null);
   const { id } = useParams();
-  
+  const [volume, setVolume] = useState<number>(50);
 
   useEffect(() => {
     const user = localStorage.getItem('user');
     if (user) {
       const convert = JSON.parse(user);
+      setUserRoom(convert);
       if (convert._id != admin._id && admin._id) {
         socket.emit("takeSongWhenJoin", { idroom: id, song: currentSong })
       }
@@ -79,8 +80,8 @@ const RoomPage = (props: Props) => {
   }, [])
   useEffect(() => {
     console.log("UPDATE SONG");
-    
-  },[listSong])
+
+  }, [listSong])
   useEffect(() => {
     socket.on("messRecived", (value) => {
       setListMess([...listMess, value])
@@ -173,131 +174,21 @@ const RoomPage = (props: Props) => {
           const sliceData = data.data.memberGroup.slice(0, 1);
           setlistMember(sliceData)
         })
-        toast.success("Thành viên đã rời phòng thành công")
+        // toast.success("Thành viên đã rời phòng thành công")
       }
     });
   }, []);
   //! Event F5 reload Page Start
 
-  // const handleBeforeUnload = () => {
-  //   const user = JSON.parse(localStorage.getItem("user") as string)
-  //   if (admin) {
-  //     if (user._id == admin._id) {
-  //       console.log("Sending leaveRoomAdmin event");
-  //       socket.emit('leaveRoomAdmin', {
-  //         user: user._id,
-  //         admin: admin._id,
-  //         idroom: id,
-  //       })
-  //       socket.emit("disconnectClient");
-  //       toast.success("Chủ phòng đã rời phòng thành công");
-  //       leaveRoom(id as string);
-  //       navigate('/')
-  //     } else {
-  //       socket.emit('leaveRoomPerson', {
-  //         user: user._id,
-  //         admin: admin._id,
-  //         idroom: id,
-  //       })
-  //       socket.emit("disconnectClient")
-  //       leaveRoom(id as string);
-  //       navigate('/');
-  //     }
-  //   }
-  // };
-  // useEffect(() => {
-  //   // Attach event listeners for beforeunload and unload events
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
-  //   // window.addEventListener("unload", handleBeforeUnload);
-
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //     // window.removeEventListener("unload", handleBeforeUnload);
-  //   };
-  // }, [stateSong]);
-  // useEffect(() => {
-  //   if (audioRef.current) {
-  //     const getplaybackState = localStorage.getItem("playbackState");
-  //     if (!getplaybackState) return;
-  //     const pausePlaybackState = JSON.parse(getplaybackState);
-  //     console.log("NẾU khi F5 page thì chạy và đây");
-  //     dispatch(setCurrentSong(pausePlaybackState.currentSong));
-  //     // sliderFooter
-  //     audioRef.current && (audioRef.current.currentTime = pausePlaybackState.currentTime);
-  //     localStorage.removeItem("playbackState");
-  //   }
-  // },[])
-  
-  // const handleBeforeUnload = () => {
-  //   const playBackState = {
-  //     currentTime: audioRef.current?.currentTime || 0,
-  //     stateSong: stateSong,
-  //     currentSong: currentSong
-  //   };
-  //   localStorage.setItem("playbackState", JSON.stringify(playBackState));
-  // };
-  // useEffect(() => {
-  //   if (id) {
-  //     socket.on("setverPauseSongReload", value => {
-  //       if (value) {
-  //         dispatch(setStateSong(false));
-  //         audioRef.current?.pause();
-  //       }
-  //     })
-  //   }
-  // },[])
-
-  // useEffect(() => {
-  //   // Attach event listeners for beforeunload and unload events
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
-  //   window.addEventListener("unload", handleBeforeUnload);
-
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //     window.removeEventListener("unload", handleBeforeUnload);
-  //   };
-  // }, [stateSong]);
-
-
-  // }, [stateSong]);
-
-// const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-//   event.preventDefault();
-//   const user = JSON.parse(localStorage.getItem("user") as string);
-//   if (admin) {
-//     if (user._id === admin._id) {
-//       console.log("Sending leaveRoomAdmin event");
-//        socket.emit('leaveRoomAdmin', {
-//         user: user._id,
-//         admin: admin._id,
-//         idroom: id,
-//       });
-//        socket.emit("disconnectClient");
-//       toast.success("Chủ phòng đã rời phòng thành công");
-//       // await leaveRoom(id as string);
-//     } else {
-//        socket.emit('leaveRoomPerson', {
-//         user: user._id,
-//         admin: admin._id,
-//         idroom: id,
-//       });
-//        socket.emit("disconnectClient");
-//       // await leaveRoom(id as string);
-//     }
-//   }
-//   // window.location.href = "/";
-//   navigate("/")
-// };
-
-
-// useEffect(() => {
-//   window.addEventListener("beforeunload", handleBeforeUnload);
-
-//   return () => {
-//     window.removeEventListener("beforeunload", handleBeforeUnload);
-//   };
-// }, []);
-
+  const handChangeVolume = (_event: any, value: any) => {
+    setVolume(value)
+  }
+  const handTurnVolume = () => {
+    return volume > 0 ? setVolume(0) : setVolume(50);
+  }
+  useEffect(() => {
+    audioRef.current && (audioRef.current.volume = (volume / 100));
+  }, [volume])
 
   //! Event F5 reload Page end
 
@@ -308,108 +199,59 @@ const RoomPage = (props: Props) => {
         h-full
          left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
       >
-        <div className="zm-left-content w-[88px] relative z-20 bg-[#21181c] h-full">
-          <div className="scroll-container h-full">
-            <div className="content relative h-full">
-              <Swiper
-                modules={[Navigation]}
-                direction="vertical"
-                slidesPerView={9}
-                navigation={true}
-              >
-                {img_slide.map((slide) => {
-                  return (
-                    <SwiperSlide key={slide.id}>
-                      <RoomLeftItem image={slide.img} />
-                    </SwiperSlide>
-                  );
-                })}
-              </Swiper>
-            </div>
-          </div>
-        </div>
-
         <div
           style={{ backgroundImage: `url(${background})` }}
           className="zm-room relative bg-no-repeat bg-cover "
         >
           <div className="zm-room-opacity absolute top-0 left-0 right-0 bottom-0"></div>
           <div className="zm-room-content relative h-full p-[30px] pl-[40px] ">
-            <div className="top-info flex">
-              <div className="live-info flex">
-                <div className="media-left relative mr-[10px]">
-                  <div className="w-[80px] h-[80px] overflow-hidden">
-                    <img
-                      className="rounded-full"
-                      src="../../../public/Image/fd79808d2180de9a421afa6aff38953e.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="label absolute bg-[#ff0a0a] uppercase flex justify-center items-center font-bold text-[12px] px-[15px] py-[1px] rounded-[5px] left-[50%] -translate-x-[50%] -bottom-[6px]">
-                    Live
-                  </div>
-                </div>
-                <div className="media-content flex flex-col ">
-                  <div className="top">
-                    <h3 className="title text-[48px] font-bold leading-[1.2]">
-                      K-POP Radio
-                    </h3>
-                  </div>
-                  <div className="bottom flex items-center gap-4">
-                    <FiRadio />
-                    <h3 className="text-[14px]">K-POP theo yêu cầu</h3>
-                  </div>
-                </div>
-              </div>
-              <div className="stats flex ml-[32px] gap-[20px] text-[18px]">
-                <div className="view flex justify-center items-center gap-[10px]">
-                  <MdPerson />
-                  <span>{listMember.length}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="box-media-play w-[250px] mt-[40px]">
+            <div className="box-media-play w-[300px] mt-[40px]">
               <div className="title uppercase text-[12px] font-bold tracking-[1px]">
                 Bài hát đang phát
               </div>
               <Link to={"#"}>
-                <div className="media flex mt-[8px] p-[12px] rounded-[5px] items-center bg-[rgb(166,158,145)]">
-                  <div className="media-left mr-[10px] grow-0 shrink-0">
-                    <div className="w-[40px] h-[40px]">
-                      <img
-                        className="rounded-[5px] h-full"
-                        src={`${currentSong?.song_image[0]}`}
-                        alt=""
-                      />
+                <div className="media flex mt-[8px] rounded-[5px] items-center gap-4">
+                  <div className="w-[80%] flex justify-between items-center px-4 py-2 bg-[rgb(166,158,145)] rounded-md">
+                    <div className="media-left mr-[10px] grow-0 shrink-0">
+                      <div className="w-[40px] h-[40px]">
+                        <img
+                          className="rounded-[5px] h-full"
+                          src={`${currentSong?.song_image[0]}`}
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                    <div className="media-content grow shrink">
+                      <div className="name text-[14px]">
+                        <span>{currentSong?.song_name}</span>
+                      </div>
+                      <h3 className="subtitle text-[rgba(254,255,255,.6)]  text-[12px] uppercase">
+                        {currentSong?.song_singer}
+                      </h3>
+                    </div>
+                    <div className="media-right grow-0 shrink-0 flex items-center">
+                      <button className="cursor-pointer">
+                        <AiOutlineHeart />
+                      </button>
                     </div>
                   </div>
-                  <div className="media-content grow shrink">
-                    <div className="name text-[14px]">
-                      <span>{currentSong?.song_name}</span>
-                    </div>
-                    <h3 className="subtitle text-[rgba(254,255,255,.6)]  text-[12px] uppercase">
-                      {currentSong?.song_singer}
-                    </h3>
-                  </div>
-                  <div className="media-right grow-0 shrink-0 flex items-center">
-                    <button className="cursor-pointer">
-                      <AiOutlineHeart />
-                    </button>
+                  <div className="w-[20%] flex justify-around items-center">
+                    <MdPerson />
+                    <span>{listMember.length}</span>
                   </div>
                 </div>
               </Link>
             </div>
 
             <div className="action-group absolute right-[30px] top-[30px] z-30">
-              <div className="item0 flex gap-2">
+              <div className="item0 flex gap-2 items-center">
                 <button className="group relative flex flex-col items-center justify-center" onClick={() => handLeaveRoom()}>
                   <FaDoorOpen className="bg-[rgba(255,255,255,.2)] px-3 py-2 rounded-full text-[40px] hover:brightness-90 cursor-pointer" />
                   <div className="item-hover1 relative  text-xs rounded-[5px] bg-[#000] text-center py-1 opacity-0 group-hover:opacity-100 ease-in-out duration-500 mt-[10px]">
                     <p className="text-white px-2 ">Rời phòng</p>
                   </div>
                 </button>
-                <button className="group relative ">
+                <button className="group relative">
                   <BsChevronDown className="bg-[rgba(255,255,255,.2)] px-3 py-2 rounded-full text-[40px] hover:brightness-90 cursor-pointer" />
                   <div className="item-hover relative text-xs rounded-[5px] bg-[#000] text-center py-1 opacity-0 group-hover:opacity-100 ease-in-out duration-500 mt-[10px]">
                     <p className="text-white">Đóng</p>
@@ -417,6 +259,40 @@ const RoomPage = (props: Props) => {
                 </button>
               </div>
             </div>
+            {
+              Object.keys(userRoom).length &&
+                Object.keys(admin).length > 0 && userRoom._id != admin._id ?
+                <div className="action-group absolute right-[220px] top-[30px] z-30">
+                  <div className={`item0 flex gap-2 items-center w-[140px]`}>
+                    <ListItemButtonStyle onClick={() => handTurnVolume()} >
+                      <ListItemIconStyle>
+                        {volume <= 0 ? <VolumeOffIcon sx={{ color: "white" }} /> : <VolumeUpIcon sx={{ color: "white" }} />}
+                      </ListItemIconStyle>
+                    </ListItemButtonStyle>
+                    <Slider
+                      sx={{
+                        color: "white",
+                        "& .MuiSlider-thumb": {
+                          width: "0px",
+                          height: "0px",
+                          transition: "0.1s cubic-bezier(.47,1.64,.41,.8)",
+                          "&:hover": {
+                            width: "12px",
+                            height: "12px",
+                          },
+                          "&:hover, &.Mui-focusVisible": {
+                            width: "12px",
+                            height: "12px",
+                            boxShadow: "0px 0px 0px 8px rgb(255 255 255 / 16%)",
+                          },
+                        },
+                      }}
+                      value={volume}
+                      onChange={handChangeVolume}
+                    />
+                  </div>
+                </div> : ''
+            }
           </div>
           {/* //todo SideBar Rooom */}
           <SideBarRoom listMess={listMess} setListMess={setListMess} audioRef={audioRef} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar} />

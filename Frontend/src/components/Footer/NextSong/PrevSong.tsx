@@ -7,13 +7,15 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 type Props = {
   ListData : ifSong[],
 }
-const PrevSong = (props : Props) => {
-  const {ListData} = props;
+const PrevSong = ({ListData} : Props) => {
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
+  const {song} = useAppSelector(({Song}) => Song);
+  console.log(song);
+  
   const dispatch = useAppDispatch();
     const handPrevSong = () => {
-      const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
-      const findSong = ListData.filter((_item, index) => index == findIndexSong - 1);
+      const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id);
+      const findSong = ListData.filter((_item, index) => findIndexSong - 1 < 0 ? index === ListData.length - 1 : index == findIndexSong - 1);
       dispatch(handGetCurrentSong(findSong[0]))
       localStorage.setItem("song",JSON.stringify(findSong[0]));
       dispatch(setStateSong(false)) 

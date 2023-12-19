@@ -18,7 +18,7 @@ const SongGenre = ({item}: Props) => {
           <div className="card-image overflow-hidden rounded-[6px] relative">
             <Link to={`/singer/${item.id_Genre}`} className="z-10 cursor-pointer">
             <img
-                className="rounded-[6px] aspect-square w-[252px] h-[252px]"
+                className="rounded-[6px] aspect-square h-[252px] "
                 src={`${item.song_image[0]}`}
               />
             </Link>

@@ -440,50 +440,41 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
 
   //! Event F5 reload Page Start
 
-  // const handleBeforeUnload = () => {
-  //   const playBackState = {
-  //     currentTime: audioRef.current?.currentTime || 0,
-  //     stateSong: stateSong,
-  //   };
-  //   localStorage.setItem("playbackState", JSON.stringify(playBackState));
-  // };
+  const handleBeforeUnload = () => {
+    const playBackState = {
+      currentTime: audioRef.current?.currentTime || 0,
+      stateSong: stateSong,
+      currentSong: currentSong
+    };
+    localStorage.setItem("playbackState", JSON.stringify(playBackState));
+  };
 
-  // useEffect(() => {
-  //   // Attach event listeners for beforeunload and unload events
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
-  //   window.addEventListener("unload", handleBeforeUnload);
+  useEffect(() => {
+    // Attach event listeners for beforeunload and unload events
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("unload", handleBeforeUnload);
 
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //     window.removeEventListener("unload", handleBeforeUnload);
-  //   };
-  // }, [stateSong]);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("unload", handleBeforeUnload);
+    };
+  }, [stateSong]);
 
-  // useEffect(() => {
-  //   if (audioRef.current) {
-  //     const getplaybackState = localStorage.getItem("playbackState");
-  //     if (!getplaybackState) return;
+  useEffect(() => {
+    if (audioRef.current) {
+      const getplaybackState = localStorage.getItem("playbackState");
+      if (!getplaybackState) return;
 
-  //     const pausePlaybackState = JSON.parse(getplaybackState);
+      const pausePlaybackState = JSON.parse(getplaybackState);
 
-  //     dispatch(setStateSong(pausePlaybackState.stateSong));
-  //     dispatch(setCurrentSong(pausePlaybackState.currentSong));
-  //     // sliderFooter
-  //     if (pausePlaybackState.stateSong) {
-  //       // audioRef.current.play() // Initiate playback in response to a user interaction
-  //       audioRef.current.play();
-  //       // setTimeout(() => {
-  //       //   audioRef.current && audioRef.current.play()
-  //       // },500)
-  //     } else {
-  //       audioRef.current?.pause();
-  //     }
+      // dispatch(setStateSong(pausePlaybackState.stateSong));
+      dispatch(setCurrentSong(pausePlaybackState.currentSong));
 
-  //     audioRef.current && (audioRef.current.currentTime = pausePlaybackState.currentTime);
-  //     localStorage.removeItem("playbackState");
-  //   }
+      audioRef.current && (audioRef.current.currentTime = pausePlaybackState.currentTime);
+      localStorage.removeItem("playbackState");
+    }
 
-  // }, [stateSong]);
+  }, [stateSong]);
 
 
   //! Event F5 reload Page end
@@ -491,7 +482,7 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
   return (
     <div
       className={`fixed z-50 w-[100%] bottom-0 bg-[#14182A] cursor-pointer `}>
-      <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
+      <div className="level text-white h-[90px] px-[40px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
           <div className="flex items-center w-[100%]">
             <div className="flex w-[100%] ">
@@ -665,6 +656,7 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
                       },
                     },
                   }}
+                  
                   value={volume}
                   onChange={handChangeVolume}
                 />

@@ -25,13 +25,17 @@ import {
   getPlaylist,
 } from "@/store/Reducer/playlistReducer";
 import { useAppDispatch } from "@/store/hooks";
+import useClickOutside from "@/hooks/clickOutSide";
 
-const ModalSongMenu = ({ song }: any) => {
+const ModalSongMenu = ({ song, onShowModal }: any) => {
   const { id } = useParams<{ id?: string }>();
   const [playlist, setPlaylist] = useState<any>([]);
   const [isShowModalCreate, setIsShowModalCreate] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+
+
   const fetchDataPlaylist = async () => {
     try {
       const { data } = await instanceAxios.get(`/playlist`);
@@ -60,8 +64,11 @@ const ModalSongMenu = ({ song }: any) => {
       });
 
       dispatch(
-        deleteSongToPlaylist(id as string, {
-          id_song: song._id,
+        deleteSongToPlaylist({
+          id,
+          params: {
+            id_song: song._id,
+          },
         })
       );
       dispatch(getPlaylist(id as string));
@@ -72,35 +79,40 @@ const ModalSongMenu = ({ song }: any) => {
     }
   };
 
+
+  const token = localStorage.getItem("token");
   useEffect(() => {
-    fetchDataPlaylist();
+    if (token) {
+      fetchDataPlaylist();
+    }
   }, []);
 
   const handleShowModalCreatePlaylist = () => {
     setIsShowModalCreate(!isShowModalCreate);
   };
 
-  console.log(window.location.pathname);
+  const ref = useClickOutside(() => onShowModal());
 
   return (
     <>
-      {isShowModalCreate && (
-        <ModalCreatePlaylist onShowModal={handleShowModalCreatePlaylist} />
-      )}
-      <div className="absolute z-[9999] bg-[#161b32] rounded-xl w-72 right-16 mt-72">
+
+      <div ref={ref} className="absolute z-[9999] bg-[#161b32] rounded-xl w-72 right-8">
+        {isShowModalCreate && (
+          <ModalCreatePlaylist onShowModal={handleShowModalCreatePlaylist} />
+        )}
         <header className="flex items-center py-3 ml-2 pr-10 ">
           <img
-            src="https://i.ytimg.com/vi/z3qOnZIqRVs/maxresdefault.jpg"
+            src={song.song_image[0]}
             alt=""
             className="w-10 h-10 rounded-lg mx-1 relative z-10"
           />
           <div className="mx-1">
             <p className="group relative ease-in-out duration-300">
-              <h3 className="hover:text-[#3BC8E7]">Khó Vẽ Nụ cười</h3>
+              <h3 className="hover:text-[#3BC8E7]">{song.id_Singer.name}</h3>
               <div className="absolute z-40 -top-20 -left-48 pl-10 py-5 text-sm w-60 bg-[#34224f] scale-50 rounded-xl group-hover:-top-5 group-hover:scale-100 opacity-0 group-hover:-left-72 group-hover:scale-y-95 group-hover:opacity-100 ease-in-out duration-300">
                 <div>
                   <p className="text-[#857a95]">Nghệ sĩ</p>
-                  <p>Đạt G</p>
+                  <p>{song.id_Singer.name}</p>
                 </div>
                 <div>
                   <p className="text-[#857a95]">Album</p>
@@ -108,26 +120,22 @@ const ModalSongMenu = ({ song }: any) => {
                 </div>
                 <div>
                   <p className="text-[#857a95]">Sáng tác</p>
-                  <p>Đạt G</p>
+                  <p>{song.id_Singer.name}</p>
                 </div>
                 <div>
                   <p className="text-[#857a95]">Thể loại</p>
-                  <p>Việt Nam, V-Pop</p>
-                </div>
-                <div>
-                  <p className="text-[#857a95]">Nghệ sĩ</p>
-                  <p>LOOPS Music</p>
+                  <p>{song.id_Genre.name}</p>
                 </div>
               </div>
             </p>
             <div className="flex items-center">
               <p className="flex items-center mx-1 text-xs">
                 <AiOutlineHeart />
-                <span className="mx-1">691</span>
+                <span className="mx-1">{song.total_like}</span>
               </p>
               <p className="flex items-center mx-1 text-xs">
                 <SlEarphonesAlt />
-                <span className="mx-1">25k</span>
+                <span className="mx-1">{song.view_song}</span>
               </p>
             </div>
           </div>

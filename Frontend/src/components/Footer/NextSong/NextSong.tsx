@@ -8,13 +8,15 @@ type Props = {
   ListData : ifSong[],
 }
 
-const NextSong = (props : Props) => {
-  const {ListData} = props;
+const NextSong = ({ListData} : Props) => {
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
+  const {song} = useAppSelector(({Song}) => Song);
+  console.log(song);
+  
   const dispatch = useAppDispatch();
     const handNextSong = () => {
       const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
-      const findSong = ListData.filter((_item, index) => index == findIndexSong + 1);
+      const findSong = ListData.filter((_item, index) => findIndexSong + 1 == ListData.length ? index === 0 : index == findIndexSong + 1);
       dispatch(handGetCurrentSong(findSong[0]))
       localStorage.setItem("song",JSON.stringify(findSong[0]));
       dispatch(setStateSong(false)) 

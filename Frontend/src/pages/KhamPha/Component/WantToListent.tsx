@@ -9,7 +9,7 @@ import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import { Link } from "react-router-dom";
-import './scss.scss'
+import "./scss.scss";
 type Props = {};
 
 const WantToListent = (props: Props) => {
@@ -39,36 +39,6 @@ const WantToListent = (props: Props) => {
                       <SongGenre item={itemList} key={index} />
                     ))}
                   </div>
-                  {/* <div className="block md:hidden">
-                    <Swiper
-                      modules={[Autoplay, Navigation]}
-                      slidesPerView={2}
-                      // navigation
-                      loop={true}
-                      className="mySwiper"
-                      // autoplay={{
-                      //   delay: 5000,
-                      // }}
-                    >
-                      {sliceItem?.map((slide) => {
-                        return (
-                          <SwiperSlide key={slide._id}>
-                              <div className="zm-card h-full">
-                                <Link to={`/`} className="">
-                                  <div className="card-image overflow-hidden rounded-[5px]">
-                                    <img
-                                      className="rounded-[6px] aspect-square "
-                                      src={`${slide.song_image[0]}`}
-                                    />
-                                  </div>
-                                </Link>
-                              </div>
-                            
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
-                  </div> */}
                 </div>
               </div>
             </div>

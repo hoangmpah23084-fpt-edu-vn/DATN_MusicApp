@@ -15,7 +15,8 @@ interface initState {
     dataOne: ifSong | null;
     loadingAdd: boolean;
     loadingSearch: boolean;
-    songSearch: ifSong[]
+    songSearch: ifSong[],
+    isSongHistory: boolean
 }
 
 const initialState: initState = {
@@ -28,7 +29,8 @@ const initialState: initState = {
     dataOne: null,
     loadingAdd: false,
     loadingSearch: false,
-    songSearch: []
+    songSearch: [],
+    isSongHistory: false
 };
 export const handAddSong = createAsyncThunk(
     "song/addSong",
@@ -103,9 +105,15 @@ const songReducer = createSlice({
     name: "Song",
     initialState,
     reducers: {
-        setSongFavourite : (state, action) => {
-           console.log(action.payload);
-           state.song = action.payload;
+        setSongFavourite: (state, action) => {
+            console.log(action.payload);
+            state.song = action.payload;
+        },
+        setSongHistory: (state) => {
+            state.isSongHistory = !state.isSongHistory;
+        },
+        setListSongSongHistory: (state, action) => {
+            state.song = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -176,5 +184,5 @@ const songReducer = createSlice({
     },
 });
 
-export const { setSongFavourite } = songReducer.actions;
+export const { setSongFavourite, setSongHistory, setListSongSongHistory } = songReducer.actions;
 export default songReducer.reducer;
