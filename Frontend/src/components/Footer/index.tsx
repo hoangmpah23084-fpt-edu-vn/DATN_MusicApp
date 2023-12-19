@@ -264,7 +264,7 @@ const Footer = (props: Props) => {
         className="fixed z-50 w-[100%] bottom-[60px] sm:bottom-0 bg-[#1B2039] cursor-pointer"
       >
         <div className="level text-white h-[70px] px-[15px] sm:h-[90px] sm:px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex justify-between">
-          <div className="flex items-center rounded-r-lg flex-1 w-[60%] justify-start md:w-[30%] h-[100%] bg-[#1B2039]">
+          <div className="flex items-center rounded-r-lg flex-1 w-[60%] justify-start md:w-[25%] h-[100%] bg-[#1B2039]">
             <div className="flex items-center w-[100%]">
               <div className="flex w-[100%] justify-between">
                 <div className="">
@@ -274,7 +274,7 @@ const Footer = (props: Props) => {
                         <img
                           src={currentSong?.song_image[0]}
                           alt=""
-                          className="w-[100%] rounded-[5px] w-[60px] h-[60px] sm:w-[64px] sm:h-[64px]"
+                          className="w-[100%] rounded-[5px] h-[60px] sm:w-[64px] sm:h-[64px]"
                         />
                       </div>
                     </div>

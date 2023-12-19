@@ -10,7 +10,7 @@ type Props = {
 const PrevSong = ({ListData} : Props) => {
   const {currentSong} = useAppSelector(({currentSong}) => currentSong);
   const {song} = useAppSelector(({Song}) => Song);
-  console.log(song);
+  // console.log(song);
   
   const dispatch = useAppDispatch();
     const handPrevSong = () => {
