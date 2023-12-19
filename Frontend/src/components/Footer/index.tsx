@@ -164,7 +164,7 @@ const Footer = (props: Props) => {
     props.ListData,
   ]);
   // console.log(currentSong);
-  
+
 
   useEffect(() => {
     if (audioRef.current) {
@@ -313,7 +313,7 @@ const Footer = (props: Props) => {
                     <Link to={"#"}>
                       <div className="title-wrapper">
                         <span className="item-title title text-[13px] font-thin text-[#dadada]">
-                          {currentSong?.id_Singer.name}
+                          {currentSong?.id_Singer?.name}
                         </span>
                       </div>
                     </Link>

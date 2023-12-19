@@ -5,7 +5,7 @@ import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { BsMusicNoteList } from "react-icons/bs";
 import Skeletontable from "../Skeleton";
 
-const ListSong = ({ listSong }: any) => {
+const ListSong = ({ listSong, activePlaylist }: any) => {
   const { loading } = useAppSelector((state: RootState) => state.favourites);
   const token = localStorage.getItem("token");
   return (
@@ -26,9 +26,12 @@ const ListSong = ({ listSong }: any) => {
                 <th className="w-56 text-right pr-10 py-[15px]">THỜI GIAN</th>
               </tr>
             </thead>
-            {listSong?.map((item: ifSong) => {
-              return <ItemSong item={item} listSong={listSong} />;
+            {activePlaylist ? listSong?.map((item: ifSong) => {
+              return <ItemSong item={item} listSong={listSong} activePlaylist={true} />;
+            }) : listSong?.map((item: ifSong) => {
+              return <ItemSong item={item} listSong={listSong} activeFavourite={true} />;
             })}
+
           </table>
         ) : (
           <h1 className="flex items-center justify-center">
