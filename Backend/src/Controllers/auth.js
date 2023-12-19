@@ -183,13 +183,10 @@ const ChangePassword =async (req, res) => {
 
 const VeryPass = async (req, res) => {
   try {
-    const id_user = req.user._id;
     const { email } = req.body;
-    const data = await User.findOne({ _id:id_user });
-    if (data.email !==email ) {
-      return res
-        .status(404)
-        .send({ message: "Email không đúng " });
+    const data = await User.findOne({ email:email });
+    if (!data) {
+      return res.status(400).send({ message: "Email không đúng" });
     }
     if (data) {
         const verificationCodee = Math.floor(100000 + Math.random() * 900000).toString();
@@ -243,9 +240,8 @@ const sendPass =async (req, res) => {
     return randomString;
   }
   try {
-    const id_user = req.user._id;
     const { email ,code} = req.body;
-    const data = await User.findOne({ _id:id_user });
+    const data = await User.findOne({ email:email });
     if (data.email !==email) {
       return res.status(400).send({ message: "Email không đúng" });
   }

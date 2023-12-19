@@ -4,6 +4,6 @@ import { statistical } from '../Controllers/statisticalController.js'
 const router = express.Router()
 
 
-router.get("/statistical",statistical)
+router.post("/statistical",statistical)
 
 export default router;

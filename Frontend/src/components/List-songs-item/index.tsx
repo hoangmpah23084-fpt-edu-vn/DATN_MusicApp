@@ -22,6 +22,8 @@ const ListSongItem = ({ section, item }: Props) => {
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
+  // console.log(item);
+  
   const handToggle = async () => {
     stateSong &&
       dataLocal?._id == item._id ? activeSong(dispatch, item, 'stopPause') : activeSong(dispatch, item, "start");

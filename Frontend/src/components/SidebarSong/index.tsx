@@ -1,24 +1,15 @@
 import {
   ListItemButtonStyle,
-  ListItemIconStyle,
-  PauseListItemButtonStyle,
-  PauseListItemIconStyle,
   ListItemIconBgStyle,
 } from "@/Mui/style/Footer/StyleAction";
 import React, { useEffect, useState } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import PauseIcon from "@mui/icons-material/Pause";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import { useStyles } from "../Footer";
-import { handGetSong } from "@/store/Reducer/Song";
+import { handGetSong, setListSongSongHistory } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
-import { ActiveFavourites, onhandleFavourite } from "@/constane/favourites.const";
-import { activeSong, chekcSubString } from "@/constane/song.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
-import { RootState } from "@/store/store";
-import ModalSongMenu from "../Modals/modalSongMenu";
+import ItemSongSidebar from "./itemSongSidebar";
 
 type Props = {
   sideBarRight: boolean;
@@ -26,15 +17,14 @@ type Props = {
 
 const SidebarSong = (props: Props) => {
   const [stateColor, setStateColor] = React.useState<boolean>(true);
-  const { stateSong, dataLocal, currentSong } = useAppSelector(({ currentSong }) => currentSong);
-  const { token } = useAppSelector((state: RootState) => state.user);
-
+  const { stateSong, currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
   const { song } = useAppSelector(({ Song }) => Song);
-  const classes = useStyles();
   useEffect(() => {
-    dispatch(handGetSong());
-  }, []);
+    if (stateColor) {
+      dispatch(handGetSong());
+    }
+  }, [stateColor]);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
@@ -44,33 +34,49 @@ const SidebarSong = (props: Props) => {
     }
   }, [stateSong, song.length, currentSong]);
 
+  const [historySongState, setHistorySongState] = useState<ifSong[]>()
+  const historySong = localStorage.getItem('history')
+
+  useEffect(() => {
+    if (historySong) {
+      const parsedHistory = JSON.parse(historySong) as ifSong[];
+      if (parsedHistory) {
+        const newData = parsedHistory.map((item: any) => (JSON.parse(item)));
+        setHistorySongState(newData)
+      }
+    }
+  }, [historySong]);
+
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;
     setStateColor(!preStateColor);
     if (!preStateColor) {
+      // const getSongLocal = localStorage?.getItem("song") || "";
+      // if (getSongLocal) {
+      //   const currentlocal: ifSong = JSON?.parse(getSongLocal);
+      //   dispatch(setListSongSongHistory(currentlocal));
+      // }
       setStateColor(true);
+
     } else {
+      if (historySong) {
+        const parsedHistory = JSON.parse(historySong) as ifSong[];
+        if (parsedHistory) {
+          const newData = parsedHistory.map((item: any) => (JSON.parse(item)));
+          console.log(newData);
+          dispatch(setListSongSongHistory(newData));
+          setHistorySongState(newData)
+        }
+      }
       setStateColor(false);
     }
   };
-  const [modal, setModal] = useState<boolean>(false);
-  const [songItem, setSongItem] = useState<any>();
-
-
-  const handleShowModalCreateRoom = () => {
-    setModal(!modal)
-  }
-
-  const handleAction = (item: any) => {
-    setModal(true)
-    setSongItem(item)
-  }
 
 
   return (
     <div
-      className={`right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px] px-[8px]" : "fixed translate-x-[400px] w-0"
-        } sticky z-50  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc `}
+      className={` right-0 transition-all duration-700 ${props.sideBarRight ? "w-[500px] px-[8px]" : " fixed translate-x-[400px] w-0"
+        } sticky z-10  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc `}
     >
       <div className="w-full h-full">
         <div className="w-full h-[70px] fjc">
@@ -128,98 +134,21 @@ const SidebarSong = (props: Props) => {
             </div>
           </div>
         </div>
-        {modal && (
-          <>
-            <ModalSongMenu song={songItem} onShowModal={handleShowModalCreateRoom} />
-          </>
-        )}
-        <div className="w-full relative fjc h-[calc(100vh-200px)] overflow-y-auto">
-
+        <div className="w-full relative fjc h-[calc(100vh-200px)]">
           <div className="w-full h-[100%] overflow-y-scroll">
-
-            {song &&
+            {stateColor ? song &&
               song?.length > 0 &&
-              song.map((item: ifSong, index: number) => {
+              song.map((item: ifSong) => {
                 return (
-                  <div
-                    key={index}
-                    className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
-                      ? "bg-[#092635]"
-                      : "hover:bg-[#b4b4b32d]"
-                      } my-1 fjc  cursor-pointer rounded-lg wall`}
-                  >
-                    <div className="w-[95%] h-[80%] flex justify-between ">
-
-                      <div className="w-[17%] h-full">
-                        <div className="w-full h-full flex justify-start items-center relative wallSong">
-                          <img
-                            className="w-[90%] h-[90%] bg-cover rounded-[5px]"
-                            src={`${item.song_image[0]}`}
-                          />
-                          <div className="absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause">
-                            <PauseListItemButtonStyle
-                              onClick={() =>
-                                stateSong && dataLocal?._id == item._id
-                                  ? activeSong(dispatch, item, 'stopPause')
-                                  : activeSong(dispatch, item, "start")
-                              }
-                            >
-                              <PauseListItemIconStyle
-                                sx={{
-                                  border: "none",
-                                  ":hover": {
-                                    border: "none",
-                                    color: "#fff",
-                                    "& .MuiSvgIcon-root": {
-                                      color: "#ffffffcf",
-                                    },
-                                  },
-                                }}
-                              >
-                                {dataLocal &&
-                                  stateSong &&
-                                  dataLocal?._id == item._id ? (
-                                  <PauseIcon className={classes.root} />
-                                ) : (
-                                  <PlayArrowIcon className={classes.root} />
-                                )}
-                              </PauseListItemIconStyle>
-                            </PauseListItemButtonStyle>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-[48%] ml-[2%] h-full">
-                        <div className="w-full h-[50%]">
-                          <h1 className="font-semibold">{chekcSubString(item.song_name as string, 13)}</h1>
-                        </div>
-                        <div className="w-full h-[50%]">
-                          <p className="text-gray-500 text-[12px]">
-                            {item.id_Singer?.name}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="w-[30%] h-full flex">
-                        <div className="w-1/2">
-                          <ListItemButtonStyle onClick={() => onhandleFavourite(dispatch, item?._id as string, token as string)}  >
-                            <ListItemIconStyle>
-                              <ActiveFavourites item={item} />
-                            </ListItemIconStyle>
-                          </ListItemButtonStyle >
-                        </div>
-                        <div className="w-1/2" onClick={() => handleAction(item)}>
-                          <ListItemButtonStyle>
-                            <ListItemIconStyle>
-                              <MoreHorizIcon
-                                sx={{ color: "white", fontSize: "20px" }}
-                              />
-                            </ListItemIconStyle>
-                          </ListItemButtonStyle>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+                  <ItemSongSidebar item={item} />
+                )
+              }) : historySongState &&
+              historySongState?.length > 0 &&
+            historySongState.map((item: ifSong) => {
+              return (
+                <ItemSongSidebar item={item} />
+              );
+            })}
           </div>
         </div>
       </div>

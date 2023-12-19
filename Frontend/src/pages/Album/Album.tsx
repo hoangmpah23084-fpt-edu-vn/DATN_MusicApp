@@ -26,7 +26,7 @@ const Album = () => {
                 <div className='border h-[259px] w-[212px] rounded'>
                     <div className='grid  gap-4 place-content-center h-48'>
                         <p className='flex justify-center'><AiOutlinePlusCircle className="text-5xl" /></p>
-                        <p className='text-white '>Tạo playlist mới</p>
+                        <p className='text-white '>Tạo album mới</p>
                     </div>
                 </div>
                 {/* i */}

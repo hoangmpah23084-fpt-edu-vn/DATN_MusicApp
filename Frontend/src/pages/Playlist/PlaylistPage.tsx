@@ -220,7 +220,7 @@ const PlaylistPage = () => {
                 </div>
               </div>
               <div className="playlist-content ml-[330px]">
-                <ListSong listSong={playlistDetail.playlistDetail?.list_song} />
+                <ListSong listSong={playlistDetail.playlistDetail?.list_song} activePlaylist={true} />
               </div>
             </div>
           </div>

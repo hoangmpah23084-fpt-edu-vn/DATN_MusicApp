@@ -10,9 +10,7 @@ import { getRoom } from "@/store/Reducer/roomReducer";
 import { RootState } from "@/store/store";
 import { checkToken } from "@/store/Reducer/User";
 
-
-import { Skeleton } from 'antd';
-
+import { Skeleton } from "antd";
 
 const Room = () => {
   const [isShowModalCreateRoom, setIsShowModalCreateRoom] =
@@ -21,7 +19,7 @@ const Room = () => {
   const [isShowModalJoinRoom, setIsShowModalJoinRoom] =
     useState<boolean>(false);
 
-  const [selectedRoom, setSelectedRoom] = useState<IRoom>({} as IRoom)
+  const [selectedRoom, setSelectedRoom] = useState<IRoom>({} as IRoom);
 
   const { room, loading } = useAppSelector((state: RootState) => state.room);
   const { token } = useAppSelector((state: RootState) => state.user);
@@ -36,14 +34,14 @@ const Room = () => {
     }
   };
   useEffect(() => {
-    fetchRoom()
+    fetchRoom();
   }, [dispatch]);
 
   const handleShowModalCreateRoom = () => {
     if (token) {
       setIsShowModalCreateRoom(!isShowModalCreateRoom);
     } else {
-      dispatch(checkToken(true))
+      dispatch(checkToken(true));
     }
   };
 
@@ -51,20 +49,21 @@ const Room = () => {
     if (token) {
       setIsShowModalJoinRoom(!isShowModalJoinRoom);
     } else {
-      dispatch(checkToken(true))
+      dispatch(checkToken(true));
     }
   };
 
   const handleSelectedRoom = (data: IRoom) => {
-    setSelectedRoom(data)
-  }
+    setSelectedRoom(data);
+  };
 
-  const handleSerach = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleSerach = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     if (e) {
       dispatch(getRoom(e.target.value as string));
     }
-  }
-
+  };
 
   const renderSkeletonImages = (count: number) => {
     const skeletons = [];
@@ -73,7 +72,11 @@ const Room = () => {
         <Skeleton.Image
           key={i}
           active
-          style={{ width: "200px", height: "200px", backgroundColor: '#352849' }}
+          style={{
+            width: "200px",
+            height: "200px",
+            backgroundColor: "#352849",
+          }}
         />
       );
 
@@ -85,29 +88,31 @@ const Room = () => {
 
   return (
     <>
-
-      {isShowModalJoinRoom && <ModalRoom data={selectedRoom} onShowModal={handleShowModalJoinRoom} />}
+      {isShowModalJoinRoom && (
+        <ModalRoom data={selectedRoom} onShowModal={handleShowModalJoinRoom} />
+      )}
       {isShowModalCreateRoom && (
         <ModalCreateRoom onShowModal={handleShowModalCreateRoom} />
       )}
-      <div>
-
-
-
-        <div className="text-white w-full h-[100%]">
-          <div className="flex items-center justify-between mt-24 mx-16 ">
-            <h1 className="flex items-center text-[40px] font-bold ">
-              Phòng Nhạc{" "}
-              <span className="ml-2 mt-1 hover:opacity-70 cursor-pointer ease-in-out duration-300">
+      <div className="text-white w-full h-[100%]">
+        <div className="px-[15px] md:px-16 mt-[70px]">
+          <div className="flex items-center flex-col gap-5 md:flex-row justify-between pt-[20px]">
+            <h1 className="flex items-center text-[40px] font-bold justify-center gap-2">
+              <span className=" hover:opacity-70 cursor-pointer ease-in-out duration-300">
                 <AiOutlineHome />
               </span>
+              Phòng Nhạc{" "}
             </h1>
             <input
               type="text"
               className="bg-[#1B2039] ouline-none text-white text-sm rounded-lg block w-96 p-2.5"
               placeholder="Tìm phòng"
               required
-              onChange={(e) => { handleSerach(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) }}
+              onChange={(e) => {
+                handleSerach(
+                  e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                );
+              }}
             />
             <button
               className="relative bg-[#3BC8E7] min-w-[130px] py-2 rounded-full hover:bg-white hover:text-[#3BC8E7] flex items-center text-md text-center justify-center ease-in-out duration-300"
@@ -119,13 +124,19 @@ const Room = () => {
               </span>
             </button>
           </div>
-          <div className="pb-[40%] px-16 grid grid-cols-6 gap-6 mt-5">
-            {loading ? renderSkeletonImages(room.length)
+          <div className="md:pb-[40%] grid grid-cols-2 md:grid-cols-6 gap-6 md:gap-4 mt-7 md:mt-5">
+            {loading
+              ? renderSkeletonImages(room.length)
               : room.map((data: IRoom, index: number) => {
-                return <ItemRoom key={index} data={data} handleSelectedRoom={handleSelectedRoom} handleShowModalJoinRoom={handleShowModalJoinRoom} />;
-              })
-            }
-
+                  return (
+                    <ItemRoom
+                      key={index}
+                      data={data}
+                      handleSelectedRoom={handleSelectedRoom}
+                      handleShowModalJoinRoom={handleShowModalJoinRoom}
+                    />
+                  );
+                })}
           </div>
         </div>
       </div>

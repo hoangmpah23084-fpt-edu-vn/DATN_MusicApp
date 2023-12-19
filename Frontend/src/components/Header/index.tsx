@@ -127,8 +127,8 @@ const Header = (props: Props) => {
   const dropdownMenu = (
     <Menu>
       {items.length > 0 ? (
-        items.map((menuItem: any) => (
-          <Menu.Item key={menuItem.key}>{menuItem.label}</Menu.Item>
+        items.map((menuItem, index) => (
+          <Menu.Item key={index}>{menuItem.label}</Menu.Item>
         ))
       ) : (
         <Menu.Item disabled>
@@ -216,7 +216,7 @@ const Header = (props: Props) => {
                           ? dataUserOne.image
                           : "/user-default.3ff115bb.png"
                       }
-                      className="rounded-full"
+                      className="rounded-full h-full"
                       onClick={(e) => e.preventDefault()}
                     />
                   </div>

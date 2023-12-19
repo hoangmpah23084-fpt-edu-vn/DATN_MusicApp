@@ -289,12 +289,13 @@ const ListGenre = () => {
 
   // hàm sử lý call api khi add
   const formAdd = (newData: ifAddGenre) => {
-    axios.post('http://localhost:8080/api/genre', newData).then(() => {
+    axios.post('http://localhost:8080/api/genre', newData).then((data) => {
       formRef.current.resetFields();
       setOpenAdd(false);
+      dispatch(getGenre());
       toast.success("Thêm thể loại thành công")
-    }).catch(() => {
-      toast.error("Lỗi không thể thêm")
+    }).catch((error) => {
+      toast.warning(error.response.data.message)
     })
   };
 

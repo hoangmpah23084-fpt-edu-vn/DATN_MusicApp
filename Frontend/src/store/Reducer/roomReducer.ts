@@ -1,4 +1,5 @@
 import { IRoom } from "@/pages/Admin/Interface/Room";
+import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import instanceAxios from "@/utils/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -7,12 +8,14 @@ import axios from "axios";
 interface room {
     loading: boolean,
     room: IRoom[],
+    listSong : ifSong[] | [],
     error: string,
 }
 
 const initialState: room = {
     loading: false,
     room: [],
+    listSong : [],
     error: "",
 }
 interface roomForm {
@@ -58,7 +61,17 @@ export const leaveRoom = async (id: string) => {
 const roomReducer = createSlice({
     name: 'room',
     initialState,
-    reducers: {},
+    reducers: {
+        setSongInRoom : (state, action) => {
+            state.listSong = action.payload;
+        },
+        AddSongInRoom : (state, action) => {
+            state.listSong = [...state.listSong, action.payload];
+        },
+        DeleteSongInRoom : (state, action) => {
+            state.listSong = state.listSong.filter(item => item._id != action.payload._id)
+        }
+    },
     extraReducers: builder => {
         builder
             .addCase(addRoom.pending, (state) => {
@@ -95,4 +108,5 @@ const roomReducer = createSlice({
     }
 })
 
+export const { setSongInRoom, AddSongInRoom, DeleteSongInRoom } = roomReducer.actions;
 export default roomReducer.reducer

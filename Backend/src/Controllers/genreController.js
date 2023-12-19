@@ -10,12 +10,18 @@ export const create_Genre = async (req, res) => {
         error: error.details[0].message,
       });
     }
+    const exitGenre = await Genre.findOne({ name: req.body.name });
+    if (exitGenre) {
+      return res.status(400).json({
+        message: "Genre đã tồn tại",
+      });
+    }
     const data = await Genre.create(req.body);
     if (!data) {
       return res.status(400).json({ message: "Create Genre Failed" });
     }
     return res.status(200).json({
-      message: "Create Genre Success",
+      message: "Tạo Genre thành công",
       data,
     });
   } catch (error) {
@@ -33,14 +39,15 @@ export const getAll_Genre = async (req, res) => {
     }
     const filData = data.filter((item) => item.name != "un_genre");
     // const findData = filData.filter((item) => item.name == "TẤT CẢ");
-    console.log(filData);
-    filData.forEach((item) => {
-      filData[0].list_songs = [...filData[0].list_songs, ...item.list_songs];
-    });
+    // console.log(filData);
+    // filData.forEach((item) => {
+    //   filData[0].list_songs = [...filData[0].list_songs, ...item.list_songs];
+    // });
     filData.forEach((_, index) => {
-      filData[index].list_songs = filData[index].list_songs
-        .sort((a, b) => b.view_song - a.view_song)
-        .slice(0, 9);
+      filData[index].list_songs = filData[index].list_songs.sort(
+        (a, b) => b.view_song - a.view_song
+      );
+      // .slice(0, 9);
     });
     return res.status(200).json({
       message: "Get All Genre Success",
@@ -59,9 +66,8 @@ export const get_GenreById = async (req, res) => {
     if (!data) {
       return res.status(400).json({ message: "Get Genre By Id Failed" });
     }
-    data.list_songs = data.list_songs
-      .sort((a, b) => b.view_song - a.view_song)
-      .slice(0, 9);
+    data.list_songs = data.list_songs.sort((a, b) => b.view_song - a.view_song);
+    // .slice(0, 9);
     return res.status(200).json({
       message: "Get Genre By Id Success",
       data,
@@ -100,9 +106,11 @@ export const delete_Genre = async (req, res) => {
     const genre = await Genre.findOne({ _id: id });
     //todo  Tìm và chuyển các sản phẩm liên quan sang danh mục "Uncategorized"
     const songsToUpdate = await songModel.find({ id_Genre: id });
-
+    console.log("This Song in Genre");
+    // console.log(songsToUpdate);
     //todo Tìm xem đã có danh mục Uncategorized trong db chưa
     const unGenre = await Genre.findOne({ name: "un_genre" });
+    console.log(unGenre);
     //todo Cập nhật genreId của các sản phẩm thuộc genre đang chuẩn bị được xóa sang id của "UnGenre"
     if (unGenre) {
       await songModel.updateMany(
@@ -148,4 +156,5 @@ export const delete_Genre = async (req, res) => {
     });
   }
 };
+const deleteSongInGenre = () => {};
 // const genre = await Genre.findByIdAndDelete(req.params.id);
