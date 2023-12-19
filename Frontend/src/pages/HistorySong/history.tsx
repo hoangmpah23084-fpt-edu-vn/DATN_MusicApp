@@ -25,7 +25,7 @@ const HistorySong = () => {
             <h1 className="flex items-center text-[25px] font-bold mx-16 mt-20">Nghe gần đây </h1>
             <table className="w-full text-sm text-left">
                 {
-                    loading ? (historySongState?.map((_, index) => <SuggSkeleton section="suggested" key={index} />)) : (historySongState?.map((item, index) => <ItemSong item={item} key={index} />))
+                    loading ? (historySongState?.map((_, index) => <SuggSkeleton section="suggested" key={index} />)) : (historySongState?.map((item, index) => <ItemSong item={item} key={index} activeHistory={true} />))
                 }
             </table>
 

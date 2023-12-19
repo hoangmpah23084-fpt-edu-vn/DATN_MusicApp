@@ -106,7 +106,6 @@ const songReducer = createSlice({
     initialState,
     reducers: {
         setSongFavourite: (state, action) => {
-            console.log(action.payload);
             state.song = action.payload;
         },
         setSongHistory: (state) => {
