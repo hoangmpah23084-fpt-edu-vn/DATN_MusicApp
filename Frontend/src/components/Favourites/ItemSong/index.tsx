@@ -18,11 +18,12 @@ type props = {
   activeSideBarSong?: boolean
 }
 
-const ItemSong = ({ item, active, listSong, activeSideBarSong }: props) => {
+const ItemSong = ({ item, active, activeSideBarSong }: props) => {
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch()
   const { stateSong, dataLocal } = useAppSelector(({ currentSong }) => currentSong);
   const { token } = useAppSelector((state: RootState) => state.user);
+  const { listFavourites } = useAppSelector((state: RootState) => state.favourites);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
@@ -33,7 +34,7 @@ const ItemSong = ({ item, active, listSong, activeSideBarSong }: props) => {
   }, []);
 
   const handTakeFavourite = (id: string | undefined) => {
-    dispatch(setSongFavourite(listSong));
+    dispatch(setSongFavourite(listFavourites));
     stateSong && dataLocal?._id == id
       ? activeSong(dispatch, item, 'stopPause')
       : activeSong(dispatch, item, "start")
