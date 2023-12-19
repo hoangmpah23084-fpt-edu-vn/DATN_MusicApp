@@ -195,7 +195,10 @@ export const getRooms = async (req, res) => {
         $or: [{ nameGroup: { $regex: search, $options: "i" } }],
       };
     }
-    const getRooms = await roomModel.paginate(query);
+    const options = {
+      populate: ["isAdminGroup"],
+    };
+    const getRooms = await roomModel.paginate(query,options);
     if (!getRooms) {
       return res.status(404).json({
         message: "Không tìm thấy phòng",
