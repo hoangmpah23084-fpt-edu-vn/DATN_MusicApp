@@ -232,25 +232,22 @@ const Footer = (props: Props) => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   };
 
-  const songLoca = localStorage.getItem("song");
   useEffect(() => {
-    if (songLoca) {
+    if (currentSong) {
       const history = localStorage.getItem("history");
       if (!history) {
-        localStorage.setItem("history", JSON.stringify([songLoca]));
+        localStorage.setItem("history", JSON.stringify([currentSong]));
       } else {
         const historyArray = JSON.parse(history);
-        if (!historyArray.includes(songLoca)) {
-          historyArray.unshift(songLoca);
-          if (historyArray.length > 20) {
-            historyArray.pop();
-          }
-          localStorage.setItem("history", JSON.stringify(historyArray));
-        }
+        const newData = historyArray.map((item: any) => item)
+        const filterNewData = newData.filter((item: any) => item._id !== currentSong?._id)
+        filterNewData.unshift(currentSong);
+        const truncatedHistory = filterNewData.slice(0, 20);
+        localStorage.setItem("history", JSON.stringify(truncatedHistory));
       }
     }
     dispatch(setSongHistory())
-  }, [songLoca]);
+  }, [currentSong]);
 
   const maxlength = 14;
 

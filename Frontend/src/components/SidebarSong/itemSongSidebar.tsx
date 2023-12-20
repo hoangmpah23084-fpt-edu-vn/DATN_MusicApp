@@ -34,7 +34,7 @@ const ItemSongSidebar = ({ item }: Props) => {
             )}
             <div
                 key={item._id}
-                className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
+                className={`w-full h-[60px] relative ${dataLocal && dataLocal?._id == item._id
                     ? "bg-[#092635]"
                     : "hover:bg-[#b4b4b32d]"
                     } my-1 fjc  cursor-pointer rounded-lg wall`}
