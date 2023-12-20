@@ -134,12 +134,23 @@ export const getRoom = async (req, res) => {
       .populate("listSong")
       .populate("currentSongInRoom");
 
+    const backgrounds = [
+      "https://i.redd.it/357yv737qmy71.png",
+      // Thêm các đường dẫn ảnh khác vào đây
+      // Ví dụ:
+      "https://cdn.wallpapersafari.com/81/0/P2xqdv.jpg",
+      "https://preview.redd.it/gentle-warmth-3840x2160-v0-cp4f7dncrgxb1.png?auto=webp&s=8653ef69a3b7edb23e4665dce8886d3b6dd8c069",
+      "https://c.wallhere.com/photos/59/90/LofiGirl_LoFi_neon_LofiBoy_purple_blue-2234432.jpg!d",
+    ];
+
     if (result) {
       await model_user.populate(result, {
         path: "listMessages.id_sender",
         select: "fullName",
       });
       if (result.listSong.length < 1) {
+        const randomImage =
+          backgrounds[Math.floor(Math.random() * backgrounds.length)];
         const song = (await songModel.find())
           .sort((a, b) => b.view_song - a.view_song)
           .slice(0, 6);
@@ -153,6 +164,12 @@ export const getRoom = async (req, res) => {
           model: Genre,
           select: "name",
         });
+        await roomModel.findByIdAndUpdate(result._id, {
+          $addToSet: {
+            room_image: randomImage,
+          },
+        });
+
         await roomModel.findByIdAndUpdate(result._id, {
           $addToSet: { listSong: [...result.listSong, ...genreSongs] },
         });
@@ -170,6 +187,7 @@ export const getRoom = async (req, res) => {
         );
       }
       roomModel.currentSongInRoom = result.listSong[0]._id;
+      console.log(result);
       res.status(200).json({
         message: "Lấy phòng thành công",
         data: result,
@@ -198,7 +216,7 @@ export const getRooms = async (req, res) => {
     const options = {
       populate: ["isAdminGroup"],
     };
-    const getRooms = await roomModel.paginate(query,options);
+    const getRooms = await roomModel.paginate(query, options);
     if (!getRooms) {
       return res.status(404).json({
         message: "Không tìm thấy phòng",

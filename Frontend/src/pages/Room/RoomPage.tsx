@@ -37,6 +37,7 @@ const RoomPage = (props: Props) => {
   const [listSong, setListSong] = useState<ifSong[] | []>([])
   const { currentSong, stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const [userRoom, setUserRoom] = useState<any | {}>({});
+  const [image, setImage] = useState('');
 
   const [admin, setAdmin] = useState<any | {}>({});
   const navigate = useNavigate();
@@ -60,9 +61,9 @@ const RoomPage = (props: Props) => {
       console.log(data.data.currentSongInRoom[0]);
       dispatch(setCurrentSong(data.data.currentSongInRoom[0]))
       localStorage.setItem('song', JSON.stringify(data.data.currentSongInRoom[0]));
-      console.log(currentSong);
       setListSong(data.data.listSong);
       setAdmin(data.data.isAdminGroup);
+      setImage(data.data.room_image[0]);      
       setListMess([...listMess, ...data.data.listMessages]);
       setlistMember(data.data.memberGroup);
       socket.emit('joinRoom', data.data._id);
@@ -196,7 +197,7 @@ const RoomPage = (props: Props) => {
          left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
       >
         <div
-          style={{ backgroundImage: `url(${randomBackground})` }}
+          style={{ backgroundImage: `url(${image ? image : ''})` }}
           className="zm-room relative bg-no-repeat bg-cover "
         >
           <div className="zm-room-opacity absolute top-0 left-0 right-0 bottom-0"></div>
