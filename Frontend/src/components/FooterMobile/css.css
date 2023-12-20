@@ -1,0 +1,22 @@
+.footer-mobile .ant-menu-item {
+  display: flex;
+  flex-direction: column;
+  width: 20% !important;
+  color: #ccc;
+  opacity: 1 !important;
+  position: relative !important;
+  padding: 6px 0 0 0;
+}
+.footer-mobile .ant-menu-item .ant-menu-title-content {
+  font-size: 12px;
+  margin: 0 !important;
+  line-height: 30px;
+}
+.footer-mobile .ant-menu-item-selected {
+  background-color: #293467 !important;
+  color: #ccc !important;
+}
+.footer-mobile :where(.css-dev-only-do-not-override-1ck3jst).ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected::after {
+  border-width: 0px !important;
+  border: none !important;
+}/*# sourceMappingURL=css.css.map */

@@ -59,15 +59,12 @@ const items: MenuItem[] = [
     "/rooms",
     <MdLibraryMusic className="w-[22px] text-[#ccc] h-[22px]" />
   ),
-
   { type: "divider" },
-
   getItem(
     "Nghe gần đây",
     "/history",
     <PiClockCounterClockwiseBold className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#7d32ff] p-[2px] " />
   ),
-
   getItem(
     "Playlist",
     "/playlist",
