@@ -78,7 +78,7 @@ const FavouritePage = () => {
           </ul>
         </div>
         <div className="overflow-x-auto py-10">
-          <ListSong listSong={listFavourites} />
+          <ListSong listSong={listFavourites} activeFavourite={true} />
         </div>
       </div>
     </div>

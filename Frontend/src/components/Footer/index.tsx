@@ -261,8 +261,8 @@ const Footer = (props: Props) => {
         className="fixed z-50 w-[100%] bottom-[60px] sm:bottom-0 bg-[#1B2039] cursor-pointer"
       >
         <div className="level text-white h-[70px] px-[15px] sm:h-[90px] sm:px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex justify-between">
-          <div className="flex items-center rounded-r-lg flex-1 w-[60%] justify-start md:w-[25%] h-[100%] bg-[#1B2039] overflow-hidden">
-            <div className="flex items-center md:w-[60%]">
+          <div className="flex items-center rounded-r-lg flex-1 w-[60%] justify-start md:w-[25%] h-[100%] bg-[#1B2039] overflow-hidden ">
+            <div className="flex items-center ">
               <div className="flex w-[100%] justify-between">
                 <div className="">
                   <Link to={"#"}>

@@ -28,25 +28,16 @@ const WantToListent = (props: Props) => {
             // const sliceItem = item.list_songs?.slice(0, 5);
 
             return (
-              <div className="playlist-section home-recent flex justify-center items-center bg-[#d17975] rounded-md py-[20px]">
-                <div className="home-recent-title  justify-between ">
-                  <Link
-                    to={`/genre/${item._id}`}
-                    className="text-xl font-semibold capitalize"
-                  >
+              <Link
+                to={`/genre/${item._id}`}
+                className="text-xl font-semibold capitalize"
+              >
+                <div className="playlist-section home-recent flex justify-center items-center bg-[#d17975] rounded-md py-[20px]">
+                  <div className="home-recent-title  justify-between ">
                     {item.name}
-                  </Link>
-                </div>
-                {/* <div className="carousel-wrapper relative ">
-                <div className="carousel flex -mx-[15px] overflow-hidden px-[15px]">
-                  <div className="carousel-container w-full grid grid-rows-1 grid-flow-col gap-4 px-[15px]">
-                    {sliceItem?.map((itemList) => (
-                      <SongGenre item={itemList} />
-                    ))}
                   </div>
                 </div>
-              </div> */}
-              </div>
+              </Link>
             );
           })}
       </div>
