@@ -138,7 +138,7 @@ const SidebarMenu = ({ handleShowModalCreateRoom, setCollapsed }: props) => {
         {" "}
         <button
           onClick={() => handleShowModalCreateRoom()}
-          className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px] bg-[#14182A] border-t-[1px] border-[#32323d]"
+          className="zm-btn button fixed bottom-0 px-[24px] w-full h-[54px] bg-[#14182A] border-t-[1px] border-r-[1px] border-[#1B2039]"
         >
           <Link to={"#"} className="flex items-center justify-start ">
             <AiOutlinePlus className="w-[20px] text-[#ccc] h-[40px] mr-4" />

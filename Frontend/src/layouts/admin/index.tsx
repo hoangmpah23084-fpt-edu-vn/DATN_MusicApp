@@ -11,7 +11,6 @@ import { AiOutlineBars } from "react-icons/ai";
 import { PieChartOutlined, LogoutOutlined } from '@ant-design/icons';
 import { CiMusicNote1 } from 'react-icons/ci'
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { toast } from "react-toastify";
 import { resetUser } from "@/store/Reducer/User";
 const { Content } = Layout;
 
@@ -25,7 +24,6 @@ const LayoutAdmin = () => {
     localStorage.removeItem("token");
     dispatch(resetUser(null));
     location.reload();
-    toast.success("Đăng xuất thành công!");
   };
 
   type MenuItem = Required<MenuProps>['items'][number];
@@ -52,12 +50,11 @@ const LayoutAdmin = () => {
     getItem(<Link to="/admin/listSong">Bài hát</Link>, '2', <CiMusicNote1 />),
     getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />),
     getItem(<Link to="/admin/genre">Thể Loại</Link>, '4', <AiOutlineBars />),
-    getItem(<Link to="/admin/album">Album</Link>, '5', <AiOutlineBars />)
-
+    getItem(<Link to="/admin/album">Album</Link>, '5', <AiOutlineBars />),
+    getItem(<div onClick={handleLogout}>Đăng xuất</div>, '5', <LogoutOutlined />)
   ];
   return (
     <div className="h-screen flex w-full">
-
       <div className={collapsed ? "min-w-[5%] ease-in-out duration-300 fixed z-0" : " min-w-[15%] ease-in-out duration-300 fixed  z-0"}>
         <Button
           type="primary"
@@ -73,7 +70,6 @@ const LayoutAdmin = () => {
           className="h-screen overflow-y-auto"
           inlineCollapsed={collapsed}
         />
-
       </div>
       <div className={collapsed ? "w-[95%] ml-[5%] ease-in-out duration-100" : "w-[85%] ml-[15%] ease-in-out duration-100"}>
         <Content

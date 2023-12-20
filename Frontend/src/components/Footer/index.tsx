@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   handChangeStateSong,
   handGetCurrentSong,
+  setStateSong,
 } from "@/store/Reducer/currentSong";
 import {
   ActiveFavourites,
@@ -39,6 +40,7 @@ import { RootState } from "@/store/store";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "./css.scss";
+import { setSongHistory } from "@/store/Reducer/Song";
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() =>
   createStyles({
@@ -63,33 +65,31 @@ const Footer = (props: Props) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
-  const [intervalId, setIntervalId] = useState<number | null>(null);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
-  const { token } = useAppSelector((state: RootState) => state.user);
+
   const [totalTiming, setTotalTiming] = useState<number>(0);
+  const token = localStorage.getItem('token')
 
   const dispatch = useAppDispatch();
 
-  const togglePlayPause = useCallback(() => {
+  const handUpdateCurrentTime = () => {
+    audioRef.current && audioRef.current.addEventListener("timeupdate", (value) => {
+      setRewindAudio((value.target as HTMLAudioElement)?.currentTime);
+      setCurrentTime(SeconToMinuste((value.target as HTMLAudioElement)?.currentTime));
+    })
+  }
+
+  const togglePlayPause = useCallback(async () => {
     const preValue = stateSong;
-    dispatch(handChangeStateSong(!preValue));
+    dispatch(setStateSong(!preValue));
     if (!preValue) {
-      void audioRef.current?.play();
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current &&
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      await audioRef.current?.play();
+      handUpdateCurrentTime();
     } else {
-      audioRef.current?.pause();
-      if (intervalId !== null) {
-        clearInterval(intervalId);
-        setIntervalId(null);
-      }
+      await audioRef.current?.pause();
     }
-  }, [dispatch, intervalId, stateSong]);
+  }, [dispatch, stateSong]);
   const SeconToMinuste = (secs: number) => {
     if (secs) {
       const minutes = Math.floor(secs / 60);
@@ -115,9 +115,9 @@ const Footer = (props: Props) => {
           dispatch(handGetCurrentSong(findSong[0]));
           localStorage.setItem("song", JSON.stringify(findSong[0]));
           console.log("Đây là lỗi Tự động chuyển");
-          dispatch(handChangeStateSong(false));
+          dispatch(setStateSong(false));
           setTimeout(() => {
-            dispatch(handChangeStateSong(true));
+            dispatch(setStateSong(true));
           }, 500);
         }
       }
@@ -128,9 +128,9 @@ const Footer = (props: Props) => {
           ];
         dispatch(handGetCurrentSong(randomSong1));
         localStorage.setItem("song", JSON.stringify(randomSong1));
-        dispatch(handChangeStateSong(false));
+        dispatch(setStateSong(false));
         setTimeout(() => {
-          dispatch(handChangeStateSong(true));
+          dispatch(setStateSong(true));
         }, 500);
       }
     };
@@ -163,6 +163,8 @@ const Footer = (props: Props) => {
     dispatch,
     props.ListData,
   ]);
+  // console.log(currentSong);
+
 
   useEffect(() => {
     if (audioRef.current) {
@@ -187,12 +189,7 @@ const Footer = (props: Props) => {
   useEffect(() => {
     stateSong ? audioRef.current?.play() : audioRef.current?.pause();
     if (stateSong) {
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current &&
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      handUpdateCurrentTime();
     }
     audioRef.current && (audioRef.current.loop = repeat);
     audioRef.current && (audioRef.current.volume = volume / 100);
@@ -237,23 +234,22 @@ const Footer = (props: Props) => {
 
   const songLoca = localStorage.getItem("song");
   useEffect(() => {
-    if(songLoca){
+    if (songLoca) {
       const history = localStorage.getItem("history");
       if (!history) {
         localStorage.setItem("history", JSON.stringify([songLoca]));
       } else {
         const historyArray = JSON.parse(history);
         if (!historyArray.includes(songLoca)) {
-          historyArray.push(songLoca)
-          if (historyArray.length > 9) {
-            // Nếu vượt quá 10 bài, xóa bài cũ (ở đầu mảng)
-            historyArray.shift();
+          historyArray.unshift(songLoca);
+          if (historyArray.length > 20) {
+            historyArray.pop();
           }
           localStorage.setItem("history", JSON.stringify(historyArray));
         }
       }
     }
-  
+    dispatch(setSongHistory())
   }, [songLoca]);
 
   const maxlength = 14;
@@ -268,7 +264,7 @@ const Footer = (props: Props) => {
         className="fixed z-50 w-[100%] bottom-[60px] sm:bottom-0 bg-[#1B2039] cursor-pointer"
       >
         <div className="level text-white h-[70px] px-[15px] sm:h-[90px] sm:px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex justify-between">
-          <div className="flex items-center rounded-r-lg flex-1 w-[60%] justify-start md:w-[30%] h-[100%] bg-[#1B2039]">
+          <div className="flex items-center rounded-r-lg flex-1 w-[60%] justify-start md:w-[25%] h-[100%] bg-[#1B2039]">
             <div className="flex items-center w-[100%]">
               <div className="flex w-[100%] justify-between">
                 <div className="">
@@ -278,7 +274,7 @@ const Footer = (props: Props) => {
                         <img
                           src={currentSong?.song_image[0]}
                           alt=""
-                          className="w-[100%] rounded-[5px] w-[60px] h-[60px] sm:w-[64px] sm:h-[64px]"
+                          className="w-[100%] rounded-[5px] h-[60px] sm:w-[64px] sm:h-[64px]"
                         />
                       </div>
                     </div>
@@ -317,7 +313,7 @@ const Footer = (props: Props) => {
                     <Link to={"#"}>
                       <div className="title-wrapper">
                         <span className="item-title title text-[13px] font-thin text-[#dadada]">
-                          {currentSong?.id_Singer.name}
+                          {currentSong?.id_Singer?.name}
                         </span>
                       </div>
                     </Link>

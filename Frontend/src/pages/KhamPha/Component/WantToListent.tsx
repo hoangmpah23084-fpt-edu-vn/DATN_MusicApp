@@ -22,7 +22,7 @@ const WantToListent = (props: Props) => {
 
   return (
     <>
-      <div className="playlist-section home-recent grid grid-cols-1 md:grid-cols-3 gap-4 mt-12 ">
+      <div className="playlist-section home-recent grid grid-cols-1 md:grid-cols-3 gap-4 my-[30px]">
         {genre.length > 0 &&
           genre.map((item) => {
             // const sliceItem = item.list_songs?.slice(0, 5);

@@ -21,19 +21,26 @@ import { setCurrentSong } from "@/store/Reducer/currentSong";
 import { RootState } from "@/store/store";
 import { setSongFavourite } from "@/store/Reducer/Song";
 type props = {
-  item: ifSong;
-  active?: boolean;
-  listSong?: ifSong[];
-  activeSideBarSong?: boolean;
-};
+  item: ifSong,
+  active?: boolean,
+  listSong?: ifSong[],
+  activeSideBarSong?: boolean,
+  activeHistory?: boolean,
+  activePlaylist?: boolean,
+  activeFavourite?: boolean
 
-const ItemSong = ({ item, active, listSong, activeSideBarSong }: props) => {
+}
+
+const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlaylist, activeFavourite }: props) => {
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { stateSong, dataLocal } = useAppSelector(
     ({ currentSong }) => currentSong
   );
   const { token } = useAppSelector((state: RootState) => state.user);
+  const { listFavourites } = useAppSelector((state: RootState) => state.favourites);
+  const { playlistDetail } = useAppSelector((state: RootState) => state.playlist);
+
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
@@ -44,7 +51,24 @@ const ItemSong = ({ item, active, listSong, activeSideBarSong }: props) => {
   }, []);
 
   const handTakeFavourite = (id: string | undefined) => {
-    dispatch(setSongFavourite(listSong));
+    if (activeHistory) {
+      const history = localStorage.getItem('history')
+      if (history) {
+        const parsedHistory = JSON.parse(history) as ifSong[];
+        if (parsedHistory) {
+          const newData = parsedHistory.map((item: any) => (JSON.parse(item)))
+          dispatch(setSongFavourite(newData));
+        }
+      }
+    }
+    if (activePlaylist) {
+      dispatch(setSongFavourite(playlistDetail.list_song));
+    }
+
+    if (activeFavourite) {
+      dispatch(setSongFavourite(listFavourites));
+    }
+
     stateSong && dataLocal?._id == id
       ? activeSong(dispatch, item, "stopPause")
       : activeSong(dispatch, item, "start");

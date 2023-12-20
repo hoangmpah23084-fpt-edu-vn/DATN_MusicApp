@@ -21,8 +21,8 @@ router.get("/members/:id", getOneUser);
 router.post("/token/refresh", refreshToken);
 router.put("/members",authUser,updateUser);
 router.post("/changePassword",authUser,ChangePassword);
-router.post("/VeryPass",authUser,VeryPass);
-router.post("/sendPass",authUser,sendPass);
+router.post("/VeryPass",VeryPass);
+router.post("/sendPass",sendPass);
 
 
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import { ListItemButtonStyle, ListItemIconStyle, PauseListItemButtonStyle, PauseListItemIconStyle } from "@/Mui/style/Footer/StyleAction";
 import RepeatIcon from '@mui/icons-material/Repeat';
@@ -13,7 +13,7 @@ import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {  handGetCurrentSong, setCurrentSong, setStateSong } from "@/store/Reducer/currentSong";
+import { handGetCurrentSong, setCurrentSong, setStateSong } from "@/store/Reducer/currentSong";
 import { chekcSubString } from "@/constane/song.const";
 import { Socket, io } from "socket.io-client";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
@@ -35,7 +35,7 @@ type Props = {
 }
 
 var socket: Socket<DefaultEventsMap, DefaultEventsMap>;
-const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
+const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState('');
   const [rewindAudio, setRewindAudio] = useState<number>(0);
@@ -43,56 +43,65 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
   const [repeat, setRepeat] = useState(false);
   const [randomSong, setRandomSong] = useState(false);
   const [admin, setAdmin] = useState<isAdminGroup>()
+  const [userLocal, setUserLocal] = useState<any | {}>({})
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
-  const [intervalId, setIntervalId] = useState<number | null>(null);
-  const { currentSong,stateSong } = useAppSelector(({ currentSong }) => currentSong);
+  const { currentSong, stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const dispatch = useAppDispatch();
+  const { id } = useParams();
+  const { listSong : ListData  } = useAppSelector(({ room }) => room);
 
-  const togglePlayPause = useCallback(() => {
+  const handUpdateCurrentTime = () => {
+    audioRef.current && audioRef.current.addEventListener("timeupdate", (value) => {
+      setRewindAudio((value.target as HTMLAudioElement)?.currentTime);
+      setCurrentTime(SeconToMinuste((value.target as HTMLAudioElement)?.currentTime));
+    })
+  }
+
+  console.log(userLocal, admin);
+  
+  const togglePlayPause = async () => {
     if (idRoom) {
       const preValue = stateSong;
+      if (!audioRef.current) {
+        return;
+      }
       dispatch(setStateSong(!preValue));
-      if (!preValue) {
-        audioRef.current && audioRef.current.play();
-        const id = setInterval(() => {
-          audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-          audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-        }, 1000);
-        setIntervalId(id);
+      if (preValue) {
+        console.log("Pause FOoter");
+        audioRef.current.pause();
       } else {
-        if (intervalId !== null) {
-          console.log("a11");
-          audioRef.current && audioRef.current.pause();
-          clearInterval(intervalId);
-          setIntervalId(null);
-        }
+        console.log("Play FOoter");
+        audioRef.current.play();
+        audioRef.current && audioRef.current.addEventListener("timeupdate", (value) => {
+          setRewindAudio((value.target as HTMLAudioElement)?.currentTime);
+          setCurrentTime(SeconToMinuste((value.target as HTMLAudioElement)?.currentTime));
+        })
       }
       socket.emit("toggPlayPause", {
-        idroom: idRoom,
+        idroom: id,
         listMember: listMember,
-        stateSong: preValue
+        stateSong: preValue,
+        song: currentSong
       })
     }
-  }, [dispatch, intervalId, stateSong])
+  }
 
   //todo handEventSocket.
-  const debounced = useDebouncedCallback(
-    // function
-    (value) => {
-      if (audioRef.current) {
-        audioRef.current.currentTime = Number(value.rewind);
-        setRewindAudio(value.rewind as number);
-        setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-        audioRef.current?.play();
-      }
-      audioRef.current &&
-        setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+  const debounced = useDebouncedCallback(async (value) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Number(value.rewind);
       setRewindAudio(value.rewind as number);
-    },
-    // delay in ms
+      setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+      await audioRef.current?.play();
+    }
+    audioRef.current &&
+      setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
+    setRewindAudio(value.rewind as number);
+  },
     1000
   );
+
 
   //! Send events to the Server
   useEffect(() => {
@@ -101,10 +110,12 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
       const user = localStorage.getItem('user');
       if (user) {
         const convert = JSON.parse(user);
+        setUserLocal(convert);
         socket.emit('setUser', convert._id)
       }
       axios.get(`http://localhost:8080/api/room/${idRoom}`).then(({ data }) => {
         setAdmin(data.data.isAdminGroup)
+        console.log("ID ROOM ON CLICENT : ", data.data._id);
         socket.emit('joinRoom', data.data._id)
       });
     }
@@ -123,45 +134,45 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
   }
   //todo: Start Receive events returned from the Server;
 
-  const debouncedClick = useDebouncedCallback(
-    () => {
-      audioRef.current && audioRef.current.play();
-      console.log("Play Server");
 
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
-      console.log("play");
-    },
-    500
-  );
+
   useEffect(() => {
     if (idRoom) {
       socket.on("recivedHandTogg", async (value) => {
         if (value) {
           const preValue = value.stateSong;
-          dispatch(setStateSong(!value.stateSong))
+          if (!audioRef.current) {
+            return;
+          }
+          dispatch(setCurrentSong(value.song));
+          localStorage.setItem('song', JSON.stringify(value.song));
           if (!preValue) {
-            debouncedClick();
-            localStorage.setItem('song', JSON.stringify(currentSong));
-          }else{
-            audioRef.current &&audioRef.current.pause(); 
-            console.log("pause Server");
-            intervalId && clearInterval(intervalId);
-            setIntervalId(null);
+            // audioRef.current && await
+            console.log("Chay ca 2");
+
+            dispatch(setStateSong(true));
+            audioRef.current.play();
+            setTimeout(async () => {
+              audioRef.current && audioRef.current.play();
+            }, 500)
+          } else {
+            console.log("a11");
+            dispatch(setStateSong(false));
+            audioRef.current.pause();
           }
         }
       });
     }
-  }, [dispatch]);
-  // ,[dispatch, intervalId, stateSong]
+  }, [stateSong]);
+  // , [dispatch, stateSong]
 
-  const debounceNextSong = useDebouncedCallback(() => {
-    dispatch(setStateSong(true));
-    audioRef.current && audioRef.current?.play();
-  },700)
+  const debounceNextSong = useDebouncedCallback(async () => {
+    audioRef.current?.play();
+    setTimeout(async () => {
+      dispatch(setStateSong(true));
+      audioRef.current?.play();
+    }, 500);
+  }, 700)
 
   useEffect(() => {
     if (idRoom) {
@@ -176,27 +187,27 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
           debounceNextSong()
         }
       })
-      socket.on('emitPrevServer', value => {
+      socket.on('emitPrevServer', async (value) => {
         if (value) {
           const findIndexSong = ListData.findIndex((item) => item._id == currentSong?._id)
           const findSong = ListData.filter((_item, index) => findIndexSong - 1 < 0 ? index === ListData.length - 1 : index == findIndexSong - 1);
           dispatch(handGetCurrentSong(findSong[0]))
           localStorage.setItem("song", JSON.stringify(findSong[0]));
           dispatch(setStateSong(false))
-          setTimeout(() => {
-            dispatch(setStateSong(true));
-            audioRef.current && audioRef.current?.play();
-          }, 500);
+          debounceNextSong();
         }
       });
       socket.on("handRewindServer", value => {
         if (value) {
           debounced(value);
+          if (stateSong == false) {
+            dispatch(setStateSong(true));
+          }
         }
       });
     }
   })
-  // ,[dispatch, intervalId, stateSong, ListData, setCurrentTime, setRewindAudio]
+  // ,[dispatch, stateSong, ListData, setCurrentTime, setRewindAudio]
 
   useEffect(() => {
     if (idRoom) {
@@ -213,20 +224,29 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
   //todo: End Receive events returned from the Server
   const getUser = localStorage.getItem('user');
 
-  const handleAudioEnd = () => {
-    console.log(randomSong);
+
+  const handleLoadedMetadata = () => {
+    const audioDuration = audioRef.current?.duration;
+    if (!isNaN(audioDuration as number) && (audioDuration as number) > 0) {
+      setDuration(audioDuration as number);
+    }
+  };
+
+  const handleAudioEnd = async () => {
+    // console.log(randomSong);
     if (audioRef.current?.ended && duration > 0 && !repeat && !randomSong) {
-        const findIndexSong = ListData.findIndex((item) => item._id === currentSong?._id);
-        const nextIndex = (findIndexSong + 1) % ListData.length;
-        console.log(nextIndex, findIndexSong);
-        const findSong = ListData[nextIndex];
-        dispatch(setCurrentSong(findSong))
-        localStorage.setItem('song', JSON.stringify(findSong));
-        dispatch(setStateSong(false));
-        setTimeout(() => {
-          dispatch(setStateSong(true));
-          audioRef.current?.play(); // Kích hoạt phát âm thanh
-        }, 500);
+      const findIndexSong = ListData.findIndex((item) => item._id === currentSong?._id);
+      const nextIndex = (findIndexSong + 1) % ListData.length;
+      console.log(nextIndex, findIndexSong);
+      const findSong = ListData[nextIndex];
+      dispatch(setCurrentSong(findSong))
+      axios.put(`http://localhost:8080/api/currentSongRoom/${idRoom}`, findSong);
+      localStorage.setItem('song', JSON.stringify(findSong));
+      dispatch(setStateSong(false));
+      setTimeout(async () => {
+        dispatch(setStateSong(true));
+        await audioRef.current?.play(); // Kích hoạt phát âm thanh
+      }, 500);
     }
     if (audioRef.current?.ended && duration > 0 && randomSong) {
       if (getUser) {
@@ -235,6 +255,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
           const randomSong1 = ListData[Math.floor(Math.random() * ListData.length)];
           console.log('Chay vo random : ', randomSong1);
           dispatch(setCurrentSong(randomSong1))
+          axios.put(`http://localhost:8080/api/currentSongRoom/${idRoom}`, randomSong1)
           localStorage.setItem('song', JSON.stringify(randomSong1));
           dispatch(setStateSong(false));
           setTimeout(() => {
@@ -248,24 +269,15 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
       }
     }
   };
-  const handleLoadedMetadata = () => {
-    const audioDuration = audioRef.current?.duration;
-    if (!isNaN(audioDuration as number) && (audioDuration as number) > 0) {
-      setDuration(audioDuration as number);
-    }
-  };
-
   useEffect(() => {
-    const cb = () => {
-      if(audioRef.current && audioRef.current.currentTime >= audioRef.current.duration) {
+    const cb = async () => {
+      if (audioRef.current && audioRef.current.currentTime >= audioRef.current.duration) {
         handleAudioEnd();
-        setTimeout(() => {
-          audioRef.current?.play();
+        setTimeout(async () => {
+          await audioRef.current?.play();
         }, 1000)
       }
     }
-    console.log(randomSong);
-    
     audioRef.current && audioRef.current.addEventListener("timeupdate", cb);
     audioRef.current && audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
 
@@ -274,33 +286,27 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
       audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, [audioRef, duration, repeat, currentSong, dispatch, ListData, randomSong, idRoom]);
+  // audioRef, duration, repeat, currentSong, dispatch, ListData, randomSong, idRoom
 
-  const debouncedRandomSong = useDebouncedCallback(
-    // function
-    () => {
+  const debouncedRandomSong = useDebouncedCallback(() => {
+    audioRef.current?.play();
+    setTimeout(() => {
       audioRef.current?.play();
-    },
-    // delay in ms
-    1000
-  );
-
+    }, 500);
+  }, 1000);
   useEffect(() => {
     if (idRoom) {
       socket.on("randomSongServer", value => {
         const handAutoRandom = () => {
           localStorage.setItem('song', JSON.stringify(value.song));
-          // setTimeout(() => {
-          //   audioRef.current?.play();
-          // }, 500);
           dispatch(setCurrentSong(value.song))
           debouncedRandomSong();
         }
         audioRef.current && audioRef.current?.addEventListener("ended", handAutoRandom);
         audioRef.current && audioRef.current?.addEventListener("loadedmetadata", handleLoadedMetadata);
-        // handAutoRandom(value.song)
         return () => {
           audioRef.current?.removeEventListener("ended", handAutoRandom);
-          audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);   
+          audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
         }
       })
     }
@@ -308,11 +314,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
 
   useEffect(() => {
     if (stateSong) {
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current && setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      handUpdateCurrentTime();
     }
     audioRef.current && (audioRef.current.loop = repeat);
     audioRef.current && (audioRef.current.volume = (volume / 100));
@@ -333,7 +335,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
     setVolume(value as number);
   };
 
-  const handRewindAudio = ({ value }: any) => {
+  const handRewindAudio = async ({ value }: any) => {
     rewindRef.current &&
       rewindRef.current.addEventListener("mouseup", () => {
         if (audioRef.current) {
@@ -342,10 +344,13 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
           setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
         }
       });
+    if (stateSong == false) {
+      dispatch(setStateSong(true));
+    }
     audioRef.current &&
       setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
     setRewindAudio(value as number);
-    audioRef.current?.play();
+    await audioRef.current?.play();
     idRoom && socket.emit("handRewindClient", {
       idroom: idRoom,
       rewind: value
@@ -357,8 +362,8 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
     setRandomSong(!preRandom);
     preRandom == false && setRepeat(false);
     socket.emit('setRandomSong', {
-      idroom : idRoom,
-      stateRandom : preRandom
+      idroom: idRoom,
+      stateRandom: preRandom
     })
   }
   useEffect(() => {
@@ -368,19 +373,19 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
         value.stateRandom == false && setRepeat(false);
       }
     })
-  },[])
+  }, [])
   useEffect(() => {
     if (idRoom) {
       socket.on('serverSetRandomSong', value => {
         if (value) {
-        const preRandom = value.stateRandom;
-        console.log(preRandom);
-        setRandomSong(!preRandom);
-        preRandom == false && setRepeat(false);
+          const preRandom = value.stateRandom;
+          console.log(preRandom);
+          setRandomSong(!preRandom);
+          preRandom == false && setRepeat(false);
         }
       })
     }
-  },[setRandomSong,setRepeat])
+  }, [setRandomSong, setRepeat])
 
   const handTurnVolume: any = () => {
     return volume > 0 ? setVolume(0) : setVolume(50);
@@ -393,10 +398,95 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
     setRandomSong(false);
     setRepeat((value) => !value)
   }
+
+  // SeconToMinuste
+  //todo Check person 2 when join in room
+  useEffect(() => {
+    if (idRoom) {
+      socket.on("Welcome", value => {
+        if (value) {
+          console.log("Join Rooom");
+          console.log(audioRef.current && audioRef.current.currentTime);
+          socket.emit("currentTimeSong", { idroom: idRoom, currentTime: audioRef.current && audioRef.current.currentTime, stateSong })
+        }
+      })
+    }
+  }, [])
+  //todo server return curentime for person 2
+  useEffect(() => {
+    if (idRoom) {
+      socket.on("serverCurrentTimeSong", async (value) => {
+        if (value) {
+          if (audioRef.current) {
+            audioRef.current.currentTime = Number(value.currentTime);
+          }
+          // audioRef.current && await audioRef.current.play();
+          console.log("chạy vô đây khi F5 trang");
+          console.log(!value.stateSong);
+
+          setCurrentTime(SeconToMinuste(Number(value.currentTime)));
+          if (!value.stateSong) {
+            dispatch(setStateSong(true));
+            await audioRef.current?.play();
+            setTimeout(() => {
+              audioRef.current?.play();
+            }, 500);
+            handUpdateCurrentTime();
+          } else {
+            dispatch(setStateSong(false));
+            audioRef.current?.pause();
+            setRewindAudio(value.currentTime);
+          }
+        }
+      })
+    }
+  }, [stateSong])
+
+  //! Event F5 reload Page Start
+
+  const handleBeforeUnload = () => {
+    const playBackState = {
+      currentTime: audioRef.current?.currentTime || 0,
+      stateSong: stateSong,
+      currentSong: currentSong
+    };
+    localStorage.setItem("playbackState", JSON.stringify(playBackState));
+  };
+
+  useEffect(() => {
+    // Attach event listeners for beforeunload and unload events
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("unload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("unload", handleBeforeUnload);
+    };
+  }, [stateSong]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      const getplaybackState = localStorage.getItem("playbackState");
+      if (!getplaybackState) return;
+
+      const pausePlaybackState = JSON.parse(getplaybackState);
+
+      // dispatch(setStateSong(pausePlaybackState.stateSong));
+      dispatch(setCurrentSong(pausePlaybackState.currentSong));
+
+      audioRef.current && (audioRef.current.currentTime = pausePlaybackState.currentTime);
+      localStorage.removeItem("playbackState");
+    }
+
+  }, [stateSong]);
+
+
+  //! Event F5 reload Page end
+
   return (
     <div
-      className={`fixed z-50 w-[100%] bottom-0 bg-[#14182A] cursor-pointer `}>
-      <div className="level text-white h-[90px] px-[20px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
+      className={`fixed z-50 w-[100%] bottom-0 bg-[#14182A] cursor-pointer ${userLocal && admin && userLocal._id == admin._id ? 'visible' : 'invisible'}`}>
+      <div className="level text-white h-[90px] px-[40px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
           <div className="flex items-center w-[100%]">
             <div className="flex w-[100%] ">
@@ -407,7 +497,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                       <img
                         src={currentSong?.song_image[0]}
                         alt=""
-                        className="w-[100%] rounded-[5px]"
+                        className="w-[100%] rounded-[5px] h-full"
                       />
                     </div>
                   </div>
@@ -467,9 +557,16 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                     </ListItemIconStyle>
                   </ListItemButtonStyle>
                 </div>
-                <PrevSongRoom ListData={ListData} audioRef={audioRef} socket={socket} idRoom={idRoom} />
+                <PrevSongRoom audioRef={audioRef} socket={socket} idRoom={idRoom} />
                 <div className="w-[24%] h-[100%] ">
-                  <PauseListItemButtonStyle onClick={togglePlayPause} >
+                  <PauseListItemButtonStyle id="buttonToggle" onClick={async () => togglePlayPause()} >
+                    {/* // togglePlayPause();
+                    // if (stateSong == true) {
+                    //   audioRef.current && audioRef.current.addEventListener("timeupdate", (value) => {
+                    //     setRewindAudio((value.target as HTMLAudioElement)?.currentTime);
+                    //     setCurrentTime(SeconToMinuste((value.target as HTMLAudioElement)?.currentTime));
+                    //   })
+                    // } */}
                     <PauseListItemIconStyle>
                       {stateSong ? (
                         <PauseIcon className={classes.root} />
@@ -479,7 +576,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                     </PauseListItemIconStyle>
                   </PauseListItemButtonStyle>
                 </div>
-                <NextSongRoom ListData={ListData} audioRef={audioRef} socket={socket} idRoom={idRoom} />
+                <NextSongRoom audioRef={audioRef} socket={socket} idRoom={idRoom} />
                 <div className="w-[19%] h-[100%] ">
                   <ListItemButtonStyle
                     onClick={handchangeRepeat}
@@ -494,10 +591,13 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
               </div>
             </div>
             <div className="w-[100%] h-[30%] flex justify-center items-start">
-              <audio ref={audioRef} src={currentSong ? currentSong.song_link as string : ''} id="sliderFooter" preload={"metadata"} autoPlay={false}/>
+              {/* preload={"metadata"} autoPlay={true} */}
+
+              <audio ref={audioRef} src={currentSong ? currentSong.song_link as string : ''} id="sliderFooter" preload={"auto"} autoPlay={false} />
               <div className="w-full h-[20px] flex justify-between">
                 <div className="w-[6%] h-full fjc">
-                  <p>{currentTime || "00:00"}</p>
+                  <p>{currentTime}</p>
+                  {/* {currentTime || "00:00"} */}
                 </div>
                 <div className="w-[85%] h-full fjc">
                   <Slider
@@ -560,6 +660,7 @@ const FooterRoom = ({ listMember, ListData, audioRef, idRoom }: Props) => {
                       },
                     },
                   }}
+                  
                   value={volume}
                   onChange={handChangeVolume}
                 />

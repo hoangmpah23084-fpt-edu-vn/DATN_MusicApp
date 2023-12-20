@@ -5,7 +5,7 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
-import { Advertisement, SuggestSong, WantToListent } from "./Component";
+import { SuggestSong, WantToListent } from "./Component";
 import { useEffect, useState } from "react";
 import ListSongItem from "@/components/List-songs-item";
 import { ifSong } from "../Admin/Interface/ValidateSong";
@@ -14,6 +14,9 @@ import SongGenre from "@/components/SongGenre";
 import Album from "../../components/Album/index.tsx";
 import { MdArrowForwardIos } from "react-icons/md";
 import ListAlbum from "./Component/ListAlbum.tsx";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+
 
 const img_slide = [
   { id: 0, img: "/Image/b0fa9fbfce103d1dce15d73aaceb68be.jpg" },
@@ -140,6 +143,7 @@ const KhamPhaPage = () => {
               {/* Start Component WantToListent */}
               {/* <Advertisement /> */}
               {/* End Component WantToListent */}
+
             </div>
           </div>
         </main>

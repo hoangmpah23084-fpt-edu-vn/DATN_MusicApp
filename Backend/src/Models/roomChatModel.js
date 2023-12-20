@@ -20,6 +20,12 @@ const roomModel = new mongoose.Schema({
       ref: "Message",
     },
   ],
+  currentSongInRoom: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Song",
+    },
+  ],
   isAdminGroup: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

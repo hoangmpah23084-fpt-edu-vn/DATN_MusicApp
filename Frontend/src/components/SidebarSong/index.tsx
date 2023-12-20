@@ -1,17 +1,17 @@
 import {
   ListItemButtonStyle,
+  ListItemIconBgStyle,
   ListItemIconStyle,
   PauseListItemButtonStyle,
   PauseListItemIconStyle,
-  ListItemIconBgStyle,
+  
 } from "@/Mui/style/Footer/StyleAction";
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import React, { useEffect, useState } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import PauseIcon from "@mui/icons-material/Pause";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import { useStyles } from "../Footer";
-import { handGetSong } from "@/store/Reducer/Song";
+import { handGetSong, setListSongSongHistory } from "@/store/Reducer/Song";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import {
@@ -20,9 +20,10 @@ import {
 } from "@/constane/favourites.const";
 import { activeSong, chekcSubString } from "@/constane/song.const";
 import { setDataLocal } from "@/store/Reducer/currentSong";
+import ItemSongSidebar from "./itemSongSidebar";
 import { RootState } from "@/store/store";
 import ModalSongMenu from "../Modals/modalSongMenu";
-
+import { useStyles } from "../Footer";
 type Props = {
   sideBarRight: boolean;
 };
@@ -36,10 +37,11 @@ const SidebarSong = (props: Props) => {
 
   const dispatch = useAppDispatch();
   const { song } = useAppSelector(({ Song }) => Song);
-  const classes = useStyles();
   useEffect(() => {
-    dispatch(handGetSong());
-  }, []);
+    if (stateColor) {
+      dispatch(handGetSong());
+    }
+  }, [stateColor]);
 
   useEffect(() => {
     const getSongLocal = localStorage?.getItem("song") || "";
@@ -49,17 +51,46 @@ const SidebarSong = (props: Props) => {
     }
   }, [stateSong, song.length, currentSong]);
 
+  const [historySongState, setHistorySongState] = useState<ifSong[]>()
+  const historySong = localStorage.getItem('history')
+
+  useEffect(() => {
+    if (historySong) {
+      const parsedHistory = JSON.parse(historySong) as ifSong[];
+      if (parsedHistory) {
+        const newData = parsedHistory.map((item: any) => (JSON.parse(item)));
+        setHistorySongState(newData)
+      }
+    }
+  }, [historySong]);
+
   const handTogglePlaylist = () => {
     const preStateColor = stateColor;
     setStateColor(!preStateColor);
     if (!preStateColor) {
+      // const getSongLocal = localStorage?.getItem("song") || "";
+      // if (getSongLocal) {
+      //   const currentlocal: ifSong = JSON?.parse(getSongLocal);
+      //   dispatch(setListSongSongHistory(currentlocal));
+      // }
       setStateColor(true);
+
     } else {
+      if (historySong) {
+        const parsedHistory = JSON.parse(historySong) as ifSong[];
+        if (parsedHistory) {
+          const newData = parsedHistory.map((item: any) => (JSON.parse(item)));
+          console.log(newData);
+          dispatch(setListSongSongHistory(newData));
+          setHistorySongState(newData)
+        }
+      }
       setStateColor(false);
     }
   };
   const [modal, setModal] = useState<boolean>(false);
   const [songItem, setSongItem] = useState<any>();
+  const classes = useStyles();
 
   const handleShowModalCreateRoom = () => {
     setModal(!modal);
@@ -69,6 +100,8 @@ const SidebarSong = (props: Props) => {
     setModal(true);
     setSongItem(item);
   };
+
+  
 
   return (
     <>
