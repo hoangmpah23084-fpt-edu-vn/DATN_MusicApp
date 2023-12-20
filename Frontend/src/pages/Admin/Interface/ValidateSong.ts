@@ -80,3 +80,17 @@ export interface SongLink {
   name: string;
   value: string;
 }
+
+export interface itemSong {
+  _id: string;
+  view_song: string;
+  total_like: string;
+  song_name: string;
+  id_Genre: {
+    name: string
+  },
+  id_Singer: {
+    name: string
+  },
+  createdAt: string
+}
