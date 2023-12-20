@@ -80,7 +80,7 @@ const DSong = (props: Props) => {
     <div className="container">
       <div className="chanel-section-title mt-[100px] pl-[60px] py-10 flex justify-between mb-[20px]">
         <h3 className="font-semibold capitalize text-white text-[40px]">
-          BXH Nhạc mới
+          Danh sách nhạc
         </h3>
       </div>
       {/* overflow-y-scroll */}

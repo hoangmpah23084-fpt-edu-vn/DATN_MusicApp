@@ -43,6 +43,7 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
   const [repeat, setRepeat] = useState(false);
   const [randomSong, setRandomSong] = useState(false);
   const [admin, setAdmin] = useState<isAdminGroup>()
+  const [userLocal, setUserLocal] = useState<any | {}>({})
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
   const { currentSong, stateSong } = useAppSelector(({ currentSong }) => currentSong);
@@ -57,6 +58,8 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
     })
   }
 
+  console.log(userLocal, admin);
+  
   const togglePlayPause = async () => {
     if (idRoom) {
       const preValue = stateSong;
@@ -107,6 +110,7 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
       const user = localStorage.getItem('user');
       if (user) {
         const convert = JSON.parse(user);
+        setUserLocal(convert);
         socket.emit('setUser', convert._id)
       }
       axios.get(`http://localhost:8080/api/room/${idRoom}`).then(({ data }) => {
@@ -481,7 +485,7 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
 
   return (
     <div
-      className={`fixed z-50 w-[100%] bottom-0 bg-[#14182A] cursor-pointer `}>
+      className={`fixed z-50 w-[100%] bottom-0 bg-[#14182A] cursor-pointer ${userLocal && admin && userLocal._id == admin._id ? 'visible' : 'invisible'}`}>
       <div className="level text-white h-[90px] px-[40px] bg-[#130c1c]  border-t-[1px] border-[#32323d] flex">
         <div className="flex items-center justify-start w-[20%] h-[100%]">
           <div className="flex items-center w-[100%]">

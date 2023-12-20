@@ -1,7 +1,7 @@
 import RoomCommentListItem from '@/components/Room-comment-list-item'
-import { DetailRoom, listMessages } from '@/pages/Admin/Interface/Room'
+import { DetailRoom, isAdminGroup, listMessages } from '@/pages/Admin/Interface/Room'
 import instanceAxios from '@/utils/axios'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 
@@ -9,10 +9,13 @@ type Props = {
     listMess : listMessages[],
     socket : Socket,
     setListMess : React.Dispatch<React.SetStateAction<listMessages[]>>,
+    admin: isAdminGroup
 }
 
-const Message = ({listMess, socket, setListMess}: Props) => {
+const Message = ({listMess, socket, setListMess, admin}: Props) => {
   const {id} = useParams(); 
+  const [userLocal , setUserLocal] = useState<any | {}>({});
+
     const handSendMessage = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key == "Enter") {
       event.preventDefault()
@@ -30,10 +33,18 @@ const Message = ({listMess, socket, setListMess}: Props) => {
       (event.target as HTMLInputElement).value = "";
       }
     }
+    useEffect(() => {
+      const user = localStorage.getItem("user");
+      if (!user) {
+        return;
+      }
+      const paserUser = JSON.parse(user);
+      setUserLocal(paserUser);
+    },[])
   return (
-    <div className="content-wrapper flex-1">
-    <div className="zm-room-comment flex flex-col h-[93%] justify-between">
-      <div className="zm-room-comment-list flex flex-col py-[6px] h-[calc(100vh-265px)] overflow-y-auto">
+    <div className="content-wrapper ">
+    <div className={`zm-room-comment flex flex-col justify-between ${userLocal._id == admin._id ? 'h-[93%]' : 'h-[100%]'}`}>
+      <div className="zm-room-comment-list flex flex-col py-[6px] h-[calc(100vh-265px)] overflow-y-scroll">
         {
           listMess.length > 0 ? listMess.map((item, index) => <RoomCommentListItem item={item} key={index} />) : ''
         }
@@ -42,9 +53,10 @@ const Message = ({listMess, socket, setListMess}: Props) => {
         <div className="avatar w-[40px] h-[40px]">
           <img
             className="rounded-full h-full"
-            src="https://res.cloudinary.com/dsbiugddk/image/upload/v1699500124/DATN/lqlyeilscdksm54zgzsj.jpg"
+            src={`${userLocal && userLocal.image ? userLocal.image : 'https://res.cloudinary.com/dsbiugddk/image/upload/v1699500124/DATN/lqlyeilscdksm54zgzsj.jpg'} `}
             alt=""
           />
+          {/* "https://res.cloudinary.com/dsbiugddk/image/upload/v1699500124/DATN/lqlyeilscdksm54zgzsj.jpg" */}
         </div>
         <div className="control ml-[10px] flex-1">
           <input
