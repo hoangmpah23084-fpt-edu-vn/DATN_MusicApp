@@ -43,7 +43,6 @@ const KhamPhaPage = () => {
       .then((response) => response.json())
       .then(({ data }) => {
         const album = data.slice(0, 5);
-
         setListAlbum(album);
       });
   }, [])
