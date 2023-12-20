@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Avatar, Button, List, Skeleton } from "antd";
 import instanceAxios from "@/utils/axios";
 import { toast } from "react-toastify";
+import { getGenre } from "@/store/Reducer/genreReducer";
+import { useAppDispatch } from "@/store/hooks";
 
 
 interface Props {
@@ -13,7 +15,7 @@ const GenreDetail = (props: Props) => {
   const [initLoading, setInitLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
   const [list, setList] = useState<any[]>([]);
-
+  const dispatch = useAppDispatch()
 
 
 
@@ -32,7 +34,7 @@ const GenreDetail = (props: Props) => {
   };
 
   useEffect(() => {
-    if(idGenre) {
+    if (idGenre) {
       fetchData();
     }
   }, [idGenre]);
@@ -48,6 +50,8 @@ const GenreDetail = (props: Props) => {
 
       toast.success(resp.data.message);
       fetchData();
+      dispatch(getGenre());
+
     } catch (error) {
       toast.error(error as any);
     }

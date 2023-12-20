@@ -32,14 +32,26 @@ export const create_Album = async (req, res) => {
 };
 
 export const getAll_Album = async (req, res) => {
-  try {
-    const data = await Album.find().populate("id_singer");
+  const {
+    search,
+  } = req.query;
+    const options = {
+      populate: ["id_singer"],
+    };
+    try {
+      let query = {};
+      if (search) {
+        query = {
+          $or: [{ album_name: { $regex: search, $options: "i" } }],
+        };
+      }
+    const data = await Album.paginate(query, options);
     if (!data) {
       return res.status(400).json({ message: "Get All Album Failed" });
     }
     return res.status(200).json({
       message: "Get All Album Success",
-      data,
+      data:data.docs,
     });
   } catch (error) {
     console.log(error);
