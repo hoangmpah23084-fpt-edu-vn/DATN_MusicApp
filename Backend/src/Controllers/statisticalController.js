@@ -2,6 +2,7 @@ import Song from "../Models/songModel.js";
 import Album from "../Models/albumModel.js";
 import User from "../Models/model_user.js";
 import Singer from '../Models/singer.js'
+import moment from 'moment'
 
 export const statistical = async (req, res) => {
     try {
@@ -60,20 +61,43 @@ export const statistical = async (req, res) => {
 export const monthSong = async (req, res) => {
     try {
         const listSong = await Song.find()
-        // const {
-        //     endDate, startDate
-        // } = req.body
-        // const newData = listSong.filter((item) => {
-        //     if (moment(item.createdAt).format("DD-MM-YYYY").isBetween(moment(startDate).format("DD-MM-YYYY"), moment(endDate).format("DD-MM-YYYY"))) {
-        //         return item
-        //     }
-        // })
 
-        // console.log(newData)
+        // Ngày bắt đầu và kết thúc của khoảng thời gian
+        const startMonth = moment().startOf('month').format('YYYY-MM-DD')
+        const endMonth = moment().endOf('month').format('YYYY-MM-DD')
 
+        // Kiểm tra xem targetDate có nằm trong khoảng thời gian không
+        const newData = listSong.filter((item) => moment(item.createdAt).format('YYYY-MM-DD') <  endMonth &&  startMonth < moment(item.createdAt).format('YYYY-MM-DD'))
 
+        return res.json({
+            message: "Danh sách bài hát mới thêm trong tháng",
+            data: {
+                itemCount: newData.length || 0,
+                items: newData
+            }
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+}
 
-        return res.json(listSong)
+export const monthUser = async (req, res) => {
+    try {
+        const listUser = await User.find();
+        const startMonth = moment().startOf('month').format('YYYY-MM-DD')
+        const endMonth = moment().endOf('month').format('YYYY-MM-DD')
+
+        // Kiểm tra xem targetDate có nằm trong khoảng thời gian không
+        const newData = listUser.filter((item) => moment(item.createdAt).format('YYYY-MM-DD') <  endMonth &&  startMonth < moment(item.createdAt).format('YYYY-MM-DD'))
+        return res.json({
+            message: "Danh sách người đăng ký mới trong tháng",
+            data: {
+                itemCount: newData.length || 0,
+                items: newData
+            }
+        })
     } catch (error) {
         return res.status(500).json({
             message: error,

@@ -5,6 +5,7 @@ import {
   get_GenreById,
   delete_Genre,
   update_Genre,
+  deleteSongInGenre,
 } from "../Controllers/genreController.js";
 const GenderRouter = express.Router();
 
@@ -13,5 +14,6 @@ GenderRouter.get("/genre/:id", get_GenreById);
 GenderRouter.post("/genre", create_Genre);
 GenderRouter.put("/genre/:id", update_Genre);
 GenderRouter.delete("/genre/:id", delete_Genre);
+GenderRouter.delete("/songGenre/:id", deleteSongInGenre);
 
 export default GenderRouter;
