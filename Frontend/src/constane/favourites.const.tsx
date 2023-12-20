@@ -30,8 +30,8 @@ export const ActiveFavouritesTitle = ({ item }: props) => {
   const active = listFavourites?.map((item) => item?._id).includes(item?._id)
   return (
     <>
-      {active ? <p className="text-white">Xoá khỏi thư viện</p> :
-        <p className="text-white">Thêm thư viện</p>}
+      {active ? <p className="text-white w-32">Xoá khỏi thư viện</p> :
+        <p className="text-white  w-28">Thêm thư viện</p>}
     </>
   )
 }
