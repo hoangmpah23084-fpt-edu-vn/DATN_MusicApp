@@ -48,13 +48,25 @@ export const getAll_Album = async (req, res) => {
 
 export const get_AlbumById = async (req, res) => {
   try {
-    const data = await Album.findById(req.params.id).populate("id_singer").populate("list_song");
-    
-      return res.status(200).json({
-        message: "Get Album By Id Success",
-        data,
-      });
-   
+    const data = await Album.findById(req.params.id).populate({
+      path: 'list_song',
+      populate: {
+        path: 'id_Genre',
+        model: 'Genre'
+      }
+    }).populate({
+      path: 'list_song',
+      populate: {
+        path: 'id_Singer',
+        model: 'Singer'
+      }
+    });
+
+    return res.status(200).json({
+      message: "Get Album By Id Success",
+      data,
+    });
+
   } catch (error) {
     console.log(error);
   }
