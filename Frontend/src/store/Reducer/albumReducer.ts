@@ -1,3 +1,4 @@
+import { IApiSinger } from "@/pages/Admin/Interface/ISinger";
 import { ifAlbum } from "@/pages/Admin/Interface/validateAlbum";
 import instanceAxios from "@/utils/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -19,8 +20,9 @@ export const addAlbum = createAsyncThunk("album/addAlbum", async (dataToForm: if
     const { data } = await instanceAxios.post<{ data: ifAlbum }>("http://localhost:8080/api/album", dataToForm);
     return data.data;
 })
-export const getAlbum = createAsyncThunk("album/getAlbum", async () => {
-    const { data } = await instanceAxios.get<{ data: ifAlbum[] }>("http://localhost:8080/api/album");
+export const getAlbum = createAsyncThunk("album/getAlbum", async (option?: IApiSinger) => {
+    const { data } = await instanceAxios.get<{ data: ifAlbum[] }>(`http://localhost:8080/api/album?search=${option?.search ? option?.search : ""
+        }`);
     return data.data;
 })
 export const deleteAlbum = createAsyncThunk("album/deleteAlbum", async (_id: string) => {

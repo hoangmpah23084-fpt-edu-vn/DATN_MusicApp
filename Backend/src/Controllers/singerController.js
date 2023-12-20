@@ -4,18 +4,28 @@ import Genre from "../Models/genreModel.js";
 import SingerValidate from "../Schemas/singerSchema.js";
 
 export const getSingers = async (req, res) => {
-  try {
-    const data = await Singer.find().populate("songs");
-
-    console.log(data);
+  const {
+    search,
+  } = req.query;
+    const options = {
+      populate: ["songs"],
+    };
+    try {
+      let query = {};
+      if (search) {
+        query = {
+          $or: [{ name: { $regex: search, $options: "i" } }],
+        };
+      }
+    const data = await Singer.paginate(query, options);
     if (!data) {
       return res.status(404).send({ message: "fail", error: "Loi" });
     }
-    return res.status(200).send({ message: "success", data: data });
+    return res.status(200).send({ message: "success", data: data.docs });
   } catch (error) {
     return res.status(500).send({ message: "fail", error: "Loi he thong" });
   }
-};
+}
 
 export const createSinger = async (req, res) => {
   try {
