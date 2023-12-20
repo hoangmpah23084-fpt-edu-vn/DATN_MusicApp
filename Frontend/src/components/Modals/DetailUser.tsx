@@ -58,12 +58,18 @@ const DetailUser = ({ onShowModal }: IProps) => {
         }
         if (img) {
             dispatch(updateUser(newData)).unwrap().then(async (res) => {
+                localStorage.setItem('user', JSON.stringify(res.data))
                 await toast.success(res.message);
                 onShowModal()
                 setImg('')
                 if (user) {
                     const data = JSON.parse(user)
                     dispatch(GetUser(data._id))
+                    //    const newUser = {
+                    //     ...data,
+                    //     images:d
+                    //    }
+
                 }
             })
         } else {
