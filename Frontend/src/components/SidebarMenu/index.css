@@ -53,7 +53,7 @@
 }
 
 :where(.css-dev-only-do-not-override-1ck3jst).ant-menu-light .ant-menu-item-selected {
-  background-color: red;
+  background-color: #3bc8e7;
   color: #fff;
 }
 

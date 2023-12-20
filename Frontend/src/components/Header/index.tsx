@@ -208,9 +208,9 @@ const Header = (props: Props) => {
               <img src="/logo.png" alt="" />
             </div>
 
-            <div className="hidden md:flex h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
+            {/* <div className="hidden md:flex h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
               <AiOutlineSetting className=" w-10 h-[20px]" />
-            </div>
+            </div> */}
             {userLocal && token ? (
               <div className="dropdown-profile">
                 <Dropdown overlay={menu}>
