@@ -21,7 +21,7 @@ const MusicCharts = (props: Props) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 5000);
+    }, 1000);
     fetch("http://localhost:8080/api/Song?_order=desc&_limit=10")
       .then((response) => response.json())
       .then((data) => setListSong(data.data));
@@ -39,11 +39,11 @@ const MusicCharts = (props: Props) => {
         <div className="content md:px-10 py-2 hover:cursor-default space-y-5">
           {loading
             ? listSong.map((_, index) => (
-                <SuggSkeleton section="suggested" key={index} />
-              ))
+              <SuggSkeleton section="suggested" key={index} />
+            ))
             : listSong?.map((song, index) => {
-                return <BXHItemSong item={song} indexItem={index} key={index} />;
-              })}
+              return <BXHItemSong item={song} indexItem={index} key={index} />;
+            })}
         </div>
       </section>
       {/* End .music_charts */}

@@ -196,7 +196,7 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
             </button>
 
             <button
-              className="item_list mx-2 hidden"
+              className="ml-8"
               onClick={() => setModal(!modal)}
             >
               <BsThreeDots className="px-3 py-2 rounded-full text-[40px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 " />
@@ -211,11 +211,7 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
               </>
             )}
 
-            <span className="item_list_time text-sm text-[#86828c]  mx-2 w-[40px] h-[40px] flex items-center justify-center">
-              <p className=" rounded-full text-[9px] hover:bg-[#423a4b] cursor-pointer hover:opacity-80 ">
-                4:00
-              </p>
-            </span>
+
           </div>
         </td>
       )}

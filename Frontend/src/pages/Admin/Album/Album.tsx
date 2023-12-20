@@ -28,6 +28,8 @@ import { toast } from "react-toastify";
 import instanceAxios from "@/utils/axios";
 import { FaEye } from "react-icons/fa";
 import AlbumDetail from "./ModalDetail";
+import { getAlbum } from "@/store/Reducer/albumReducer";
+import { IApiSinger } from "../Interface/ISinger";
 const { Option } = Select;
 
 const AlbumAdmin = () => {
@@ -48,9 +50,10 @@ const AlbumAdmin = () => {
   const [form] = Form.useForm();
   const formRef = useRef<any>();
 
-  const fetchData = async () => {
+  const fetchData = async (option?: IApiSinger) => {
     try {
-      const resp = await instanceAxios.get("http://localhost:8080/api/album");
+      const resp = await instanceAxios.get(`http://localhost:8080/api/album?search=${option?.search ? option?.search : ""
+        }`);
       setAlbum(resp.data.data);
     } catch (error) {
       toast.error(error as any);
@@ -73,12 +76,10 @@ const AlbumAdmin = () => {
   // get dữ liệu
   useEffect(() => {
     const data: IApiSong = {
-      page: page,
-      pageSize: pageSize,
       search: search,
     };
-    dispatch(handGetSong(data));
-  }, [page, pageSize, search]);
+    fetchData(data)
+  }, [search]);
 
   useEffect(() => {
     fetchData();
@@ -382,7 +383,7 @@ const AlbumAdmin = () => {
   };
 
   useEffect(() => {
-    if(albumSelected?.id_singer?._id) {
+    if (albumSelected?.id_singer?._id) {
       fetchDataSong()
     }
   }, [albumSelected])
@@ -444,20 +445,12 @@ const AlbumAdmin = () => {
           <Table
             dataSource={dataSource}
             columns={columns}
-            pagination={false}
             className="mt-12"
             scroll={{ y: 650 }}
           />
         )}
       </main>
-      <footer className="w-[100%] h-10 bg-[#F4F5F7] fixed bottom-0 z-50">
-        <Pagination
-          defaultCurrent={page}
-          total={totalSong || 1}
-          onChange={onChangePage}
-          className="absolute bottom-1 right-72   z-50"
-        />
-      </footer>
+
 
       <Modal
         title="Chi tiết Album"
