@@ -12,7 +12,7 @@ const HistorySong = () => {
     if (historySong) {
       const parsedHistory = JSON.parse(historySong) as ifSong[];
       if (parsedHistory) {
-        const newData = parsedHistory.map((item: any) => JSON.parse(item));
+        const newData = parsedHistory.map((item: any) => item);
         setHistorySongState([...newData]);
         setTimeout(() => {
           setLoading(false);
@@ -29,11 +29,11 @@ const HistorySong = () => {
         <table className="w-full text-sm text-left mt-[20px]">
           {loading
             ? historySongState?.map((_, index) => (
-                <SuggSkeleton section="suggested" key={index} />
-              ))
+              <SuggSkeleton section="suggested" key={index} />
+            ))
             : historySongState?.map((item, index) => (
-                <ItemSong item={item} key={index} />
-              ))}
+              <ItemSong item={item} key={index} />
+            ))}
         </table>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const { Schema } = mongoose;
 
@@ -40,6 +41,6 @@ const singerSchema = new Schema(
   },
   { timestamps: true, versionKey: false }
 );
-
+singerSchema.plugin(mongoosePaginate);
 const Singer = mongoose.model("Singer", singerSchema, "Singer");
 export default Singer;

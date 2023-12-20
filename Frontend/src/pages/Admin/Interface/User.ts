@@ -30,10 +30,19 @@ export interface ifUserUpgrade {
     passwordUpgrade: string,
     confirmPasswordUpgrade: string
 }
+export interface itemUser {
+    _id: string,
+    email: string,
+    fullName: string,
+    role: string,
+    createdAt: string
+}
+
 
 export const userSchema = yup.object().shape({
     fullName: yup.string(),
 })
+
 
 
 

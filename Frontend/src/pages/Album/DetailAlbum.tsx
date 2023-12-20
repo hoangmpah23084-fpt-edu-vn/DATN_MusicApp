@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { ifAlbum } from "../Admin/Interface/validateAlbum";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import BXHItemSong from "@/components/BXHItemSong";
-import SuggSkeleton from "../KhamPha/Skeleton/Sugg.skeleton";
+import { useAppDispatch } from "@/store/hooks";
+import { getOneAlbum } from "@/store/Reducer/albumReducer";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 import ListSong from "@/components/Favourites/ListSong";
 
 type Props = {};
 
 const DetailAlbum = (props: Props) => {
-  const [loading, setLoading] = useState(true);
 
-  const [album, setAlbum] = useState<ifAlbum[] | []>([]);
+  const { listOneAlbum } = useSelector((state: RootState) => state.album)
+  console.log("listOneAlbum", listOneAlbum);
+
+
   const param = useParams();
   const id = param.id;
+  const dispatch = useAppDispatch()
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/album/${id}`)
-      .then(({ data }) => setAlbum(data.data));
-      
-  }, []);
+    dispatch(getOneAlbum(id as string))
+  }, [id]);
 
   return (
-    <div className="chanel-section-title mt-[70px] md:mt-[100px] px-[15px] md:px-16 py-5 flex justify-between md:mb-[20px] text-[#fff] overflow-x-auto">
-      <ListSong listSong={album?.list_song} />
+    <div className="chanel-section-title mt-[70px] md:mt-[100px] px-[15px] md:px-16 py-2 flex justify-between md:mb-[20px] text-[#fff]  flex-col">
+      <span className="w-44 font-bold text-xl">Chi tiết Album</span>
+      <ListSong listSong={listOneAlbum} activeAbum={true} />
     </div>
+
   );
 };
 
