@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./index.css";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction, useEffect } from "react";
 
 interface props {
   handleShowModalCreateRoom: () => void;
@@ -59,15 +59,12 @@ const items: MenuItem[] = [
     "/rooms",
     <MdLibraryMusic className="w-[22px] text-[#ccc] h-[22px]" />
   ),
-
   { type: "divider" },
-
   getItem(
     "Nghe gần đây",
     "/history",
     <PiClockCounterClockwiseBold className="h-[22px] w-[22px] flex items-center justify-center rounded-[9px] bg-[#7d32ff] p-[2px] " />
   ),
-
   getItem(
     "Playlist",
     "/playlist",
@@ -84,7 +81,6 @@ const SidebarMenu = ({ handleShowModalCreateRoom, setCollapsed }: props) => {
   const [isCollapsed, setIscollapsed] = useState(false);
   const navigate = useNavigate();
 
-  
   return (
     <div className=" text-[#dadada] text-[14px] top-0 left-0 z-40 max-w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#1b2039] hidden sm:block">
       <nav className="zm-navbar ">
