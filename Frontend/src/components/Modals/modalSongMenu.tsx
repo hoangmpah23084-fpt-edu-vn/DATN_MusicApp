@@ -134,10 +134,6 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
                   <p>{song.id_Singer.name}</p>
                 </div>
                 <div>
-                  <p className="text-[#857a95]">Album</p>
-                  <p>Đạt G</p>
-                </div>
-                <div>
                   <p className="text-[#857a95]">Sáng tác</p>
                   <p>{song.id_Singer.name}</p>
                 </div>
@@ -159,7 +155,7 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
             </div>
           </div>
         </header>
-        <div className="flex items-center justify-between bg-[#493961]  rounded-2xl mx-5">
+        {/* <div className="flex items-center justify-between bg-[#493961]  rounded-2xl mx-5">
           <span className="hover:bg-[#594b6f] px-4 py-2 hover:rounded-tl-2xl hover:rounded-bl-2xl ease-in-out duration-300">
             <AiOutlineDownload className="mx-3" />
             <p className="text-[10px]">Tải xuống</p>
@@ -172,7 +168,7 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
             <FaBan className="mx-5" />
             <p className="text-[10px]">chặn</p>
           </span>
-        </div>
+        </div> */}
         <div className="mt-3">
           <ul className="text-base text-[#c4c2c8]">
             <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300">
@@ -294,9 +290,9 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
             )}
           </ul>
         </div>
-        <footer className="py-2 text-center text-[#867b95]">
+        {/* <footer className="py-2 text-center text-[#867b95]">
           <p>Cung cấp bởi LOOPS Music</p>
-        </footer>
+        </footer> */}
       </div>
     </>
   );

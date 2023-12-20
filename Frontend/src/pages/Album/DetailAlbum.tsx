@@ -18,11 +18,11 @@ const DetailAlbum = (props: Props) => {
     axios
       .get(`http://localhost:8080/api/album/${id}`)
       .then(({ data }) => setAlbum(data.data));
-    //   const song = album?.
+      
   }, []);
 
   return (
-    <div className="chanel-section-title mt-[70px] md:mt-[100px] px-[15px] md:px-16 py-5 flex justify-between md:mb-[20px] text-[#fff]">
+    <div className="chanel-section-title mt-[70px] md:mt-[100px] px-[15px] md:px-16 py-5 flex justify-between md:mb-[20px] text-[#fff] overflow-x-auto">
       <ListSong listSong={album?.list_song} />
     </div>
   );

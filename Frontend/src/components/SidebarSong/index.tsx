@@ -4,10 +4,9 @@ import {
   ListItemIconStyle,
   PauseListItemButtonStyle,
   PauseListItemIconStyle,
-
 } from "@/Mui/style/Footer/StyleAction";
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import React, { useEffect, useState } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -51,15 +50,15 @@ const SidebarSong = (props: Props) => {
     }
   }, [stateSong, song.length, currentSong]);
 
-  const [historySongState, setHistorySongState] = useState<ifSong[]>()
-  const historySong = localStorage.getItem('history')
+  const [historySongState, setHistorySongState] = useState<ifSong[]>();
+  const historySong = localStorage.getItem("history");
 
   useEffect(() => {
     if (historySong) {
       const parsedHistory = JSON.parse(historySong) as ifSong[];
       if (parsedHistory) {
         const newData = parsedHistory.map((item: any) => item);
-        setHistorySongState(newData)
+        setHistorySongState(newData);
       }
     }
   }, [isSongHistory]);
@@ -74,7 +73,6 @@ const SidebarSong = (props: Props) => {
       //   dispatch(setListSongSongHistory(currentlocal));
       // }
       setStateColor(true);
-
     } else {
       if (historySong) {
         const parsedHistory = JSON.parse(historySong) as ifSong[];
@@ -82,7 +80,7 @@ const SidebarSong = (props: Props) => {
           const newData = parsedHistory.map((item: any) => item);
           if (newData) {
             dispatch(setListSongSongHistory(newData));
-            setHistorySongState(newData)
+            setHistorySongState(newData);
           }
         }
       }
@@ -102,25 +100,25 @@ const SidebarSong = (props: Props) => {
     setSongItem(item);
   };
 
-
-
   return (
     <>
       {/* sidebar màn hình máy tính */}
       <div
-        className={`right-0 transition-all duration-700 hidden md:block ${props.sideBarRight
-          ? "w-[500px] px-[8px]"
-          : "fixed translate-x-[400px] w-0"
-          } sticky z-10  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc `}
+        className={`right-0 transition-all duration-700 hidden md:block ${
+          props.sideBarRight
+            ? "w-[500px] px-[8px]"
+            : "fixed translate-x-[400px] w-0"
+        } sticky z-10  border-l-[1px] border-[#120822] text-white h-[calc(100vh-90px)] bg-[#14182A] bottom-[90px] fjc `}
       >
         <div className="w-full h-full">
           <div className="w-full h-[70px] fjc">
             <div className="w-full h-[50%] px-[8px] flex">
-              <div className="w-[70%] h-full bg-[#2A2139] rounded-full flex items-center justify-center">
+              <div className="w-[100%] h-full bg-[#2A2139] rounded-full flex items-center justify-center">
                 <div className="w-[48%] h-[85%]">
                   <button
-                    className={`text-[11px] transition-all  w-full rounded-full h-full ${stateColor ? "bg-[#6A6474] font-bold" : ""
-                      }`}
+                    className={`text-[11px] transition-all  w-full rounded-full h-full ${
+                      stateColor ? "bg-[#6A6474] font-bold" : ""
+                    }`}
                     onClick={() => handTogglePlaylist()}
                   >
                     Danh sách phát
@@ -128,38 +126,19 @@ const SidebarSong = (props: Props) => {
                 </div>
                 <div className="w-[50%] h-[85%]">
                   <button
-                    className={`text-[10px] transition-all w-full h-full rounded-full ${stateColor ? "" : "bg-[#6A6474] font-bold"
-                      }`}
+                    className={`text-[10px] transition-all w-full h-full rounded-full ${
+                      stateColor ? "" : "bg-[#6A6474] font-bold"
+                    }`}
                     onClick={() => handTogglePlaylist()}
                   >
                     Nghe gần đây
                   </button>
                 </div>
               </div>
-              <div className="w-[30%] h-full flex">
-                <div className="w-[50%] h-full">
-                  <ListItemButtonStyle>
-                    <ListItemIconBgStyle>
-                      <AccessAlarmIcon
-                        sx={{ color: "white", fontSize: "18px" }}
-                      />
-                    </ListItemIconBgStyle>
-                  </ListItemButtonStyle>
-                </div>
-                <div className="w-[50%] h-full">
-                  <ListItemButtonStyle>
-                    <ListItemIconBgStyle>
-                      <MoreHorizIcon
-                        sx={{ color: "white", fontSize: "18px" }}
-                      />
-                    </ListItemIconBgStyle>
-                  </ListItemButtonStyle>
-                </div>
-              </div>
             </div>
           </div>
           <div className="w-full fjc">
-            <div className="w-full h-[90%] ">
+            {/* <div className="w-full h-[90%] ">
               <div className="w-full h-[50%] flex items-center justify-start ">
                 <h2 className="font-bold text-[14px]">Tiếp Theo</h2>
               </div>
@@ -169,16 +148,14 @@ const SidebarSong = (props: Props) => {
                   <span className="text-[#3BC8E7] pl-[5px]">Mới phát hành</span>
                 </h3>
               </div>
-            </div>
+            </div> */}
           </div>
-          <div className="w-full relative fjc h-[calc(100vh-200px)]">
+          <div className="w-full relative fjc h-[calc(100vh-200px)] mt-2">
             <div className="w-full h-[100%] overflow-y-scroll">
               {song &&
                 song?.length > 0 &&
                 song.map((item: ifSong) => {
-                  return (
-                    <ItemSongSidebar item={item} />
-                  );
+                  return <ItemSongSidebar item={item} />;
                 })}
             </div>
           </div>
@@ -187,10 +164,11 @@ const SidebarSong = (props: Props) => {
 
       {/* sidebar màn hình điện thoại */}
       <div
-        className={`right-0 transition-all duration-700 block md:hidden ${props.sideBarRight
-          ? "absolute w-full"
-          : "fixed translate-x-[400px] w-0"
-          }  z-10  border-l-[1px] border-[#120822] text-white h-[calc(100vh-130px)] bg-[#14182A] top-[70px] overflow-y-auto fjc `}
+        className={`right-0 transition-all duration-700 block md:hidden ${
+          props.sideBarRight
+            ? "absolute w-full"
+            : "fixed translate-x-[400px] w-0"
+        }  z-10  border-l-[1px] border-[#120822] text-white h-[calc(100vh-130px)] bg-[#14182A] top-[70px] overflow-y-auto fjc `}
       >
         <div className="w-full h-full">
           <div className="w-full h-[70px] fjc">
@@ -198,8 +176,9 @@ const SidebarSong = (props: Props) => {
               <div className="w-[70%] h-full bg-[#2A2139] rounded-full flex items-center justify-center">
                 <div className="w-[48%] h-[85%]">
                   <button
-                    className={`text-[11px] transition-all  w-full rounded-full h-full ${stateColor ? "bg-[#6A6474] font-bold" : ""
-                      }`}
+                    className={`text-[11px] transition-all  w-full rounded-full h-full ${
+                      stateColor ? "bg-[#6A6474] font-bold" : ""
+                    }`}
                     onClick={() => handTogglePlaylist()}
                   >
                     Danh sách phát
@@ -207,8 +186,9 @@ const SidebarSong = (props: Props) => {
                 </div>
                 <div className="w-[50%] h-[85%]">
                   <button
-                    className={`text-[10px] transition-all w-full h-full rounded-full ${stateColor ? "" : "bg-[#6A6474] font-bold"
-                      }`}
+                    className={`text-[10px] transition-all w-full h-full rounded-full ${
+                      stateColor ? "" : "bg-[#6A6474] font-bold"
+                    }`}
                     onClick={() => handTogglePlaylist()}
                   >
                     Nghe gần đây
@@ -266,10 +246,11 @@ const SidebarSong = (props: Props) => {
                   return (
                     <div
                       key={index}
-                      className={`w-full h-[60px] ${dataLocal && dataLocal?._id == item._id
-                        ? "bg-[#092635]"
-                        : "hover:bg-[#b4b4b32d]"
-                        } my-3 fjc  cursor-pointer rounded-lg wall`}
+                      className={`w-full h-[60px] ${
+                        dataLocal && dataLocal?._id == item._id
+                          ? "bg-[#092635]"
+                          : "hover:bg-[#b4b4b32d]"
+                      } my-3 fjc  cursor-pointer rounded-lg wall`}
                     >
                       <div className="w-[95%] h-[80%] flex justify-between ">
                         <div className="w-[17%] h-full">
@@ -299,8 +280,8 @@ const SidebarSong = (props: Props) => {
                                   }}
                                 >
                                   {dataLocal &&
-                                    stateSong &&
-                                    dataLocal?._id == item._id ? (
+                                  stateSong &&
+                                  dataLocal?._id == item._id ? (
                                     <PauseIcon className={classes.root} />
                                   ) : (
                                     <PlayArrowIcon className={classes.root} />
