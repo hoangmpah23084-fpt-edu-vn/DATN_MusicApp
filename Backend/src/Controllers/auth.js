@@ -66,7 +66,7 @@ const signin = async (req, res) => {
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.json({
+      return res.status(400).json({
         message: "Không đúng mật khẩu ^^",
       });
     }
@@ -79,7 +79,9 @@ const signin = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({
+      message: error.message
+    })
   }
 };
 
