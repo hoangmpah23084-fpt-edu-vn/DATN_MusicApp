@@ -33,13 +33,11 @@ const Dashboard = () => {
 
   const col = {
     curent: "Lượt nghe tháng trước",
-    prev: "Lượt nghe tháng này",
   };
 
   const fectchData = async (params = {}) => {
     try {
       const today = new Date();
-      let monthYear = `${today.getFullYear()}-${Number(today.getMonth()) + 1}`;
 
       const resp = await instanceAxios.post(
         "http://localhost:8080/api/statistical",
@@ -52,7 +50,7 @@ const Dashboard = () => {
         const newData = ratingSong.map((item: any) => ({
           name: item.song_name,
           [col.curent]: item.view,
-          [col.prev]: JSON.parse(item.month)[monthYear],
+
         }));
 
         setDataChart(newData);
@@ -209,12 +207,6 @@ const Dashboard = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line
-            type="monotone"
-            dataKey={col.prev}
-            stroke="#8884d8"
-            activeDot={{ r: 8 }}
-          />
           <Line
             type="monotone"
             activeDot={{ r: 8 }}
