@@ -11,8 +11,6 @@ type Props = {};
 const DetailAlbum = (props: Props) => {
 
   const { listOneAlbum } = useSelector((state: RootState) => state.album)
-  console.log("listOneAlbum", listOneAlbum);
-
 
   const param = useParams();
   const id = param.id;
