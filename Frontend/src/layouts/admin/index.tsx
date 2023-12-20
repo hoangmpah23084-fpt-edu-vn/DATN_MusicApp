@@ -51,7 +51,7 @@ const LayoutAdmin = () => {
     getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />),
     getItem(<Link to="/admin/genre">Thể Loại</Link>, '4', <AiOutlineBars />),
     getItem(<Link to="/admin/album">Album</Link>, '5', <AiOutlineBars />),
-    getItem(<div onClick={handleLogout}>Đăng xuất</div>, '5', <LogoutOutlined />)
+    getItem(<div onClick={handleLogout}>Đăng xuất</div>, '6', <LogoutOutlined />)
   ];
   return (
     <div className="h-screen flex w-full">

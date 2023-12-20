@@ -28,7 +28,8 @@ const AlbumDetail = (props: Props) => {
       const resp = await instanceAxios.get(
         `http://localhost:8080/api/album/${albumSelected._id}`
       );
-      console.log(resp.data.data);
+      console.log("cmm")
+      console.log(123,resp.data.data);
       setList(resp.data.data.list_song);
       setData(resp.data.data.list_song);
       setInitLoading(false);
@@ -72,26 +73,12 @@ const AlbumDetail = (props: Props) => {
     }
   };
 
-  const loadMore =
-    !initLoading && !loading ? (
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: 12,
-          height: 32,
-          lineHeight: "32px",
-        }}
-      >
-        <Button onClick={onLoadMore}>loading more</Button>
-      </div>
-    ) : null;
 
   return (
     <List
       className="demo-loadmore-list"
       loading={initLoading}
       itemLayout="horizontal"
-      loadMore={loadMore}
       dataSource={list}
       renderItem={(item) => (
         <List.Item

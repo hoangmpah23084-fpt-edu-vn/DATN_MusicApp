@@ -57,8 +57,6 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
       setCurrentTime(SeconToMinuste((value.target as HTMLAudioElement)?.currentTime));
     })
   }
-
-  console.log(userLocal, admin);
   
   const togglePlayPause = async () => {
     if (idRoom) {
@@ -285,9 +283,9 @@ const FooterRoom = ({ listMember, audioRef, idRoom }: Props) => {
       audioRef.current?.removeEventListener("timeupdate", cb);
       audioRef.current?.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [audioRef, duration, repeat, currentSong, dispatch, ListData, randomSong, idRoom]);
-  // audioRef, duration, repeat, currentSong, dispatch, ListData, randomSong, idRoom
-
+  }, [audioRef, duration, repeat, currentSong, ListData, randomSong, idRoom, stateSong]);
+  // dispatch
+  // audioRef, duration, repeat, currentSong, dispatch, ListData, randomSong, idRoomx
   const debouncedRandomSong = useDebouncedCallback(() => {
     audioRef.current?.play();
     setTimeout(() => {
