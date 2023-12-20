@@ -14,6 +14,6 @@ GenderRouter.get("/genre/:id", get_GenreById);
 GenderRouter.post("/genre", create_Genre);
 GenderRouter.put("/genre/:id", update_Genre);
 GenderRouter.delete("/genre/:id", delete_Genre);
-GenderRouter.delete("/songGenre/:id", deleteSongInGenre);
+GenderRouter.put("/songGenre/:id", deleteSongInGenre);
 
 export default GenderRouter;

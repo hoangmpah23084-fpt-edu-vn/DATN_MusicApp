@@ -22,7 +22,7 @@ import { getGenre, updateGenre } from "@/store/Reducer/genreReducer";
 import { ifAddGenre, ifGenre } from "../Interface/validateAlbum";
 import axios from "axios";
 import { toast } from "react-toastify";
-const { Option } = Select;
+import GenreDetail from "./ModalDetail";
 
 interface ifUpdateGenre {
   key : string,
@@ -83,12 +83,8 @@ const ListGenre = () => {
   };
 
   const handleGetDetail = (id: string) => {
-    axios.get(`http://localhost:8080/api/genre/${id}`).then(({data}) => {
-      console.log(data.data);
-      setDetailsGenre(data.data);
-    })
+    setIdGenre(id as any)
     setOpenDetail(true);
-    // dispatch(handGetOne(id));
   };
 
   interface columns {
@@ -347,45 +343,15 @@ const ListGenre = () => {
     );
   };
 
-  const modalDetail = () => {
-    return (
-      <Modal
-        title="Chi tiết thể loại"
-        open={openDetail}
-        onOk={() => handleEdit()}
-        onCancel={handleCancel}
-        okText="Chỉnh sửa"
-        cancelText="Thoát"
-        okType="danger"
-        width={600}
-      >
-        {loading ? (
-          <Skeleton active />
-        ) : (
-          <div className="flex items-center justify-between pt-5 pb-5">
-            <div className="w-full">
-              {/* <p className="flex">
-                <strong>ID : </strong> <span>{detailsGenre?._id}</span>
-              </p> */}
-              <p>
-                <strong>Tên thể loại : </strong> {detailsGenre?.name}
-              </p>
-              <p>
-                <strong>số lượng bài hát : </strong> {detailsGenre?.list_songs?.length}
-              </p>
-            </div>
-            {/* {dataOne?.song_image.map((item) => (
-              <img src={item} className="w-32 h-32 rounded-xl" />
-            ))} */}
-          </div>
-        )}
-      </Modal>
-    );
-  };
+
+
+  const handleOk = () => {
+    setOpenDetail(false)
+  }
 
   return (
     <div className="relative">
-      {modalDetail()}
+
       {modalAdd()}
       <header className="fixed top-0 flex items-center justify-between z-40 bg-[#F4F5F7] pt-2 w-[100%] pb-2.5 ">
         <span className="font-bold text-xl ml-10">Danh sách thể loại</span>
@@ -424,6 +390,19 @@ const ListGenre = () => {
           className="absolute bottom-1 right-72   z-50"
         />
       </footer>
+
+
+      <Modal
+        title="Chi tiết Album"
+        open={openDetail}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <GenreDetail  idGenre={idGenre} />
+
+
+      </Modal>
+
     </div>
   );
 };
