@@ -1,0 +1,18 @@
+.scrolling-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.scrolling-text {
+  animation: scrollLeft 10s linear infinite;
+  animation-delay: 5s;
+}
+
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}/*# sourceMappingURL=css.css.map */

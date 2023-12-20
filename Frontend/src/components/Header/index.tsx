@@ -45,13 +45,10 @@ const Header = (props: Props) => {
       const parseCurrentUser = JSON.parse(currentUser);
       setUserLocal(parseCurrentUser);
       dispatch(GetUser(parseCurrentUser._id));
-      if (parseCurrentUser.role === 'admin') {
-        setCheckAdmin(true)
+      if (parseCurrentUser.role === "admin") {
+        setCheckAdmin(true);
       }
     }
-
-
-
   }, []);
 
   const handleMenuClick = (e: any) => {
@@ -68,8 +65,6 @@ const Header = (props: Props) => {
     localStorage.removeItem("token");
     dispatch(resetUser(null));
   };
-
-
 
   const menu = (
     <Menu onClick={handleMenuClick}>
@@ -90,11 +85,17 @@ const Header = (props: Props) => {
       </Menu.Item>
       <Menu.Divider />
 
-      {checkAdmin && <Menu.Item key="admin" >
-        <Link to='/admin' className="flex items-center">
-          <strong className="flex items-center"> <AiOutlineUser className="mr-2" />Quản trị viên</strong>
-        </Link>
-      </Menu.Item>}
+      {checkAdmin && (
+        <Menu.Item key="admin">
+          <Link to="/admin" className="flex items-center">
+            <strong className="flex items-center">
+              {" "}
+              <AiOutlineUser className="mr-2" />
+              Quản trị viên
+            </strong>
+          </Link>
+        </Menu.Item>
+      )}
 
       <Menu.Item key="personal" onClick={() => setShowUser(!showUser)}>
         <b className="flex items-center">
@@ -132,7 +133,7 @@ const Header = (props: Props) => {
         ))
       ) : (
         <Menu.Item disabled>
-          <span style={{ color: 'white' }}>Không tìm thấy bài hát</span>
+          <span style={{ color: "white" }}>Không tìm thấy bài hát</span>
         </Menu.Item>
       )}
     </Menu>
@@ -157,6 +158,8 @@ const Header = (props: Props) => {
       })
     );
   }, []);
+// console.log(props.collapsed);
+// console.log(props.sideBarRight);
 
   return (
     <>
@@ -166,22 +169,24 @@ const Header = (props: Props) => {
       )}
       <div
         className={`flex h-[70px] items-center fixed bg-[#1b2039] left-0 z-20 px-[15px] w-full  md:left-[240px] md:px-[59px] transition-all duration-700
-        ${props.collapsed ? "md:left-[80px] md:w-[calc(100vw-80px)]" : ""}
-        ${props.collapsed && props.sideBarRight
+        ${props.collapsed ? "md:left-[80px] " : ""}
+        ${
+          props.collapsed && props.sideBarRight
             ? "md:w-[calc(100vw-450px)]"
             : ""
-          }
-        ${props.sideBarRight
+        }
+        ${
+          props.sideBarRight
             ? "md:w-[calc(100vw-570px)]"
             : "md:w-[calc(100vw-240px)] "
-          }`}
+        }`}
       >
         <div className="flex items-center z-1 w-[100%] justify-between">
           <div className="flex flex-1 md:flex-none">
             <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] hidden items-center h-[40px] md:flex" />
             <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px] hidden md:block" />
             <div className="search w-full lg:flex items-center relative justify-center dropdown-search max-h-[400px]">
-              <Dropdown overlay={dropdownMenu} trigger={['click']}>
+              <Dropdown overlay={dropdownMenu} trigger={["click"]}>
                 <Input
                   addonBefore={
                     <AiOutlineSearch

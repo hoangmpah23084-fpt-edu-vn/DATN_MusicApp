@@ -156,5 +156,5 @@ export const delete_Genre = async (req, res) => {
     });
   }
 };
-const deleteSongInGenre = () => {};
+const deleteSongInGenre = () => { };
 // const genre = await Genre.findByIdAndDelete(req.params.id);

@@ -22,28 +22,34 @@ const WantToListent = (props: Props) => {
 
   return (
     <>
-      {genre.length > 0 &&
-        genre.map((item, index) => {
-          const sliceItem = item.list_songs?.splice(0, 5);
-          return (
-            <div className="playlist-section home-recent mt-12" key={index}>
-              <div className="home-recent-title flex justify-between mb-[20px]">
-                <h3 className="text-xl font-semibold capitalize">
-                  {item.name}
-                </h3>
-              </div>
-              <div className="carousel-wrapper relative ">
+      <div className="playlist-section home-recent grid grid-cols-1 md:grid-cols-3 gap-4 my-[30px]">
+        {genre.length > 0 &&
+          genre.map((item) => {
+            // const sliceItem = item.list_songs?.slice(0, 5);
+
+            return (
+              <div className="playlist-section home-recent flex justify-center items-center bg-[#d17975] rounded-md py-[20px]">
+                <div className="home-recent-title  justify-between ">
+                  <Link
+                    to={`/genre/${item._id}`}
+                    className="text-xl font-semibold capitalize"
+                  >
+                    {item.name}
+                  </Link>
+                </div>
+                {/* <div className="carousel-wrapper relative ">
                 <div className="carousel flex -mx-[15px] overflow-hidden px-[15px]">
                   <div className="carousel-container w-full grid grid-rows-1 grid-flow-col gap-4 px-[15px]">
-                    {sliceItem?.map((itemList, index) => (
-                      <SongGenre item={itemList} key={index} />
+                    {sliceItem?.map((itemList) => (
+                      <SongGenre item={itemList} />
                     ))}
                   </div>
                 </div>
+              </div> */}
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+      </div>
     </>
   );
 };

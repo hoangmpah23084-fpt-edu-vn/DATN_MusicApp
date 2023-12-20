@@ -32,7 +32,7 @@ export const createSong = async (req, res) => {
     await Genre.findByIdAndUpdate(
       data.id_Genre,
       {
-        $addToSet: { list_song: data._id },
+        $addToSet: { list_songs: data._id },
       },
       { new: true }
     );

@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import { ifSong } from "./ValidateSong";
+import { ifUser } from "./User";
 
 
 export interface IRoom {
@@ -8,7 +9,8 @@ export interface IRoom {
     name: string,
     quanlity: number,
     password?: string,
-    nameGroup?: string
+    nameGroup?: string,
+    isAdminGroup?: ifUser
 }
 export interface DetailRoom {
     _id: string,

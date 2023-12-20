@@ -110,6 +110,9 @@ dependencies:
   react-slick:
     specifier: ^0.29.0
     version: 0.29.0(react-dom@18.2.0)(react@18.2.0)
+  react-slidedown:
+    specifier: ^2.4.7
+    version: 2.4.7(react-dom@18.2.0)(react@18.2.0)
   react-slideshow-image:
     specifier: ^4.2.1
     version: 4.2.1(react@18.2.0)
@@ -4233,6 +4236,17 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       resize-observer-polyfill: 1.5.1
+    dev: false
+
+  /react-slidedown@2.4.7(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-HGDfrqo70r1WVE0DwrySPdCT27/2wcZaJYh5kOnmuPSCtjDDJrNkDdn4Ep/cma2VVfwupeAGhbc2pbrGThU6VQ==}
+    peerDependencies:
+      react: ^16.3.0 || 17
+      react-dom: ^16.3.0 || 17
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tslib: 2.6.2
     dev: false
 
   /react-slideshow-image@4.2.1(react@18.2.0):
