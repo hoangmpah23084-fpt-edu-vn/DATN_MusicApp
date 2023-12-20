@@ -79,10 +79,6 @@ const RoomPage = (props: Props) => {
     FetchMessage();
   }, [])
   useEffect(() => {
-    console.log("UPDATE SONG");
-
-  }, [listSong])
-  useEffect(() => {
     socket.on("messRecived", (value) => {
       setListMess([...listMess, value])
     })

@@ -56,7 +56,6 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
 
     if (activeFavourite) {
       dispatch(setSongFavourite(listFavourites));
-
     }
 
     stateSong && dataLocal?._id == id

@@ -4,6 +4,7 @@ import { IApiSong, ifSong } from "@/pages/Admin/Interface/ValidateSong";
 import instanceAxios from "@/utils/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface initState {
     error: string;
@@ -113,7 +114,31 @@ const songReducer = createSlice({
         },
         setListSongSongHistory: (state, action) => {
             state.song = action.payload;
-        }
+        },
+        addSongtoSideBarSong: (state, action) => {
+            const findData = state.song.filter(item => item._id == action.payload._id);
+            if (findData.length > 0) {
+                toast.warning("Bài nhạc đã tồn tại")
+                return
+            }else{
+                state.song = [...state.song, action.payload];
+            }
+        },
+        addSongToNextSong : (state, action) => {
+            const findData = state.song.filter(item => item._id == action.payload.song._id);
+            if (findData.length > 0) {
+                toast.warning("Bài nhạc đã tồn tại")
+                return;
+            }
+            if (action.payload.findSong < 0) {
+                state.song = [action.payload.song, ...state.song]
+            }else{
+                state.song.splice(action.payload.findSong + 1, 0, action.payload.song);
+            }            
+        },
+        deleteSongInListSong: (state, action) => {
+            state.song = state.song.filter(item => item._id != action.payload._id); 
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -183,5 +208,5 @@ const songReducer = createSlice({
     },
 });
 
-export const { setSongFavourite, setSongHistory, setListSongSongHistory } = songReducer.actions;
+export const { setSongFavourite, setSongHistory, setListSongSongHistory, addSongtoSideBarSong, addSongToNextSong, deleteSongInListSong } = songReducer.actions;
 export default songReducer.reducer;
