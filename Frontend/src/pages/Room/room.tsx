@@ -105,7 +105,7 @@ const Room = () => {
             </h1>
             <input
               type="text"
-              className="bg-[#1B2039] ouline-none text-white text-sm rounded-lg block w-96 p-2.5"
+              className="bg-[#1B2039] ouline-none text-white text-sm rounded-lg block w-full md:w-96 p-2.5 "
               placeholder="Tìm phòng"
               required
               onChange={(e) => {
