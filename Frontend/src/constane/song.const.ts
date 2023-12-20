@@ -1,5 +1,5 @@
 import { ifSong } from "@/pages/Admin/Interface/ValidateSong";
-import { handChangeStateSong, handGetCurrentSong, setDataLocal } from "@/store/Reducer/currentSong";
+import { handChangeStateSong, handGetCurrentSong, setDataLocal, setStateSong } from "@/store/Reducer/currentSong";
 import { AppDispatch } from "@/store/store";
 
 export const activeSong = (
@@ -8,10 +8,10 @@ export const activeSong = (
     action: 'start' | 'stopPause') => {
     dispatch(handGetCurrentSong(value));
     if (action === "start") {
-        dispatch(handChangeStateSong(true));
+        dispatch(setStateSong(true));
         localStorage.setItem("song", JSON.stringify(value));
     } else if (action === "stopPause") {
-        dispatch(handChangeStateSong(false));
+        dispatch(setStateSong(false));
     }
     const getSongLocal = localStorage?.getItem("song") || "";
     if (getSongLocal) {
@@ -30,6 +30,17 @@ export const chekcSubString = (text: string, size?: number) => {
         return newText;
     }
     return "";
+}
+
+export const checkLengthNameSong = (text: string) => {
+    if (text) {
+        const lengthText = text.length;
+        const maxLength = 17;
+        if (lengthText > maxLength) {
+            return true;
+        }
+        return false
+    }
 }
 
 

@@ -32,7 +32,6 @@ const currentSong = createSlice({
         },
         setStateSong:(state, action: PayloadAction<boolean>) => {
             state.stateSong = action.payload; 
-            // console.log('NewPayload : ', action.payload);
         },
     },
     extraReducers: builder => {

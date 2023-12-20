@@ -14,9 +14,29 @@ const ConnectSocket = (server) => {
   });
   io.on("connection", (socket) => {
     console.log("connected socket io success");
-    socket.on("joinRoom", (value) => {
-      //todo value => idRoom
+    socket.on("joinRoom", async (value) => {
       socket.join(value);
+      const dataRoom = await roomModel.findById(value).populate("listSong");
+      console.log(dataRoom);
+      // Lấy danh sách các phòng mà socket đang tham gia
+      const rooms = Object.keys(socket.rooms);
+
+      // Kiểm tra số người trong phòng
+      const roomName = value;
+      // console.log(roomName);
+      const numberOfClients = io.sockets.adapter.rooms.get(roomName)?.size || 0;
+      console.log(numberOfClients >= 2, numberOfClients);
+      //todo if length person >= 2 send request to own room
+      if (numberOfClients >= 2) {
+        socket.to(roomName).emit("Welcome", value);
+        socket.to(roomName).emit("resetUser", value);
+      }
+    });
+    socket.on("currentTimeSong", (value) => {
+      if (value.currentTime) {
+        console.log(value);
+        socket.to(value.idroom).emit("serverCurrentTimeSong", value);
+      }
     });
     socket.on("setUser", (value) => {
       //todo value => User
@@ -24,7 +44,7 @@ const ConnectSocket = (server) => {
     });
     //? toggPlayPause
     socket.on("toggPlayPause", (value) => {
-      socket.in(value.idroom).emit("recivedHandTogg", value);
+      socket.to(value.idroom).emit("recivedHandTogg", value);
     });
     socket.on("emitNextClient", (value) => {
       socket.to(value).emit("emitNextServer", value);
@@ -46,7 +66,7 @@ const ConnectSocket = (server) => {
       socket.to(value.idroom).emit("serverStartSongSideBar", value);
     });
     socket.on("deleteSongInRoom", (value) => {
-      console.log(value);
+      // console.log(value);
       socket.to(value.idroom).emit("serverDeleteSongInRoom", value);
     });
     socket.on("addSongInListRoom", (value) => {
@@ -56,16 +76,20 @@ const ConnectSocket = (server) => {
       socket.to(value.idroom).emit("serverAutoNextSong", value);
     });
     socket.on("leaveRoomAdmin", (value) => {
-      console.log("LeaveRoomAdmin event received:", value);
+      // console.log("LeaveRoomAdmin event received:", value);
       socket.in(value.idroom).emit("serverLeaveRoomAdmin", value);
     });
     socket.on("leaveRoomPerson", (value) => {
-      console.log("leaveRoomPerson event received:", value);
-      socket.in(value.idroom).emit("serverLeaveRoomPerson", value);
+      // console.log("leaveRoomPerson event received:", value);
+      socket.to(value.idroom).emit("serverLeaveRoomPerson", value);
     });
     socket.on("setRandomSong", (value) => {
-      console.log("leaveRoomPerson event received:", value);
+      // console.log("leaveRoomPerson event received:", value);
       socket.in(value.idroom).emit("serverSetRandomSong", value);
+    });
+    socket.on("takeSongWhenJoin", (value) => {
+      // console.log("leaveRoomPerson event received:", value);
+      socket.in(value.idroom).emit("setverTakeSongWhenJoin", value);
     });
 
     socket.on("newMessage", async (value) => {
@@ -92,7 +116,13 @@ const ConnectSocket = (server) => {
         socket.to(value.id_room).emit("messRecived", value);
       });
     });
+
+    socket.on("disconnectClient", () => {
+      console.log("Disconnect user");
+      socket.disconnect();
+    });
     socket.on("disconnect", () => {
+      socket.disconnect();
       console.log("A user disconnected");
     });
   });

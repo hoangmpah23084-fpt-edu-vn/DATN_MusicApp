@@ -5,6 +5,9 @@ import Singer from '../Models/singer.js'
 
 export const statistical = async (req, res) => {
     try {
+
+        
+
         const listSong = await Song.find();
         const listAlbum = await Album.find();
         const listUser = await User.find();
@@ -23,10 +26,10 @@ export const statistical = async (req, res) => {
         else {
             monthYear = `${today.getFullYear()}-${Number(today.getMonth())}`
         }
-
-        console.log("monthYear", monthYear)
-
-
+        if(req.body?.time) {
+            monthYear = req.body.time
+        }
+        console.log(monthYear)
 
         const fomartListSong = listSong.map((item) => {
             const { month, ...rest } = item;
@@ -35,11 +38,6 @@ export const statistical = async (req, res) => {
                 view: JSON.parse(month)[monthYear] || 0,
             };
         });
-
-
-
-
-
 
         fomartListSong.sort(function (a, b) {
             return Number(JSON.parse(b.view)) - Number(JSON.parse(a.view));

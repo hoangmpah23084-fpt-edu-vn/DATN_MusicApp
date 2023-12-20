@@ -117,7 +117,7 @@ const ListGenre = () => {
       width: 200,
     },
     {
-      title: "Danh sách nhạc",
+      title: "Số lượng bài hát",
       dataIndex: "list_songs",
       key: "list_songs",
       width: 100,
@@ -289,12 +289,13 @@ const ListGenre = () => {
 
   // hàm sử lý call api khi add
   const formAdd = (newData: ifAddGenre) => {
-    axios.post('http://localhost:8080/api/genre', newData).then(() => {
+    axios.post('http://localhost:8080/api/genre', newData).then((data) => {
       formRef.current.resetFields();
       setOpenAdd(false);
+      dispatch(getGenre());
       toast.success("Thêm thể loại thành công")
-    }).catch(() => {
-      toast.error("Lỗi không thể thêm")
+    }).catch((error) => {
+      toast.warning(error.response.data.message)
     })
   };
 
@@ -387,9 +388,9 @@ const ListGenre = () => {
       {modalDetail()}
       {modalAdd()}
       <header className="fixed top-0 flex items-center justify-between z-40 bg-[#F4F5F7] pt-2 w-[100%] pb-2.5 ">
-        <span className="font-bold text-xl ml-10">Danh sách nhạc</span>
+        <span className="font-bold text-xl ml-10">Danh sách thể loại</span>
         <Input
-          placeholder="Tìm kiếm bài hát"
+          placeholder="Tìm kiếm thể loại"
           allowClear
           onChange={onChange}
           className="w-96 mr-40"
@@ -399,7 +400,7 @@ const ListGenre = () => {
           className="flex items-center right-64 text-[#fff]  border-[#fff] bg-[#4a89ff] hover:bg-[#fff] hover:text-[#4a89ff]"
         >
           <AiOutlinePlus className="text-lg mr-1 " />
-          Thêm bài hát
+          Thêm thể loại
         </Button>
       </header>
       <main className="w">

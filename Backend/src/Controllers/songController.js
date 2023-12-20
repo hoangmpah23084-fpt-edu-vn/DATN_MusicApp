@@ -12,7 +12,9 @@ export const createSong = async (req, res) => {
         message: error.details[0].message,
       });
     }
+    console.log(2);
     const data = await SongSchame.create(req.body);
+    console.log(1);
     if (!data) {
       return res.status(400).json({
         message: "Create Song failed",
@@ -30,7 +32,7 @@ export const createSong = async (req, res) => {
     await Genre.findByIdAndUpdate(
       data.id_Genre,
       {
-        $addToSet: { list_song: data._id },
+        $addToSet: { list_songs: data._id },
       },
       { new: true }
     );
@@ -65,9 +67,7 @@ export const get_Songs = async (req, res) => {
     let query = {};
     if (search) {
       query = {
-        $or: [
-          { song_name: { $regex: search, $options: "i" } },
-        ],
+        $or: [{ song_name: { $regex: search, $options: "i" } }],
       };
     }
     const data = await SongSchame.paginate(query, options);
@@ -107,6 +107,11 @@ export const update_Song = async (req, res) => {
     //     message: error.details[0].message,
     //   });
     // }
+    //todo xóa song ở Genre cũ
+    const findSong = await SongSchame.findById(req.params.id);
+    await Genre.findByIdAndUpdate(findSong.id_Genre, {
+      $pull: { list_songs: findSong._id },
+    });
     const data = await SongSchame.findByIdAndUpdate(
       { _id: req.params.id },
       req.body,
@@ -122,8 +127,10 @@ export const update_Song = async (req, res) => {
       $addToSet: { songs: data._id },
     });
     //todo loai bỏ id song khỏi genre
+    // console.log(data);
+    console.log("1");
     await Genre.findByIdAndUpdate(data.id_Genre, {
-      $pull: { list_songs: data._id },
+      $addToSet: { list_songs: data._id },
     });
     // const genreId = data.id_Genre;
     // await Artist.findByIdAndUpdate(genreId, {

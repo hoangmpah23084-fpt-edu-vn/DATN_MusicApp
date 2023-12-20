@@ -29,16 +29,18 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   handChangeStateSong,
   handGetCurrentSong,
+  setStateSong,
 } from "@/store/Reducer/currentSong";
 import {
   ActiveFavourites,
   onhandleFavourite,
 } from "@/constane/favourites.const";
-import { chekcSubString } from "@/constane/song.const";
+import { chekcSubString, checkLengthNameSong } from "@/constane/song.const";
 import { RootState } from "@/store/store";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import "./css.scss";
+import { setSongHistory } from "@/store/Reducer/Song";
 // const connect = io("http://localhost:8080")
 export const useStyles = makeStyles(() =>
   createStyles({
@@ -63,33 +65,31 @@ const Footer = (props: Props) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const rewindRef = useRef<HTMLAudioElement>(null);
   const classes = useStyles();
-  const [intervalId, setIntervalId] = useState<number | null>(null);
   const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
-  const { token } = useAppSelector((state: RootState) => state.user);
+
   const [totalTiming, setTotalTiming] = useState<number>(0);
+  const token = localStorage.getItem('token')
 
   const dispatch = useAppDispatch();
 
-  const togglePlayPause = useCallback(() => {
+  const handUpdateCurrentTime = () => {
+    audioRef.current && audioRef.current.addEventListener("timeupdate", (value) => {
+      setRewindAudio((value.target as HTMLAudioElement)?.currentTime);
+      setCurrentTime(SeconToMinuste((value.target as HTMLAudioElement)?.currentTime));
+    })
+  }
+
+  const togglePlayPause = useCallback(async () => {
     const preValue = stateSong;
-    dispatch(handChangeStateSong(!preValue));
+    dispatch(setStateSong(!preValue));
     if (!preValue) {
-      void audioRef.current?.play();
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current &&
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      await audioRef.current?.play();
+      handUpdateCurrentTime();
     } else {
-      audioRef.current?.pause();
-      if (intervalId !== null) {
-        clearInterval(intervalId);
-        setIntervalId(null);
-      }
+      await audioRef.current?.pause();
     }
-  }, [dispatch, intervalId, stateSong]);
+  }, [dispatch, stateSong]);
   const SeconToMinuste = (secs: number) => {
     if (secs) {
       const minutes = Math.floor(secs / 60);
@@ -115,9 +115,9 @@ const Footer = (props: Props) => {
           dispatch(handGetCurrentSong(findSong[0]));
           localStorage.setItem("song", JSON.stringify(findSong[0]));
           console.log("Đây là lỗi Tự động chuyển");
-          dispatch(handChangeStateSong(false));
+          dispatch(setStateSong(false));
           setTimeout(() => {
-            dispatch(handChangeStateSong(true));
+            dispatch(setStateSong(true));
           }, 500);
         }
       }
@@ -128,9 +128,9 @@ const Footer = (props: Props) => {
           ];
         dispatch(handGetCurrentSong(randomSong1));
         localStorage.setItem("song", JSON.stringify(randomSong1));
-        dispatch(handChangeStateSong(false));
+        dispatch(setStateSong(false));
         setTimeout(() => {
-          dispatch(handChangeStateSong(true));
+          dispatch(setStateSong(true));
         }, 500);
       }
     };
@@ -163,6 +163,8 @@ const Footer = (props: Props) => {
     dispatch,
     props.ListData,
   ]);
+  // console.log(currentSong);
+
 
   useEffect(() => {
     if (audioRef.current) {
@@ -187,12 +189,7 @@ const Footer = (props: Props) => {
   useEffect(() => {
     stateSong ? audioRef.current?.play() : audioRef.current?.pause();
     if (stateSong) {
-      const id = setInterval(() => {
-        audioRef.current && setRewindAudio(audioRef.current?.currentTime);
-        audioRef.current &&
-          setCurrentTime(SeconToMinuste(Number(audioRef.current.currentTime)));
-      }, 1000);
-      setIntervalId(id);
+      handUpdateCurrentTime();
     }
     audioRef.current && (audioRef.current.loop = repeat);
     audioRef.current && (audioRef.current.volume = volume / 100);
@@ -235,162 +232,232 @@ const Footer = (props: Props) => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   };
 
-
-  const songLoca = localStorage.getItem('song')
+  const songLoca = localStorage.getItem("song");
   useEffect(() => {
-    const history = localStorage.getItem('history')
-    if (!history) {
-      localStorage.setItem('history', JSON.stringify([songLoca]))
-    } else {
-      const historyArray = JSON.parse(history)
-      if (!historyArray.includes(songLoca)) {
-        historyArray.push(songLoca)
-        if (historyArray.length > 9) {
-          // Nếu vượt quá 10 bài, xóa bài cũ (ở đầu mảng)
-          historyArray.shift()
+    if (songLoca) {
+      const history = localStorage.getItem("history");
+      if (!history) {
+        localStorage.setItem("history", JSON.stringify([songLoca]));
+      } else {
+        const historyArray = JSON.parse(history);
+        if (!historyArray.includes(songLoca)) {
+          historyArray.unshift(songLoca);
+          if (historyArray.length > 20) {
+            historyArray.pop();
+          }
+          localStorage.setItem("history", JSON.stringify(historyArray));
         }
-        localStorage.setItem('history', JSON.stringify(historyArray))
       }
     }
-  }, [songLoca])
+    dispatch(setSongHistory())
+  }, [songLoca]);
+
+  const maxlength = 14;
 
   return (
-    <div
-      // onClick={() => {
-      //   setLiveRoom((value) => !value);
-      //   props.setLiveRoom((value) => !value);
-      // }}
-      className="fixed z-50 w-[100%] bottom-[60px] md:bottom-0 bg-[#1B2039] cursor-pointer"
-    >
-      <div className="level text-white h-[90px] px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex justify-between">
-        <div className="flex items-center rounded-r-lg flex-1  justify-start md:w-[20%] h-[100%] bg-[#1B2039]">
-          <div className="flex items-center w-[100%]">
-            <div className="flex w-[100%] ">
-              <div className="">
-                <Link to={"#"}>
-                  <div className="thumbnail-wrapper">
-                    <div className="thumbnail w-[64px] h-[64px] mr-[10px]">
-                      <img
-                        src={currentSong?.song_image[0]}
-                        alt=""
-                        className="w-[100%] rounded-[5px]"
-                      />
-                    </div>
-                  </div>
-                </Link>
-              </div>
-              <div className="media-content flex justify-center items-start flex-col w-[40%] ">
-                <div className="is-mark level-left">
-                  <div className="song-info-wrapper">
-                    <span className="song-title-item">
-                      <Link to={"#"}>
-                        <div className="title-wrapper">
-                          <span className="item-title title text-[14px] text-[#fff]">
-                            {chekcSubString(
-                              currentSong?.song_name as string,
-                              15
-                            )}
-                          </span>
-                        </div>
-                      </Link>
-                    </span>
-                  </div>
-                </div>
-                <h3 className="is-one-line is-truncate subtitle  ">
+    <>
+      <div
+        // onClick={() => {
+        //   setLiveRoom((value) => !value);
+        //   props.setLiveRoom((value) => !value);
+        // }}
+        className="fixed z-50 w-[100%] bottom-[60px] sm:bottom-0 bg-[#1B2039] cursor-pointer"
+      >
+        <div className="level text-white h-[70px] px-[15px] sm:h-[90px] sm:px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex justify-between">
+          <div className="flex items-center rounded-r-lg flex-1 w-[60%] justify-start md:w-[25%] h-[100%] bg-[#1B2039]">
+            <div className="flex items-center w-[100%]">
+              <div className="flex w-[100%] justify-between">
+                <div className="">
                   <Link to={"#"}>
-                    <div className="title-wrapper">
-                      <span className="item-title title text-[13px] font-thin text-[#dadada]">
-                        {currentSong?.id_Singer.name}
-                      </span>
+                    <div className="thumbnail-wrapper">
+                      <div className="thumbnail w-[60px] h-[60px] sm:w-[64px] sm:h-[64px] mr-[8px]">
+                        <img
+                          src={currentSong?.song_image[0]}
+                          alt=""
+                          className="w-[100%] rounded-[5px] h-[60px] sm:w-[64px] sm:h-[64px]"
+                        />
+                      </div>
                     </div>
                   </Link>
-                </h3>
-              </div>
-
-              <div className=" items-center justify-center hidden md:w-[40%] md:flex">
-                <div className="flex items-center justify-center ml-[20px] ">
-                  <div className="level-item">
-                    <button
-                      className="bg"
-                      onClick={() =>
-                        onhandleFavourite(
-                          dispatch,
-                          currentSong?._id as string,
-                          token as string
-                        )
-                      }
-                    >
-                      <ActiveFavourites item={currentSong as ifSong} />
-                    </button>
+                </div>
+                <div className="media-content flex justify-center items-start flex-col w-full overflow-hidden">
+                  <div className="is-mark level-left">
+                    <div className="song-info-wrapper">
+                      <span className="song-title-item">
+                        <Link to={"#"}>
+                          <div className="title-wrapper scrolling-container">
+                            <span className="item-title title text-[14px] text-[#fff] hidden md:block">
+                              {currentSong?.song_name}
+                              {/* {chekcSubString(
+                              currentSong?.song_name as string,
+                              30
+                            )} */}
+                            </span>
+                            {checkLengthNameSong(
+                              currentSong?.song_name as string
+                            ) ? (
+                              <span className="block md:hidden item-title title text-[14px] text-[#fff] scrolling-text">
+                                {currentSong?.song_name}
+                              </span>
+                            ) : (
+                              <span className="block md:hidden item-title title text-[14px] text-[#fff]">
+                                {currentSong?.song_name}
+                              </span>
+                            )}
+                          </div>
+                        </Link>
+                      </span>
+                    </div>
                   </div>
-                  <div className="level-item ml-3">
-                    <span id="np_menu">
-                      <button className="zm-btn zm-tooltip-btn btn-more is-hover-circle button ">
-                        <BsThreeDots />
+                  <h3 className="is-one-line is-truncate subtitle  ">
+                    <Link to={"#"}>
+                      <div className="title-wrapper">
+                        <span className="item-title title text-[13px] font-thin text-[#dadada]">
+                          {currentSong?.id_Singer?.name}
+                        </span>
+                      </div>
+                    </Link>
+                  </h3>
+                </div>
+
+                <div className=" items-center justify-start hidden md:w-[25%] md:flex">
+                  <div className="flex items-center justify-center mx-[15px] ">
+                    <div className="level-item">
+                      <button
+                        className="bg"
+                        onClick={() =>
+                          onhandleFavourite(
+                            dispatch,
+                            currentSong?._id as string,
+                            token as string
+                          )
+                        }
+                      >
+                        <ActiveFavourites item={currentSong as ifSong} />
                       </button>
-                    </span>
+                    </div>
+                    <div className="level-item ml-3">
+                      <span id="np_menu">
+                        <button className="zm-btn zm-tooltip-btn btn-more is-hover-circle button ">
+                          <BsThreeDots />
+                        </button>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="w-[60%] h-[100%] fjc hidden md:block">
-          <div className=" h-[100%] ">
-            <div className="w-[100%] h-[70%] fjc">
-              <div className="w-[40%] min-w-[200px] h-[75%] flex">
-                <div className="w-[19%] h-[100%] ">
-                  <ListItemButtonStyle onClick={handRandomSong}>
-                    <ListItemIconStyle>
-                      <ShuffleIcon
-                        sx={{ color: randomSong ? "#3BC8E7" : "white" }}
-                      />
-                    </ListItemIconStyle>
-                  </ListItemButtonStyle>
+
+          <div className="w-[45%] h-[100%] fjc hidden md:block">
+            <div className=" h-[100%] ">
+              <div className="w-[100%] h-[70%] fjc">
+                <div className="w-[40%] min-w-[200px] h-[75%] flex">
+                  <div className="w-[19%] h-[100%] ">
+                    <ListItemButtonStyle onClick={handRandomSong}>
+                      <ListItemIconStyle>
+                        <ShuffleIcon
+                          sx={{ color: randomSong ? "#3BC8E7" : "white" }}
+                        />
+                      </ListItemIconStyle>
+                    </ListItemButtonStyle>
+                  </div>
+                  <PrevSong ListData={props.ListData} />
+                  <div className="w-[24%] h-[100%] ">
+                    <PauseListItemButtonStyle onClick={togglePlayPause}>
+                      <PauseListItemIconStyle>
+                        {stateSong ? (
+                          <PauseIcon className={classes.root} />
+                        ) : (
+                          <PlayArrowIcon className={classes.root} />
+                        )}
+                      </PauseListItemIconStyle>
+                    </PauseListItemButtonStyle>
+                  </div>
+                  <NextSong ListData={props.ListData} />
+                  <div className="w-[19%] h-[100%] ">
+                    <ListItemButtonStyle
+                      onClick={() => setRepeat((value) => !value)}
+                    >
+                      <ListItemIconStyle>
+                        <RepeatIcon
+                          sx={{ color: repeat ? "#3BC8E7" : "white" }}
+                        />
+                      </ListItemIconStyle>
+                    </ListItemButtonStyle>
+                  </div>
                 </div>
-                <PrevSong ListData={props.ListData} />
-                <div className="w-[24%] h-[100%] ">
-                  <PauseListItemButtonStyle onClick={togglePlayPause}>
-                    <PauseListItemIconStyle>
-                      {stateSong ? (
-                        <PauseIcon className={classes.root} />
-                      ) : (
-                        <PlayArrowIcon className={classes.root} />
-                      )}
-                    </PauseListItemIconStyle>
-                  </PauseListItemButtonStyle>
-                </div>
-                <NextSong ListData={props.ListData} />
-                <div className="w-[19%] h-[100%] ">
-                  <ListItemButtonStyle
-                    onClick={() => setRepeat((value) => !value)}
-                  >
-                    <ListItemIconStyle>
-                      <RepeatIcon
-                        sx={{ color: repeat ? "#3BC8E7" : "white" }}
-                      />
-                    </ListItemIconStyle>
-                  </ListItemButtonStyle>
+              </div>
+              <div className="w-[100%] h-[30%] flex justify-center items-start">
+                <audio
+                  ref={audioRef}
+                  src={currentSong ? (currentSong.song_link as string) : ""}
+                  preload={"metadata"}
+                />
+                <div className="w-full h-[20px] flex justify-between">
+                  <div className="w-[6%] h-full fjc">
+                    <p>{currentTime}</p>
+                  </div>
+                  <div className="w-[85%] h-full fjc">
+                    <Slider
+                      sx={{
+                        color: "white",
+                        "& .MuiSlider-thumb": {
+                          width: "0px",
+                          height: "0px",
+                          "&:hover": {
+                            width: "12px",
+                            height: "12px",
+                          },
+                          "&:hover, &.Mui-focusVisible": {
+                            width: "12px",
+                            height: "12px",
+                            boxShadow: "0px 0px 0px 8px rgb(255 255 255 / 16%)",
+                          },
+                        },
+                        // min={0} step={1}
+                      }}
+                      value={rewindAudio}
+                      max={duration}
+                      ref={rewindRef}
+                      onChange={handRewindAudio}
+                    />
+                  </div>
+                  <div className="w-[6%] h-full fjc">
+                    {audioRef.current
+                      ? SeconToMinuste(audioRef.current?.duration)
+                      : 0}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="w-[100%] h-[30%] flex justify-center items-start">
-              <audio
-                ref={audioRef}
-                src={currentSong ? (currentSong.song_link as string) : ""}
-                preload={"metadata"}
-              />
-              <div className="w-full h-[20px] flex justify-between">
-                <div className="w-[6%] h-full fjc">
-                  <p>{currentTime}</p>
+          </div>
+
+          {/* Màn hình đt ẩn */}
+          <div className="w-[25%] h-[100%] items-center justify-between hidden md:flex">
+            <div className="w-[80%] h-[40px]  flex justify-end items-center  ">
+              <div className="w-[50%] h-[100%] flex ">
+                <div className="w-[30%] h-[100%]">
+                  <ListItemButtonStyle
+                    onClick={() => handTurnVolume(volume, setVolume)}
+                  >
+                    <ListItemIconStyle>
+                      {volume <= 0 ? (
+                        <VolumeOffIcon sx={{ color: "white" }} />
+                      ) : (
+                        <VolumeUpIcon sx={{ color: "white" }} />
+                      )}
+                    </ListItemIconStyle>
+                  </ListItemButtonStyle>
                 </div>
-                <div className="w-[85%] h-full fjc">
+                <div className="w-[65%] h-[100%] fjc ">
                   <Slider
                     sx={{
                       color: "white",
                       "& .MuiSlider-thumb": {
                         width: "0px",
                         height: "0px",
+                        transition: "0.1s cubic-bezier(.47,1.64,.41,.8)",
                         "&:hover": {
                           width: "12px",
                           height: "12px",
@@ -401,123 +468,96 @@ const Footer = (props: Props) => {
                           boxShadow: "0px 0px 0px 8px rgb(255 255 255 / 16%)",
                         },
                       },
-                      // min={0} step={1}
                     }}
-                    value={rewindAudio}
-                    max={duration}
-                    ref={rewindRef}
-                    onChange={handRewindAudio}
+                    value={volume}
+                    onChange={handChangeVolume}
                   />
                 </div>
-                <div className="w-[6%] h-full fjc">
-                  {audioRef.current
-                    ? SeconToMinuste(audioRef.current?.duration)
-                    : 0}
-                </div>
               </div>
             </div>
-          </div>
-        </div>
-        {/* Màn hình đt ẩn */}
-        <div className="w-[20%] h-[100%] items-center justify-between hidden md:flex">
-          <div className="w-[80%] h-[40px]  flex justify-end items-center  ">
-            <div className="w-[50%] h-[100%] flex ">
-              <div className="w-[30%] h-[100%]">
-                <ListItemButtonStyle
-                  onClick={() => handTurnVolume(volume, setVolume)}
-                >
-                  <ListItemIconStyle>
-                    {volume <= 0 ? (
-                      <VolumeOffIcon sx={{ color: "white" }} />
-                    ) : (
-                      <VolumeUpIcon sx={{ color: "white" }} />
-                    )}
-                  </ListItemIconStyle>
-                </ListItemButtonStyle>
-              </div>
-              <div className="w-[65%] h-[100%] fjc ">
-                <Slider
-                  sx={{
-                    color: "white",
-                    "& .MuiSlider-thumb": {
-                      width: "0px",
-                      height: "0px",
-                      transition: "0.1s cubic-bezier(.47,1.64,.41,.8)",
-                      "&:hover": {
-                        width: "12px",
-                        height: "12px",
-                      },
-                      "&:hover, &.Mui-focusVisible": {
-                        width: "12px",
-                        height: "12px",
-                        boxShadow: "0px 0px 0px 8px rgb(255 255 255 / 16%)",
-                      },
-                    },
-                  }}
-                  value={volume}
-                  onChange={handChangeVolume}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="w-[1px] h-[35px] bg-[#dadada6c]"></div>
-          <div className="w-[20%] h-[40px] fjc">
-            <ListItemButtonStyle
-              sx={{
-                "& .MuiTouchRipple-root": {
-                  display: "none",
-                },
-              }}
-              onClick={() => {
-                props.setSideBarRight((value) => !value);
-              }}
-            >
-              <ListItemIconStyle
+            <div className="w-[1px] h-[35px] bg-[#dadada6c]"></div>
+            <div className="w-[20%] h-[40px] fjc">
+              <ListItemButtonStyle
                 sx={{
-                  backgroundColor: "#3BC8E7",
-                  borderRadius: "5px",
-                  ":hover": {
-                    backgroundColor: "#3BC8E7a3",
+                  "& .MuiTouchRipple-root": {
+                    display: "none",
                   },
                 }}
+                onClick={() => {
+                  props.setSideBarRight((value) => !value);
+                }}
               >
-                <LibraryMusicIcon sx={{ color: "white" }} />
-              </ListItemIconStyle>
-            </ListItemButtonStyle>
-          </div>
-        </div>
-
-        {/* màn hình điện thoại thì hiện */}
-        <div className="flex md:hidden">
-          <button
-            className="bg"
-            onClick={() =>
-              onhandleFavourite(
-                dispatch,
-                currentSong?._id as string,
-                token as string
-              )
-            }
-          >
-            <ActiveFavourites item={currentSong as ifSong} />
-          </button>
-
-          <div className="w-[45px]">
-            <PauseListItemButtonStyle onClick={togglePlayPause}>
-              <PauseListItemIconStyle>
-                {stateSong ? (
-                  <PauseIcon className={classes.root} />
-                ) : (
-                  <PlayArrowIcon className={classes.root} />
-                )}
-              </PauseListItemIconStyle>
-            </PauseListItemButtonStyle>
+                <ListItemIconStyle
+                  sx={{
+                    backgroundColor: "#3BC8E7",
+                    borderRadius: "5px",
+                    ":hover": {
+                      backgroundColor: "#3BC8E7a3",
+                    },
+                  }}
+                >
+                  <LibraryMusicIcon sx={{ color: "white" }} />
+                </ListItemIconStyle>
+              </ListItemButtonStyle>
+            </div>
           </div>
 
-          <NextSong ListData={props.ListData} />
+          {/* màn hình điện thoại thì hiện */}
+          <div className="flex md:hidden">
+            <button
+              className="bg"
+              onClick={() =>
+                onhandleFavourite(
+                  dispatch,
+                  currentSong?._id as string,
+                  token as string
+                )
+              }
+            >
+              <ActiveFavourites item={currentSong as ifSong} />
+            </button>
+
+            <div className="w-[45px]">
+              <PauseListItemButtonStyle onClick={togglePlayPause}>
+                <PauseListItemIconStyle>
+                  {stateSong ? (
+                    <PauseIcon className={classes.root} />
+                  ) : (
+                    <PlayArrowIcon className={classes.root} />
+                  )}
+                </PauseListItemIconStyle>
+              </PauseListItemButtonStyle>
+            </div>
+
+            <NextSong ListData={props.ListData} />
+          </div>
         </div>
       </div>
-    </div>
+      <div className="block md:hidden absolute bottom-[130px] right-[10px] z-20">
+        <ListItemButtonStyle
+          sx={{
+            "& .MuiTouchRipple-root": {
+              display: "none",
+            },
+          }}
+          onClick={() => {
+            props.setSideBarRight((value) => !value);
+          }}
+        >
+          <ListItemIconStyle
+            sx={{
+              backgroundColor: "#3BC8E7",
+              borderRadius: "5px",
+              ":hover": {
+                backgroundColor: "#3BC8E7a3",
+              },
+            }}
+          >
+            <LibraryMusicIcon sx={{ color: "white" }} />
+          </ListItemIconStyle>
+        </ListItemButtonStyle>
+      </div>
+    </>
   );
 };
 

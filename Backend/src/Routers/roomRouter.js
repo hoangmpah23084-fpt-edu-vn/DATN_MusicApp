@@ -7,6 +7,7 @@ import {
   deleteUserFromRoom,
   getRoom,
   getRooms,
+  handUpdateCurrentSongInRoom,
   joinRoom,
   leaveRoom,
   updateRoomChat,
@@ -27,5 +28,8 @@ roomRouter.post("/dluseroom", authUser, deleteUserFromRoom);
 roomRouter.put("/addSongInRoom/:id", addSongInRoom);
 //todo Remove Song from list song in room
 roomRouter.put("/dlSongInRoom/:id", deleteSongInRoom);
+
+//todo Curent Song
+roomRouter.put("/currentSongRoom/:id", handUpdateCurrentSongInRoom);
 
 export default roomRouter;

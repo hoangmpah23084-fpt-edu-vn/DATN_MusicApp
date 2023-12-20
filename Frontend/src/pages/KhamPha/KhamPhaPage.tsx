@@ -5,11 +5,18 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
-import { Advertisement, SuggestSong, WantToListent } from "./Component";
+import { SuggestSong, WantToListent } from "./Component";
 import { useEffect, useState } from "react";
 import ListSongItem from "@/components/List-songs-item";
 import { ifSong } from "../Admin/Interface/ValidateSong";
 import SuggSkeleton from "./Skeleton/Sugg.skeleton";
+import SongGenre from "@/components/SongGenre";
+import Album from "../../components/Album/index.tsx";
+import { MdArrowForwardIos } from "react-icons/md";
+import ListAlbum from "./Component/ListAlbum.tsx";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+
 
 const img_slide = [
   { id: 0, img: "/Image/b0fa9fbfce103d1dce15d73aaceb68be.jpg" },
@@ -21,21 +28,30 @@ const img_slide = [
 ];
 
 const KhamPhaPage = () => {
-  const [historySongState, setHistorySongState] = useState<ifSong[]>()
-  const historySong = localStorage.getItem('history')
-  const [loading, setLoading] = useState(true)
+  const [historySongState, setHistorySongState] = useState<ifSong[]>();
+  const historySong = localStorage.getItem("history");
+  const [loading, setLoading] = useState(true);
+  const [listAlbum, setListAlbum] = useState([]);
+
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     if (historySong) {
       const parsedHistory = JSON.parse(historySong) as ifSong[];
       if (parsedHistory) {
-        const newData = parsedHistory.map((item: any) => (JSON.parse(item)))
-        setHistorySongState([...newData])
+        const newData = parsedHistory.map((item: any) => JSON.parse(item));
+        setHistorySongState([...newData]);
         setTimeout(() => {
-          setLoading(false)
+          setLoading(false);
         }, 2000);
       }
     }
+    fetch("http://localhost:8080/api/album")
+      .then((response) => response.json())
+      .then(({ data }) => {
+        const album = data.slice(0, 5);
+
+        setListAlbum(album);
+      });
   }, [historySong]);
 
   return (
@@ -84,14 +100,26 @@ const KhamPhaPage = () => {
               </div>
               <div className="playlist-section home-recent mt-12">
                 <div className="home-recent-title flex justify-between mb-[20px]">
-                  {historySongState && <h3 className="text-xl font-semibold capitalize ">Gần đây</h3>}
+                  {historySongState && (
+                    <h3 className="text-xl font-semibold capitalize ">
+                      Gần đây
+                    </h3>
+                  )}
                 </div>
                 {/* Start Component HeardRecently */}
                 <div className="column">
                   <div className="list grid grid-cols-1 md:grid-cols-3 -mx-[15px]">
-                    {
-                      loading ? (historySongState?.map((_, index) => <SuggSkeleton section="suggested" key={index} />)) : (historySongState?.map((item, index) => <ListSongItem item={item} section="suggested" key={index} />))
-                    }
+                    {loading
+                      ? historySongState?.map((_, index) => (
+                          <SuggSkeleton section="suggested" key={index} />
+                        ))
+                      : historySongState?.map((item, index) => (
+                          <ListSongItem
+                            item={item}
+                            section="suggested"
+                            key={index}
+                          />
+                        ))}
                   </div>
                 </div>
                 {/* End Component HeardRecently */}
@@ -99,6 +127,10 @@ const KhamPhaPage = () => {
               {/* Start Component SuggestSong */}
               <SuggestSong />
               {/* End Component SuggestSong */}
+
+              {/* Album */}
+              <ListAlbum/>
+              
 
               {/* Start Component WantToListent */}
               <WantToListent />
@@ -109,9 +141,9 @@ const KhamPhaPage = () => {
               {/* End Component WantToListent */}
 
               {/* Start Component WantToListent */}
-              <Advertisement />
+              {/* <Advertisement /> */}
               {/* End Component WantToListent */}
-              
+
             </div>
           </div>
         </main>
