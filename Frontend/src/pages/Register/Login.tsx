@@ -153,11 +153,11 @@ const Login = () => {
                                     />
                                     <div className=" flex items-center justify-between space-x-1 mt-5 text-white">
                                         <a href="auth/veryPass" className="ml-2 text-[#3f8aff] cursor-pointer" >Quên mật khẩu</a>
-                                        <div className="flex items-center">
+                                        <div className="flex items-center space-x-2">
                                             <input type="checkbox" id="show_password"
                                                 onChange={onHandleChangePassword}
                                             />
-                                            <label htmlFor="show_password ml-2">Hiển thị mật khẩu</label>
+                                            <label htmlFor="show_password">Hiển thị mật khẩu</label>
                                         </div>
                                     </div>
                                     <p className="text-red-600 text-[15px]">{errors.password && errors.password.message}</p>

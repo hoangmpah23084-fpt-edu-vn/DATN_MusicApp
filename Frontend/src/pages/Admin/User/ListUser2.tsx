@@ -1,29 +1,24 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { Pagination, Table, Button, message, Popconfirm, Modal, Form, Upload, Select, UploadFile } from "antd";
-import { useEffect, useRef, useState } from "react";
-import { IApiSong, SongLink, ifSong } from "../Interface/ValidateSong";
+import { Pagination, Table, Button, Popconfirm, Form } from "antd";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Skeleton } from 'antd';
 import { chekcSubString } from "@/constane/song.const";
-import { AiFillEye, AiOutlinePlus } from 'react-icons/ai'
-import { handImage, handleFileUpload } from "@/Mui/Component/handUpload";
 import { getUsers } from "@/store/Reducer/User";
-const { Option } = Select;
+
 const ListUser2 = () => {
 
   const dispatch = useAppDispatch()
   const [page, setPage] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
-  const { song, totalSong, loading, loadingRemove, loadingGetone, dataOne, loadingAdd } = useSelector((state: RootState) => state.Song)
-  const [songForm, setSongForm] = useState<SongLink>({ name: '', value: '' });
+  const { song, totalSong, loading, loadingRemove, dataOne } = useSelector((state: RootState) => state.Song)
   const [form] = Form.useForm();
-  const formRef = useRef<any>();
 
 
   // get dữ liệu
   const {user} = useAppSelector(({user}) => user);
-    console.log(user);
+    // console.log(user);
     
    useEffect(() => {
      void dispatch(getUsers())
@@ -46,14 +41,16 @@ const ListUser2 = () => {
   }
 
 
-  const dataSource = user.map((item: any) => {
+  const dataSource = user.map((item: any, index) => {
+    // console.log('item', item);
+    
     return {
       key: item._id,
-      id: chekcSubString(item._id as string, 5),
+      id: index + 1,
       ten: chekcSubString(item.fullName as string, 20),
       email: chekcSubString(item.email as string, 20),
       role: chekcSubString(item.role as string, 20),
-      anh: <img src={item.image[0]} className="w-14 h-14 rounded-xl" />,
+      anh: <img src={item.image?.[0]} className="w-14 h-14 rounded-xl" alt="No image"  />,
     //   casi: item.id_Singer,
     //   luotnghe: item.view_song,
     //   yeuthich: item.total_like,
@@ -159,7 +156,9 @@ const ListUser2 = () => {
         <span className="font-bold text-xl ml-10">Danh sách người dùng</span>
       </header>
       <main className="w">
-        {loading ? <div className="mt-32">{skeletonItems}</div> : <Table dataSource={dataSource} columns={columns} pagination={false} className="mt-12" scroll={{ y: 650 }} />}
+        {loading 
+        ? <div className="mt-32">{skeletonItems}</div> 
+        : <Table dataSource={dataSource} columns={columns} pagination={false} className="mt-12" scroll={{ y: 650 }} />}
       </main>
       <footer className="w-[100%] h-10 bg-[#F4F5F7] fixed bottom-0 z-50">
         <Pagination defaultCurrent={page} total={totalSong || 1} onChange={onChangePage} className="absolute bottom-1 right-72   z-50" />

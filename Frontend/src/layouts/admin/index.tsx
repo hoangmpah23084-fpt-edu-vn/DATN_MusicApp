@@ -9,7 +9,7 @@ import { Link, Outlet } from "react-router-dom";
 import type { MenuProps } from 'antd';
 import { AiOutlineBars } from "react-icons/ai";
 import { PieChartOutlined, LogoutOutlined } from '@ant-design/icons';
-import { CiMusicNote1 } from 'react-icons/ci'
+import { CiMusicNote1, CiUser } from 'react-icons/ci'
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { resetUser } from "@/store/Reducer/User";
 const { Content } = Layout;
@@ -51,7 +51,8 @@ const LayoutAdmin = () => {
     getItem(<Link to="/admin/listSinger">Ca sĩ</Link>, '3', <AiOutlineCustomerService />),
     getItem(<Link to="/admin/genre">Thể Loại</Link>, '4', <AiOutlineBars />),
     getItem(<Link to="/admin/album">Album</Link>, '5', <AiOutlineBars />),
-    getItem(<div onClick={handleLogout}>Đăng xuất</div>, '5', <LogoutOutlined />)
+    getItem(<Link to="/admin/listUser">User</Link>, '6', <CiUser />),
+    getItem(<div onClick={handleLogout}>Đăng xuất</div>, '7', <LogoutOutlined />)
   ];
   return (
     <div className="h-screen flex w-full">
