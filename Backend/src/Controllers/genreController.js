@@ -156,5 +156,28 @@ export const delete_Genre = async (req, res) => {
     });
   }
 };
-const deleteSongInGenre = () => { };
+export const deleteSongInGenre = async (req, res) => {
+  try {
+    const { id_song } = req.body;
+    if (!id_song) {
+      return res.json({
+        message: "Bài hát không hợp lệ",
+      });
+    }
+    const data = await Genre.findByIdAndUpdate(req.params.id, {
+      $pull: {
+        list_songs: id_song,
+      },
+    });
+
+    return res.status(200).json({
+      message: "Xóa bài hát thành công",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 // const genre = await Genre.findByIdAndDelete(req.params.id);
