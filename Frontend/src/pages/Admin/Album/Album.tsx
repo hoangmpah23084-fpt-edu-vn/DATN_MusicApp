@@ -70,7 +70,6 @@ const AlbumAdmin = () => {
       toast.error(error as any);
     }
   };
-
   // get dữ liệu
   useEffect(() => {
     const data: IApiSong = {

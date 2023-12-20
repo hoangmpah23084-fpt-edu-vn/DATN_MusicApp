@@ -350,7 +350,7 @@ const ListGenre = () => {
   const modalDetail = () => {
     return (
       <Modal
-        title="Chi tiết bài hát"
+        title="Chi tiết thể loại"
         open={openDetail}
         onOk={() => handleEdit()}
         onCancel={handleCancel}
@@ -364,9 +364,9 @@ const ListGenre = () => {
         ) : (
           <div className="flex items-center justify-between pt-5 pb-5">
             <div className="w-full">
-              <p className="flex">
+              {/* <p className="flex">
                 <strong>ID : </strong> <span>{detailsGenre?._id}</span>
-              </p>
+              </p> */}
               <p>
                 <strong>Tên thể loại : </strong> {detailsGenre?.name}
               </p>
