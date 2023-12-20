@@ -81,6 +81,11 @@ const SidebarMenu = ({ handleShowModalCreateRoom, setCollapsed }: props) => {
   const [isCollapsed, setIscollapsed] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+  // const getClass = document.querySelector("")
+  },[])
+
+  
   return (
     <div className=" text-[#dadada] text-[14px] top-0 left-0 z-40 max-w-[240px] h-[calc(100vh-90px)] transition-transform -translate-x-full sm:translate-x-0 pt-[70px] bg-[#1b2039] hidden sm:block">
       <nav className="zm-navbar ">
