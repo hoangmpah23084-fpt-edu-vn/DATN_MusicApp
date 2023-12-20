@@ -60,20 +60,30 @@ export const statistical = async (req, res) => {
 export const monthSong = async (req, res) => {
     try {
         const listSong = await Song.find()
-        // const {
-        //     endDate, startDate
-        // } = req.body
-        // const newData = listSong.filter((item) => {
-        //     if (moment(item.createdAt).format("DD-MM-YYYY").isBetween(moment(startDate).format("DD-MM-YYYY"), moment(endDate).format("DD-MM-YYYY"))) {
-        //         return item
-        //     }
-        // })
+        return res.json({
+            message: "Danh sách bài hát mới thêm trong tháng",
+            data: {
+                itemCount: listSong.length || 0,
+                items: listSong 
+            }
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+}
 
-        // console.log(newData)
-
-
-
-        return res.json(listSong)
+export const monthUser = async (req, res) => {
+    try {
+        const listUser = await User.find();
+        return res.json({
+            message: "Danh sách người đăng ký mới trong tháng",
+            data: {
+                itemCount: listUser.length || 0,
+                items: listUser 
+            }
+        })
     } catch (error) {
         return res.status(500).json({
             message: error,
