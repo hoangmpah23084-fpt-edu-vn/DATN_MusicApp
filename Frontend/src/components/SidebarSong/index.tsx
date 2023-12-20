@@ -174,12 +174,12 @@ const SidebarSong = (props: Props) => {
           <div className="w-full relative fjc h-[calc(100vh-200px)]">
             <div className="w-full h-[100%] overflow-y-scroll">
               {song &&
-                song?.length > 0 &&
+                song?.length > 0 ?
                 song.map((item: ifSong) => {
                   return (
                     <ItemSongSidebar item={item} />
                   );
-                })}
+                }) : '' }
             </div>
           </div>
         </div>
@@ -261,7 +261,7 @@ const SidebarSong = (props: Props) => {
           <div className="w-full relative fjc h-[calc(100vh-318px)] overflow-y-auto">
             <div className="w-full h-[100%] overflow-y-scroll">
               {song &&
-                song?.length > 0 &&
+                song?.length > 0 ?
                 song.map((item: ifSong, index: number) => {
                   return (
                     <div
@@ -354,7 +354,7 @@ const SidebarSong = (props: Props) => {
                       </div>
                     </div>
                   );
-                })}
+                }) : ''}
             </div>
           </div>
         </div>

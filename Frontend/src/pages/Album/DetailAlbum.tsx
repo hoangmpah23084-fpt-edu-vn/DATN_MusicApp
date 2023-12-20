@@ -17,13 +17,13 @@ const DetailAlbum = (props: Props) => {
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/album/${id}`)
-      .then(({ data }) => setAlbum(data.data));
-    //   const song = album?.
+      .then(({ data }) => setAlbum(data.data.list_song));
   }, []);
-
+  console.log(album);
+  
   return (
     <div className="chanel-section-title mt-[70px] md:mt-[100px] px-[15px] md:px-16 py-5 flex justify-between md:mb-[20px] text-[#fff]">
-      <ListSong listSong={album?.list_song} />
+      {album.length > 0 ? <ListSong listSong={album} /> : ''} 
     </div>
   );
 };

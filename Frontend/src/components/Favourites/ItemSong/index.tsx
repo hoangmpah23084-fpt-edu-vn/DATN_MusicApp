@@ -51,23 +51,23 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
   }, []);
 
   const handTakeFavourite = (id: string | undefined) => {
-    if (activeHistory) {
-      const history = localStorage.getItem('history')
-      if (history) {
-        const parsedHistory = JSON.parse(history) as ifSong[];
-        if (parsedHistory) {
-          const newData = parsedHistory.map((item: any) => (JSON.parse(item)))
-          dispatch(setSongFavourite(newData));
-        }
-      }
-    }
-    if (activePlaylist) {
-      dispatch(setSongFavourite(playlistDetail.list_song));
-    }
+    // if (activeHistory) {
+    //   const history = localStorage.getItem('history')
+    //   if (history) {
+    //     const parsedHistory = JSON.parse(history) as ifSong[];
+    //     if (parsedHistory) {
+    //       const newData = parsedHistory.map((item: any) => (JSON.parse(item)))
+    //       dispatch(setSongFavourite(newData));
+    //     }
+    //   }
+    // }
+    // if (activePlaylist) {
+    //   dispatch(setSongFavourite(playlistDetail.list_song));
+    // }
 
-    if (activeFavourite) {
-      dispatch(setSongFavourite(listFavourites));
-    }
+    // if (activeFavourite) {
+    //   dispatch(setSongFavourite(listFavourites));
+    // }
 
     stateSong && dataLocal?._id == id
       ? activeSong(dispatch, item, "stopPause")
