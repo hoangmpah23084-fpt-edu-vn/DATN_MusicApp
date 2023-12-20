@@ -268,7 +268,6 @@ const AlbumAdmin = () => {
   //hàm sửa
   const handleEdit = async (recode: any) => {
     setModalSetting(2);
-
     const newValue = {
       _id: recode._id,
       album_name: recode.album_name,
@@ -384,7 +383,9 @@ const AlbumAdmin = () => {
   };
 
   useEffect(() => {
-    fetchDataSong()
+    if(albumSelected?.id_singer?._id) {
+      fetchDataSong()
+    }
   }, [albumSelected])
 
   const modalAdd = () => {
