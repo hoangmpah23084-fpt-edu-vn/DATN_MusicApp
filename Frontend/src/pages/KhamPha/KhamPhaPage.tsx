@@ -14,8 +14,9 @@ import SongGenre from "@/components/SongGenre";
 import Album from "../../components/Album/index.tsx";
 import { MdArrowForwardIos } from "react-icons/md";
 import ListAlbum from "./Component/ListAlbum.tsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useAppSelector } from "@/store/hooks.ts";
 
 
 const img_slide = [
@@ -32,6 +33,8 @@ const KhamPhaPage = () => {
   const historySong = localStorage.getItem("history");
   const [loading, setLoading] = useState(true);
   const [listAlbum, setListAlbum] = useState([]);
+  const { stateSong } = useAppSelector(({ currentSong }) => currentSong);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
@@ -49,10 +52,9 @@ const KhamPhaPage = () => {
       .then((response) => response.json())
       .then(({ data }) => {
         const album = data.slice(0, 5);
-
         setListAlbum(album);
       });
-  }, [historySong]);
+  }, [historySong, dispatch]);
 
   return (
     <>

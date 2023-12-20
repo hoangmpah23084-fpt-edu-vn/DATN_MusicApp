@@ -460,7 +460,7 @@ const AlbumAdmin = () => {
       </footer>
 
       <Modal
-        title="Basic Modal"
+        title="Chi tiết Album"
         open={modalSetting == 3}
         onOk={handleOk}
         onCancel={handleCancel}
