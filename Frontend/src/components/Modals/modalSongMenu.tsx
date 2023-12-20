@@ -4,7 +4,7 @@ import { SlEarphonesAlt } from "react-icons/sl";
 import { FaBan } from "react-icons/fa";
 import { HiDocumentAdd } from "react-icons/hi";
 import { MdReplay } from "react-icons/md";
-import { ImCopy } from "react-icons/im";
+import { FaTrash } from "react-icons/fa";
 import { PiMicrophoneStageDuotone } from "react-icons/pi";
 import {
   AiOutlineHeart,
@@ -24,8 +24,9 @@ import {
   deleteSongToPlaylist,
   getPlaylist,
 } from "@/store/Reducer/playlistReducer";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import useClickOutside from "@/hooks/clickOutSide";
+import { addSongToNextSong, addSongtoSideBarSong, deleteSongInListSong } from "@/store/Reducer/Song";
 
 const ModalSongMenu = ({ song, onShowModal }: any) => {
   const { id } = useParams<{ id?: string }>();
@@ -33,8 +34,8 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
   const [isShowModalCreate, setIsShowModalCreate] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-
+  const { currentSong } = useAppSelector(({ currentSong }) => currentSong);
+  const { song : listSong } = useAppSelector(({ Song }) => Song);
 
   const fetchDataPlaylist = async () => {
     try {
@@ -92,6 +93,24 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
   };
 
   const ref = useClickOutside(() => onShowModal());
+
+  const handAddPlayList = () => {
+    dispatch(addSongtoSideBarSong(song));
+    onShowModal(false)
+  }
+
+  const handNextSongSidebar = () => {
+    const findSong = listSong.findIndex( item => item._id == currentSong?._id);
+    dispatch(addSongToNextSong({
+      song,
+      findSong
+    }));
+    onShowModal(false)
+  }
+  const handDeleteSongInList = () => {
+    dispatch(deleteSongInListSong(song));
+    onShowModal(false)
+  }
 
   return (
     <>
@@ -157,7 +176,7 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
         <div className="mt-3">
           <ul className="text-base text-[#c4c2c8]">
             <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300">
-              <button className="flex items-center">
+              <button className="flex items-center" onClick={handAddPlayList}>
                 <span className="mx-5">
                   <HiDocumentAdd />
                 </span>
@@ -165,7 +184,7 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
               </button>
             </li>
             <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300">
-              <button className="flex items-center">
+              <button className="flex items-center" onClick={handNextSongSidebar}>
                 <span className="mx-5">
                   <MdReplay />
                 </span>
@@ -219,15 +238,17 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
                 </div>
               </div>
             </li>
-            <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300">
+            {
+              listSong.filter(item => item._id == song._id).length > 0 ? <li className="py-1 hover:bg-[#594b6f] ease-in-out duration-300" onClick={handDeleteSongInList}>
               <button className="flex items-center">
                 <span className="mx-5">
-                  <ImCopy />
+                  <FaTrash />
                 </span>
-                Sao chép link
+                Xóa bài hát
               </button>
-            </li>
-            <li className="py-1 hover:bg-[#594b6f] group relative ease-in-out duration-300">
+            </li> : ''
+            }
+            {/* <li className="py-1 hover:bg-[#594b6f] group relative ease-in-out duration-300">
               <button className="flex items-center">
                 <span className="mx-5">
                   <AiOutlineShareAlt />
@@ -257,7 +278,7 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
                   </div>
                 </div>
               </div>
-            </li>
+            </li> */}
             {window.location.pathname.includes("/playlist/") && (
               <li
                 onClick={() => handleDeleteToPlaylist()}
@@ -265,7 +286,7 @@ const ModalSongMenu = ({ song, onShowModal }: any) => {
               >
                 <button className="flex items-center">
                   <span className="mx-5">
-                    <ImCopy />
+                    <FaTrash />
                   </span>
                   Xóa bài hát khỏi Playlist
                 </button>
