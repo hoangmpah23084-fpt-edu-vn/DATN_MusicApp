@@ -27,11 +27,12 @@ type props = {
   activeSideBarSong?: boolean,
   activeHistory?: boolean,
   activePlaylist?: boolean,
-  activeFavourite?: boolean
+  activeFavourite?: boolean,
+  activeAbum?: boolean,
 
 }
 
-const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlaylist, activeFavourite }: props) => {
+const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlaylist, activeFavourite, activeAbum }: props) => {
   const [modal, setModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { stateSong, dataLocal } = useAppSelector(
@@ -40,6 +41,8 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
   const { token } = useAppSelector((state: RootState) => state.user);
   const { listFavourites } = useAppSelector((state: RootState) => state.favourites);
   const { playlistDetail } = useAppSelector((state: RootState) => state.playlist);
+  const { listOneAlbum } = useAppSelector((state: RootState) => state.album);
+
 
 
   useEffect(() => {
@@ -69,6 +72,11 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
       dispatch(setSongFavourite(listFavourites));
     }
 
+    if (activeAbum) {
+      dispatch(setSongFavourite(listOneAlbum));
+
+    }
+
     stateSong && dataLocal?._id == id
       ? activeSong(dispatch, item, "stopPause")
       : activeSong(dispatch, item, "start");
@@ -81,11 +89,10 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
   return (
     <tr
       className={`item border-b-[#2c2436] border-b-[1px] flex-1 cursor-pointer ease-in-out duration-300 first-letter:
-      ${
-        dataLocal && dataLocal?._id == item._id
+      ${dataLocal && dataLocal?._id == item._id
           ? "bg-[#14182A]"
           : "hover:bg-[#b4b4b32d]"
-      } 
+        } 
       `}
     >
       <td
@@ -111,17 +118,16 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
           <img
             className={`rounded-[5px] w-10 h-10
                `}
-            src={item.song_image[0]}
+            src={item.song_image.length > 0 ? item.song_image[0] : ''}
             alt=""
           />
           <div className="overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] hidden"></div>
           <div
             className={`action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%] 
-            ${
-              dataLocal && stateSong && dataLocal?._id == item._id
+            ${dataLocal && stateSong && dataLocal?._id == item._id
                 ? ""
                 : "hidden"
-            }
+              }
             `}
           >
             <div className="flex gap-[20px] h-full justify-center">
@@ -168,11 +174,10 @@ const ItemSong = ({ item, active, activeSideBarSong, activeHistory, activePlayli
       ) : (
         <td className="h-full">
           <div
-            className={`${
-              activeSideBarSong
-                ? "flex"
-                : "flex items-center justify-center mr-2"
-            }`}
+            className={`${activeSideBarSong
+              ? "flex"
+              : "flex items-center justify-center mr-2"
+              }`}
           >
             <button
               className="text-[#3BC8E7] mx-2 group relative "
