@@ -13,7 +13,7 @@ export const create_Album = async (req, res) => {
     }
     const data = await Album.create(req.body);
     if (!data) {
-      return res.status(400).json({ message: "Create Album Failed" });
+      return res.status(400).json({ message: "Tạo album không thành công" });
     }
     await Singer.findByIdAndUpdate(
       data.id_singer,
@@ -23,7 +23,7 @@ export const create_Album = async (req, res) => {
       { new: true }
     );
     return res.status(200).json({
-      message: "Create Album Success",
+      message: "Tạo album thành công",
       data,
     });
   } catch (error) {
@@ -91,7 +91,7 @@ export const delete_Album = async (req, res) => {
   try {
     const album = await Album.findByIdAndDelete(req.params.id);
     return res.status(200).json({
-      message: "Album Deleted",
+      message: "Xoá album thành công",
       album,
     });
   } catch (error) {

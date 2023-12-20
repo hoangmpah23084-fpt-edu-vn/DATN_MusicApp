@@ -183,8 +183,8 @@ const Header = (props: Props) => {
       >
         <div className="flex items-center z-1 w-[100%] justify-between">
           <div className="flex flex-1 md:flex-none">
-            <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] hidden items-center h-[40px] md:flex" />
-            <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px] hidden md:block" />
+            {/* <IoIosArrowRoundBack className="mr-[20px] w-10 text-[#ccc] hidden items-center h-[40px] md:flex" />
+            <IoIosArrowRoundForward className="mr-[20px] w-10 text-[#ccc] h-[40px] hidden md:block" /> */}
             <div className="search w-full lg:flex items-center relative justify-center dropdown-search max-h-[400px]">
               <Dropdown overlay={dropdownMenu} trigger={["click"]}>
                 <Input
@@ -208,9 +208,9 @@ const Header = (props: Props) => {
               <img src="/logo.png" alt="" />
             </div>
 
-            <div className="hidden md:flex h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
+            {/* <div className="hidden md:flex h-[40px] w-[40px] ml-2 md:ml-5 items-center justify-center bg-[#3bc8e7] rounded-full">
               <AiOutlineSetting className=" w-10 h-[20px]" />
-            </div>
+            </div> */}
             {userLocal && token ? (
               <div className="dropdown-profile">
                 <Dropdown overlay={menu}>
