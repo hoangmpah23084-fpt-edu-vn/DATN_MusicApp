@@ -19,7 +19,7 @@ export const ActiveFavourites = ({ item }: props) => {
   const active = listFavourites?.map((item) => item?._id).includes(item?._id)
   return (
     <>
-      {active ? <AiFillHeart className="text-[#3bc8e7] scale-90 ease-in-out duration-300 px-3 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-80 " /> :
+      {active ? <AiFillHeart className="text-[#3bc8e7] scale-90 ease-in-out duration-300 px-2 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-80 " /> :
         <AiOutlineHeart className="text-[#fff] scale-90 ease-in-out duration-300 px-3 py-2 rounded-full text-[40px] hover:bg-[rgba(204,204,204,.2)] cursor-pointer hover:opacity-8" />}
     </>
   )
