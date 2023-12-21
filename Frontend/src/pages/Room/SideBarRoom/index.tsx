@@ -37,7 +37,7 @@ const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSide
   
   
   return (
-    <div className="zm-room-right-content absolute w-[340px] p-[20px] bg-[#130C1C] flex flex-col right-[30px] top-[94px] bottom-[30px] rounded-[12px] ">
+    <div className="zm-room-right-content absolute w-[340px] p-[20px] bg-[#1B2039] flex flex-col right-[30px] top-[94px] bottom-[30px] rounded-[12px] ">
     <div className="main-tabs text-[12px] mb-[12px]">
       <ul className="flex bg-[rgba(254,255,255,.1)] rounded-[15px] justify-center self-center p-[3px] max-w-max relative">
         <li onClick={() => setStateSideBar('trochuyen')} className={`tab-item tabSidebarSoom ${stateSideBar == 'trochuyen' ? 'bg-[rgba(254,255,255,.2)] ' : ''} cursor-pointer`} >

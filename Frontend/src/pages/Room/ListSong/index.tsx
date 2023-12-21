@@ -127,14 +127,14 @@ const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
     },[])
     
   return (
-    <div className='w-full h-full overflow-y-scroll bg-[#130C1C] rounded-md p-2'>
+    <div className='w-full h-full overflow-y-scroll bg-[#1B2039] rounded-md p-2'>
         {
            listSong.length > 0 && listSong.map((item, index) => {
             // console.log(item);
             
             return <div className='w-full flex' key={index}>
             <div className={`w-full h-[60px] flex justify-center rounded-md items-center ${
-              currentSong && currentSong?._id == item._id ? 'bg-[#9B4DE0]' : 'hover:bg-[#b4b4b32d]'
+              currentSong && currentSong?._id == item._id ? 'bg-[#092635]' : 'hover:bg-[#b4b4b32d]'
             } wall`}>
                <div className="w-[95%] h-[80%] flex justify-between ">
                     <div className="w-[17%] h-full">

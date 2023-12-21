@@ -53,12 +53,12 @@ const debounced = useDebouncedCallback(
   return (
     <div className='w-full flex flex-col'>
       <div className='w-full flex justify-center items-center'>
-        <CiSearch className="bg-[#14182A] h-full w-[40px] p-2 rounded-l-full" />
-        <input type="text" onChange={(e) => debounced(e.target.value)} className='w-full h-full bg-[#2F2739] text-white rounded-r-full outline-none focus:outline-none border-none px-[3px] OutlineSearch font-inter'
+        <CiSearch className="bg-[#3BC8E7] h-full w-[40px] p-2 rounded-l-full" />
+        <input type="text" onChange={(e) => debounced(e.target.value)} className='w-full h-full text-black bg-white rounded-r-full outline-none focus:outline-none border-none px-[3px] OutlineSearch font-inter'
          autoComplete="off"
         placeholder='Search...' />
       </div>
-    <div className='w-full overflow-y-scroll bg-[#130C1C] rounded-md p-2'>
+    <div className='w-full overflow-y-scroll bg-[#1B2039] rounded-md p-2'>
         {
            listDataSearch.length > 0 && listDataSearch.map((item, index) => {
             return <div className='w-full flex' key={index}>
