@@ -2,6 +2,8 @@ import { Validate_Song } from "../Schemas/songSchemas.js";
 import SongSchame from "../Models/songModel.js";
 import Singer from "../Models/singer.js";
 import Genre from "../Models/genreModel.js";
+import Album from "../Models/albumModel.js";
+import playlistModal from "../Models/playlistModal.js";
 
 export const createSong = async (req, res) => {
   try {
@@ -157,16 +159,38 @@ export const deleteSong = async (req, res) => {
       });
     }
 
-    /* delete song in artist */
+    // /* delete song in artist */
     await Singer.findByIdAndUpdate(data.id_Singer, {
       $pull: { songs: data._id },
     });
 
-    //todo  delete song in genre  */
+    // //todo  delete song in genre  */
     await Genre.findByIdAndUpdate(data.id_Genre, {
       $pull: { list_song: data._id },
     });
-
+    //todo  delete album in genre  */
+    const albumlist = await Album.find().populate("list_song");
+    const mapdata = albumlist.map(async (item) => {
+      console.log(item._id);
+      const dataListSong = item.list_song.filter((item) => item._id == id);
+      console.log(dataListSong);
+      if (dataListSong.length > 0) {
+        await Album.findByIdAndUpdate(item._id, {
+          $pull: { list_song: id },
+        });
+      }
+    });
+    const playlist = await playlistModal.find().populate("list_song");
+    const mapdataPlayList = playlist.map(async (item) => {
+      console.log(item._id);
+      const dataListSong = item.list_song.filter((item) => item._id == id);
+      console.log(dataListSong);
+      if (dataListSong.length > 0) {
+        await playlistModal.findByIdAndUpdate(item._id, {
+          $pull: { list_song: id },
+        });
+      }
+    });
     return res.status(200).json({
       message: "Delete Song Successfully",
       data,

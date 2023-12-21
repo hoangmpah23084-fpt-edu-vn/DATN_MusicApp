@@ -6,6 +6,7 @@ import { BsPlayCircle } from "react-icons/bs";
 
 import { BiX } from "react-icons/bi";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const Album = () => {
   const [listAlbum, setListAlbum] = useState([]);
@@ -14,7 +15,6 @@ const Album = () => {
       .then((response) => response.json())
       .then((data) => setListAlbum(data.data));
   }, []);
-  console.log(listAlbum);
 
   return (
     <div className="text-white w-full h-[100%]">
@@ -29,31 +29,29 @@ const Album = () => {
               <div className="">
                 <div className="flex flex-col">
                   <div className="relative overflow-hidden rounded-md group">
-                    <img
-                      className="w-[100%] rounded-md transition duration-300 ease-in-out transform group-hover:scale-110 aspect-square"
-                      src={`${item?.id_singer?.images[0]}`}
-                      alt=""
-                    />
-                    <p className="text-4xl flex gap-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out text-white ">
-                      <span className="text-white">
-                        <BiX />
-                      </span>
-                      <span className="text-white">
-                        <BsPlayCircle />
-                      </span>
-                      <span className="text-white">
-                        <BiDotsHorizontalRounded />
-                      </span>
-                    </p>
+                    <Link
+                      to={`/album/${item._id}`}
+                      className="z-10 cursor-pointer"
+                    >
+                      <img
+                        className="w-[100%] rounded-md transition duration-300 ease-in-out transform group-hover:scale-110 aspect-square"
+                        src={`${item?.id_singer?.images[0]}`}
+                        alt=""
+                      />
+                    </Link>
                   </div>
-                  <p className="text-white font-medium text-sm mt-1">{item?.album_name}</p>
-                  <p className="text-[#8B8791] text-xs">Zing MP3</p>
+                  <Link to={`/album/${item?._id}`}>
+                    <p className="text-white font-medium text-sm mt-1">
+                      {item?.album_name}
+                    </p>
+                    <p className="text-[#8B8791] text-xs">
+                      {item?.id_singer?.name}
+                    </p>
+                  </Link>
                 </div>
               </div>
             );
           })}
-
-         
         </div>
       </div>
     </div>

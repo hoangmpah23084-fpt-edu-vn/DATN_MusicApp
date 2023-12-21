@@ -3,11 +3,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
 const roomModel = new mongoose.Schema({
   nameGroup: String,
   password: String,
-  room_image: [
-    {
-      type: Object,
-    },
-  ],
+  room_image: Array,
   memberGroup: [
     {
       type: mongoose.Schema.Types.ObjectId,

@@ -59,12 +59,10 @@ const ListSinger = () => {
   // get dữ liệu
   useEffect(() => {
     const data: IApiSinger = {
-      page: page,
-      pageSize: pageSize,
       search: search,
     };
     dispatch(handleGetSinger(data));
-  }, [page, pageSize, search]);
+  }, [search]);
 
   // tìm kiếm
   const onChange = (
@@ -285,9 +283,9 @@ const ListSinger = () => {
       setFileListImage(filterItem);
     }
 
-    if(filterItem.length == 0) {
+    if (filterItem.length == 0) {
       setFileListImage([])
-     // form.setFieldValue("images",undefined)
+      // form.setFieldValue("images",undefined)
     }
   };
 
@@ -455,8 +453,8 @@ const ListSinger = () => {
   };
 
   const formEdit = (newData: ISinger) => {
-console.log(newData);
-    
+    console.log(newData);
+
     newData = {
       ...newData,
       _id: dataOne?._id as string,
@@ -543,7 +541,7 @@ console.log(newData);
                 {chekcSubString(dataOne?.name as string, 20)}
               </p>
               <p>
-                <strong>Tuổi:</strong> 
+                <strong>Tuổi:</strong>
               </p>
               <p>
                 <strong>Mô tả: </strong>
@@ -586,20 +584,11 @@ console.log(newData);
           <Table
             dataSource={dataSource}
             columns={columns}
-            pagination={false}
             className="mt-12"
             scroll={{ y: 650 }}
           />
         )}
       </main>
-      <footer className="w-[100%] h-10 bg-[#F4F5F7] fixed bottom-0 z-50">
-        <Pagination
-          defaultCurrent={page}
-          total={totalSinger || 1}
-          onChange={onChangePage}
-          className="absolute bottom-1 right-72 z-50"
-        />
-      </footer>
     </div>
   );
 };

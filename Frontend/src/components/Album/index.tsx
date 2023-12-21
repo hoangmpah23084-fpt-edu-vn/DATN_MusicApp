@@ -58,6 +58,7 @@ const Album = ({ item }: Props) => {
               <span className="text-[14px] font-semibold">
                 {item?.album_name}
               </span>
+              <p className="text-[#8B8791] text-xs">{item?.id_singer?.name}</p>
             </Link>
           </h4>
         </div>

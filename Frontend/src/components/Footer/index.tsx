@@ -232,25 +232,22 @@ const Footer = (props: Props) => {
     return volume > 0 ? setVolume(0) : setVolume(50);
   };
 
-  const songLoca = localStorage.getItem("song");
   useEffect(() => {
-    if (songLoca) {
+    if (currentSong) {
       const history = localStorage.getItem("history");
       if (!history) {
-        localStorage.setItem("history", JSON.stringify([songLoca]));
+        localStorage.setItem("history", JSON.stringify([currentSong]));
       } else {
         const historyArray = JSON.parse(history);
-        if (!historyArray.includes(songLoca)) {
-          historyArray.unshift(songLoca);
-          if (historyArray.length > 20) {
-            historyArray.pop();
-          }
-          localStorage.setItem("history", JSON.stringify(historyArray));
-        }
+        const newData = historyArray.map((item: any) => item)
+        const filterNewData = newData.filter((item: any) => item._id !== currentSong?._id)
+        filterNewData.unshift(currentSong);
+        const truncatedHistory = filterNewData.slice(0, 20);
+        localStorage.setItem("history", JSON.stringify(truncatedHistory));
       }
     }
     dispatch(setSongHistory())
-  }, [songLoca]);
+  }, [currentSong]);
 
   const maxlength = 14;
 
@@ -265,7 +262,7 @@ const Footer = (props: Props) => {
       >
         <div className="level text-white h-[70px] px-[15px] sm:h-[90px] sm:px-[20px] bg-[#1B2039]  border-t-[1px] border-[#32323d] flex justify-between">
           <div className="flex items-center rounded-r-lg flex-1 w-[60%] justify-start md:w-[25%] h-[100%] bg-[#1B2039]">
-            <div className="flex items-center w-[100%]">
+            <div className="flex items-center w-[60%]">
               <div className="flex w-[100%] justify-between">
                 <div className="">
                   <Link to={"#"}>
@@ -338,9 +335,9 @@ const Footer = (props: Props) => {
                     </div>
                     <div className="level-item ml-3">
                       <span id="np_menu">
-                        <button className="zm-btn zm-tooltip-btn btn-more is-hover-circle button ">
+                        {/* <button className="zm-btn zm-tooltip-btn btn-more is-hover-circle button ">
                           <BsThreeDots />
-                        </button>
+                        </button> */}
                       </span>
                     </div>
                   </div>

@@ -22,17 +22,17 @@ const PlaylistPage = () => {
   const playlistDetail = useAppSelector(({ playlist }) => playlist);
   const [album, setAlbum] = useState<ifAlbum | null>(null);
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    id &&
-      getOneAlbum(id as string)
-        .then(({ data }) => {
-          setAlbum(data);
-          dispatch(setStateSong(false));
-          dispatch(setCurrentSong(data.list_song[0]));
-          setTimeout(() => dispatch(setStateSong(true)), 500);
-        })
-        .catch((error) => console.error(error));
-  }, [id]);
+  // useEffect(() => {
+  //   id &&
+  //     getOneAlbum(id as string)
+  //       .then(({ data }) => {
+  //         setAlbum(data);
+  //         dispatch(setStateSong(false));
+  //         dispatch(setCurrentSong(data.list_song[0]));
+  //         setTimeout(() => dispatch(setStateSong(true)), 500);
+  //       })
+  //       .catch((error) => console.error(error));
+  // }, [id]);
 
   const handToggSong = () => {
     const state = currentSong.stateSong;

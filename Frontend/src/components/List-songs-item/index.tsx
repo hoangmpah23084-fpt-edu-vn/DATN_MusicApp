@@ -50,17 +50,14 @@ const ListSongItem = ({ section, item }: Props) => {
         </>
       )}
       <div
-        className={`media flex items-center py-[10px] px-[15px] rounded-[5px] text-left hover:bg-[#2f2739] relative z-10 ${
-          section === "chanel" && "bg-[#14182A]"
-        }  ${
-          section === "zingchart" && "bg-[#492761] mb-[10px] hover:bg-[#65487a]"
-        }`}
+        className={`media flex items-center py-[10px] px-[15px] rounded-[5px] text-left hover:bg-[#2f2739] relative z-10 ${section === "chanel" && "bg-[#14182A]"
+          }  ${section === "zingchart" && "bg-[#492761] mb-[10px] hover:bg-[#65487a]"
+          }`}
       >
         <div className=" media-left flex flex-row grow shrink w-[50%] mr-[10px]">
           <div
-            className={`song-prefix ${
-              (section === "zingchart" && "block") || "hidden"
-            } flex items-center`}
+            className={`song-prefix ${(section === "zingchart" && "block") || "hidden"
+              } flex items-center`}
           >
             <span className="number is-top-1 mr-[15px]">1</span>
           </div>
@@ -70,39 +67,33 @@ const ListSongItem = ({ section, item }: Props) => {
             onClick={handToggle}
           >
             <div
-              className={`${
-                section === "chanel" && "card-image"
-              } overflow-hidden relative rounded-[5px]`}
+              className={`${section === "chanel" && "card-image"
+                } overflow-hidden relative rounded-[5px]`}
             >
               <img
-                className={`rounded-[5px] ${
-                  section === "suggested" && "w-[60px] h-[60px]"
-                } ${section === "zingchart" && "w-[60px] h-[60px]"} ${
-                  section === "chanel" && "w-[120px] h-[120px]"
-                }`}
-                src={`${item?.song_image[0]}`}
+                className={`rounded-[5px] ${section === "suggested" && "w-[60px] h-[60px]"
+                  } ${section === "zingchart" && "w-[60px] h-[60px]"} ${section === "chanel" && "w-[120px] h-[120px]"
+                  }`}
+                src={`${item.song_image?.length > 0 ? item.song_image[0] : ''}`}
                 alt=""
               />
               <div
-                className={`overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] ${
-                  currentSong?._id == item?._id && stateSong
-                    ? "block"
-                    : "hidden"
-                }`}
+                className={`overlay absolute w-full h-full top-0 bg-[rgba(0,0,0,.4)] ${currentSong?._id == item?._id && stateSong
+                  ? "block"
+                  : "hidden"
+                  }`}
               ></div>
               <div
-                className={`action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%]  ${
-                  currentSong?._id == item?._id && stateSong
-                    ? "block"
-                    : "hidden"
-                } `}
+                className={`action-container absolute w-full h-[40px] top-[50%] -translate-y-[50%]  ${currentSong?._id == item?._id && stateSong
+                  ? "block"
+                  : "hidden"
+                  } `}
               >
                 <div className="flex gap-[20px] h-full justify-center items-center">
                   <div>
                     <div
-                      className={`${
-                        section === "chanel" && "border rounded-full"
-                      } flex justify-center items-center`}
+                      className={`${section === "chanel" && "border rounded-full"
+                        } flex justify-center items-center`}
                     >
                       {currentSong?._id == item?._id && stateSong ? (
                         <BsFillPauseFill className="text-[40px] p-1 pl-[6px] " />
@@ -116,9 +107,8 @@ const ListSongItem = ({ section, item }: Props) => {
             </div>
           </div>
           <div
-            className={`${
-              (section === "chanel" && "justify-between") || "justify-center"
-            } card-title flex flex-col grow shrink relative`}
+            className={`${(section === "chanel" && "justify-between") || "justify-center"
+              } card-title flex flex-col grow shrink relative`}
           >
             <div>
               <div className="capitalize text-[15px]">
@@ -131,9 +121,8 @@ const ListSongItem = ({ section, item }: Props) => {
               </div>
             </div>
             <div
-              className={`${
-                (section === "chanel" && "block") || "hidden"
-              } flex justify-between`}
+              className={`${(section === "chanel" && "block") || "hidden"
+                } flex justify-between`}
             >
               <span className="order ">#1</span>
               <span className="release-date text-[14px] text-[rgb(140,136,146)] absolute bottom-0 right-0 leading-[1.8]">
@@ -144,9 +133,8 @@ const ListSongItem = ({ section, item }: Props) => {
         </div>
 
         <div
-          className={`media-right ${
-            (section === "suggested" && "block") || "hidden"
-          }  ml-[10px]`}
+          className={`media-right ${(section === "suggested" && "block") || "hidden"
+            }  ml-[10px]`}
         >
           <div className="hover-items hidden relative z-10">
             <div className="level flex">
@@ -179,9 +167,8 @@ const ListSongItem = ({ section, item }: Props) => {
         </div>
 
         <div
-          className={`media-right ${
-            (section === "zingchart" && "block") || "hidden"
-          }`}
+          className={`media-right ${(section === "zingchart" && "block") || "hidden"
+            }`}
         >
           <span className="font-bold">26%</span>
         </div>

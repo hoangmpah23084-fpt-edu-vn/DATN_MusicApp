@@ -22,13 +22,13 @@ import { getGenre, updateGenre } from "@/store/Reducer/genreReducer";
 import { ifAddGenre, ifGenre } from "../Interface/validateAlbum";
 import axios from "axios";
 import { toast } from "react-toastify";
-const { Option } = Select;
+import GenreDetail from "./ModalDetail";
 
 interface ifUpdateGenre {
-  key : string,
-  id : string,
-  name : string,
-  list_songs : ifSong[] | []
+  key: string,
+  id: string,
+  name: string,
+  list_songs: ifSong[] | []
 }
 
 const ListGenre = () => {
@@ -38,18 +38,21 @@ const ListGenre = () => {
   const [search, setSearch] = useState<string>("");
   const [openDetail, setOpenDetail] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
-  const { genre,loading } = useAppSelector((state: RootState) => state.genre);
-  
+  const { genre, loading } = useAppSelector((state: RootState) => state.genre);
+
   const [form] = Form.useForm();
   const formRef = useRef<any>();
   const [checkUpdate, setCheckUpdate] = useState(false);
-  const [idGenre , setIdGenre] = useState<ifUpdateGenre | null>(null);
+  const [idGenre, setIdGenre] = useState<ifUpdateGenre | null>(null);
   const [detailsGenre, setDetailsGenre] = useState<ifGenre>();
 
   // get dữ liệu
   useEffect(() => {
-    dispatch(getGenre());
-  }, [page, pageSize, search]);
+    const data = {
+      search: search
+    }
+    dispatch(getGenre(data));
+  }, [search]);
 
   // tìm kiếm
   const onChange = (
@@ -83,12 +86,8 @@ const ListGenre = () => {
   };
 
   const handleGetDetail = (id: string) => {
-    axios.get(`http://localhost:8080/api/genre/${id}`).then(({data}) => {
-      console.log(data.data);
-      setDetailsGenre(data.data);
-    })
+    setIdGenre(id as any)
     setOpenDetail(true);
-    // dispatch(handGetOne(id));
   };
 
   interface columns {
@@ -229,7 +228,7 @@ const ListGenre = () => {
   //hàm sửa
   const handleEdit = async (item: any) => {
     console.log(item);
-    
+
     setIdGenre(item);
     form.setFieldsValue(item);
     setOpenAdd(true);
@@ -301,8 +300,8 @@ const ListGenre = () => {
 
   const formEdit = (newData: ifGenre) => {
     dispatch(updateGenre({
-      _id : idGenre && idGenre.key,
-      name : newData.name
+      _id: idGenre && idGenre.key,
+      name: newData.name
     } as any))
       .unwrap()
       .then(() => {
@@ -323,7 +322,7 @@ const ListGenre = () => {
     };
     if (checkUpdate) {
       formEdit(newData as any);
-      
+
     } else {
       // hàm sử lý call api khi add
       formAdd(newData as any);
@@ -347,45 +346,15 @@ const ListGenre = () => {
     );
   };
 
-  const modalDetail = () => {
-    return (
-      <Modal
-        title="Chi tiết bài hát"
-        open={openDetail}
-        onOk={() => handleEdit()}
-        onCancel={handleCancel}
-        okText="Chỉnh sửa"
-        cancelText="Thoát"
-        okType="danger"
-        width={600}
-      >
-        {loading ? (
-          <Skeleton active />
-        ) : (
-          <div className="flex items-center justify-between pt-5 pb-5">
-            <div className="w-full">
-              <p className="flex">
-                <strong>ID : </strong> <span>{detailsGenre?._id}</span>
-              </p>
-              <p>
-                <strong>Tên thể loại : </strong> {detailsGenre?.name}
-              </p>
-              <p>
-                <strong>số lượng bài hát : </strong> {detailsGenre?.list_songs?.length}
-              </p>
-            </div>
-            {/* {dataOne?.song_image.map((item) => (
-              <img src={item} className="w-32 h-32 rounded-xl" />
-            ))} */}
-          </div>
-        )}
-      </Modal>
-    );
-  };
+
+
+  const handleOk = () => {
+    setOpenDetail(false)
+  }
 
   return (
     <div className="relative">
-      {modalDetail()}
+
       {modalAdd()}
       <header className="fixed top-0 flex items-center justify-between z-40 bg-[#F4F5F7] pt-2 w-[100%] pb-2.5 ">
         <span className="font-bold text-xl ml-10">Danh sách thể loại</span>
@@ -410,20 +379,22 @@ const ListGenre = () => {
           <Table
             dataSource={dataSource}
             columns={columns}
-            pagination={false}
             className="mt-12"
             scroll={{ y: 650 }}
           />
         )}
       </main>
-      <footer className="w-[100%] h-10 bg-[#F4F5F7] fixed bottom-0 z-50">
-        <Pagination
-          defaultCurrent={page}
-          total={genre.length  || 1}
-          onChange={onChangePage}
-          className="absolute bottom-1 right-72   z-50"
-        />
-      </footer>
+      <Modal
+        title="Chi tiết Album"
+        open={openDetail}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <GenreDetail idGenre={idGenre} />
+
+
+      </Modal>
+
     </div>
   );
 };
