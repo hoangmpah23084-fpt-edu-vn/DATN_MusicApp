@@ -4,6 +4,7 @@ import { ifUser } from "./User";
 
 
 export interface IRoom {
+    room_image: any;
     id: number,
     _id: string,
     name: string,

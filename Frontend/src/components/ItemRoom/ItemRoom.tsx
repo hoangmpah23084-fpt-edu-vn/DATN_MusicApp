@@ -42,7 +42,7 @@ const ItemRoom = ({
         >
             <div className="rounded-[5px] overflow-hidden room-item--img relative">
                 <img
-                    src={data?.isAdminGroup?.image}
+                    src={data && (data.room_image[0] as string)}
                     alt=""
                 />
                 <span className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 py-[2px] rounded-[3px] border-[1px] border-[gray] text-center min-w-[120px]">
