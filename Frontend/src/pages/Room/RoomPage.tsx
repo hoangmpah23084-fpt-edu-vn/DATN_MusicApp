@@ -37,6 +37,7 @@ const RoomPage = (props: Props) => {
   const [listSong, setListSong] = useState<ifSong[] | []>([])
   const { currentSong, stateSong } = useAppSelector(({ currentSong }) => currentSong);
   const [userRoom, setUserRoom] = useState<any | {}>({});
+  const [image, setImage] = useState('');
 
   const [admin, setAdmin] = useState<any | {}>({});
   const navigate = useNavigate();
@@ -60,9 +61,9 @@ const RoomPage = (props: Props) => {
       console.log(data.data.currentSongInRoom[0]);
       dispatch(setCurrentSong(data.data.currentSongInRoom[0]))
       localStorage.setItem('song', JSON.stringify(data.data.currentSongInRoom[0]));
-      console.log(currentSong);
       setListSong(data.data.listSong);
       setAdmin(data.data.isAdminGroup);
+      setImage(data.data.room_image[0]);      
       setListMess([...listMess, ...data.data.listMessages]);
       setlistMember(data.data.memberGroup);
       socket.emit('joinRoom', data.data._id);
@@ -196,7 +197,7 @@ const RoomPage = (props: Props) => {
          left-0 top-0 right-0 bottom-0 text-white overflow-hidden`}
       >
         <div
-          style={{ backgroundImage: `url(${background})` }}
+          style={{ backgroundImage: `url(${image ? image : ''})` }}
           className="zm-room relative bg-no-repeat bg-cover "
         >
           <div className="zm-room-opacity absolute top-0 left-0 right-0 bottom-0"></div>
@@ -323,4 +324,17 @@ const img_slide = [
 
 
 //background image
-const background = "../../../public/Image/e1887a2c79f9d3d04984905cbf443a29.jpg";
+// const background = "../../../public/Image/e1887a2c79f9d3d04984905cbf443a29.jpg";
+const backgrounds = [
+  "https://i.redd.it/357yv737qmy71.png",
+  // Thêm các đường dẫn ảnh khác vào đây
+  // Ví dụ:
+  "https://cdn.wallpapersafari.com/81/0/P2xqdv.jpg",
+  "https://preview.redd.it/gentle-warmth-3840x2160-v0-cp4f7dncrgxb1.png?auto=webp&s=8653ef69a3b7edb23e4665dce8886d3b6dd8c069",
+  "https://c.wallhere.com/photos/59/90/LofiGirl_LoFi_neon_LofiBoy_purple_blue-2234432.jpg!d"
+];
+
+const randomIndex = Math.floor(Math.random() * backgrounds.length);
+const randomBackground = backgrounds[randomIndex];
+
+console.log(randomBackground );

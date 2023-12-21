@@ -13,7 +13,7 @@ export const create_Album = async (req, res) => {
     }
     const data = await Album.create(req.body);
     if (!data) {
-      return res.status(400).json({ message: "Create Album Failed" });
+      return res.status(400).json({ message: "Tạo album không thành công" });
     }
     await Singer.findByIdAndUpdate(
       data.id_singer,
@@ -23,7 +23,7 @@ export const create_Album = async (req, res) => {
       { new: true }
     );
     return res.status(200).json({
-      message: "Create Album Success",
+      message: "Tạo album thành công",
       data,
     });
   } catch (error) {
@@ -32,14 +32,26 @@ export const create_Album = async (req, res) => {
 };
 
 export const getAll_Album = async (req, res) => {
-  try {
-    const data = await Album.find().populate("id_singer");
+  const {
+    search,
+  } = req.query;
+    const options = {
+      populate: ["id_singer"],
+    };
+    try {
+      let query = {};
+      if (search) {
+        query = {
+          $or: [{ album_name: { $regex: search, $options: "i" } }],
+        };
+      }
+    const data = await Album.paginate(query, options);
     if (!data) {
       return res.status(400).json({ message: "Get All Album Failed" });
     }
     return res.status(200).json({
       message: "Get All Album Success",
-      data,
+      data:data.docs,
     });
   } catch (error) {
     console.log(error);
@@ -48,13 +60,25 @@ export const getAll_Album = async (req, res) => {
 
 export const get_AlbumById = async (req, res) => {
   try {
-    const data = await Album.findById(req.params.id).populate("id_singer").populate("list_song");
-    
-      return res.status(200).json({
-        message: "Get Album By Id Success",
-        data,
-      });
-   
+    const data = await Album.findById(req.params.id).populate({
+      path: 'list_song',
+      populate: {
+        path: 'id_Genre',
+        model: 'Genre'
+      }
+    }).populate({
+      path: 'list_song',
+      populate: {
+        path: 'id_Singer',
+        model: 'Singer'
+      }
+    });
+
+    return res.status(200).json({
+      message: "Get Album By Id Success",
+      data,
+    });
+
   } catch (error) {
     console.log(error);
   }
@@ -91,7 +115,7 @@ export const delete_Album = async (req, res) => {
   try {
     const album = await Album.findByIdAndDelete(req.params.id);
     return res.status(200).json({
-      message: "Album Deleted",
+      message: "Xoá album thành công",
       album,
     });
   } catch (error) {

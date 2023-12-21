@@ -32,12 +32,24 @@ export const create_Genre = async (req, res) => {
 };
 
 export const getAll_Genre = async (req, res) => {
-  try {
-    const data = await Genre.find().populate("list_songs");
+  const {
+    search,
+  } = req.query;
+    const options = {
+      populate: ["list_songs"],
+    };
+    try {
+      let query = {};
+      if (search) {
+        query = {
+          $or: [{ name: { $regex: search, $options: "i" } }],
+        };
+      }
+    const data = await Genre.paginate(query, options);
     if (!data) {
       return res.status(400).json({ message: "Get All Genre Failed" });
     }
-    const filData = data.filter((item) => item.name != "un_genre");
+    const filData = data.docs.filter((item) => item.name != "un_genre");
     // const findData = filData.filter((item) => item.name == "TẤT CẢ");
     // console.log(filData);
     // filData.forEach((item) => {
@@ -156,5 +168,28 @@ export const delete_Genre = async (req, res) => {
     });
   }
 };
-const deleteSongInGenre = () => { };
+export const deleteSongInGenre = async (req, res) => {
+  try {
+    const { id_song } = req.body;
+    if (!id_song) {
+      return res.json({
+        message: "Bài hát không hợp lệ",
+      });
+    }
+    const data = await Genre.findByIdAndUpdate(req.params.id, {
+      $pull: {
+        list_songs: id_song,
+      },
+    });
+
+    return res.status(200).json({
+      message: "Xóa bài hát thành công",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 // const genre = await Genre.findByIdAndDelete(req.params.id);

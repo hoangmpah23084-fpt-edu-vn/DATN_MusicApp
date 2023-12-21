@@ -44,9 +44,8 @@ export const handleGetSinger = createAsyncThunk(
     "singer/getSinger",
     async (option?: IApiSinger) => {
         const { data } = await instanceAxios.get(
-            `http://localhost:8080/api/singers/?_limit=${option?.pageSize ? option?.pageSize : 10
-            }&_page=${option?.page ? option?.page : 1}&search=${option?.search ? option?.search : ""
-            }&_sort=${option?.sort ? option?.sort : "createdAt"}&_order=${option?.order ? option?.order : "desc"}`
+            `http://localhost:8080/api/singers/?search=${option?.search ? option?.search : ""
+            }`
         );
         return data;
     }
@@ -97,7 +96,7 @@ export const handleGetOne = createAsyncThunk(
 );
 
 export const setSingerSong = createAsyncThunk('setSingerSong/Get', async (id) => {
-    const {data} = await axios.get(`http://localhost:8080/api/singer/${id}`).then(({data})=> data);
+    const { data } = await axios.get(`http://localhost:8080/api/singer/${id}`).then(({ data }) => data);
     console.log(data);
     return data.singers
 })
@@ -169,7 +168,7 @@ const singerReducer = createSlice({
                 state.loadingSearch = false;
             })
             .addCase(setSingerSong.fulfilled, (state, action) => {
-                state.singer = action.payload;  
+                state.singer = action.payload;
             })
     },
 });

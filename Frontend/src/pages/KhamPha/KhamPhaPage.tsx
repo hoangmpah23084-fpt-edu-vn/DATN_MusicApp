@@ -9,13 +9,9 @@ import { SuggestSong, WantToListent } from "./Component";
 import { useEffect, useState } from "react";
 import ListSongItem from "@/components/List-songs-item";
 import { ifSong } from "../Admin/Interface/ValidateSong";
-import SuggSkeleton from "./Skeleton/Sugg.skeleton";
-import SongGenre from "@/components/SongGenre";
-import Album from "../../components/Album/index.tsx";
-import { MdArrowForwardIos } from "react-icons/md";
 import ListAlbum from "./Component/ListAlbum.tsx";
-import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useAppSelector } from "@/store/hooks.ts";
 
 
 const img_slide = [
@@ -30,29 +26,26 @@ const img_slide = [
 const KhamPhaPage = () => {
   const [historySongState, setHistorySongState] = useState<ifSong[]>();
   const historySong = localStorage.getItem("history");
-  const [loading, setLoading] = useState(true);
   const [listAlbum, setListAlbum] = useState([]);
-
+  const { isSongHistory } = useAppSelector((state: RootState) => state.Song)
   useEffect(() => {
-    setLoading(true);
     if (historySong) {
       const parsedHistory = JSON.parse(historySong) as ifSong[];
       if (parsedHistory) {
-        const newData = parsedHistory.map((item: any) => JSON.parse(item));
-        setHistorySongState([...newData]);
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
+        const newData = parsedHistory.map((item: any) => item);
+        setHistorySongState(newData.slice(0, 9));
       }
     }
+  }, [isSongHistory]);
+
+  useEffect(() => {
     fetch("http://localhost:8080/api/album")
       .then((response) => response.json())
       .then(({ data }) => {
         const album = data.slice(0, 5);
-
         setListAlbum(album);
       });
-  }, [historySong]);
+  }, [])
 
   return (
     <>
@@ -109,17 +102,13 @@ const KhamPhaPage = () => {
                 {/* Start Component HeardRecently */}
                 <div className="column">
                   <div className="list grid grid-cols-1 md:grid-cols-3 -mx-[15px]">
-                    {loading
-                      ? historySongState?.map((_, index) => (
-                          <SuggSkeleton section="suggested" key={index} />
-                        ))
-                      : historySongState?.map((item, index) => (
-                          <ListSongItem
-                            item={item}
-                            section="suggested"
-                            key={index}
-                          />
-                        ))}
+                    {historySongState?.map((item, index) => (
+                      <ListSongItem
+                        item={item}
+                        section="suggested"
+                        key={index}
+                      />
+                    ))}
                   </div>
                 </div>
                 {/* End Component HeardRecently */}
@@ -129,8 +118,8 @@ const KhamPhaPage = () => {
               {/* End Component SuggestSong */}
 
               {/* Album */}
-              <ListAlbum/>
-              
+              <ListAlbum />
+
 
               {/* Start Component WantToListent */}
               <WantToListent />
