@@ -292,7 +292,7 @@ const RoomPage = (props: Props) => {
             }
           </div>
           {/* //todo SideBar Rooom */}
-          <SideBarRoom listMess={listMess} setListMess={setListMess} audioRef={audioRef} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar} />
+          <SideBarRoom listMess={listMess} setListMess={setListMess} audioRef={audioRef} socket={socket} userRoom={userRoom} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar} />
         </div>
         {listMember.length > 0 && listSong.length > 0 && <FooterRoom ListData={listSong} audioRef={audioRef} idRoom={id} listMember={listMember} />}
       </div>

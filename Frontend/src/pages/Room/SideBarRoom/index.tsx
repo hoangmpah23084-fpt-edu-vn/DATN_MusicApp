@@ -18,9 +18,10 @@ type Props = {
   setStateSideBar: React.Dispatch<React.SetStateAction<string>>,
   stateSideBar: string,
   audioRef: React.RefObject<HTMLAudioElement>;
+  userRoom: any
 }
 
-const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSideBar, audioRef }: Props) => {
+const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSideBar, audioRef, userRoom }: Props) => {
   const {id} = useParams();
   const { stateSong,currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { listSong : listSongInroom } = useAppSelector(({ room }) => room);
@@ -55,10 +56,10 @@ const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSide
       stateSideBar == 'trochuyen' ? <Message listMess={listMess} admin={admin} socket={socket} setListMess={setListMess} /> : ''
     }
     {
-      stateSideBar == 'listsong' ? <ListSongInRoom audioRef={audioRef} stateSong={stateSong} socket={socket} currentSong={currentSong} /> : ''
+      stateSideBar == 'listsong' ? <ListSongInRoom audioRef={audioRef} userRoom={userRoom} admin={admin} stateSong={stateSong} socket={socket} currentSong={currentSong} /> : ''
     }
     {
-      stateSideBar == 'search' ? <SearchSongInRoom listSong={listSongInroom} socket={socket} /> : ''
+      stateSideBar == 'search' ? <SearchSongInRoom listSong={listSongInroom} userRoom={userRoom} admin={admin} socket={socket} /> : ''
     }
   </div>
 

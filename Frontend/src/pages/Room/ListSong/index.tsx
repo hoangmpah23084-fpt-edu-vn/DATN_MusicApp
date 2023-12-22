@@ -25,8 +25,10 @@ type Props = {
   currentSong: ifSong | null,
   socket : Socket,
   audioRef: React.RefObject<HTMLAudioElement>;
+  admin : any,        
+  userRoom: any
 }
-const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
+const ListSongInRoom = ({stateSong, currentSong, socket, audioRef, admin, userRoom}: Props) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const {id} = useParams();
@@ -52,6 +54,8 @@ const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
         listSong: listSong,
       })
     }
+    console.log(admin, userRoom);
+    
     const handToggSong = async (item : ifSong) => {
       const preValue = stateSong;
       const formData = {
@@ -143,7 +147,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
                             className="w-[90%] h-[90%] bg-cover rounded-[5px]"
                             src={`${item.song_image[0]}`}
                           />
-                    <div className="absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause">
+                    <div className={`absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause ${admin._id == userRoom._id ? 'visible' : 'invisible'}`}>
                     {/* handToggSong(item) */}
                             <PauseListItemButtonStyle
                               onClick={() => handToggSong(item)}
@@ -186,7 +190,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
                         <div className="w-1/2">
                         </div>
                         <div className="w-1/2">
-                          <ListItemButtonStyle onClick={() => handDeleteSongInRoom(item)} >
+                          <ListItemButtonStyle onClick={() => handDeleteSongInRoom(item)} className={`${admin._id == userRoom._id ? 'visible' : 'invisible'}`} >
                             <ListItemIconStyle>
                               <FaRegTrashCan className='text-white text-[15px]'/>
                             </ListItemIconStyle>

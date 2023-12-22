@@ -15,8 +15,10 @@ import { AddSongInRoom } from '@/store/Reducer/roomReducer';
 type Props = {
   listSong: ifSong[],
   socket : Socket,
+  userRoom : any,
+  admin : any
 }
-const SearchSongInRoom = ({listSong, socket}: Props) => {
+const SearchSongInRoom = ({listSong, socket, userRoom, admin}: Props) => {
 const [listDataSearch , setListDataSearch] = useState<ifSong[] | []>([]);
 const dispatch = useAppDispatch();
 const {id} = useParams();
@@ -54,7 +56,7 @@ const debounced = useDebouncedCallback(
     <div className='w-full flex flex-col'>
       <div className='w-full flex justify-center items-center'>
         <CiSearch className="bg-[#3BC8E7] h-full w-[40px] p-2 rounded-l-full" />
-        <input type="text" onChange={(e) => debounced(e.target.value)} className='w-full h-full text-black bg-white rounded-r-full outline-none focus:outline-none border-none px-[3px] OutlineSearch font-inter'
+        <input type="text" onChange={(e) => debounced(e.target.value)} className='w-full h-full text-black bg-white rounded-r-full outline-none focus:outline-none border-none px-[3px] w font-inter'
          autoComplete="off"
         placeholder='Search...' />
       </div>
@@ -62,7 +64,7 @@ const debounced = useDebouncedCallback(
         {
            listDataSearch.length > 0 && listDataSearch.map((item, index) => {
             return <div className='w-full flex' key={index}>
-            <div className={`w-full h-[60px] flex justify-center rounded-md items-center hover:bg-[#b4b4b32d] cursor-pointer wall`} onClick={() => handAddSong(item)}>
+            <div className={`w-full h-[60px] flex justify-center rounded-md items-center hover:bg-[#b4b4b32d] cursor-pointer wall`} onClick={() => admin._id == userRoom._id ?  handAddSong(item) : ''}>
                <div className="w-[95%] h-[80%] flex justify-between ">
                     <div className="w-[17%] h-full">
                     <div className="w-full h-full flex justify-start items-center relative wallSong">
