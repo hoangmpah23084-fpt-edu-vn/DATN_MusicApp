@@ -234,6 +234,7 @@ export const updateViewSong = async (req, res) => {
       { _id: id_song },
       {
         month: JSON.stringify(setMonth),
+        view_song: songCurrent.view_song + 1,
       },
       { upsert: true, new: true }
     );

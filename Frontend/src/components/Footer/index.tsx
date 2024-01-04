@@ -169,7 +169,7 @@ const Footer = (props: Props) => {
   useEffect(() => {
     if (audioRef.current) {
       setTotalTiming(audioRef.current.currentTime);
-      const percent = (30 / 100) * audioRef.current.duration;
+      const percent = (1 / 100) * audioRef.current.duration;
       console.log(percent);
       console.log(Math.floor(totalTiming) == Math.floor(percent));
 
