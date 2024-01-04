@@ -248,12 +248,12 @@ const RoomPage = (props: Props) => {
                     <p className="text-white px-2 ">Rời phòng</p>
                   </div>
                 </button>
-                <button className="group relative">
+                {/* <button className="group relative">
                   <BsChevronDown className="bg-[rgba(255,255,255,.2)] px-3 py-2 rounded-full text-[40px] hover:brightness-90 cursor-pointer" />
                   <div className="item-hover relative text-xs rounded-[5px] bg-[#000] text-center py-1 opacity-0 group-hover:opacity-100 ease-in-out duration-500 mt-[10px]">
                     <p className="text-white">Đóng</p>
                   </div>
-                </button>
+                </button> */}
               </div>
             </div>
             {
@@ -292,7 +292,7 @@ const RoomPage = (props: Props) => {
             }
           </div>
           {/* //todo SideBar Rooom */}
-          <SideBarRoom listMess={listMess} setListMess={setListMess} audioRef={audioRef} socket={socket} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar} />
+          <SideBarRoom listMess={listMess} setListMess={setListMess} audioRef={audioRef} socket={socket} userRoom={userRoom} setStateSideBar={setStateSideBar} stateSideBar={stateSideBar} />
         </div>
         {listMember.length > 0 && listSong.length > 0 && <FooterRoom ListData={listSong} audioRef={audioRef} idRoom={id} listMember={listMember} />}
       </div>

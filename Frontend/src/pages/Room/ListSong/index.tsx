@@ -25,8 +25,10 @@ type Props = {
   currentSong: ifSong | null,
   socket : Socket,
   audioRef: React.RefObject<HTMLAudioElement>;
+  admin : any,        
+  userRoom: any
 }
-const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
+const ListSongInRoom = ({stateSong, currentSong, socket, audioRef, admin, userRoom}: Props) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
     const {id} = useParams();
@@ -52,6 +54,8 @@ const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
         listSong: listSong,
       })
     }
+    console.log(admin, userRoom);
+    
     const handToggSong = async (item : ifSong) => {
       const preValue = stateSong;
       const formData = {
@@ -127,14 +131,14 @@ const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
     },[])
     
   return (
-    <div className='w-full h-full overflow-y-scroll bg-[#130C1C] rounded-md p-2'>
+    <div className='w-full h-full overflow-y-scroll bg-[#1B2039] rounded-md p-2'>
         {
            listSong.length > 0 && listSong.map((item, index) => {
             // console.log(item);
             
             return <div className='w-full flex' key={index}>
             <div className={`w-full h-[60px] flex justify-center rounded-md items-center ${
-              currentSong && currentSong?._id == item._id ? 'bg-[#9B4DE0]' : 'hover:bg-[#b4b4b32d]'
+              currentSong && currentSong?._id == item._id ? 'bg-[#092635]' : 'hover:bg-[#b4b4b32d]'
             } wall`}>
                <div className="w-[95%] h-[80%] flex justify-between ">
                     <div className="w-[17%] h-full">
@@ -143,7 +147,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
                             className="w-[90%] h-[90%] bg-cover rounded-[5px]"
                             src={`${item.song_image[0]}`}
                           />
-                    <div className="absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause">
+                    <div className={`absolute w-[47px] h-[45px] top-[0] left-[-5px] z-10 fjc pause ${admin._id == userRoom._id ? 'visible' : 'invisible'}`}>
                     {/* handToggSong(item) */}
                             <PauseListItemButtonStyle
                               onClick={() => handToggSong(item)}
@@ -186,7 +190,7 @@ const ListSongInRoom = ({stateSong, currentSong, socket, audioRef}: Props) => {
                         <div className="w-1/2">
                         </div>
                         <div className="w-1/2">
-                          <ListItemButtonStyle onClick={() => handDeleteSongInRoom(item)} >
+                          <ListItemButtonStyle onClick={() => handDeleteSongInRoom(item)} className={`${admin._id == userRoom._id ? 'visible' : 'invisible'}`} >
                             <ListItemIconStyle>
                               <FaRegTrashCan className='text-white text-[15px]'/>
                             </ListItemIconStyle>
