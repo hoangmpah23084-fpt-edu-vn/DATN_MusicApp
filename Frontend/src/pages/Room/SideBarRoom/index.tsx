@@ -18,9 +18,10 @@ type Props = {
   setStateSideBar: React.Dispatch<React.SetStateAction<string>>,
   stateSideBar: string,
   audioRef: React.RefObject<HTMLAudioElement>;
+  userRoom: any
 }
 
-const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSideBar, audioRef }: Props) => {
+const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSideBar, audioRef, userRoom }: Props) => {
   const {id} = useParams();
   const { stateSong,currentSong } = useAppSelector(({ currentSong }) => currentSong);
   const { listSong : listSongInroom } = useAppSelector(({ room }) => room);
@@ -37,7 +38,7 @@ const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSide
   
   
   return (
-    <div className="zm-room-right-content absolute w-[340px] p-[20px] bg-[#130C1C] flex flex-col right-[30px] top-[94px] bottom-[30px] rounded-[12px] ">
+    <div className="zm-room-right-content absolute w-[340px] p-[20px] bg-[#1B2039] flex flex-col right-[30px] top-[94px] bottom-[30px] rounded-[12px] ">
     <div className="main-tabs text-[12px] mb-[12px]">
       <ul className="flex bg-[rgba(254,255,255,.1)] rounded-[15px] justify-center self-center p-[3px] max-w-max relative">
         <li onClick={() => setStateSideBar('trochuyen')} className={`tab-item tabSidebarSoom ${stateSideBar == 'trochuyen' ? 'bg-[rgba(254,255,255,.2)] ' : ''} cursor-pointer`} >
@@ -55,10 +56,10 @@ const SideBarRoom = ({ listMess, socket, setListMess, setStateSideBar, stateSide
       stateSideBar == 'trochuyen' ? <Message listMess={listMess} admin={admin} socket={socket} setListMess={setListMess} /> : ''
     }
     {
-      stateSideBar == 'listsong' ? <ListSongInRoom audioRef={audioRef} stateSong={stateSong} socket={socket} currentSong={currentSong} /> : ''
+      stateSideBar == 'listsong' ? <ListSongInRoom audioRef={audioRef} userRoom={userRoom} admin={admin} stateSong={stateSong} socket={socket} currentSong={currentSong} /> : ''
     }
     {
-      stateSideBar == 'search' ? <SearchSongInRoom listSong={listSongInroom} socket={socket} /> : ''
+      stateSideBar == 'search' ? <SearchSongInRoom listSong={listSongInroom} userRoom={userRoom} admin={admin} socket={socket} /> : ''
     }
   </div>
 
